@@ -4,19 +4,372 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dhruv Gupta | Zetesis Labs</title>
+    <title>Dhruv Gupta &middot; Zetesis Labs</title>
     <link rel="icon" type="image/png" href="public/images/logos/Zetesis_logo.png">
+    <link rel="canonical" href="https://zetesislabs.com/dhruv.html">
     <meta name="description"
-        content="PI, Zetesis Labs (ARTPARK @ IISc) — Building systems that make discovery measurable and dependable.">
+        content="Dhruv Gupta, Principal Investigator at Zetesis Labs (ARTPARK @ IISc). Building verified, long-horizon synthetic discovery — measurement, causal world-models, and formal verification kernels.">
+    <meta name="author" content="Dhruv Gupta">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="Dhruv Gupta &middot; Zetesis Labs">
+    <meta property="og:description"
+        content="Principal Investigator, Zetesis Labs. Verified, long-horizon synthetic discovery with formal verification at the core.">
+    <meta property="og:type" content="profile">
+    <meta property="og:url" content="https://zetesislabs.com/dhruv.html">
+    <meta name="twitter:card" content="summary">
+
+    <!-- Content-Security-Policy: locked to known origins. 'unsafe-inline' retained for this page's inline CSS/JS; can be tightened with hashes later. -->
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; img-src 'self' data: https://ghchart.rshah.org; object-src https://ghchart.rshah.org; connect-src 'self' https://api.github.com; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; font-src 'self' data:; base-uri 'self'; form-action 'self';">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+
     <link rel="stylesheet" href="output.css">
+
+    <!-- Page-specific style -->
+    <style>
+        /* Reading-progress bar */
+        #reading-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 2px;
+            width: 0%;
+            background: #000;
+            z-index: 100;
+            transition: width 120ms linear;
+        }
+
+        /* Skip link */
+        .skip-link {
+            position: absolute;
+            left: -9999px;
+            top: 0;
+        }
+
+        .skip-link:focus {
+            left: 0.5rem;
+            top: 0.5rem;
+            background: #000;
+            color: #fff;
+            padding: 0.4rem 0.8rem;
+            z-index: 200;
+        }
+
+        /* Table of contents: sticky sidebar on desktop, horizontal scroll band on mobile */
+        #layout {
+            display: block;
+            position: relative;
+        }
+
+        #toc {
+            display: none;
+        }
+
+        @media (min-width: 1200px) {
+            #layout {
+                display: grid;
+                grid-template-columns: 200px minmax(0, 1fr);
+                gap: 3rem;
+                align-items: start;
+            }
+
+            #toc {
+                display: block;
+                position: sticky;
+                top: 2rem;
+                padding-top: 0.5rem;
+                max-height: calc(100vh - 4rem);
+                overflow-y: auto;
+                font-size: 13px;
+                line-height: 1.5;
+            }
+
+            #toc .toc-group {
+                margin-bottom: 1.25rem;
+            }
+
+            #toc .toc-group-label {
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                font-size: 11px;
+                color: var(--color-muted);
+                margin-bottom: 0.35rem;
+            }
+
+            #toc ol {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
+
+            #toc li {
+                padding: 0.15rem 0;
+            }
+
+            #toc a {
+                color: var(--color-muted);
+                text-decoration: none;
+                display: block;
+                border-left: 2px solid transparent;
+                padding-left: 0.6rem;
+                margin-left: -0.6rem;
+                transition: color 120ms, border-color 120ms;
+            }
+
+            #toc a:hover {
+                color: var(--color-foreground);
+                text-decoration: none;
+            }
+
+            #toc a.active {
+                color: var(--color-foreground);
+                border-left-color: var(--color-foreground);
+            }
+        }
+
+        /* Hero pull-quote */
+        .pullquote {
+            font-style: italic;
+            border-left: 3px solid #000;
+            padding: 0.25rem 0 0.25rem 1.5rem;
+            line-height: 1.6;
+            margin: 1.5rem 0;
+        }
+
+        /* Three-pillar strip in hero */
+        .pillars {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0 0.5rem;
+        }
+
+        .pillars .pillar {
+            border: 1px solid var(--color-foreground);
+            padding: 0.9rem 1rem;
+        }
+
+        .pillars .pillar .k {
+            font-size: 11px;
+            letter-spacing: 0.09em;
+            text-transform: uppercase;
+            color: var(--color-muted);
+            margin-bottom: 0.4rem;
+        }
+
+        .pillars .pillar .v {
+            line-height: 1.4;
+            font-size: 15px;
+        }
+
+        @media (max-width: 900px) {
+            .pillars {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Major philosophical divider */
+        hr.major-divider {
+            border: 0;
+            border-top: 3px double #000;
+            margin: 5rem 0 3rem;
+            height: 10px;
+        }
+
+        hr.major-divider::after {
+            content: "Research Programme";
+            display: block;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.25em;
+            font-size: 11px;
+            color: var(--color-muted);
+            margin-top: 8px;
+            background: #fff;
+        }
+
+        /* Deep-dive cards have more air */
+        .deepdive {
+            border: 1px solid var(--color-foreground);
+            padding: 1.5rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .deepdive h4 {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 0.3rem;
+        }
+
+        .deepdive .subtitle {
+            color: var(--color-muted);
+            font-size: 14px;
+            margin-bottom: 0.9rem;
+        }
+
+        .deepdive p {
+            line-height: 1.7;
+            margin-bottom: 0.8rem;
+        }
+
+        .deepdive p:last-child {
+            margin-bottom: 0;
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        .metric-grid .m {
+            border: 1px solid var(--color-hairline);
+            padding: 0.65rem 0.75rem;
+        }
+
+        .metric-grid .m .n {
+            font-weight: bold;
+            font-size: 20px;
+            display: block;
+        }
+
+        .metric-grid .m .l {
+            color: var(--color-muted);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        /* Zetema concept-graph container */
+        #zetema-graph {
+            width: 100%;
+            max-width: 740px;
+            margin: 1.5rem auto;
+            display: block;
+        }
+
+        #zetema-graph svg {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        #zetema-graph .node rect,
+        #zetema-graph .node circle {
+            fill: #fff;
+            stroke: #000;
+            stroke-width: 1;
+        }
+
+        #zetema-graph .node text {
+            font-family: var(--font-serif);
+            font-size: 13px;
+            text-anchor: middle;
+            pointer-events: none;
+        }
+
+        #zetema-graph .edge {
+            stroke: #000;
+            stroke-width: 0.8;
+            fill: none;
+        }
+
+        #zetema-graph .node:hover rect,
+        #zetema-graph .node:hover circle {
+            fill: #000;
+        }
+
+        #zetema-graph .node:hover text {
+            fill: #fff;
+        }
+
+        #zetema-tooltip {
+            font-size: 13px;
+            color: var(--color-muted);
+            text-align: center;
+            min-height: 1.3em;
+            margin-top: 0.5rem;
+        }
+
+        /* Credentials grid */
+        .cred-grid {
+            display: grid;
+            grid-template-columns: minmax(150px, 200px) 1fr;
+            column-gap: 2rem;
+            row-gap: 0.8rem;
+        }
+
+        .cred-grid dt {
+            color: var(--color-muted);
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.08em;
+            padding-top: 0.2rem;
+        }
+
+        .cred-grid dd {
+            line-height: 1.55;
+            margin: 0;
+        }
+
+        @media (max-width: 700px) {
+            .cred-grid {
+                grid-template-columns: 1fr;
+                row-gap: 0.3rem;
+            }
+
+            .cred-grid dt {
+                margin-top: 0.8rem;
+            }
+        }
+
+        /* Back-to-top */
+        #back-to-top {
+            position: fixed;
+            right: 1.5rem;
+            bottom: 1.5rem;
+            background: #000;
+            color: #fff;
+            font-size: 12px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 0.5rem 0.8rem;
+            border: 0;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 180ms;
+            z-index: 90;
+        }
+
+        #back-to-top.visible {
+            opacity: 1;
+        }
+
+        /* Section anchors spacing for sticky TOC */
+        section[id] {
+            scroll-margin-top: 1.5rem;
+        }
+
+        /* Inline code / math */
+        code.tex {
+            font-family: var(--font-serif);
+            font-style: italic;
+        }
+    </style>
 </head>
 
 <body>
+    <a href="#content" class="skip-link">Skip to content</a>
+    <div id="reading-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-label="Reading progress">
+    </div>
+
     <div class="container">
         <!-- Navigation -->
         <nav>
-            <div class="flex items-center gap-3">
-                <a href="index.html" class="flex items-center gap-3" style="text-decoration: none; color: inherit;">
+            <div class="flex items-center gap-4">
+                <a href="index.html" class="flex items-center gap-4"
+                    style="text-decoration: none; color: inherit;">
                     <img src="public/images/logos/Zetesis_logo.png" alt="Zetesis" style="height: 32px; width: auto;">
                     <div style="font-weight: bold; font-size: 20px;">Zetesis Labs</div>
                 </a>
@@ -24,495 +377,810 @@
             <div class="flex gap-4">
                 <a href="index.html">Main</a>
                 <a href="lab.html">Lab</a>
-                <a href="https://discovery.zetesislabs.com" target="_blank">Demo</a>
+                <a href="https://discovery.zetesislabs.com" target="_blank" rel="noopener noreferrer">Demo</a>
             </div>
         </nav>
 
-        <!-- Profile Hero -->
-        <section class="mb-18">
-            <h1 style="font-size: 44px; margin-bottom: 0.5rem;">Dhruv Gupta</h1>
-            <p class="font-bold text-lg mb-2">PI, Zetesis Labs (ARTPARK @ IISc) | Innovator-in-Residence</p>
-            <p class="italic text-muted mb-6">Bengaluru, India</p>
-
-            <div class="flex gap-6 text-sm mb-8" style="flex-wrap: wrap;">
-                <a href="mailto:dhruv@zetesislabs.com">dhruv@zetesislabs.com</a>
-                <a href="mailto:dhruvgupta@iisc.ac.in">dhruvgupta@iisc.ac.in</a>
-                <span class="text-muted">+91 80599 96663</span>
-            </div>
-
-            <div class="flex gap-4 text-sm mb-8">
-                <a href="https://linkedin.com/in/dhruv-gupta-iir" target="_blank" class="border p-2">LinkedIn</a>
-                <a href="https://github.com/CO2mmunity" target="_blank" class="border p-2">GitHub</a>
-            </div>
-
-            <div class="border p-6 bg-gray-50" style="max-width: 800px;">
-                <p style="font-size: 20px; line-height: 1.6;">
-                    I build systems that make discovery measurable and dependable: research-grade measurement,
-                    causal world models, and verification kernels—unified by <strong>Zetema</strong>, my philosophy
-                    of discovery that centers ignorance, imagination, and inquiry.
-                </p>
-            </div>
-        </section>
-
-        <hr style="border: 0; border-top: 1px solid #ddd; margin: 3rem 0;">
-
-        <!-- Motivation -->
-        <section class="mb-18">
-            <h2>Motivation</h2>
-            <blockquote
-                style="border-left: 3px solid #000; padding-left: 1.5rem; font-size: 18px; line-height: 1.7; font-style: italic;">
-                I want to change the world to match an image in my mind—a world where discovery is faster,
-                more reliable, and less hostage to luck. Zetema is the attempt to make that ambition operational
-                without turning it into narrative: treat ignorance as structured, and treat inquiry as something we can
-                design.
-            </blockquote>
-        </section>
-
-        <hr style="border: 0; border-top: 1px solid #ddd; margin: 3rem 0;">
-
-        <!-- Three Things -->
-        <section class="mb-18">
-            <h2>Three Things to Know</h2>
-            <p class="text-muted mb-6">(how I work)</p>
-
-            <div class="flex flex-col gap-8">
-                <div style="border-left: 3px solid #000; padding-left: 1.5rem;">
-                    <h3 class="uppercase text-sm tracking-wide mb-2">1. Discovery as an Engineered Process</h3>
-                    <p>I treat inquiry as a controllable operator. I try to make unknowns explicit, typed, and testable.
-                        The goal is not to sound confident; the goal is to stay corrigible while still acting
-                        decisively.</p>
+        <div id="layout">
+            <!-- Sticky table of contents -->
+            <aside id="toc" aria-label="Page sections">
+                <div class="toc-group">
+                    <div class="toc-group-label">Profile</div>
+                    <ol>
+                        <li><a href="#hero">Hero</a></li>
+                        <li><a href="#programme">The Programme</a></li>
+                    </ol>
                 </div>
-                <div style="border-left: 3px solid #000; padding-left: 1.5rem;">
-                    <h3 class="uppercase text-sm tracking-wide mb-2">2. Measurement Before Models</h3>
-                    <p>I build and validate instrumentation and calibration stacks because trustworthy traces are the
-                        substrate of trustworthy inference. Most "AI failures" are measurement and calibration failures
-                        disguised as model failures.</p>
+                <div class="toc-group">
+                    <div class="toc-group-label">Evidence</div>
+                    <ol>
+                        <li><a href="#work">Selected Work</a></li>
+                        <li style="padding-left: 0.9rem;"><a href="#work-pilots" style="font-size: 12px;">&middot; Applied Pilots</a></li>
+                        <li style="padding-left: 0.9rem;"><a href="#work-formal" style="font-size: 12px;">&middot; Formal Kernels</a></li>
+                        <li style="padding-left: 0.9rem;"><a href="#work-discovery" style="font-size: 12px;">&middot; Synthetic Discovery</a></li>
+                        <li style="padding-left: 0.9rem;"><a href="#work-neuroscience" style="font-size: 12px;">&middot; Neuroscience</a></li>
+                        <li style="padding-left: 0.9rem;"><a href="#work-institution" style="font-size: 12px;">&middot; Institution Building</a></li>
+                        <li><a href="#open-source">Open Source</a></li>
+                        <li><a href="#credentials">Credentials</a></li>
+                    </ol>
                 </div>
-                <div style="border-left: 3px solid #000; padding-left: 1.5rem;">
-                    <h3 class="uppercase text-sm tracking-wide mb-2">3. Verification for High-Stakes Decisions</h3>
-                    <p>I translate theory into deployable systems that can audit their own uncertainty and failure
-                        modes.
-                        The output surface must be tethered to evidence, not narrative fluency.</p>
+                <div class="toc-group">
+                    <div class="toc-group-label">Engage</div>
+                    <ol>
+                        <li><a href="#collaboration">Collaboration Fit</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ol>
                 </div>
-            </div>
-        </section>
-
-        <hr style="border: 0; border-top: 1px solid #ddd; margin: 3rem 0;">
-
-        <!-- Zetema -->
-        <section class="mb-18">
-            <h2>Zetema: Discovery as Inquiry over Structured Ignorance</h2>
-
-            <div class="border p-6 mb-6 bg-gray-50">
-                <p class="font-bold mb-4" style="font-size: 18px;">Core Reversal</p>
-                <blockquote style="border-left: 3px solid #000; padding-left: 1rem; font-style: italic;">
-                    Knowledge is what remains after inquiry. Ignorance is not a residual error term; it has internal
-                    geometry.
-                    If you can represent that geometry, you can engineer discovery.
-                </blockquote>
-            </div>
-
-            <h3 class="mb-4">Core Commitments</h3>
-            <div class="flex flex-col gap-4 mb-8">
-                <div class="flex gap-4" style="align-items: flex-start;">
-                    <span class="font-mono" style="min-width: 20px;">•</span>
-                    <p><strong>Ignorance is first-class:</strong> unknowns are typed objects (articulated vs
-                        unarticulated; resolvable vs structurally blocked).</p>
+                <div class="toc-group">
+                    <div class="toc-group-label">Zetema</div>
+                    <ol>
+                        <li><a href="#zetema">Overview</a></li>
+                        <li><a href="#calculus">Calculus of Discovery</a></li>
+                        <li><a href="#measurement">Measurement</a></li>
+                        <li><a href="#cognition">Cognitive Architecture</a></li>
+                        <li><a href="#verification">Formal Verification</a></li>
+                    </ol>
                 </div>
-                <div class="flex gap-4" style="align-items: flex-start;">
-                    <span class="font-mono" style="min-width: 20px;">•</span>
-                    <p><strong>Inquiry is a meta-operator:</strong> it changes not only beliefs, but language,
-                        variables, and mechanisms that can be expressed.</p>
-                </div>
-                <div class="flex gap-4" style="align-items: flex-start;">
-                    <span class="font-mono" style="min-width: 20px;">•</span>
-                    <p><strong>Robustness over confidence:</strong> use invariance-style reasoning—what survives future
-                        coherent challenges—not only probabilities.</p>
-                </div>
-                <div class="flex gap-4" style="align-items: flex-start;">
-                    <span class="font-mono" style="min-width: 20px;">•</span>
-                    <p><strong>Economics of discovery:</strong> design minimum experiments and highest-leverage
-                        hypotheses under resource constraints.</p>
-                </div>
-            </div>
-        </section>
+            </aside>
 
-        <hr style="border: 0; border-top: 1px solid #ddd; margin: 3rem 0;">
+            <main id="content">
+                <!-- HERO -->
+                <section id="hero">
+                    <h1 style="font-size: 44px; margin-bottom: 0.5rem;">Dhruv Gupta</h1>
+                    <p class="font-bold text-lg mb-2">Principal Investigator, Zetesis Labs
+                        (<a href="https://www.artpark.in/zetesis" target="_blank"
+                            rel="noopener noreferrer">ARTPARK @ IISc</a>) &middot; Innovator-in-Residence</p>
+                    <p class="italic text-muted mb-6">Bengaluru, India</p>
 
-        <!-- Calculus of Discovery -->
-        <section class="mb-18">
-            <h2>Calculus of Discovery</h2>
-            <p class="text-muted mb-6">[epistemology]</p>
-
-            <p class="mb-6" style="line-height: 1.7;">
-                Internally, I represent a local theory-state as a compact object that separates commitments, mechanisms,
-                representations, and traces. Ignorance is tracked explicitly rather than hidden behind confidence.
-            </p>
-
-            <h3 class="mb-4">Primitive Operators</h3>
-            <div class="grid grid-cols-2 gap-6 mb-8">
-                <div class="border p-4">
-                    <h4 class="font-bold uppercase text-sm mb-2">Imagine</h4>
-                    <p class="text-sm">Propose variables/mechanisms; migrate unarticulated regularities into explicit
-                        questions.</p>
-                </div>
-                <div class="border p-4">
-                    <h4 class="font-bold uppercase text-sm mb-2">Experiment</h4>
-                    <p class="text-sm">Design minimum interventions that collapse uncertainty cheaply.</p>
-                </div>
-                <div class="border p-4">
-                    <h4 class="font-bold uppercase text-sm mb-2">Describe</h4>
-                    <p class="text-sm">Retype traces into stable representations; keep language consistent with data.
+                    <p style="font-size: 20px; line-height: 1.55; max-width: 780px; margin-bottom: 1.25rem;">
+                        Building <strong>verified, long-horizon synthetic discovery</strong> &mdash; measurement,
+                        causal world-models, and formal verification kernels composed into systems that stay
+                        correct as conditions change.
                     </p>
-                </div>
-                <div class="border p-4">
-                    <h4 class="font-bold uppercase text-sm mb-2">Communicate</h4>
-                    <p class="text-sm">Import external knowledge as traces/representations without forcing it into
-                        axioms.</p>
-                </div>
-            </div>
 
-            <h3 class="mb-4">Measurement Classes</h3>
-            <table class="mb-8">
-                <thead>
-                    <tr>
-                        <th>Class</th>
-                        <th>Definition</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>Plausibility</strong></td>
-                        <td>Could this claim be consistent with current structure?</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Verification</strong></td>
-                        <td>Is there evidence/proof for this claim against the traces and representations?</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Invariance</strong></td>
-                        <td>Robustness under coherent future inquiry (threat sets, stress tests).</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Efficiency</strong></td>
-                        <td>Validated novelty per unit resource.</td>
-                    </tr>
-                </tbody>
-            </table>
+                    <div class="flex gap-6 text-sm mb-6" style="flex-wrap: wrap;">
+                        <a href="mailto:dhruv@zetesislabs.com">dhruv@zetesislabs.com</a>
+                        <a href="mailto:dhruvgupta@iisc.ac.in">dhruvgupta@iisc.ac.in</a>
+                        <a href="tel:+918059996663">+91 80599 96663</a>
+                        <a href="https://linkedin.com/in/dhruv-gupta-iir" target="_blank"
+                            rel="noopener noreferrer">LinkedIn</a>
+                        <a href="https://github.com/CO2mmunity" target="_blank" rel="noopener noreferrer">GitHub</a>
+                        <a href="dhruv_gupta_resume_v6.pdf">CV (PDF)</a>
+                    </div>
 
-            <div class="border p-4 bg-gray-50 font-mono text-sm">
-                <strong>Efficiency metric:</strong> η = ΔK<sub>validated</sub> / (E × I<sub>prior</sub>)
-                <p class="text-muted mt-2" style="font-family: var(--font-serif);">
-                    Low efficiency typically signals missing causality, missing abstraction, or missing intervention
-                    design.
-                </p>
-            </div>
-        </section>
+                    <blockquote class="pullquote">
+                        I want to change the world to match an image in my mind &mdash; a world where discovery is
+                        faster, more reliable, and less hostage to luck. Zetema is the attempt to make that
+                        operational: treat ignorance as structured, and treat inquiry as something we can design.
+                    </blockquote>
 
-        <hr style="border: 0; border-top: 1px solid #ddd; margin: 3rem 0;">
+                    <div class="pillars" aria-label="Three operating principles">
+                        <div class="pillar">
+                            <div class="k">01 &middot; Engineered discovery</div>
+                            <div class="v">Inquiry is a controllable operator, not a mood. Unknowns are typed,
+                                explicit, testable.</div>
+                        </div>
+                        <div class="pillar">
+                            <div class="k">02 &middot; Measurement before models</div>
+                            <div class="v">Trustworthy traces are the substrate of trustworthy inference. Most
+                                "AI failures" are calibration failures in disguise.</div>
+                        </div>
+                        <div class="pillar">
+                            <div class="k">03 &middot; Verification at stake</div>
+                            <div class="v">Systems must audit their own uncertainty. The output surface is tethered
+                                to evidence, not narrative fluency.</div>
+                        </div>
+                    </div>
+                </section>
 
-        <!-- Cognitive Architecture -->
-        <section class="mb-18">
-            <h2>Cognitive Architecture</h2>
-            <p class="text-muted mb-6">[noology]</p>
+                <hr style="border: 0; border-top: 1px solid #ddd; margin: 3rem 0;">
 
-            <p class="mb-6" style="line-height: 1.7;">
-                A second axis of the work is the structure of the agent itself: representation bias and the capacity
-                to discover new structure. Two agents with the same traces can diverge because they factor the world
-                differently.
-            </p>
-
-            <div class="grid grid-cols-2 gap-6">
-                <div class="p-4 bg-gray-50 border">
-                    <h4 class="font-bold uppercase text-sm mb-2">Learning</h4>
-                    <p class="text-sm">Supplies bedrock content. Tends to constrain you to what is repeatedly
-                        experienced
-                        and safely generalized.</p>
-                </div>
-                <div class="p-4 bg-black text-white">
-                    <h4 class="font-bold uppercase text-sm mb-2">Imagination</h4>
-                    <p class="text-sm">Ability to posit a structure cheaply from thin traces and then act to make it
-                        real—
-                        through tools, coordination, experiments, and deliberate world-shaping.</p>
-                </div>
-            </div>
-
-            <p class="text-muted italic mt-6 text-sm">
-                A serious system must keep ignorance explicit while still allowing fast synthesis.
-            </p>
-        </section>
-
-        <hr style="border: 0; border-top: 1px solid #ddd; margin: 3rem 0;">
-
-        <!-- Portfolio -->
-        <section class="mb-18">
-            <h2>Portfolio Meta-Ledger</h2>
-            <p class="text-muted mb-6">(selected programmes)</p>
-
-            <div class="flex flex-col gap-6">
-                <div class="border p-4">
-                    <h4 class="font-bold mb-2">Formal Discovery Calculus</h4>
-                    <p class="text-sm text-muted">Built typed representations of theories, ignorance, and inquiry
-                        operations;
-                        invariance-style robustness measures; directionality ledger.</p>
-                </div>
-                <div class="border p-4">
-                    <h4 class="font-bold mb-2">Trace-based Reconstruction & Verification</h4>
-                    <p class="text-sm text-muted">Built structured view of limits of learning/program synthesis via
-                        traces;
-                        formal verification kernels (Lean4) for reasoning stacks.</p>
-                </div>
-                <div class="border p-4">
-                    <h4 class="font-bold mb-2">Climate Measurement Infrastructure (Terrapulse)</h4>
-                    <p class="text-sm text-muted">Built research-grade soil CO₂ flux instrumentation with Bayesian
-                        calibration
-                        and drift accounting; field validation mindset.</p>
-                </div>
-                <div class="border p-4">
-                    <h4 class="font-bold mb-2">Industrial Decision Intelligence (Ather)</h4>
-                    <p class="text-sm text-muted">Built blueprint for RCA + predictive maintenance for robotic welding
-                        reliability;
-                        verified dashboards with non-hallucinating explanations.</p>
-                </div>
-                <div class="border p-4">
-                    <h4 class="font-bold mb-2">Biomedical Sensing Calibration (Temple)</h4>
-                    <p class="text-sm text-muted">Built phantom-first feasibility and causal calibration stack for novel
-                        biosensing
-                        (speckle plethysmography).</p>
-                </div>
-                <div class="border p-4">
-                    <h4 class="font-bold mb-2">ARCNet (R&D Foundry)</h4>
-                    <p class="text-sm text-muted">Designed and operationalized SRI-inspired deep-science pre-incubator
-                        model
-                        at ARTPARK, IISc; led three client projects end-to-end.</p>
-                </div>
-                <div class="border p-4">
-                    <h4 class="font-bold mb-2">JRD Tata Innovation Support Center</h4>
-                    <p class="text-sm text-muted">Established summer research camp (40+ students); PI/architect for
-                        8-project
-                        applied R&D portfolio across robotics, neuro/GenAI, power electronics, forensic ML.</p>
-                </div>
-                <div class="border p-4">
-                    <h4 class="font-bold mb-2">Synthetic Biology (iGEM 2022)</h4>
-                    <p class="text-sm text-muted">Led climate-tech synthetic biology programme for degrading
-                        ozone-depleting gases;
-                        iGEM 2022 Gold Medal (Paris) and climate-track finalist.</p>
-                </div>
-            </div>
-        </section>
-
-        <hr style="border: 0; border-top: 1px solid #ddd; margin: 3rem 0;">
-
-        <!-- Deep Dives -->
-        <section class="mb-18">
-            <h2>Deep Dives</h2>
-            <p class="text-muted mb-6">(selected projects with technical detail)</p>
-
-            <div class="flex flex-col gap-8">
-                <!-- Ather -->
-                <div class="border p-6">
-                    <h3 class="font-bold mb-2">Industrial Pilot: Robotic Welding Reliability (Ather)</h3>
-                    <p class="text-muted text-sm mb-4">RCA + predictive maintenance under drift</p>
-                    <p class="mb-4" style="line-height: 1.7;">
-                        <strong>Observed failure mode:</strong> Intermittent anomalies → frequent downtime → high MTTR
-                        due
-                        to ad hoc troubleshooting → weak linkage between alarm/defect and action.
+                <!-- PROGRAMME CONTEXT -->
+                <section id="programme">
+                    <h2>The Programme (2025&ndash;Present)</h2>
+                    <p style="line-height: 1.7; max-width: 780px;">
+                        At Zetesis Labs I run one research programme across seven fields, asking whether
+                        discovery can be engineered rather than left to chance. Current work separates into three
+                        layers, each with shipped artifacts: a <strong>formal verification kernel</strong> written
+                        in Lean4; a <strong>synthetic-discovery stack</strong> (LLM harness &rarr; compile-filter
+                        pipelines &rarr; verified outputs); and <strong>industrial and biomedical pilots</strong>
+                        that test each piece against reality. The commercial wedge is Layer-2 outcomes
+                        (root-cause analysis, calibration, compliance, reliability planning), not philosophy as
+                        user interface.
                     </p>
-                    <p class="mb-4" style="line-height: 1.7;">
-                        <strong>Approach:</strong> Build a local world model for the cell aligned to the 4Ms—Man
-                        (operator context),
-                        Machine (telemetry/configs), Method (process recipes), Material (batch provenance).
+                    <p style="line-height: 1.7; max-width: 780px; margin-top: 1rem;">
+                        Institutional pattern: I have founded or led Zetesis Labs, ARCNet Research, and the
+                        JRD Tata Innovation Support Center at IISc, and sit on the ARTPARK Industry 5.0 programme
+                        board alongside BEL, Bosch, and Toyota. Each of those exists to make a specific piece of
+                        the discovery stack reachable in practice.
                     </p>
-                    <p style="line-height: 1.7;">
-                        <strong>Output:</strong> Ranked suspects, fault-path narrative, and minimum next checks that
-                        collapse
-                        uncertainty fastest. Drift treated as first-class; verification gates keep explanations tethered
-                        to evidence.
+                    <p class="text-muted italic" style="line-height: 1.7; max-width: 780px; margin-top: 1rem; font-size: 15px;">
+                        What follows is what each layer looks like as a shipped thing.
                     </p>
-                </div>
+                </section>
 
-                <!-- Temple -->
-                <div class="border p-6">
-                    <h3 class="font-bold mb-2">Sensor Validation + Causal Calibration (Temple)</h3>
-                    <p class="text-muted text-sm mb-4">Speckle plethysmography feasibility</p>
-                    <p class="mb-4" style="line-height: 1.7;">
-                        <strong>Three workstreams:</strong> (1) Stable SPG reference system with primary flow/perfusion
-                        metric;
-                        (2) Reproducible multi-layer phantom with controlled confounders; (3) Calibration mapping with
-                        QC checks.
-                    </p>
-                    <p class="text-muted italic text-sm">
-                        Thesis: Calibration is where sensing startups die; making confounders and interventions
-                        first-class
-                        makes calibration transferable rather than artisanal.
-                    </p>
-                </div>
+                <hr style="border: 0; border-top: 1px solid #ddd; margin: 3rem 0;">
 
-                <!-- Terrapulse -->
-                <div class="border p-6">
-                    <h3 class="font-bold mb-2">Terrapulse: Measuring What Models Miss</h3>
-                    <p class="text-muted text-sm mb-4">Research-grade soil CO₂ flux at ~1% typical cost</p>
-                    <p class="mb-4" style="line-height: 1.7;">
-                        Low-cost NDIR CO₂ cell on embedded compute, designed to capture sub-minute flux pulses with
-                        ppm-level precision. Calibration stack is explicitly multi-layer (step tests to field closure).
-                    </p>
-                    <p class="text-muted italic text-sm">
-                        Key principle: Calibration is not a one-time correction; it is a maintained mapping under
-                        changing conditions.
-                    </p>
-                </div>
+                <!-- SELECTED WORK -->
+                <section id="work">
+                    <h2>Selected Work</h2>
+                    <p class="text-muted mb-6">Shipped artifacts and active pilots, organized by layer.</p>
 
-                <!-- JRD -->
-                <div class="border p-6">
-                    <h3 class="font-bold mb-2">JRD Tata Innovation Support Center</h3>
-                    <p class="text-muted text-sm mb-4">Repeated discovery under constraints</p>
-                    <p class="mb-4" style="line-height: 1.7;">
-                        Eight prototype tracks testing whether I can repeatedly identify the center-of-mass unknown,
-                        propose a minimum experiment, and build the right representation quickly:
+                    <!-- Applied Pilots -->
+                    <h3 id="work-pilots" class="mb-4"
+                        style="font-size: 20px; border-bottom: 1px solid var(--color-hairline); padding-bottom: 0.5rem;">
+                        Applied Pilots &middot; Industrial &amp; Biomedical</h3>
+
+                    <article class="deepdive">
+                        <h4>Ather Energy &middot; Robotic welding reliability (K383)</h4>
+                        <p class="subtitle">Causal root-cause analysis under drift. Deployed, 2025.</p>
+                        <p><strong>Problem.</strong> Intermittent welding anomalies on a production line
+                            produced high MTTR because the linkage between alarm, defect, and action was weak and
+                            ad-hoc.</p>
+                        <p><strong>Approach.</strong> A causal world-model for the welding cell aligned to the
+                            4Ms &mdash; Man (operator context), Machine (telemetry/configs), Method (process
+                            recipes), Material (batch provenance). Implemented as an OWL ontology, internally
+                            named <code>K383</code>.</p>
+                        <div class="metric-grid">
+                            <div class="m"><span class="n">2,586</span><span class="l">Nodes</span></div>
+                            <div class="m"><span class="n">7,934</span><span class="l">Directed edges</span></div>
+                            <div class="m"><span class="n">~30 days</span><span class="l">Model build time</span>
+                            </div>
+                            <div class="m"><span class="n">60 / 12 / 28%</span><span class="l">Resolvable /
+                                    evidence-gated / structurally unresolvable</span></div>
+                        </div>
+                        <p><strong>Uncertainty diagnostic.</strong> A geometric belief-function analysis
+                            (Cuzzolin framework) classifies each failure path by <em>resolvability</em>: 60% are
+                            diagnosable from error codes alone, 12% require targeted additional evidence, and 28%
+                            are structurally unresolvable without live data integration. The diagnostic tells
+                            the operator not just what happened, but what else needs to be known.</p>
+                        <p><strong>Output.</strong> Ranked suspects, fault-path narrative, and minimum next checks
+                            that collapse uncertainty fastest. Drift is treated as first-class; verification gates
+                            keep explanations tethered to evidence rather than LLM fluency.</p>
+                    </article>
+
+                    <article class="deepdive">
+                        <h4>Temple &middot; Sensor validation &amp; causal calibration</h4>
+                        <p class="subtitle">Speckle plethysmography feasibility; phantom-first.</p>
+                        <p><strong>Three workstreams.</strong> (1) A stable SPG reference system with primary
+                            flow/perfusion metrics; (2) a reproducible multi-layer phantom with controlled
+                            confounders; (3) a calibration mapping with QC gates.</p>
+                        <p><strong>Thesis.</strong> Calibration is where sensing startups die. Making confounders
+                            and interventions first-class &mdash; rather than nuisance &mdash; makes calibration
+                            transferable rather than artisanal.</p>
+                    </article>
+
+                    <article class="deepdive">
+                        <h4>Terrapulse &middot; Research-grade soil CO<sub>2</sub> flux</h4>
+                        <p class="subtitle">Open-source instrument &middot; IISc B.S. Research thesis (A+, Rank 1).
+                        </p>
+                        <p>Low-cost NDIR CO<sub>2</sub> cell (K33-ELG) on embedded compute, designed to capture
+                            sub-minute flux pulses at research-grade precision. Three-layer Bayesian calibration
+                            chain: FTIR step-test &rarr; lab pulse simulation &rarr; multi-day field mass-closure
+                            via alkali trap. Field-deployed in Lahaul&ndash;Spiti valley over 2024&ndash;25.</p>
+                        <div class="metric-grid">
+                            <div class="m"><span class="n">~$150</span><span class="l">Bill of materials</span>
+                            </div>
+                            <div class="m"><span class="n">&plusmn;2 ppm</span><span class="l">Precision</span>
+                            </div>
+                            <div class="m"><span class="n">3.8%</span><span class="l">Flux MAE (mass-closure)</span>
+                            </div>
+                            <div class="m"><span class="n">sub-min</span><span class="l">Pulse capture</span></div>
+                        </div>
+                        <p>Open methods, datasets, and analysis pipeline released at
+                            <a href="https://github.com/CO2mmunity" target="_blank"
+                                rel="noopener noreferrer">github.com/CO2mmunity</a>. Final 95% posteriors:
+                            gain = 0.993 &plusmn; 0.005; offset = 16 &plusmn; 10 ppm; drift = 0.002 &plusmn; 0.020
+                            ppm h<sup>&minus;1</sup>.</p>
+                    </article>
+
+                    <article class="deepdive">
+                        <h4>Cerebral Blood Flow &middot; SPG wearable (with Continue Research)</h4>
+                        <p class="subtitle">Physics world-model &rarr; novel sensing &rarr; cross-modal transfer.
+                        </p>
+                        <p>A cerebral-blood-flow physics world-model feeding an SPG-based wearable sensor; brain
+                            phantoms for controlled validation; and a transfer-learning bridge from SPG to PPG so
+                            the physics stays tethered to the sensor that survives reality.</p>
+                    </article>
+
+                    <article class="deepdive" style="padding: 1rem 1.5rem;">
+                        <h4 style="font-size: 16px;">Deterministic hemodynamics via radiometric inference</h4>
+                        <p style="line-height: 1.6; margin: 0;">Physics-first pipeline for cuffless
+                            hemodynamics: stiffness discrimination under controlled perturbations, treated
+                            as an inverse problem against a tractable forward model rather than a regression
+                            on raw PPG.</p>
+                    </article>
+
+                    <!-- Formal Kernels -->
+                    <h3 id="work-formal" class="mb-4"
+                        style="font-size: 20px; border-bottom: 1px solid var(--color-hairline); padding-bottom: 0.5rem; margin-top: 3rem;">
+                        Formal Kernels &middot; Lean4</h3>
+
+                    <article class="deepdive">
+                        <h4>Formal Learning Theory Kernel</h4>
+                        <p class="subtitle">21,522 lines of Lean4, machine-checked with no gaps.</p>
+                        <p>A self-contained Lean4 kernel of formal learning theory, currently under arXiv
+                            review and being upstreamed to Lean4 <code>cslib</code> and <code>mathlib</code>.
+                            Four results it carries that the field had been citing rather than proving:</p>
+                        <ul style="padding-left: 1.5rem; line-height: 1.7; font-size: 15px;">
+                            <li><strong>Borel&ndash;analytic separation theorem</strong> (concurrent with
+                                Krapp&ndash;Wirth 2024).</li>
+                            <li><strong>Constructive MWU-based compression proof.</strong></li>
+                            <li><strong>PAC-Bayes bound</strong> &mdash; first Lean4 formalization of record.</li>
+                            <li><strong>Choquet capacitability</strong> &mdash; previously absent from Mathlib4.
+                            </li>
+                        </ul>
+                        <p style="margin-top: 0.9rem;">Formalization is the claim. The claim is checked.</p>
+                    </article>
+
+                    <article class="deepdive">
+                        <h4>ICM Unbundling</h4>
+                        <p class="subtitle">Lean4 formalization of OOD geometry for factored knowledge-graph
+                            embeddings.</p>
+                        <p>Seven theorems proving that independent causal mechanisms make distribution shift
+                            geometrically visible &mdash; with VC-dimension bounds, a risk decomposition, and an
+                            entanglement-vulnerability converse. The converse does the work:
+                            <em>entanglement is a vulnerability, not a feature</em>.</p>
+                    </article>
+
+                    <article class="deepdive">
+                        <h4>Transformer Learning Theory</h4>
+                        <p class="subtitle">Measurability-theoretic foundations for attention architectures.</p>
+                        <p>Lean4 results: attention-routing measurability; softmax&ndash;argmax equivalence under
+                            appropriate limits; a universality statement (every measurable router
+                            <em>is</em> attention); and a NullMeasurable necessity result.</p>
+                    </article>
+
+                    <!-- Synthetic Discovery -->
+                    <h3 id="work-discovery" class="mb-4"
+                        style="font-size: 20px; border-bottom: 1px solid var(--color-hairline); padding-bottom: 0.5rem; margin-top: 3rem;">
+                        Synthetic Discovery</h3>
+
+                    <article class="deepdive">
+                        <h4>LLM harness &middot; First Proof Challenge</h4>
+                        <p class="subtitle">Operational pipeline; Harvard benchmark, commodity compute.</p>
+                        <p>An LLM-driven proof search harness that reached <strong>4 of 10</strong> on Harvard's
+                            First Proof Challenge benchmark using <strong>$32 of commodity API compute</strong>
+                            on a single MacBook. The number is not the point. The shape of the failures is.
+                            Where the harness succeeds is where formalization gates exist; where it fails is
+                            where they are absent.</p>
+                    </article>
+
+                    <article class="deepdive">
+                        <h4>Knowledge-creation engine (JRD)</h4>
+                        <p class="subtitle">Generate-and-verify pipeline for physics problems.</p>
+                        <p>Compile/filter workflow producing <strong>500+ labeled mechanics problems with
+                                verified solutions</strong>. A concrete test of whether synthetic problem
+                            generation can cross the quality threshold required for training data &mdash; the
+                            answer was yes, when verification is load-bearing.</p>
+                    </article>
+
+                    <article class="deepdive">
+                        <h4>BCI/EEG &rarr; text with generative-AI post-editing (JRD)</h4>
+                        <p class="subtitle">Neural signal decoding with coherence-checked synthesis.</p>
+                        <p>Decoding pipeline from low-density EEG to natural-language text, with synthetic
+                            data augmentation and a coherence-checked LLM post-edit stage. Exploratory
+                            decoding metrics; the useful result was the post-edit gate: without it, fluent
+                            hallucination dominates.</p>
+                    </article>
+
+                    <!-- Neuroscience -->
+                    <h3 id="work-neuroscience" class="mb-4"
+                        style="font-size: 20px; border-bottom: 1px solid var(--color-hairline); padding-bottom: 0.5rem; margin-top: 3rem;">
+                        Neuroscience Modeling</h3>
+
+                    <article class="deepdive">
+                        <h4>Hyper-Resonant Dendritic Oscillations (HDO)</h4>
+                        <p class="subtitle">Single-neuron timing primitive &middot; preprint on request.</p>
+                        <p><strong>Claim.</strong> A single stellate cell carries two <em>stable</em> intrinsic
+                            oscillatory regimes &mdash; a &theta;-like slow regime and a high-frequency HDO
+                            regime &mdash; with stochastic switching driven by channel noise.</p>
+                        <p><strong>Mechanism.</strong> Stochastic Ca<sub>V</sub> gating (Gillespie) plus a
+                            calcium-activated current plus BCM-like intrinsic plasticity regulates the
+                            transition probability between regimes. Bifurcation reasoning points to a
+                            subcritical Hopf / SNIC candidate; robustness confirmed under parameter sweeps.</p>
+                        <p><strong>Consequence.</strong> A timing primitive that is neither a fixed oscillator
+                            nor a pure integrator. Metaplasticity is the switch; the switch is the
+                            computation.</p>
+                    </article>
+
+                    <article class="deepdive">
+                        <h4>Information&ndash;energy efficiency operator</h4>
+                        <p class="subtitle">Complex-valued tradeoff operator for neural computation.</p>
+                        <p>A complex-valued operator that expresses the energy&ndash;information tradeoff in
+                            neural computation, validated in Brian2 simulations. System-level
+                            energy&ndash;information efficiency in visual cortex served as the undergraduate
+                            project in the Arun lab at IISc.</p>
+                    </article>
+
+                    <article class="deepdive">
+                        <h4>Dawn Arbor</h4>
+                        <p class="subtitle">Open Python platform for machine-checked neurobiophysics.</p>
+                        <p>Converts ModelDB <code>.hoc</code> models into a type-inheritance DAG so
+                            neurobiophysics models can be composed, type-checked, and verified like programs
+                            rather than passed around as opaque simulation scripts.</p>
+                    </article>
+
+                    <article class="deepdive">
+                        <h4>NIAS collaboration &middot; Neurochaos learning for calibration</h4>
+                        <p class="subtitle">With the National Institute of Advanced Studies, IISc campus.</p>
+                        <p>Using neurochaos-learning primitives (chaotic-attractor features) as a calibration
+                            substrate for biosensors where conventional linear calibration is brittle to
+                            nonstationary confounders.</p>
+                    </article>
+
+                    <!-- Institution Building -->
+                    <h3 id="work-institution" class="mb-4"
+                        style="font-size: 20px; border-bottom: 1px solid var(--color-hairline); padding-bottom: 0.5rem; margin-top: 3rem;">
+                        Institution Building</h3>
+
+                    <article class="deepdive">
+                        <h4>Zetesis Labs &middot; ARTPARK Industry 5.0 Board</h4>
+                        <p class="subtitle">2025&ndash;Present.</p>
+                        <p>Principal Investigator at Zetesis; Innovator-in-Residence at ARTPARK; and Board
+                            Member of the ARTPARK Industry 5.0 programme, co-developing manufacturing R&amp;D
+                            automation pilots with BEL, Bosch, and Toyota. The board role exists to close the
+                            loop from research to industrial deployment.</p>
+                    </article>
+
+                    <article class="deepdive">
+                        <h4>ARCNet Research &middot; Deep-tech consultancy</h4>
+                        <p class="subtitle">Founder, 2024&ndash;Jun 2025. Transitioned to permanent team.</p>
+                        <p>An SRI-inspired deep-tech consultancy and pre-incubator built inside ARTPARK. Three
+                            named client engagements delivered end-to-end: remote-sensing QC, multimodal
+                            evaluation, lab automation.</p>
+                    </article>
+
+                    <article class="deepdive">
+                        <h4>JRD Tata Innovation Support Center &middot; IISc</h4>
+                        <p class="subtitle">PI &middot; Program Lead, 2024. A stress test for repeated
+                            discovery across unrelated domains.</p>
+                        <p>Established and led the summer research programme (40+ students) and an 8-project
+                            applied-R&amp;D portfolio. All eight tracks reached working prototype; the
+                            portfolio itself is the contribution. The question the programme answered: can the
+                            same operator catch the <em>center-of-mass unknown</em> in eight unrelated domains
+                            within a single summer?</p>
+                        <ul style="padding-left: 1.5rem; line-height: 1.7; font-size: 14.5px; margin-top: 0.5rem;">
+                            <li><strong>Voice-first teleoperation</strong> of a robotic arm from smartphone
+                                (safety + latency trade-off).</li>
+                            <li><strong>Digital-twin-driven bionic arm</strong> with calibration drift as the
+                                primary failure mode.</li>
+                            <li><strong>Low-cost servo + encoder stack</strong> (FSM decoding of noisy
+                                inputs).</li>
+                            <li><strong>BCI/EEG &rarr; text</strong> with generative-AI coherence gates.</li>
+                            <li><strong>Physics-to-math knowledge engine</strong> (compiler as verification
+                                gate).</li>
+                            <li><strong>General-purpose multi-I/O power converter.</strong></li>
+                            <li><strong>Fuel-quality automation</strong> with Pass/Fail/Inconclusive as a
+                                first-class output.</li>
+                            <li><strong>Forensic triage</strong> with Bayesian uncertainty and mandatory
+                                justification chains.</li>
+                        </ul>
+                    </article>
+
+                    <article class="deepdive">
+                        <h4>iGEM IISc &middot; Halocleen</h4>
+                        <p class="subtitle">Team Lead, 2022. Paris Jamboree, Gold Medal, Climate-track finalist.
+                        </p>
+                        <p>Climate-tech synthetic-biology programme on halocarbon biodegradation (methanotroph
+                            bio-circuits degrading CFC-11/12); bioreactor concepts and deployment economics.
+                            Two patent-filed bioreactor designs.</p>
+                    </article>
+                </section>
+
+                <hr style="border: 0; border-top: 1px solid #ddd; margin: 3rem 0;">
+
+                <!-- OPEN SOURCE (live from GitHub) -->
+                <section id="open-source">
+                    <h2>Open Source</h2>
+                    <p class="text-muted mb-6">
+                        Live from GitHub:
+                        <a href="https://github.com/CO2mmunity" target="_blank" rel="noopener noreferrer">@CO2mmunity</a>
+                        &middot;
+                        <a href="https://github.com/Zetetic-Dhruv" target="_blank"
+                            rel="noopener noreferrer">@Zetetic-Dhruv</a>
                     </p>
-                    <ul class="text-sm" style="padding-left: 1.5rem; line-height: 1.8;">
-                        <li>Voice-first smartphone teleoperation of robotic arm (safety + latency)</li>
-                        <li>Digital-twin-driven bionic arm with calibration drift as primary failure mode</li>
-                        <li>Low-cost servo + encoder stack (FSM decoding of noisy inputs)</li>
-                        <li>BCI/EEG + GenAI assistant with coherence checks</li>
-                        <li>Physics-to-math knowledge engine (compiler as verification gate)</li>
-                        <li>General-purpose multi-I/O power converter</li>
-                        <li>Fuel quality automation (Pass/Fail/Inconclusive as first-class output)</li>
-                        <li>Forensic triage with Bayesian uncertainty and mandatory justification chains</li>
+
+                    <div id="gh-stats" class="border p-4 mb-8 bg-gray-50" aria-live="polite">
+                        <div class="text-muted text-sm">Loading profile data from GitHub&hellip;</div>
+                    </div>
+
+                    <h3 class="mb-4">Repositories</h3>
+                    <div id="gh-repos" class="flex flex-col gap-4 mb-8" aria-live="polite">
+                        <div class="text-muted text-sm">Loading repositories&hellip;</div>
+                    </div>
+
+                    <h3 class="mb-4">Contribution Activity <span class="text-muted text-sm">(last year)</span></h3>
+                    <div id="gh-contrib" class="border p-4 bg-gray-50" style="overflow-x: auto;">
+                        <div class="text-muted text-sm">Loading contribution graphs&hellip;</div>
+                    </div>
+
+                    <p class="text-muted text-xs mt-4 italic">
+                        Public GitHub REST API &middot; cached locally for 30 minutes &middot; contribution graphs
+                        rendered via <a href="https://ghchart.rshah.org" target="_blank"
+                            rel="noopener noreferrer">ghchart.rshah.org</a>.
+                    </p>
+                </section>
+
+                <hr style="border: 0; border-top: 1px solid #ddd; margin: 3rem 0;">
+
+                <!-- CREDENTIALS & RECOGNITION -->
+                <section id="credentials">
+                    <h2>Credentials &amp; Recognition</h2>
+                    <p class="text-muted mb-6">Education, awards, invited talks, and references.
+                        Full <a href="dhruv_gupta_resume_v6.pdf">CV (PDF)</a>.</p>
+
+                    <dl class="cred-grid">
+                        <dt>Education</dt>
+                        <dd>
+                            <strong>B.S. (Research), Biology</strong>, Indian Institute of Science, Bangalore
+                            (2021&ndash;2025). First Class with Distinction, CGPA 8.8/10.<br>
+                            Thesis (A+, Rank 1): <em>Measuring What Models Miss.</em>
+                        </dd>
+
+                        <dt>Lab training</dt>
+                        <dd>
+                            S. P. Arun (visual neuroscience, IISc) &middot; Rishikesh Narayan (IISc) &middot;
+                            clinical neurology internships, Sir Ganga Ram Hospital, Delhi (2022, 2023).
+                        </dd>
+
+                        <dt>Awards</dt>
+                        <dd>
+                            <strong>iGEM 2022 Gold Medal</strong> (Paris Jamboree), Best Climate-Crisis
+                            nomination &middot;
+                            <strong>KVPY Fellow (AIR 50)</strong> &middot;
+                            <strong>JEE Main 99.94<sup>th</sup> percentile</strong> &middot;
+                            <strong>Abhiprajna (AIR 1)</strong> &middot;
+                            All-India Subject Topper (Biology).
+                        </dd>
+
+                        <dt>Invited talks</dt>
+                        <dd>
+                            Sponsored panelist, <em>Prosthetics &amp; Robotics 2026</em>, Boston, representing
+                            IISc &middot; invited lectures at IIT Delhi and AIIMS Delhi.
+                        </dd>
+
+                        <dt>Teaching &amp; community</dt>
+                        <dd>
+                            Student Branch President, IEEE Computer Society (IISc) &middot; Member, Eta Kappa
+                            Nu (HKN) &middot; workshops across 16 institutions on graph neural networks,
+                            neuromorphic computing, and embedded systems.
+                        </dd>
+
+                        <dt>Industrial leadership</dt>
+                        <dd>
+                            Board Member, ARTPARK Industry 5.0 programme (2025&ndash;).
+                        </dd>
+
+                        <dt>References</dt>
+                        <dd>
+                            <strong>Prof. Bharadwaj Amrutur</strong>, Dept. of Electrical Communication
+                            Engineering, IISc Bangalore (long-term research mentor) &middot;
+                            <strong>Gopika Kannan</strong>, Executive Advisor, Zetesis Labs &middot;
+                            <strong>Narayan Rangarajan</strong>, Head of Agile R&amp;D and Product Engineering,
+                            Ather Energy &middot;
+                            <strong>Dr. Sudip Mondal</strong>, Head of Hardware, Firmware, and Systems
+                            Engineering, Ather Energy.
+                        </dd>
+                    </dl>
+                </section>
+
+                <hr style="border: 0; border-top: 1px solid #ddd; margin: 3rem 0;">
+
+                <!-- COLLABORATION FIT -->
+                <section id="collaboration">
+                    <h2>Collaboration Fit</h2>
+
+                    <h3 class="mb-4">Where we're most useful</h3>
+                    <ul style="padding-left: 1.5rem; line-height: 2; margin-bottom: 2rem; max-width: 780px;">
+                        <li>Science or engineering that must justify itself under uncertainty (measurement,
+                            calibration, compliance, safety).</li>
+                        <li>Rapid world-model building in messy domains, with explicit assumptions and
+                            verification gates.</li>
+                        <li>Bridging theory to systems: formal methods, causal inference, data architecture,
+                            prototype delivery.</li>
                     </ul>
-                </div>
-            </div>
-        </section>
 
-        <hr style="border: 0; border-top: 1px solid #ddd; margin: 3rem 0;">
+                    <h3 class="mb-4">Services we take money for</h3>
+                    <div class="grid grid-cols-2 gap-6 mb-8" style="max-width: 780px;">
+                        <div class="border p-4">
+                            <h4 class="font-bold uppercase text-sm mb-2">Applied Causal / RCA Pilots</h4>
+                            <p class="text-sm">Ather-template engagements: build a causal world-model for a
+                                client's failure-mode analysis; ship dashboards with verification gates.
+                                Evidence: <a href="#work-pilots">Ather K383</a>, 2,586 nodes / 7,934 edges,
+                                deployed 2025.</p>
+                        </div>
+                        <div class="border p-4">
+                            <h4 class="font-bold uppercase text-sm mb-2">Formal Verification Consulting</h4>
+                            <p class="text-sm">Lean4 kernel design and type-theoretic audits of reasoning
+                                systems. Evidence: <a href="#work-formal">21,522-line FLT kernel</a> on
+                                arXiv; see <a href="#verification">&sect;Formal Verification</a> below for
+                                why Lean4 specifically.</p>
+                        </div>
+                        <div class="border p-4">
+                            <h4 class="font-bold uppercase text-sm mb-2">Advisory &amp; Research Fellowships</h4>
+                            <p class="text-sm">Retained advisory for research-heavy teams; short fellowships for
+                                focused problems. Evidence: <a href="#work-institution">three ARCNet client
+                                engagements</a>, 2024&ndash;2025.</p>
+                        </div>
+                        <div class="border p-4" style="background: #f9f9f9; border-style: dashed;">
+                            <h4 class="font-bold uppercase text-sm mb-2" style="color: var(--color-muted);">Good
+                                opening questions</h4>
+                            <ul class="text-sm" style="padding-left: 1rem; line-height: 1.7;">
+                                <li>&ldquo;What are we missing?&rdquo;</li>
+                                <li>&ldquo;What would change your mind?&rdquo;</li>
+                                <li>&ldquo;What is the minimum decisive experiment?&rdquo;</li>
+                                <li>&ldquo;Where can we place a verification gate?&rdquo;</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
 
-        <!-- Open Source (live from GitHub API) -->
-        <section class="mb-18" id="open-source">
-            <h2>Open Source</h2>
-            <p class="text-muted mb-6">
-                (live from GitHub:
-                <a href="https://github.com/CO2mmunity" target="_blank">@CO2mmunity</a>
-                &middot;
-                <a href="https://github.com/Zetetic-Dhruv" target="_blank">@Zetetic-Dhruv</a>)
-            </p>
+                <hr style="border: 0; border-top: 1px solid #ddd; margin: 3rem 0;">
 
-            <!-- Profile stats strip -->
-            <div id="gh-stats" class="border p-4 mb-8 bg-gray-50" aria-live="polite">
-                <div class="text-muted text-sm">Loading profile data from GitHub&hellip;</div>
-            </div>
+                <!-- CONTACT -->
+                <section id="contact">
+                    <h2>Contact</h2>
+                    <div class="border p-6 mb-6" style="max-width: 780px;">
+                        <p class="mb-4">
+                            The most useful opening is a paragraph describing <em>the problem</em>,
+                            <em>the constraints</em>, and what <em>solved</em> would look like. I read everything
+                            directly.
+                        </p>
+                        <p class="mb-4">
+                            Write to <a href="mailto:dhruv@zetesislabs.com?subject=Zetesis%20Inquiry"
+                                style="font-weight: bold;">dhruv@zetesislabs.com</a>, or to my IISc address
+                            <a href="mailto:dhruvgupta@iisc.ac.in">dhruvgupta@iisc.ac.in</a> for academic
+                            correspondence.
+                        </p>
+                        <p class="text-muted text-sm">
+                            Timelines: 48 hours for serious inquiries; longer for cold outreach without
+                            specifics.
+                        </p>
+                    </div>
 
-            <!-- Repositories -->
-            <h3 class="mb-4">Repositories</h3>
-            <div id="gh-repos" class="flex flex-col gap-4 mb-8" aria-live="polite">
-                <div class="text-muted text-sm">Loading repositories&hellip;</div>
-            </div>
+                    <div class="bg-black text-white p-6" style="max-width: 780px;">
+                        <div class="flex gap-8" style="flex-wrap: wrap; align-items: center;">
+                            <a href="mailto:dhruv@zetesislabs.com" class="text-white"
+                                style="text-decoration: underline;">dhruv@zetesislabs.com</a>
+                            <a href="mailto:dhruvgupta@iisc.ac.in" class="text-white"
+                                style="text-decoration: underline;">dhruvgupta@iisc.ac.in</a>
+                            <a href="tel:+918059996663" class="text-white"
+                                style="text-decoration: underline;">+91 80599 96663</a>
+                        </div>
+                    </div>
+                </section>
 
-            <!-- Contribution graph -->
-            <h3 class="mb-4">Contribution Activity <span class="text-muted text-sm">(last year)</span></h3>
-            <div id="gh-contrib" class="border p-4 bg-gray-50" style="overflow-x: auto;">
-                <div class="text-muted text-sm">Loading contribution graphs&hellip;</div>
-            </div>
+                <hr class="major-divider" aria-hidden="true">
 
-            <p class="text-muted text-xs mt-4 italic">
-                Data fetched from the public GitHub REST API on page load. Cached locally for 30 minutes.
-                Contribution graphs rendered via <a href="https://ghchart.rshah.org" target="_blank">ghchart.rshah.org</a>.
-            </p>
-        </section>
+                <!-- RESEARCH PROGRAMME: ZETEMA (philosophy at the bottom) -->
+                <section id="zetema">
+                    <h2>The Research Programme: Zetema</h2>
+                    <p class="text-muted mb-6">Discovery as inquiry over structured ignorance.</p>
 
-        <hr style="border: 0; border-top: 1px solid #ddd; margin: 3rem 0;">
+                    <blockquote class="pullquote" style="max-width: 780px;">
+                        Knowledge is what remains after inquiry. Ignorance is not a residual error term; it has
+                        internal geometry. If you can represent that geometry, you can engineer discovery.
+                    </blockquote>
 
-        <!-- Formal Verification -->
-        <section class="mb-18">
-            <h2>Formal Verification & Reasoning Infrastructure</h2>
-            <p class="mb-6" style="line-height: 1.7;">
-                I do not treat formalism as decoration. I use it as infrastructure: to make reasoning systems converge,
-                to make ignorance explicit, and to keep explanations tethered to what can be justified.
-            </p>
-            <p class="text-muted text-sm">
-                Tooling: Lean4 / type theory / knowledge graphs. I also explore a geometric lens on model behavior
-                (including LLMs) where homogeneity, impurities, and phase transitions in generalization can be treated
-                as objects.
-            </p>
-        </section>
+                    <p style="line-height: 1.7; max-width: 780px; margin-top: 1rem;">
+                        The conventional view treats ignorance as noise &mdash; a residual to be minimized by
+                        more data or better models. That view predicts monotonic progress with compute. What
+                        we observe instead is that the hardest problems keep the same shape as compute grows:
+                        more of the same model on more of the same data converges to a better version of the
+                        same failure.
+                    </p>
 
-        <hr style="border: 0; border-top: 1px solid #ddd; margin: 3rem 0;">
+                    <p style="line-height: 1.7; max-width: 780px; margin-top: 1rem;">
+                        Zetema's reversal is the starting move. If ignorance has internal structure, progress
+                        depends on <em>acting on that structure</em>, not dissolving it. The rest of this page
+                        shows what the programme has <em>produced</em>. This section describes the framework
+                        that produced it. It is not decoration; it is the operating manual for every artifact
+                        above. The sections below are intentionally sparser than the work above &mdash; each
+                        is load-bearing, and none are duplicated.
+                    </p>
 
-        <!-- Current Direction -->
-        <section class="mb-18">
-            <h2>Current Direction (2025–Present)</h2>
-            <p class="mb-6" style="line-height: 1.7;">
-                At Zetesis Labs (ARTPARK @ IISc), my focus is to build decision and discovery systems that are:
-            </p>
-            <ul style="padding-left: 1.5rem; line-height: 2; margin-bottom: 2rem;">
-                <li><strong>Grounded in measurement</strong> and trace provenance (no mystery data)</li>
-                <li><strong>World-model based</strong> (mechanisms, not just statistical correlations)</li>
-                <li><strong>Verification-aware</strong> (typed representations and formal checks where it matters)</li>
-                <li><strong>Deployable</strong> in physical environments where failure has a cost</li>
-            </ul>
-            <p class="text-muted italic">
-                Zetema is not only a philosophy; it structures work so each project increases the reachable space of
-                inquiry.
-            </p>
-        </section>
+                    <!-- Interactive concept graph -->
+                    <div id="zetema-graph" aria-label="Zetema concept graph">
+                        <!-- SVG injected by JS for interactive hover; a static fallback goes inside for no-JS. -->
+                        <noscript>
+                            <p class="text-muted text-sm">
+                                URS = &langle;Axioms, Mechanisms, Representations, Traces&rangle; &middot;
+                                Ignorance = {KK, KU, UK, UU} &middot;
+                                Ledgers = {&gamma; discovery, &Gamma; inquiry} &middot;
+                                Measurements = {Pl, Coh, Inv, Comp}.
+                            </p>
+                        </noscript>
+                    </div>
+                    <p id="zetema-tooltip" aria-live="polite">Hover a node to read its definition.</p>
 
-        <hr style="border: 0; border-top: 1px solid #ddd; margin: 3rem 0;">
+                    <h3 id="calculus" class="mt-12 mb-4">Calculus of Discovery</h3>
+                    <p style="line-height: 1.7; max-width: 780px;">
+                        Internally I represent a local theory-state as a compact object
+                        <code class="tex">URS = &langle;A, M, R, T&rangle;</code>: axioms, mechanisms,
+                        representations, traces. Inquiry is a small set of primitive operators that modify this
+                        object. The operators are not a style of thought; they are what a deployed system is
+                        allowed to do.
+                    </p>
+                    <div class="grid grid-cols-2 gap-4 mb-8" style="margin-top: 1rem; max-width: 780px;">
+                        <div class="border p-4">
+                            <h4 class="font-bold uppercase text-sm mb-2">Imagine (<code class="tex">abd</code>)</h4>
+                            <p class="text-sm">Propose new variables or mechanisms. Migrate unarticulated
+                                regularities into explicit questions. This is where grammar grows.</p>
+                            <p class="text-xs text-muted" style="margin-top: 0.5rem;">
+                                <strong>Quadrant transition:</strong> UK &rarr; KU.
+                            </p>
+                        </div>
+                        <div class="border p-4">
+                            <h4 class="font-bold uppercase text-sm mb-2">Experiment (<code class="tex">do</code>)
+                            </h4>
+                            <p class="text-sm">Design minimum interventions that collapse uncertainty cheapest.
+                                The cost function is real, not metaphorical.</p>
+                            <p class="text-xs text-muted" style="margin-top: 0.5rem;">
+                                <strong>Quadrant transition:</strong> KU &rarr; KK.
+                            </p>
+                        </div>
+                        <div class="border p-4">
+                            <h4 class="font-bold uppercase text-sm mb-2">Describe
+                                (<code class="tex">rep</code>)</h4>
+                            <p class="text-sm">Retype traces into stable representations. Keep language
+                                consistent with what data can actually carry.</p>
+                            <p class="text-xs text-muted" style="margin-top: 0.5rem;">
+                                <strong>Quadrant transition:</strong> stabilize KK against drift.
+                            </p>
+                        </div>
+                        <div class="border p-4">
+                            <h4 class="font-bold uppercase text-sm mb-2">Communicate
+                                (<code class="tex">com</code>)</h4>
+                            <p class="text-sm">Import external knowledge as traces or representations, not
+                                axioms. Other people's certainty does not become yours automatically.</p>
+                            <p class="text-xs text-muted" style="margin-top: 0.5rem;">
+                                <strong>Quadrant transition:</strong> URS<sub>i</sub> &harr; URS<sub>j</sub>,
+                                via shared traces.
+                            </p>
+                        </div>
+                    </div>
 
-        <!-- Collaboration -->
-        <section class="mb-18">
-            <h2>Collaboration Fit</h2>
+                    <h3 id="measurement" class="mt-12 mb-4">Measurement classes</h3>
+                    <p style="line-height: 1.7; max-width: 780px;">
+                        A single "confidence" number is a projection; like any projection, it drops
+                        information. Zetema tracks four orthogonal measurements instead. They do not aggregate:
+                        a claim can be high-Pl and low-Coh (admissible, but doesn't compose), or high-Comp and
+                        low-Inv (everything is resolved inside a frame that dies under perturbation). The four
+                        are the minimum set that doesn't lose structure.
+                    </p>
 
-            <h3 class="mb-4">Where I'm Most Useful</h3>
-            <ul style="padding-left: 1.5rem; line-height: 2; margin-bottom: 2rem;">
-                <li>Science or engineering that must justify itself under uncertainty (measurement, calibration,
-                    compliance, safety)</li>
-                <li>Rapid world-model building in messy domains, with explicit assumptions and verification gates</li>
-                <li>Bridging theory → systems: formal methods, causal inference, data architecture, prototype delivery
-                </li>
-            </ul>
+                    <table class="mb-6" style="max-width: 780px;">
+                        <thead>
+                            <tr>
+                                <th>Class</th>
+                                <th>Operational question</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Plausibility (Pl)</strong></td>
+                                <td>Could this claim be consistent with current structure? Is it admissible
+                                    at all?</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Coherence (Coh)</strong></td>
+                                <td>Does the claim compose with other admitted content, or does it fracture?
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Invariance (Inv)</strong></td>
+                                <td>Does it survive perturbations of the current frame &mdash; coherent future
+                                    challenges, not just repeated trials?</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Completeness (Comp)</strong></td>
+                                <td>What fraction of the obligations the claim induces are actually
+                                    discharged?</td>
+                            </tr>
+                        </tbody>
+                    </table>
 
-            <h3 class="mb-4">Good Opening Questions</h3>
-            <div class="border p-6 bg-gray-50">
-                <ul style="padding-left: 1.5rem; line-height: 2;">
-                    <li>"What are we missing?"</li>
-                    <li>"What would change your mind?"</li>
-                    <li>"What is the minimum decisive experiment?"</li>
-                    <li>"Where can we place a verification gate?"</li>
-                </ul>
-            </div>
-        </section>
+                    <div class="border p-4 bg-gray-50 font-mono text-sm" style="max-width: 780px;">
+                        <strong>Efficiency of validated novelty:</strong>
+                        &nbsp;&eta; = &Delta;K<sub>validated</sub> &#8725; (E &times; I<sub>prior</sub>)
+                        <p class="text-muted mt-2" style="font-family: var(--font-serif); line-height: 1.6;">
+                            Low &eta; typically signals missing causality, missing abstraction, or missing
+                            intervention design &mdash; not low effort. It is a diagnostic, not a score.
+                        </p>
+                    </div>
 
-        <hr style="border: 0; border-top: 1px solid #ddd; margin: 3rem 0;">
+                    <h3 id="cognition" class="mt-12 mb-4">Cognitive architecture: learning vs imagination</h3>
+                    <p style="line-height: 1.7; max-width: 780px;">
+                        Two agents with the same traces can diverge because they factor the world differently.
+                        That factoring is a property of the agent, not the data. Zetema names two distinct
+                        faculties rather than compressing them into "intelligence":
+                    </p>
+                    <div class="grid grid-cols-2 gap-6 mb-8" style="margin-top: 1rem; max-width: 780px;">
+                        <div class="p-4 bg-gray-50 border">
+                            <h4 class="font-bold uppercase text-sm mb-2">Learning</h4>
+                            <p class="text-sm">Supplies bedrock content. Tends to constrain you to what is
+                                repeatedly experienced and safely generalized. Learning <em>admits</em>
+                                constraints.</p>
+                        </div>
+                        <div class="p-4 bg-black text-white">
+                            <h4 class="font-bold uppercase text-sm mb-2">Imagination</h4>
+                            <p class="text-sm">Posits a structure cheaply from thin traces, then acts to make
+                                it real through tools, experiments, and world-shaping. Imagination
+                                <em>expands</em> agency.</p>
+                        </div>
+                    </div>
+                    <p class="text-muted italic text-sm" style="max-width: 780px;">
+                        A serious system keeps ignorance explicit while still allowing fast synthesis.
+                        Learning without imagination is corrigible but timid; imagination without learning is
+                        bold and wrong. Modern LLMs, absent verification gates, are the second case made
+                        concrete: fluent imagination with no admitted constraint. The measurement classes
+                        above tell you when the second case has occurred.
+                    </p>
 
-        <!-- Contact -->
-        <section class="mb-18">
-            <h2>Contact</h2>
-            <div class="bg-black text-white p-6">
-                <div class="flex gap-8" style="flex-wrap: wrap;">
-                    <a href="mailto:dhruv@zetesislabs.com" class="text-white"
-                        style="text-decoration: underline;">dhruv@zetesislabs.com</a>
-                    <a href="mailto:dhruvgupta@iisc.ac.in" class="text-white"
-                        style="text-decoration: underline;">dhruvgupta@iisc.ac.in</a>
-                    <span>+91 80599 96663</span>
-                </div>
-            </div>
-        </section>
+                    <h3 id="verification" class="mt-12 mb-4">Formal verification as infrastructure</h3>
+                    <p style="line-height: 1.7; max-width: 780px;">
+                        Formalism here is not decoration. It is the substrate that makes reasoning systems
+                        converge, makes ignorance explicit, and keeps explanations tethered to what can be
+                        justified. Without it, the previous three sections reduce to vocabulary: a nice way
+                        to talk about what discovery should feel like, with nothing checking whether the talk
+                        matches the system.
+                    </p>
+                    <p style="line-height: 1.7; max-width: 780px; margin-top: 1rem;">
+                        Lean4 is the working language for three specific reasons. First, <strong>proof terms
+                        are first-class evidence</strong> &mdash; a Lean proof <em>is</em> the object it
+                        certifies, not a citation to one. Second, the <strong>type system</strong> makes
+                        ignorance explicit: every hypothesis, every assumption, every hole appears as a type
+                        obligation that cannot hide. Third, decidable type-checking with explicit universe
+                        management scales &mdash; the 21,522-line FLT kernel stays sound because no part of
+                        it relies on a human's mental model of what should have been proved.
+                    </p>
+                    <p style="line-height: 1.7; max-width: 780px; margin-top: 1rem;">
+                        The commercial wedge trades on this directly: every output that leaves a Zetesis
+                        system can carry a checkable receipt. The client does not have to trust the reasoning;
+                        they can verify it.
+                    </p>
+                    <p class="text-muted text-sm mt-4" style="max-width: 780px;">
+                        Current tools: Lean4 / type theory / structured knowledge graphs. Research direction:
+                        a geometric lens on model behaviour (including LLMs) where homogeneity, impurities,
+                        and phase transitions in generalization are treated as objects rather than side
+                        effects.
+                    </p>
 
-        <!-- Footer -->
-        <footer>
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-                <div class="flex gap-6 text-sm">
-                    <a href="mailto:dhruv@zetesislabs.com">Contact</a>
-                    <a href="https://linkedin.com/in/dhruv-gupta-iir" target="_blank">LinkedIn</a>
-                    <a href="https://github.com/CO2mmunity" target="_blank">GitHub</a>
-                </div>
-                <div class="flex items-center gap-3">
-                    <img src="public/images/logos/Zetesis_logo.png" alt="Zetesis"
-                        style="height: 20px; width: auto; opacity: 0.6;">
-                    <div class="text-muted text-xs">&copy; 2025 Zetesis Labs.</div>
-                </div>
-            </div>
-        </footer>
+                    <p style="line-height: 1.7; max-width: 780px; margin-top: 2.5rem; padding-top: 1.25rem; border-top: 1px solid var(--color-hairline);">
+                        Everything above the divider is <em>evidence</em>. Everything below it is
+                        <em>the grammar that generated it</em>. If the grammar is load-bearing, the
+                        evidence ought to feel inevitable in retrospect &mdash; each pilot, each kernel,
+                        each programme slotting into a place the framework had already named. That is
+                        the claim, and the rest of the page is how we are checking it.
+                    </p>
+                </section>
+
+                <!-- Footer -->
+                <footer>
+                    <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                        <div class="flex gap-6 text-sm">
+                            <a href="mailto:dhruv@zetesislabs.com">Contact</a>
+                            <a href="https://linkedin.com/in/dhruv-gupta-iir" target="_blank"
+                                rel="noopener noreferrer">LinkedIn</a>
+                            <a href="https://github.com/CO2mmunity" target="_blank"
+                                rel="noopener noreferrer">GitHub &middot; @CO2mmunity</a>
+                            <a href="https://github.com/Zetetic-Dhruv" target="_blank"
+                                rel="noopener noreferrer">GitHub &middot; @Zetetic-Dhruv</a>
+                            <a href="dhruv_gupta_resume_v6.pdf">CV</a>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <img src="public/images/logos/Zetesis_logo.png" alt="Zetesis"
+                                style="height: 20px; width: auto; opacity: 0.6;">
+                            <div class="text-muted text-xs">&copy; 2025&ndash;2026 Zetesis Labs.</div>
+                        </div>
+                    </div>
+                </footer>
+            </main>
+        </div>
     </div>
+
+    <button id="back-to-top" type="button" aria-label="Back to top">&uarr; Top</button>
 
     <!-- GitHub integration: fetch profile + repos for two users, render + cache locally. -->
     <script>
@@ -520,24 +1188,21 @@
       'use strict';
 
       var USERS = ['CO2mmunity', 'Zetetic-Dhruv'];
-      var CACHE_KEY = 'dhruv-gh-cache-v1';
-      var CACHE_TTL_MS = 30 * 60 * 1000; // 30 minutes
+      var CACHE_KEY = 'dhruv-gh-cache-v2';
+      var CACHE_TTL_MS = 30 * 60 * 1000;
       var MAX_REPOS = 24;
 
-      // ----- utils -----
       function esc(s) {
         return String(s == null ? '' : s).replace(/[&<>"']/g, function (m) {
           return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m];
         });
       }
-
       function fmtDate(iso) {
         if (!iso) return '';
         var d = new Date(iso);
         if (isNaN(d)) return '';
         return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short' });
       }
-
       function loadCache() {
         try {
           var raw = localStorage.getItem(CACHE_KEY);
@@ -548,42 +1213,27 @@
           return obj.data;
         } catch (e) { return null; }
       }
-
       function saveCache(data) {
-        try {
-          localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data: data }));
-        } catch (e) { /* quota exceeded; ignore */ }
+        try { localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data: data })); } catch (e) { }
       }
-
-      // ----- fetch -----
       function fetchJSON(url) {
-        return fetch(url, { headers: { 'Accept': 'application/vnd.github+json' } })
-          .then(function (r) {
-            if (r.status === 403) throw new Error('rate-limit');
-            if (!r.ok) throw new Error('http-' + r.status);
-            return r.json();
-          });
+        return fetch(url, { headers: { 'Accept': 'application/vnd.github+json' } }).then(function (r) {
+          if (r.status === 403) throw new Error('rate-limit');
+          if (!r.ok) throw new Error('http-' + r.status);
+          return r.json();
+        });
       }
-
       function fetchUser(user) {
         return Promise.all([
           fetchJSON('https://api.github.com/users/' + user).catch(function () { return null; }),
           fetchJSON('https://api.github.com/users/' + user + '/repos?per_page=100&sort=updated').catch(function () { return []; })
-        ]).then(function (out) {
-          return { user: user, profile: out[0], repos: out[1] || [] };
-        });
+        ]).then(function (out) { return { user: user, profile: out[0], repos: out[1] || [] }; });
       }
-
       function fetchAll() {
         var cached = loadCache();
         if (cached) return Promise.resolve(cached);
-        return Promise.all(USERS.map(fetchUser)).then(function (results) {
-          saveCache(results);
-          return results;
-        });
+        return Promise.all(USERS.map(fetchUser)).then(function (r) { saveCache(r); return r; });
       }
-
-      // ----- render -----
       function renderStats(data) {
         var el = document.getElementById('gh-stats');
         if (!el) return;
@@ -599,15 +1249,10 @@
           '<div class="flex gap-8 text-sm" style="flex-wrap: wrap; align-items: baseline;">' +
             '<div><strong>' + totalRepos + '</strong> <span class="text-muted">public repos</span></div>' +
             '<div><strong>' + totalFollowers + '</strong> <span class="text-muted">followers</span></div>' +
-            USERS.map(function (u) {
-              return '<a href="https://github.com/' + esc(u) + '" target="_blank">@' + esc(u) + '</a>';
-            }).join('') +
+            USERS.map(function (u) { return '<a href="https://github.com/' + esc(u) + '" target="_blank" rel="noopener noreferrer">@' + esc(u) + '</a>'; }).join('') +
           '</div>' +
-          (bios.length
-            ? '<p class="text-muted text-sm italic" style="margin-top: 0.75rem;">' + esc(bios.join(' \u00b7 ')) + '</p>'
-            : '');
+          (bios.length ? '<p class="text-muted text-sm italic" style="margin-top: 0.75rem;">' + esc(bios.join(' \u00b7 ')) + '</p>' : '');
       }
-
       function renderRepos(data) {
         var el = document.getElementById('gh-repos');
         if (!el) return;
@@ -615,13 +1260,7 @@
         data.forEach(function (u) {
           (u.repos || []).forEach(function (r) {
             if (r && !r.fork && !r.archived && !r.private) {
-              merged.push({
-                name: r.name,
-                description: r.description,
-                html_url: r.html_url,
-                pushed_at: r.pushed_at,
-                owner: u.user
-              });
+              merged.push({ name: r.name, description: r.description, html_url: r.html_url, pushed_at: r.pushed_at, owner: u.user });
             }
           });
         });
@@ -633,64 +1272,224 @@
         var shown = merged.slice(0, MAX_REPOS);
         var hiddenCount = merged.length - shown.length;
         el.innerHTML = shown.map(function (r) {
-          return '' +
-            '<a href="' + esc(r.html_url) + '" target="_blank" class="border p-4" ' +
-              'style="text-decoration: none; color: inherit; display: block;">' +
-              '<div class="flex gap-4" style="justify-content: space-between; align-items: baseline; flex-wrap: wrap;">' +
-                '<h4 class="font-bold" style="margin: 0;">' + esc(r.name) + '</h4>' +
-                '<span class="text-muted text-xs">@' + esc(r.owner) + '  \u00b7  updated ' + esc(fmtDate(r.pushed_at)) + '</span>' +
-              '</div>' +
-              (r.description
-                ? '<p class="text-sm text-muted" style="margin-top: 0.5rem; line-height: 1.5;">' + esc(r.description) + '</p>'
-                : '') +
+          return '<a href="' + esc(r.html_url) + '" target="_blank" rel="noopener noreferrer" class="border p-4" ' +
+            'style="text-decoration: none; color: inherit; display: block;">' +
+            '<div class="flex gap-4" style="justify-content: space-between; align-items: baseline; flex-wrap: wrap;">' +
+            '<h4 class="font-bold" style="margin: 0;">' + esc(r.name) + '</h4>' +
+            '<span class="text-muted text-xs">@' + esc(r.owner) + '  \u00b7  updated ' + esc(fmtDate(r.pushed_at)) + '</span>' +
+            '</div>' +
+            (r.description ? '<p class="text-sm text-muted" style="margin-top: 0.5rem; line-height: 1.5;">' + esc(r.description) + '</p>' : '') +
             '</a>';
         }).join('') +
-        (hiddenCount > 0
-          ? '<p class="text-muted text-xs italic" style="margin-top: 0.5rem;">' +
-            hiddenCount + ' more on GitHub.</p>'
-          : '');
+        (hiddenCount > 0 ? '<p class="text-muted text-xs italic" style="margin-top: 0.5rem;">' + hiddenCount + ' more on GitHub.</p>' : '');
       }
-
       function renderContrib() {
         var el = document.getElementById('gh-contrib');
         if (!el) return;
         el.innerHTML = USERS.map(function (u) {
-          return '' +
-            '<div style="margin-bottom: 1rem;">' +
-              '<div class="text-xs text-muted" style="margin-bottom: 0.35rem;">@' + esc(u) + '</div>' +
-              '<object type="image/svg+xml" data="https://ghchart.rshah.org/000000/' + esc(u) + '" ' +
-                'style="max-width: 100%; min-width: 600px; display: block;" ' +
-                'aria-label="' + esc(u) + ' GitHub contribution graph">' +
-                '<div class="text-muted text-xs">Contribution graph unavailable for @' + esc(u) + '.</div>' +
-              '</object>' +
+          return '<div style="margin-bottom: 1rem;">' +
+            '<div class="text-xs text-muted" style="margin-bottom: 0.35rem;">@' + esc(u) + '</div>' +
+            '<object type="image/svg+xml" data="https://ghchart.rshah.org/000000/' + esc(u) + '" ' +
+              'style="max-width: 100%; min-width: 600px; display: block;" ' +
+              'aria-label="' + esc(u) + ' GitHub contribution graph">' +
+            '<div class="text-muted text-xs">Contribution graph unavailable for @' + esc(u) + '.</div>' +
+            '</object>' +
             '</div>';
         }).join('');
       }
-
       function renderError(msg) {
         var statsEl = document.getElementById('gh-stats');
         var reposEl = document.getElementById('gh-repos');
         if (statsEl) statsEl.innerHTML = '<div class="text-muted text-sm">' + esc(msg) + '</div>';
         if (reposEl) reposEl.innerHTML =
           '<div class="text-muted text-sm">Unable to reach GitHub right now. Visit ' +
-          USERS.map(function (u) { return '<a href="https://github.com/' + esc(u) + '" target="_blank">@' + esc(u) + '</a>'; }).join(' or ') +
+          USERS.map(function (u) { return '<a href="https://github.com/' + esc(u) + '" target="_blank" rel="noopener noreferrer">@' + esc(u) + '</a>'; }).join(' or ') +
           ' directly.</div>';
       }
-
-      // ----- run -----
       fetchAll()
-        .then(function (data) {
-          renderStats(data);
-          renderRepos(data);
-          renderContrib();
-        })
+        .then(function (data) { renderStats(data); renderRepos(data); renderContrib(); })
         .catch(function (err) {
           var msg = err && err.message === 'rate-limit'
             ? 'GitHub rate limit reached for this IP. Try again in an hour.'
             : 'GitHub unreachable.';
-          renderError(msg);
-          renderContrib(); // contribution graph uses a different host, still try
+          renderError(msg); renderContrib();
         });
+    })();
+    </script>
+
+    <!-- Reading progress, scroll-spy TOC, back-to-top, and Zetema concept graph. -->
+    <script>
+    (function () {
+      'use strict';
+
+      // Reading progress bar
+      var progressEl = document.getElementById('reading-progress');
+      function updateProgress() {
+        if (!progressEl) return;
+        var doc = document.documentElement;
+        var scrolled = doc.scrollTop || document.body.scrollTop;
+        var height = doc.scrollHeight - doc.clientHeight;
+        var pct = height > 0 ? Math.min(100, Math.max(0, (scrolled / height) * 100)) : 0;
+        progressEl.style.width = pct + '%';
+        progressEl.setAttribute('aria-valuenow', String(Math.round(pct)));
+      }
+
+      // Back to top button
+      var backBtn = document.getElementById('back-to-top');
+      if (backBtn) {
+        backBtn.addEventListener('click', function () {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      }
+      function updateBackBtn() {
+        if (!backBtn) return;
+        var scrolled = window.scrollY || document.documentElement.scrollTop;
+        if (scrolled > 600) backBtn.classList.add('visible');
+        else backBtn.classList.remove('visible');
+      }
+
+      // TOC scroll-spy
+      var tocLinks = [].slice.call(document.querySelectorAll('#toc a[href^="#"]'));
+      var targets = tocLinks.map(function (a) {
+        var id = a.getAttribute('href').slice(1);
+        return { link: a, el: document.getElementById(id) };
+      }).filter(function (t) { return t.el; });
+
+      function updateActive() {
+        var y = (window.scrollY || document.documentElement.scrollTop) + 120;
+        var active = null;
+        for (var i = 0; i < targets.length; i++) {
+          var t = targets[i];
+          var top = t.el.getBoundingClientRect().top + (window.scrollY || document.documentElement.scrollTop);
+          if (top <= y) active = t;
+          else break;
+        }
+        targets.forEach(function (t) {
+          t.link.classList.toggle('active', t === active);
+        });
+      }
+
+      var rafScheduled = false;
+      function onScroll() {
+        if (rafScheduled) return;
+        rafScheduled = true;
+        requestAnimationFrame(function () {
+          updateProgress();
+          updateBackBtn();
+          updateActive();
+          rafScheduled = false;
+        });
+      }
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll);
+      onScroll();
+
+      // Smooth anchor scrolling handled by CSS scroll-behavior.
+
+      // --- Zetema concept graph (interactive SVG) ---
+      (function () {
+        var host = document.getElementById('zetema-graph');
+        var tip = document.getElementById('zetema-tooltip');
+        if (!host) return;
+
+        var NS = 'http://www.w3.org/2000/svg';
+        var svg = document.createElementNS(NS, 'svg');
+        svg.setAttribute('viewBox', '0 0 740 300');
+        svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+        svg.setAttribute('role', 'img');
+        svg.setAttribute('aria-label', 'Zetema concept graph: URS, ignorance quadrants, ledgers, measurements');
+
+        // Layout: center column = URS; left column = ignorance quadrants; right column = ledgers and measurements.
+        var nodes = [
+          { id: 'urs', x: 370, y: 150, kind: 'rect', w: 130, h: 56, label: 'URS', sub: '\u27e8A, M, R, T\u27e9',
+            def: 'URS = \u27e8Axioms, Mechanisms, Representations, Traces\u27e9 \u2014 the carrier of any local theory-state.' },
+          { id: 'kk', x: 110, y: 50, kind: 'circle', r: 34, label: 'KK',
+            def: 'Known-Knowns: content that is stable under current structure and verified against traces.' },
+          { id: 'ku', x: 200, y: 50, kind: 'circle', r: 34, label: 'KU',
+            def: 'Known-Unknowns: articulated questions. The object of the \u03b3 ledger.' },
+          { id: 'uk', x: 110, y: 250, kind: 'circle', r: 34, label: 'UK',
+            def: 'Unknown-Knowns: pre-structural pressure. You have the data; you don\u2019t yet have the grammar to see it.' },
+          { id: 'uu', x: 200, y: 250, kind: 'circle', r: 34, label: 'UU',
+            def: 'Unknown-Unknowns: not askable under the current URS. The frontier that only \u0393-inquiry can open.' },
+          { id: 'gamma', x: 620, y: 60, kind: 'rect', w: 110, h: 42, label: '\u03b3 discovery',
+            def: '\u03b3 ledger: stabilizing knowledge under ignorance pressure. Grows KK.' },
+          { id: 'Gamma', x: 620, y: 130, kind: 'rect', w: 110, h: 42, label: '\u0393 inquiry',
+            def: '\u0393 ledger: engineering ignorance itself \u2014 changing what is askable. Changes the URS.' },
+          { id: 'measure', x: 620, y: 220, kind: 'rect', w: 110, h: 58, label: 'Pl \u00b7 Coh', sub: 'Inv \u00b7 Comp',
+            def: 'Four orthogonal measurements: Plausibility, Coherence, Invariance, Completeness. Not collapsible into one score.' }
+        ];
+
+        var edges = [
+          { from: 'kk', to: 'urs' }, { from: 'ku', to: 'urs' },
+          { from: 'uk', to: 'urs' }, { from: 'uu', to: 'urs' },
+          { from: 'urs', to: 'gamma' }, { from: 'urs', to: 'Gamma' }, { from: 'urs', to: 'measure' }
+        ];
+
+        function byId(id) { for (var i = 0; i < nodes.length; i++) if (nodes[i].id === id) return nodes[i]; return null; }
+
+        // Edges first so nodes paint on top.
+        edges.forEach(function (e) {
+          var a = byId(e.from), b = byId(e.to);
+          if (!a || !b) return;
+          var path = document.createElementNS(NS, 'line');
+          path.setAttribute('x1', String(a.x));
+          path.setAttribute('y1', String(a.y));
+          path.setAttribute('x2', String(b.x));
+          path.setAttribute('y2', String(b.y));
+          path.setAttribute('class', 'edge');
+          svg.appendChild(path);
+        });
+
+        nodes.forEach(function (n) {
+          var g = document.createElementNS(NS, 'g');
+          g.setAttribute('class', 'node');
+          g.setAttribute('tabindex', '0');
+          g.setAttribute('role', 'button');
+          g.setAttribute('aria-label', n.label + '. ' + n.def);
+
+          var shape;
+          if (n.kind === 'rect') {
+            shape = document.createElementNS(NS, 'rect');
+            shape.setAttribute('x', String(n.x - n.w / 2));
+            shape.setAttribute('y', String(n.y - n.h / 2));
+            shape.setAttribute('width', String(n.w));
+            shape.setAttribute('height', String(n.h));
+          } else {
+            shape = document.createElementNS(NS, 'circle');
+            shape.setAttribute('cx', String(n.x));
+            shape.setAttribute('cy', String(n.y));
+            shape.setAttribute('r', String(n.r));
+          }
+          g.appendChild(shape);
+
+          var label = document.createElementNS(NS, 'text');
+          label.setAttribute('x', String(n.x));
+          label.setAttribute('y', String(n.y + (n.sub ? -4 : 4)));
+          label.textContent = n.label;
+          g.appendChild(label);
+
+          if (n.sub) {
+            var sub = document.createElementNS(NS, 'text');
+            sub.setAttribute('x', String(n.x));
+            sub.setAttribute('y', String(n.y + 14));
+            sub.setAttribute('font-size', '11');
+            sub.textContent = n.sub;
+            g.appendChild(sub);
+          }
+
+          function show() { if (tip) tip.textContent = n.def; }
+          function hide() { if (tip) tip.textContent = 'Hover a node to read its definition.'; }
+          g.addEventListener('mouseenter', show);
+          g.addEventListener('focus', show);
+          g.addEventListener('mouseleave', hide);
+          g.addEventListener('blur', hide);
+          svg.appendChild(g);
+        });
+
+        host.appendChild(svg);
+      })();
+
     })();
     </script>
 </body>
