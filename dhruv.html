@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dhruv Gupta | Zetesis Labs</title>
+    <link rel="icon" type="image/png" href="public/images/logos/Zetesis_logo.png">
     <meta name="description"
         content="PI, Zetesis Labs (ARTPARK @ IISc) — Building systems that make discovery measurable and dependable.">
     <link rel="stylesheet" href="output.css">
@@ -385,6 +386,41 @@
 
         <hr style="border: 0; border-top: 1px solid #ddd; margin: 3rem 0;">
 
+        <!-- Open Source (live from GitHub API) -->
+        <section class="mb-18" id="open-source">
+            <h2>Open Source</h2>
+            <p class="text-muted mb-6">
+                (live from GitHub:
+                <a href="https://github.com/CO2mmunity" target="_blank">@CO2mmunity</a>
+                &middot;
+                <a href="https://github.com/Zetetic-Dhruv" target="_blank">@Zetetic-Dhruv</a>)
+            </p>
+
+            <!-- Profile stats strip -->
+            <div id="gh-stats" class="border p-4 mb-8 bg-gray-50" aria-live="polite">
+                <div class="text-muted text-sm">Loading profile data from GitHub&hellip;</div>
+            </div>
+
+            <!-- Repositories -->
+            <h3 class="mb-4">Repositories</h3>
+            <div id="gh-repos" class="flex flex-col gap-4 mb-8" aria-live="polite">
+                <div class="text-muted text-sm">Loading repositories&hellip;</div>
+            </div>
+
+            <!-- Contribution graph -->
+            <h3 class="mb-4">Contribution Activity <span class="text-muted text-sm">(last year)</span></h3>
+            <div id="gh-contrib" class="border p-4 bg-gray-50" style="overflow-x: auto;">
+                <div class="text-muted text-sm">Loading contribution graphs&hellip;</div>
+            </div>
+
+            <p class="text-muted text-xs mt-4 italic">
+                Data fetched from the public GitHub REST API on page load. Cached locally for 30 minutes.
+                Contribution graphs rendered via <a href="https://ghchart.rshah.org" target="_blank">ghchart.rshah.org</a>.
+            </p>
+        </section>
+
+        <hr style="border: 0; border-top: 1px solid #ddd; margin: 3rem 0;">
+
         <!-- Formal Verification -->
         <section class="mb-18">
             <h2>Formal Verification & Reasoning Infrastructure</h2>
@@ -477,6 +513,186 @@
             </div>
         </footer>
     </div>
+
+    <!-- GitHub integration: fetch profile + repos for two users, render + cache locally. -->
+    <script>
+    (function () {
+      'use strict';
+
+      var USERS = ['CO2mmunity', 'Zetetic-Dhruv'];
+      var CACHE_KEY = 'dhruv-gh-cache-v1';
+      var CACHE_TTL_MS = 30 * 60 * 1000; // 30 minutes
+      var MAX_REPOS = 24;
+
+      // ----- utils -----
+      function esc(s) {
+        return String(s == null ? '' : s).replace(/[&<>"']/g, function (m) {
+          return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m];
+        });
+      }
+
+      function fmtDate(iso) {
+        if (!iso) return '';
+        var d = new Date(iso);
+        if (isNaN(d)) return '';
+        return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short' });
+      }
+
+      function loadCache() {
+        try {
+          var raw = localStorage.getItem(CACHE_KEY);
+          if (!raw) return null;
+          var obj = JSON.parse(raw);
+          if (!obj || typeof obj.ts !== 'number') return null;
+          if (Date.now() - obj.ts > CACHE_TTL_MS) return null;
+          return obj.data;
+        } catch (e) { return null; }
+      }
+
+      function saveCache(data) {
+        try {
+          localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data: data }));
+        } catch (e) { /* quota exceeded; ignore */ }
+      }
+
+      // ----- fetch -----
+      function fetchJSON(url) {
+        return fetch(url, { headers: { 'Accept': 'application/vnd.github+json' } })
+          .then(function (r) {
+            if (r.status === 403) throw new Error('rate-limit');
+            if (!r.ok) throw new Error('http-' + r.status);
+            return r.json();
+          });
+      }
+
+      function fetchUser(user) {
+        return Promise.all([
+          fetchJSON('https://api.github.com/users/' + user).catch(function () { return null; }),
+          fetchJSON('https://api.github.com/users/' + user + '/repos?per_page=100&sort=updated').catch(function () { return []; })
+        ]).then(function (out) {
+          return { user: user, profile: out[0], repos: out[1] || [] };
+        });
+      }
+
+      function fetchAll() {
+        var cached = loadCache();
+        if (cached) return Promise.resolve(cached);
+        return Promise.all(USERS.map(fetchUser)).then(function (results) {
+          saveCache(results);
+          return results;
+        });
+      }
+
+      // ----- render -----
+      function renderStats(data) {
+        var el = document.getElementById('gh-stats');
+        if (!el) return;
+        var totalRepos = 0, totalFollowers = 0, bios = [];
+        data.forEach(function (u) {
+          if (u.profile) {
+            totalRepos += u.profile.public_repos || 0;
+            totalFollowers += u.profile.followers || 0;
+            if (u.profile.bio) bios.push('@' + u.user + ': ' + u.profile.bio);
+          }
+        });
+        el.innerHTML =
+          '<div class="flex gap-8 text-sm" style="flex-wrap: wrap; align-items: baseline;">' +
+            '<div><strong>' + totalRepos + '</strong> <span class="text-muted">public repos</span></div>' +
+            '<div><strong>' + totalFollowers + '</strong> <span class="text-muted">followers</span></div>' +
+            USERS.map(function (u) {
+              return '<a href="https://github.com/' + esc(u) + '" target="_blank">@' + esc(u) + '</a>';
+            }).join('') +
+          '</div>' +
+          (bios.length
+            ? '<p class="text-muted text-sm italic" style="margin-top: 0.75rem;">' + esc(bios.join(' \u00b7 ')) + '</p>'
+            : '');
+      }
+
+      function renderRepos(data) {
+        var el = document.getElementById('gh-repos');
+        if (!el) return;
+        var merged = [];
+        data.forEach(function (u) {
+          (u.repos || []).forEach(function (r) {
+            if (r && !r.fork && !r.archived && !r.private) {
+              merged.push({
+                name: r.name,
+                description: r.description,
+                html_url: r.html_url,
+                pushed_at: r.pushed_at,
+                owner: u.user
+              });
+            }
+          });
+        });
+        merged.sort(function (a, b) { return new Date(b.pushed_at) - new Date(a.pushed_at); });
+        if (merged.length === 0) {
+          el.innerHTML = '<div class="text-muted text-sm">No public repositories found.</div>';
+          return;
+        }
+        var shown = merged.slice(0, MAX_REPOS);
+        var hiddenCount = merged.length - shown.length;
+        el.innerHTML = shown.map(function (r) {
+          return '' +
+            '<a href="' + esc(r.html_url) + '" target="_blank" class="border p-4" ' +
+              'style="text-decoration: none; color: inherit; display: block;">' +
+              '<div class="flex gap-4" style="justify-content: space-between; align-items: baseline; flex-wrap: wrap;">' +
+                '<h4 class="font-bold" style="margin: 0;">' + esc(r.name) + '</h4>' +
+                '<span class="text-muted text-xs">@' + esc(r.owner) + '  \u00b7  updated ' + esc(fmtDate(r.pushed_at)) + '</span>' +
+              '</div>' +
+              (r.description
+                ? '<p class="text-sm text-muted" style="margin-top: 0.5rem; line-height: 1.5;">' + esc(r.description) + '</p>'
+                : '') +
+            '</a>';
+        }).join('') +
+        (hiddenCount > 0
+          ? '<p class="text-muted text-xs italic" style="margin-top: 0.5rem;">' +
+            hiddenCount + ' more on GitHub.</p>'
+          : '');
+      }
+
+      function renderContrib() {
+        var el = document.getElementById('gh-contrib');
+        if (!el) return;
+        el.innerHTML = USERS.map(function (u) {
+          return '' +
+            '<div style="margin-bottom: 1rem;">' +
+              '<div class="text-xs text-muted" style="margin-bottom: 0.35rem;">@' + esc(u) + '</div>' +
+              '<object type="image/svg+xml" data="https://ghchart.rshah.org/000000/' + esc(u) + '" ' +
+                'style="max-width: 100%; min-width: 600px; display: block;" ' +
+                'aria-label="' + esc(u) + ' GitHub contribution graph">' +
+                '<div class="text-muted text-xs">Contribution graph unavailable for @' + esc(u) + '.</div>' +
+              '</object>' +
+            '</div>';
+        }).join('');
+      }
+
+      function renderError(msg) {
+        var statsEl = document.getElementById('gh-stats');
+        var reposEl = document.getElementById('gh-repos');
+        if (statsEl) statsEl.innerHTML = '<div class="text-muted text-sm">' + esc(msg) + '</div>';
+        if (reposEl) reposEl.innerHTML =
+          '<div class="text-muted text-sm">Unable to reach GitHub right now. Visit ' +
+          USERS.map(function (u) { return '<a href="https://github.com/' + esc(u) + '" target="_blank">@' + esc(u) + '</a>'; }).join(' or ') +
+          ' directly.</div>';
+      }
+
+      // ----- run -----
+      fetchAll()
+        .then(function (data) {
+          renderStats(data);
+          renderRepos(data);
+          renderContrib();
+        })
+        .catch(function (err) {
+          var msg = err && err.message === 'rate-limit'
+            ? 'GitHub rate limit reached for this IP. Try again in an hour.'
+            : 'GitHub unreachable.';
+          renderError(msg);
+          renderContrib(); // contribution graph uses a different host, still try
+        });
+    })();
+    </script>
 </body>
 
 </html>
