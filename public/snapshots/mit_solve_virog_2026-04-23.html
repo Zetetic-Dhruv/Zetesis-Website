@@ -1,0 +1,1536 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Seo -->
+         <title>MIT Solve</title>
+
+
+
+
+
+
+
+
+
+ 
+        <!-- Favicons -->
+        <link rel="icon" type="image/x-icon" href="/favicon.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+        <link rel="manifest" href="/site.webmanifest">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="https://use.typekit.net/nfg0gup.css">
+
+        <!-- Styles -->
+        <!-- Livewire Styles --><style >[wire\:loading][wire\:loading], [wire\:loading\.delay][wire\:loading\.delay], [wire\:loading\.inline-block][wire\:loading\.inline-block], [wire\:loading\.inline][wire\:loading\.inline], [wire\:loading\.block][wire\:loading\.block], [wire\:loading\.flex][wire\:loading\.flex], [wire\:loading\.table][wire\:loading\.table], [wire\:loading\.grid][wire\:loading\.grid], [wire\:loading\.inline-flex][wire\:loading\.inline-flex] {display: none;}[wire\:loading\.delay\.none][wire\:loading\.delay\.none], [wire\:loading\.delay\.shortest][wire\:loading\.delay\.shortest], [wire\:loading\.delay\.shorter][wire\:loading\.delay\.shorter], [wire\:loading\.delay\.short][wire\:loading\.delay\.short], [wire\:loading\.delay\.default][wire\:loading\.delay\.default], [wire\:loading\.delay\.long][wire\:loading\.delay\.long], [wire\:loading\.delay\.longer][wire\:loading\.delay\.longer], [wire\:loading\.delay\.longest][wire\:loading\.delay\.longest] {display: none;}[wire\:offline][wire\:offline] {display: none;}[wire\:dirty]:not(textarea):not(input):not(select) {display: none;}:root {--livewire-progress-bar-color: #2299dd;}[x-cloak] {display: none !important;}[wire\:cloak] {display: none !important;}dialog#livewire-error::backdrop {background-color: rgba(0, 0, 0, .6);}</style>
+        <link rel="preload" as="style" href="https://solve.mit.edu/build/assets/styles-DcbuOuES.css" /><link rel="stylesheet" href="https://solve.mit.edu/build/assets/styles-DcbuOuES.css" data-navigate-track="reload" />
+        <!-- Head Stack -->
+        <script>
+window.dataLayer = window.dataLayer || [];
+window.__gtmContext = {"app":"MIT Solve","env":"production","user_id":null};
+</script>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5G5VPL5J');</script>
+<!-- End Google Tag Manager -->
+
+<script id="cypressmetrics-script" type="module" defer="defer" src="https://serve.cypressmetrics.com/public/cypressmetrics.js" data-key="4da2af3c-3864-4356-a9ef-730346b0b565" crossorigin="anonymous"></script>    </head>
+    <body class="bg-white text-black font-sans">
+        <!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5G5VPL5J"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+        <div class="flex flex-col min-h-screen">
+        <header>
+    <div class="bg-black default-font-settings text-white relative z-100">
+        <div class="w-full max-w-screen-2xl px-4 mx-auto">
+            <div class="flex items-center justify-between w-full h-16 gap-x-4 xs:gap-x-10">
+                <div class="shrink-0">
+                    <a href="https://solve.mit.edu" title="Go to homepage" aria-label="Solve Logo">
+                        <img
+        src="https://solve.mit.edu/img/logos/solve-logo-10.webp"
+        style="" class="h-6 xs:h-8" id="img-69e92402edba5" loading="lazy" decoding="async" fetchpriority="low"
+    />                        
+                    </a>
+                </div>
+
+                <div class="lg:hidden">
+                    <button
+                        x-data="{open: false}"
+                        x-on:open-mobile-menu.window="open = true"
+                        x-on:close-mobile-menu.window="open = false"
+                        x-on:click="open ? $dispatch('close-mobile-menu') : $dispatch('open-mobile-menu')"
+                        x-text="open ? 'Close' : 'Menu'"
+                        aria-label="Toggle mobile menu"
+                        class="inline-block h-7 px-2 xs:px-8 bg-primary text-black text-18 font-semibold uppercase"
+                    >
+                        Menu
+                    </button>
+                </div>
+
+                <nav class="hidden lg:block">
+    <ul class="flex justify-center gap-10 font-semibold">
+                    <li
+                                    x-data="desktopNavDropdown"
+                    x-bind="trigger"
+                            >
+                <a href="/impact" target="_self" class="relative flex items-center leading-none uppercase h-nav-height">
+                    Impact
+
+                                            <span x-cloak x-show="showDropdown" class="absolute text-white transition -translate-x-1/2 -bottom-3 left-1/2 z-modal">
+                            <svg class="w-9" viewBox="0 0 37 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18.5 0L36.2535 30.75H0.746479L18.5 0Z" fill="currentColor"/>
+</svg>
+                        </span>
+                                    </a>
+
+                                                        <div
+                        x-cloak
+                        x-show="showDropdown"
+                        class="absolute bg-white left-1/2 -translate-x-1/2 top-nav-height z-100 text-black p-3 shadow-3xl w-[1024px]"
+                    >
+                        <div class="grid grid-cols-3">
+                                                                                                                                        <img id="img-69e92402ef5c6" alt="YSW_WeRobotics_Nepali-Pilots-Training-USAID-Staff.jpg" fetchpriority="low" loading="auto" decoding="async" class="object-cover w-full h-full select-none aspect-square" draggable="false" src="https://d3t35pgnsskh52.cloudfront.net/media/58385/conversions/YSW_WeRobotics_Nepali-Pilots-Training-USAID-Staff-xs.jpg" alt="YSW_WeRobotics_Nepali-Pilots-Training-USAID-Staff.jpg">                                                                                                                                                                                                            
+                                        <nav class="mb-6 mt-13 col-span-1  border-r border-r-black/25 ">
+                                                                                            <h2 class="px-10 pb-6 heading-4">
+                                                                                                            <a href="/impact" target="_self" class="transition-opacity hover:opacity-60">
+                                                            Areas of impact
+                                                        </a>
+                                                                                                    </h2>
+                                            
+                                                                                            <ul class="px-10 space-y-6">
+                                                                                                            <li>
+                                                            <a href="/impact/climate" target="_self" class="uppercase transition-opacity font-book hover:opacity-60">Climate</a>
+                                                        </li>
+                                                                                                            <li>
+                                                            <a href="/impact/economic-prosperity" target="_self" class="uppercase transition-opacity font-book hover:opacity-60">Economic Prosperity</a>
+                                                        </li>
+                                                                                                            <li>
+                                                            <a href="/impact/health" target="_self" class="uppercase transition-opacity font-book hover:opacity-60">Health</a>
+                                                        </li>
+                                                                                                            <li>
+                                                            <a href="/impact/learning" target="_self" class="uppercase transition-opacity font-book hover:opacity-60">Learning</a>
+                                                        </li>
+                                                                                                    </ul>
+                                                                                    </nav>
+                                                                                                                                                                                                            
+                                        <nav class="mb-6 mt-13 col-span-1 ">
+                                                                                            <div class="h-13"></div>
+                                            
+                                                                                            <ul class="px-10 space-y-6">
+                                                                                                            <li>
+                                                            <a href="/impact/indigenous-communities" target="_self" class="uppercase transition-opacity font-book hover:opacity-60">Indigenous Communities</a>
+                                                        </li>
+                                                                                                            <li>
+                                                            <a href="/impact/youth-innovation" target="_self" class="uppercase transition-opacity font-book hover:opacity-60">Youth Innovation</a>
+                                                        </li>
+                                                                                                            <li>
+                                                            <a href="/partner/sif" target="_self" class="uppercase transition-opacity font-book hover:opacity-60">Innovative Financing</a>
+                                                        </li>
+                                                                                                    </ul>
+                                                                                    </nav>
+                                                                                                                        </div>
+                    </div>
+                            </li>
+                    <li
+                                    x-data="desktopNavDropdown"
+                    x-bind="trigger"
+                            >
+                <a href="/innovators" target="_self" class="relative flex items-center leading-none uppercase h-nav-height">
+                    Innovators
+
+                                            <span x-cloak x-show="showDropdown" class="absolute text-white transition -translate-x-1/2 -bottom-3 left-1/2 z-modal">
+                            <svg class="w-9" viewBox="0 0 37 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18.5 0L36.2535 30.75H0.746479L18.5 0Z" fill="currentColor"/>
+</svg>
+                        </span>
+                                    </a>
+
+                                                        <div
+                        x-cloak
+                        x-show="showDropdown"
+                        class="absolute bg-white left-1/2 -translate-x-1/2 top-nav-height z-100 text-black p-3 shadow-3xl w-[1024px]"
+                    >
+                        <div class="grid grid-cols-3">
+                                                                                                                                        <img id="img-69e92402f2535" alt="Three women holding hands" fetchpriority="low" loading="auto" decoding="async" class="object-cover w-full h-full select-none aspect-square" draggable="false" src="https://d3t35pgnsskh52.cloudfront.net/media/57595/conversions/women-holding-hands-xs.webp" alt="women-holding-hands.webp">                                                                                                                                                                                                            
+                                        <nav class="mb-6 mt-13 col-span-1  border-r border-r-black/25 ">
+                                                                                            <h2 class="px-10 pb-6 heading-4">
+                                                                                                            <a href="/innovators" target="_self" class="transition-opacity hover:opacity-60">
+                                                            Innovators
+                                                        </a>
+                                                                                                    </h2>
+                                            
+                                                                                            <ul class="px-10 space-y-6">
+                                                                                                            <li>
+                                                            <a href="/innovators/meet-the-solvers" target="_self" class="uppercase transition-opacity font-book hover:opacity-60">Meet the Solvers</a>
+                                                        </li>
+                                                                                                            <li>
+                                                            <a href="/innovators/become-a-solver" target="_self" class="uppercase transition-opacity font-book hover:opacity-60">Become a Solver</a>
+                                                        </li>
+                                                                                                    </ul>
+                                                                                    </nav>
+                                                                                                                                                                                                            <div class="relative px-10 mb-6 group mt-13">
+                                                                                            <a href="https://solve.mit.edu/newsletters#marketplace" target="_self" class="absolute inset-0" aria-label="Sign up for the Newsletter"></a>
+                                            
+                                                                                            <span class="block mb-2 heading-4">Sign up for the Newsletter</span>
+                                            
+                                                                                            <div class="font-book">
+                                                    Get the monthly newsletter designed for busy innovators around the globe.
+                                                </div>
+                                            
+                                                                                            <a href="https://solve.mit.edu/newsletters#marketplace" target="_self" class="flex justify-end mt-1 ml-auto uppercase">
+                                                    <svg class="w-10 group-hover:translate-x-2 transition-transform ease-in" xmlns="http://www.w3.org/2000/svg" width="32" height="16" viewBox="0 0 32 16" fill="currentColor">
+    <path d="M31.7071 8.76045C32.0976 8.36992 32.0976 7.73676 31.7071 7.34623L25.3432 0.982274C24.9526 0.59175 24.3195 0.59175 23.9289 0.982274C23.5384 1.3728 23.5384 2.00596 23.9289 2.39649L29.5858 8.05334L23.9289 13.7102C23.5384 14.1007 23.5384 14.7339 23.9289 15.1244C24.3195 15.5149 24.9526 15.5149 25.3432 15.1244L31.7071 8.76045ZM0.968262 9.05334L31 9.05334L31 7.05334L0.968262 7.05334L0.968262 9.05334Z" />
+</svg>
+                                                </a>
+                                                                                    </div>
+                                                                                                                        </div>
+                    </div>
+                            </li>
+                    <li
+                                    x-data="desktopNavDropdown"
+                    x-bind="trigger"
+                            >
+                <a href="/challenges" target="_self" class="relative flex items-center leading-none uppercase h-nav-height">
+                    Challenges
+
+                                            <span x-cloak x-show="showDropdown" class="absolute text-white transition -translate-x-1/2 -bottom-3 left-1/2 z-modal">
+                            <svg class="w-9" viewBox="0 0 37 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18.5 0L36.2535 30.75H0.746479L18.5 0Z" fill="currentColor"/>
+</svg>
+                        </span>
+                                    </a>
+
+                                                        <div
+                        x-cloak
+                        x-show="showDropdown"
+                        class="absolute bg-white left-1/2 -translate-x-1/2 top-nav-height z-100 text-black p-3 shadow-3xl w-[1024px]"
+                    >
+                        <div class="grid grid-cols-3">
+                                                                                                                                        <img id="img-69e9240300bf8" alt="SFS_eggXYt_WomanLabMicroscope-(1).jpg" fetchpriority="low" loading="auto" decoding="async" class="object-cover w-full h-full select-none aspect-square" draggable="false" src="https://d3t35pgnsskh52.cloudfront.net/media/54795/conversions/SFS_eggXYt_WomanLabMicroscope-(1)-xs.jpg" alt="SFS_eggXYt_WomanLabMicroscope (1).jpg">                                                                                                                                                                                                            
+                                        <nav class="mb-6 mt-13 col-span-1  border-r border-r-black/25 ">
+                                                                                            <h2 class="px-10 pb-6 heading-4">
+                                                                                                            <a href="/challenges" target="_self" class="transition-opacity hover:opacity-60">
+                                                            Challenges
+                                                        </a>
+                                                                                                    </h2>
+                                            
+                                                                                            <ul class="px-10 space-y-6">
+                                                                                                            <li>
+                                                            <a href="/challenges/index#open-challenges" target="_self" class="uppercase transition-opacity font-book hover:opacity-60">Open Challenges</a>
+                                                        </li>
+                                                                                                            <li>
+                                                            <a href="/challenges/index#past-challenges" target="_self" class="uppercase transition-opacity font-book hover:opacity-60">Past Challenges</a>
+                                                        </li>
+                                                                                                            <li>
+                                                            <a href="/events/?searchEventsBy=application+clinic#events" target="_self" class="uppercase transition-opacity font-book hover:opacity-60">Application Clinics</a>
+                                                        </li>
+                                                                                                    </ul>
+                                                                                    </nav>
+                                                                                                                                                                                                            <div class="relative px-10 mb-6 group mt-13">
+                                                                                            <a href="/custom-challenges" target="_self" class="absolute inset-0" aria-label="Launch a custom Challenge"></a>
+                                            
+                                                                                            <span class="block mb-2 heading-4">Launch a custom Challenge</span>
+                                            
+                                                                                            <div class="font-book">
+                                                    Get started with a custom challenge to solve your organization&#039;s most pressing problems.
+                                                </div>
+                                            
+                                                                                            <a href="/custom-challenges" target="_self" class="flex justify-end mt-1 ml-auto uppercase">
+                                                    <svg class="w-10 group-hover:translate-x-2 transition-transform ease-in" xmlns="http://www.w3.org/2000/svg" width="32" height="16" viewBox="0 0 32 16" fill="currentColor">
+    <path d="M31.7071 8.76045C32.0976 8.36992 32.0976 7.73676 31.7071 7.34623L25.3432 0.982274C24.9526 0.59175 24.3195 0.59175 23.9289 0.982274C23.5384 1.3728 23.5384 2.00596 23.9289 2.39649L29.5858 8.05334L23.9289 13.7102C23.5384 14.1007 23.5384 14.7339 23.9289 15.1244C24.3195 15.5149 24.9526 15.5149 25.3432 15.1244L31.7071 8.76045ZM0.968262 9.05334L31 9.05334L31 7.05334L0.968262 7.05334L0.968262 9.05334Z" />
+</svg>
+                                                </a>
+                                                                                    </div>
+                                                                                                                        </div>
+                    </div>
+                            </li>
+                    <li
+                                    x-data="desktopNavDropdown"
+                    x-bind="trigger"
+                            >
+                <a href="/events" target="_self" class="relative flex items-center leading-none uppercase h-nav-height">
+                    Events
+
+                                            <span x-cloak x-show="showDropdown" class="absolute text-white transition -translate-x-1/2 -bottom-3 left-1/2 z-modal">
+                            <svg class="w-9" viewBox="0 0 37 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18.5 0L36.2535 30.75H0.746479L18.5 0Z" fill="currentColor"/>
+</svg>
+                        </span>
+                                    </a>
+
+                                                        <div
+                        x-cloak
+                        x-show="showDropdown"
+                        class="absolute bg-white left-1/2 -translate-x-1/2 top-nav-height z-100 text-black p-3 shadow-3xl w-[768px]"
+                    >
+                        <div class="grid grid-cols-3">
+                                                                                                                                        <img id="img-69e924030367c" alt="solve_092324_173737-3.jpg" fetchpriority="low" loading="auto" decoding="async" class="object-cover w-full h-full select-none aspect-square" draggable="false" src="https://d3t35pgnsskh52.cloudfront.net/media/58386/conversions/solve_092324_173737-3-xs.jpg" alt="solve_092324_173737-3.jpg">                                                                                                                                                                                                            
+                                        <nav class="mb-6 mt-13 col-span-2 ">
+                                                                                            <h2 class="px-10 pb-6 heading-4">
+                                                                                                            <a href="/events" target="_self" class="transition-opacity hover:opacity-60">
+                                                            Events
+                                                        </a>
+                                                                                                    </h2>
+                                            
+                                                                                            <ul class="px-10 space-y-6">
+                                                                                                            <li>
+                                                            <a href="/events/solve-at-mit-2026" target="_self" class="uppercase transition-opacity font-book hover:opacity-60">Solve at MIT</a>
+                                                        </li>
+                                                                                                            <li>
+                                                            <a href="/events/solve-challenge-finals-2026" target="_self" class="uppercase transition-opacity font-book hover:opacity-60">Solve Challenge Finals</a>
+                                                        </li>
+                                                                                                    </ul>
+                                                                                    </nav>
+                                                                                                                        </div>
+                    </div>
+                            </li>
+                    <li
+                                    x-data="desktopNavDropdown"
+                    x-bind="trigger"
+                            >
+                <a href="/partner" target="_self" class="relative flex items-center leading-none uppercase h-nav-height">
+                    Partner
+
+                                            <span x-cloak x-show="showDropdown" class="absolute text-white transition -translate-x-1/2 -bottom-3 left-1/2 z-modal">
+                            <svg class="w-9" viewBox="0 0 37 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18.5 0L36.2535 30.75H0.746479L18.5 0Z" fill="currentColor"/>
+</svg>
+                        </span>
+                                    </a>
+
+                                                        <div
+                        x-cloak
+                        x-show="showDropdown"
+                        class="absolute bg-white left-1/2 -translate-x-1/2 top-nav-height z-100 text-black p-3 shadow-3xl w-[1024px]"
+                    >
+                        <div class="grid grid-cols-3">
+                                                                                                                                        
+                                        <nav class="mb-6 mt-13 col-span-1  border-r border-r-black/25 ">
+                                                                                            <h2 class="px-10 pb-6 heading-4">
+                                                                                                            I am a...
+                                                                                                    </h2>
+                                            
+                                                                                            <ul class="px-10 space-y-6">
+                                                                                                            <li>
+                                                            <a href="/partner/support" target="_self" class="uppercase transition-opacity font-book hover:opacity-60">Philanthropist</a>
+                                                        </li>
+                                                                                                            <li>
+                                                            <a href="/partner/sponsorship" target="_self" class="uppercase transition-opacity font-book hover:opacity-60">Corporation</a>
+                                                        </li>
+                                                                                                            <li>
+                                                            <a href="/partner/foundations" target="_self" class="uppercase transition-opacity font-book hover:opacity-60">Foundation</a>
+                                                        </li>
+                                                                                                            <li>
+                                                            <a href="/partner/sif" target="_self" class="uppercase transition-opacity font-book hover:opacity-60">Investor</a>
+                                                        </li>
+                                                                                                    </ul>
+                                                                                    </nav>
+                                                                                                                                                                                                            <div class="relative px-10 mb-6 group mt-13">
+                                                                                            <a href="/custom-challenges" target="_self" class="absolute inset-0" aria-label="Launch a Custom Challenge"></a>
+                                            
+                                                                                            <span class="block mb-2 heading-4">Launch a Custom Challenge</span>
+                                            
+                                                                                            <div class="font-book">
+                                                    Get started with a custom challenge to solve your organization&#039;s most pressing problems.
+                                                </div>
+                                            
+                                                                                            <a href="/custom-challenges" target="_self" class="flex justify-end mt-1 ml-auto uppercase">
+                                                    <svg class="w-10 group-hover:translate-x-2 transition-transform ease-in" xmlns="http://www.w3.org/2000/svg" width="32" height="16" viewBox="0 0 32 16" fill="currentColor">
+    <path d="M31.7071 8.76045C32.0976 8.36992 32.0976 7.73676 31.7071 7.34623L25.3432 0.982274C24.9526 0.59175 24.3195 0.59175 23.9289 0.982274C23.5384 1.3728 23.5384 2.00596 23.9289 2.39649L29.5858 8.05334L23.9289 13.7102C23.5384 14.1007 23.5384 14.7339 23.9289 15.1244C24.3195 15.5149 24.9526 15.5149 25.3432 15.1244L31.7071 8.76045ZM0.968262 9.05334L31 9.05334L31 7.05334L0.968262 7.05334L0.968262 9.05334Z" />
+</svg>
+                                                </a>
+                                                                                    </div>
+                                                                                                                                                                                                            <div class="relative px-10 mb-6 group mt-13">
+                                                                                            <a href="/partner/solver-impact-fund" target="_self" class="absolute inset-0" aria-label="Donate to the Solver Impact Fund"></a>
+                                            
+                                                                                            <span class="block mb-2 heading-4">Donate to the Solver Impact Fund</span>
+                                            
+                                                                                            <div class="font-book">
+                                                    Direct 100% of your support to social innovators.
+                                                </div>
+                                            
+                                                                                            <a href="/partner/solver-impact-fund" target="_self" class="flex justify-end mt-1 ml-auto uppercase">
+                                                    <svg class="w-10 group-hover:translate-x-2 transition-transform ease-in" xmlns="http://www.w3.org/2000/svg" width="32" height="16" viewBox="0 0 32 16" fill="currentColor">
+    <path d="M31.7071 8.76045C32.0976 8.36992 32.0976 7.73676 31.7071 7.34623L25.3432 0.982274C24.9526 0.59175 24.3195 0.59175 23.9289 0.982274C23.5384 1.3728 23.5384 2.00596 23.9289 2.39649L29.5858 8.05334L23.9289 13.7102C23.5384 14.1007 23.5384 14.7339 23.9289 15.1244C24.3195 15.5149 24.9526 15.5149 25.3432 15.1244L31.7071 8.76045ZM0.968262 9.05334L31 9.05334L31 7.05334L0.968262 7.05334L0.968262 9.05334Z" />
+</svg>
+                                                </a>
+                                                                                    </div>
+                                                                                                                        </div>
+                    </div>
+                            </li>
+            </ul>
+</nav>
+
+
+                <div class="shrink-0 flex items-center justify-end gap-2 xs:gap-4">
+                    <div>
+                                                <a href="https://solve.mit.edu/login" class="flex items-center font-medium hover:text-yellow-500">Log In</a>
+                                            </div>
+                    <a href="http://mit.edu/" title="Massachusetts Institute of Technology" target="_blank" aria-label="Massachusetts Institute of Technology Logo">
+                        <svg class="h-7 xs:h-9 text-white" viewBox="0 0 1612 1040" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="currentColor">
+    <path d="M1737.06,160L1765.32,260.42C1768.67,273.287 1772.03,286.154 1774.27,296.783C1775.66,302.937 1776.78,308.811 1777.9,314.406L1778.46,314.406C1779.58,308.811 1780.7,302.937 1782.1,296.783C1784.34,286.153 1787.13,273.287 1790.77,260.419L1819.02,160L1876.92,160L1876.92,360L1839.16,360L1839.16,245.315C1839.16,237.203 1839.16,227.133 1840,218.462C1840.28,213.706 1840.56,208.672 1840.84,203.916L1840.28,203.916C1839.44,208.671 1838.32,213.146 1837.48,217.622C1835.52,225.455 1833.57,234.406 1831.61,241.958L1797.2,360L1758.32,360L1724.76,241.958C1722.52,234.406 1720.84,225.455 1718.88,217.622C1718.04,213.147 1716.92,208.672 1716.08,203.916L1715.52,203.916C1715.8,208.671 1716.08,213.706 1716.36,218.462C1716.64,227.132 1717.2,237.202 1717.2,245.315L1717.2,360L1680,360L1680,160L1737.06,160ZM1988.81,344.056L1988.25,344.056C1984.62,349.65 1980.14,354.406 1973.71,357.762C1966.99,361.119 1958.32,363.357 1946.01,363.357C1916.36,363.357 1895.94,348.252 1895.94,319.441C1895.94,303.776 1902.1,293.147 1912.73,286.154C1923.36,279.161 1937.34,275.524 1953.57,273.287C1977.62,269.93 1988.25,267.972 1988.25,257.063C1988.25,246.433 1980.42,240 1964.19,240C1946.29,240 1937.62,246.154 1936.5,260.14L1902.66,260.14C1902.94,247.273 1908.25,235.804 1918.32,227.133C1928.39,218.462 1943.5,212.867 1964.48,212.867C2007.55,212.867 2024.89,231.888 2024.89,265.735L2024.89,338.741C2024.89,349.651 2026.57,356.084 2029.93,358.601L2029.93,360L1993.29,360C1991.05,356.923 1989.65,350.49 1988.81,344.056ZM1980.42,328.112C1986.01,323.077 1989.09,316.364 1989.09,309.371L1989.09,287.832C1982.38,292.028 1972.31,293.986 1962.52,296.224C1942.38,300.699 1932.87,305.174 1932.87,318.601C1932.87,332.028 1941.82,336.783 1955.24,336.783C1966.15,336.783 1974.55,333.426 1980.42,328.112ZM2038.32,313.566L2073.56,313.566C2076.08,330.35 2087.55,337.343 2104.89,337.343C2121.68,337.343 2131.19,330.909 2131.19,320.839C2131.19,314.126 2126.43,310.209 2119.72,307.692C2112.72,305.175 2103.21,303.776 2093.42,301.818C2080.28,299.301 2067.97,296.504 2058.46,290.07C2048.67,283.637 2042.52,274.126 2042.52,258.461C2042.52,242.797 2048.67,231.608 2059.58,223.776C2070.21,216.224 2084.47,212.587 2100.98,212.587C2139.3,212.587 2159.44,230.769 2162.51,260.14L2128.11,260.14C2126.15,244.475 2116.92,239.16 2100.42,239.16C2085.31,239.16 2075.8,244.475 2075.8,255.105C2075.8,261.539 2080.56,264.615 2088.11,266.853C2095.38,269.371 2105.17,270.49 2115.24,272.728C2127.27,275.245 2139.86,278.042 2149.65,284.476C2159.44,291.189 2165.87,301.259 2165.87,318.042C2165.87,332.587 2159.72,344.056 2149.09,351.888C2138.18,359.72 2123.35,364.196 2105.45,364.196C2063.49,364.196 2040.56,344.336 2038.32,313.566ZM2174.26,313.566L2209.5,313.566C2212.02,330.35 2223.49,337.343 2240.83,337.343C2257.62,337.343 2267.13,330.909 2267.13,320.839C2267.13,314.126 2262.37,310.209 2255.66,307.692C2248.66,305.175 2239.16,303.776 2229.36,301.818C2216.22,299.301 2203.91,296.504 2194.4,290.07C2184.61,283.637 2178.45,274.126 2178.45,258.461C2178.45,242.797 2184.61,231.608 2195.52,223.776C2206.15,216.224 2220.41,212.587 2236.92,212.587C2275.24,212.587 2295.38,230.769 2298.45,260.14L2264.05,260.14C2262.09,244.475 2252.86,239.16 2236.36,239.16C2221.25,239.16 2211.74,244.475 2211.74,255.105C2211.74,261.539 2216.5,264.615 2224.05,266.853C2231.32,269.371 2241.11,270.49 2251.18,272.728C2263.21,275.245 2275.8,278.042 2285.59,284.476C2295.38,291.189 2301.81,301.259 2301.81,318.042C2301.81,332.587 2295.66,344.056 2285.03,351.888C2274.12,359.72 2259.29,364.196 2241.39,364.196C2199.43,364.196 2176.5,344.336 2174.26,313.566ZM2405.03,344.056L2404.47,344.056C2400.83,349.65 2396.35,354.406 2389.92,357.762C2383.21,361.119 2374.54,363.357 2362.23,363.357C2332.58,363.357 2312.16,348.252 2312.16,319.441C2312.16,303.776 2318.31,293.147 2328.94,286.154C2339.57,279.161 2353.56,275.524 2369.78,273.287C2393.84,269.93 2404.47,267.972 2404.47,257.063C2404.47,246.433 2396.63,240 2380.41,240C2362.51,240 2353.84,246.154 2352.72,260.14L2318.87,260.14C2319.15,247.273 2324.47,235.804 2334.54,227.133C2344.61,218.462 2359.71,212.867 2380.69,212.867C2423.77,212.867 2441.11,231.888 2441.11,265.735L2441.11,338.741C2441.11,349.651 2442.79,356.084 2446.14,358.601L2446.14,360L2409.5,360C2407.26,356.923 2405.86,350.49 2405.03,344.056ZM2396.63,328.112C2402.23,323.077 2405.3,316.364 2405.3,309.371L2405.3,287.832C2398.59,292.028 2388.52,293.986 2378.73,296.224C2358.59,300.699 2349.08,305.174 2349.08,318.601C2349.08,332.028 2358.03,336.783 2371.46,336.783C2382.37,336.783 2390.76,333.426 2396.63,328.112ZM2476.35,342.098C2463.48,328.671 2456.49,309.65 2456.49,288.392C2456.49,267.133 2463.48,248.112 2476.07,234.406C2488.38,220.979 2506,212.587 2528.1,212.587C2546.84,212.587 2561.67,218.182 2572.85,227.133C2583.76,236.363 2590.76,249.51 2593.27,265.175L2556.07,265.175C2553.55,252.308 2544.04,243.077 2529.78,243.077C2506.56,243.077 2495.09,260.14 2495.09,288.392C2495.09,315.804 2505.72,333.706 2529.22,333.706C2544.88,333.706 2555.51,325.874 2558.03,309.371L2594.67,309.371C2593.55,324.755 2586.84,338.181 2575.93,347.972C2564.74,358.042 2549.08,364.196 2530.06,364.196C2507.12,364.196 2489.22,355.804 2476.35,342.098ZM2648.38,235.245C2659.01,219.86 2670.2,212.587 2690.06,212.587C2705.16,212.587 2717.19,218.182 2725.86,227.692C2734.53,237.482 2739.57,250.629 2739.57,266.294L2739.57,360L2701.53,360L2701.53,271.888C2701.53,256.224 2692.86,245.594 2676.63,245.594C2659.85,245.594 2647.54,258.741 2647.54,278.602L2647.54,360L2609.5,360L2609.5,160L2647.54,160L2647.54,235.245L2648.38,235.245L2648.38,235.245ZM2852.01,343.217L2851.18,343.217C2841.39,356.364 2830.2,363.916 2810.06,363.916C2777.89,363.916 2760.27,344.056 2760.27,312.168L2760.27,216.504L2798.03,216.504L2798.03,305.734C2798.03,322.517 2805.3,331.748 2821.81,331.748C2839.71,331.748 2850.62,318.322 2850.62,299.301L2850.62,216.504L2888.66,216.504L2888.66,360L2852.01,360L2852.01,343.217ZM2902.64,313.567L2937.89,313.567C2940.41,330.35 2951.88,337.343 2969.22,337.343C2986,337.343 2995.51,330.909 2995.51,320.839C2995.51,314.126 2990.76,310.209 2984.04,307.692C2977.05,305.175 2967.54,303.776 2957.75,301.818C2944.6,299.301 2932.3,296.504 2922.78,290.07C2912.99,283.637 2906.84,274.126 2906.84,258.461C2906.84,242.797 2912.99,231.608 2923.9,223.776C2934.53,216.224 2948.8,212.587 2965.3,212.587C3003.62,212.587 3023.76,230.769 3026.84,260.14L2992.43,260.14C2990.48,244.475 2981.25,239.16 2964.74,239.16C2949.64,239.16 2940.13,244.475 2940.13,255.105C2940.13,261.539 2944.88,264.615 2952.43,266.853C2959.71,269.371 2969.5,270.49 2979.57,272.728C2991.6,275.245 3004.18,278.042 3013.97,284.476C3023.76,291.189 3030.2,301.259 3030.2,318.042C3030.2,332.587 3024.04,344.056 3013.41,351.888C3002.51,359.72 2987.68,364.196 2969.78,364.196C2927.82,364.196 2904.88,344.336 2902.64,313.566L2902.64,313.567ZM3059.28,342.097C3046.41,328.671 3039.98,309.371 3039.98,288.112C3039.98,266.853 3047.25,247.832 3059.84,234.406C3072.15,220.979 3089.77,212.587 3110.75,212.587C3133.97,212.587 3151.31,221.259 3163.34,236.643C3175.37,252.027 3181.52,273.287 3181.52,299.021L3077.46,299.021C3080.54,321.399 3092.29,334.825 3114.11,334.825C3129.21,334.825 3137.6,328.112 3141.8,317.203L3179.28,317.203C3176.76,330.07 3169.77,341.538 3158.86,350.21C3147.67,358.881 3132.85,364.196 3114.39,364.196C3090.33,364.196 3072.15,355.804 3059.28,342.098L3059.28,342.097ZM3078.02,272.727L3141.8,272.727C3140.68,254.266 3128.93,241.957 3111.31,241.957C3091.17,241.957 3081.38,253.707 3078.02,272.727ZM3206.14,216.504L3206.14,171.749L3243.34,171.749L3243.34,216.504L3267.95,216.504L3267.95,243.077L3243.34,243.077L3243.34,317.762C3243.34,328.672 3248.93,332.028 3257.6,332.028L3264.88,332.028C3266.27,332.028 3267.39,332.028 3268.79,331.748L3268.79,359.72C3266.83,360 3264.88,360 3262.64,360C3258.44,360.28 3252.57,360.28 3245.02,360.28C3235.79,360.28 3226.28,358.602 3218.72,353.287C3211.17,347.972 3206.14,339.301 3206.14,325.874L3206.14,243.077L3186.28,243.077L3186.28,216.504L3206.14,216.504ZM3294.53,216.504L3294.53,171.749L3331.73,171.749L3331.73,216.504L3356.34,216.504L3356.34,243.077L3331.73,243.077L3331.73,317.762C3331.73,328.672 3337.32,332.028 3345.99,332.028L3353.26,332.028C3354.66,332.028 3355.78,332.028 3357.18,331.748L3357.18,359.72C3355.22,360 3353.26,360 3351.03,360C3346.83,360.28 3340.96,360.28 3333.41,360.28C3324.18,360.28 3314.66,358.602 3307.11,353.287C3299.56,347.972 3294.52,339.301 3294.52,325.874L3294.52,243.077L3274.66,243.077L3274.66,216.504L3294.53,216.504ZM3366.68,313.566L3401.93,313.566C3404.45,330.35 3415.92,337.343 3433.26,337.343C3450.04,337.343 3459.55,330.909 3459.55,320.839C3459.55,314.126 3454.8,310.209 3448.08,307.692C3441.09,305.175 3431.58,303.776 3421.79,301.818C3408.64,299.301 3396.34,296.504 3386.83,290.07C3377.04,283.637 3370.88,274.126 3370.88,258.461C3370.88,242.797 3377.03,231.608 3387.95,223.776C3398.57,216.224 3412.84,212.587 3429.34,212.587C3467.66,212.587 3487.81,230.769 3490.88,260.14L3456.48,260.14C3454.52,244.475 3445.29,239.16 3428.78,239.16C3413.68,239.16 3404.17,244.475 3404.17,255.105C3404.17,261.539 3408.92,264.615 3416.48,266.853C3423.75,269.371 3433.54,270.49 3443.61,272.728C3455.64,275.245 3468.22,278.042 3478.01,284.476C3487.8,291.189 3494.24,301.259 3494.24,318.042C3494.24,332.587 3488.08,344.056 3477.45,351.888C3466.55,359.72 3451.72,364.196 3433.82,364.196C3391.86,364.196 3368.92,344.336 3366.69,313.566L3366.68,313.566ZM1720.56,420L1720.56,620L1680,620L1680,420L1720.56,420ZM1784.89,496.084C1794.68,480.42 1807.55,472.587 1827.41,472.587C1842.52,472.587 1854.54,478.182 1863.21,487.692C1871.89,497.482 1876.92,510.629 1876.92,526.294L1876.92,620L1838.88,620L1838.88,531.888C1838.88,516.224 1830.21,505.594 1813.98,505.594C1797.2,505.594 1784.89,518.742 1784.89,538.602L1784.89,620L1746.85,620L1746.85,476.504L1784.05,476.504L1784.05,496.084L1784.89,496.084ZM1889.79,573.566L1925.03,573.566C1927.55,590.35 1939.02,597.343 1956.36,597.343C1973.14,597.343 1982.65,590.909 1982.65,580.839C1982.65,574.126 1977.9,570.209 1971.19,567.692C1964.19,565.175 1954.68,563.776 1944.89,561.818C1931.75,559.301 1919.44,556.504 1909.93,550.07C1900.14,543.637 1893.98,534.126 1893.98,518.461C1893.98,502.797 1900.14,491.608 1911.05,483.776C1921.68,476.224 1935.94,472.587 1952.44,472.587C1990.77,472.587 2010.91,490.769 2013.98,520.14L1979.58,520.14C1977.62,504.475 1968.39,499.16 1951.88,499.16C1936.78,499.16 1927.27,504.475 1927.27,515.105C1927.27,521.539 1932.03,524.615 1939.58,526.853C1946.85,529.371 1956.64,530.49 1966.71,532.728C1978.74,535.245 1991.33,538.042 2001.12,544.476C2010.91,551.189 2017.34,561.259 2017.34,578.042C2017.34,592.587 2011.19,604.056 2000.56,611.888C1989.65,619.721 1974.82,624.196 1956.92,624.196C1914.96,624.196 1892.03,604.336 1889.79,573.566ZM2041.39,476.504L2041.39,431.749L2078.6,431.749L2078.6,476.504L2103.21,476.504L2103.21,503.077L2078.6,503.077L2078.6,577.762C2078.6,588.672 2084.19,592.028 2092.86,592.028L2100.14,592.028C2101.53,592.028 2102.65,592.028 2104.05,591.748L2104.05,619.721C2102.09,620 2100.14,620 2097.9,620C2093.7,620.28 2087.83,620.28 2080.28,620.28C2071.05,620.28 2061.53,618.602 2053.98,613.287C2046.43,607.972 2041.39,599.301 2041.39,585.874L2041.39,503.077L2021.53,503.077L2021.53,476.504L2041.39,476.504ZM2159.15,425.315L2159.15,459.441L2121.11,459.441L2121.11,425.315L2159.15,425.315ZM2159.15,476.504L2159.15,620L2121.11,620L2121.11,476.504L2159.15,476.504ZM2193.56,476.504L2193.56,431.749L2230.76,431.749L2230.76,476.504L2255.38,476.504L2255.38,503.077L2230.76,503.077L2230.76,577.762C2230.76,588.672 2236.36,592.028 2245.03,592.028L2252.3,592.028C2253.7,592.028 2254.82,592.028 2256.22,591.748L2256.22,619.721C2254.26,620 2252.3,620 2250.06,620C2245.87,620.28 2239.99,620.28 2232.44,620.28C2223.21,620.28 2213.7,618.602 2206.14,613.287C2198.59,607.972 2193.56,599.301 2193.56,585.874L2193.56,503.077L2173.7,503.077L2173.7,476.504L2193.56,476.504ZM2363.9,603.217L2363.06,603.217C2353.27,616.363 2342.09,623.916 2321.95,623.916C2289.78,623.916 2272.16,604.056 2272.16,572.168L2272.16,476.504L2309.92,476.504L2309.92,565.734C2309.92,582.517 2317.19,591.748 2333.69,591.748C2351.6,591.748 2362.51,578.322 2362.51,559.301L2362.51,476.504L2400.55,476.504L2400.55,620L2363.9,620L2363.9,603.217ZM2434.95,476.504L2434.95,431.749L2472.16,431.749L2472.16,476.504L2496.77,476.504L2496.77,503.077L2472.16,503.077L2472.16,577.762C2472.16,588.672 2477.75,592.028 2486.42,592.028L2493.7,592.028C2495.09,592.028 2496.21,592.028 2497.61,591.748L2497.61,619.721C2495.65,620 2493.7,620 2491.46,620C2487.26,620.28 2481.39,620.28 2473.84,620.28C2464.61,620.28 2455.09,618.602 2447.54,613.287C2439.99,607.972 2434.95,599.301 2434.95,585.874L2434.95,503.077L2415.09,503.077L2415.09,476.504L2434.95,476.504ZM2525.58,602.098C2512.72,588.671 2506.28,569.371 2506.28,548.112C2506.28,526.853 2513.55,507.832 2526.14,494.406C2538.45,480.979 2556.07,472.587 2577.05,472.587C2600.27,472.587 2617.61,481.259 2629.64,496.643C2641.67,512.028 2647.82,533.287 2647.82,559.021L2543.76,559.021C2546.84,581.399 2558.59,594.825 2580.41,594.825C2595.51,594.825 2603.9,588.112 2608.1,577.203L2645.58,577.203C2643.07,590.07 2636.07,601.538 2625.16,610.21C2613.97,618.881 2599.15,624.196 2580.69,624.196C2556.63,624.196 2538.45,615.804 2525.58,602.098ZM2544.32,532.728L2608.1,532.728C2606.98,514.266 2595.23,501.958 2577.61,501.958C2557.47,501.958 2547.68,513.706 2544.32,532.728L2544.32,532.728ZM2723.06,602.098C2709.64,588.671 2702.08,569.65 2702.08,548.392C2702.08,527.134 2709.64,508.112 2723.06,494.406C2736.21,480.979 2754.67,472.587 2777.05,472.587C2799.43,472.587 2817.89,480.979 2831.32,494.406C2844.46,508.112 2852.01,527.133 2852.01,548.392C2852.01,569.651 2844.46,588.672 2831.32,602.098C2817.89,615.804 2799.43,624.196 2777.05,624.196C2754.67,624.196 2736.21,615.804 2723.06,602.098ZM2813.41,548.392C2813.41,520.14 2800.55,501.398 2777.05,501.398C2753.55,501.398 2740.69,520.14 2740.69,548.392C2740.69,576.364 2753.55,595.105 2777.05,595.105C2800.55,595.105 2813.41,576.364 2813.41,548.392ZM2876.35,476.504L2876.35,463.636C2876.35,446.014 2883.06,434.266 2894.53,427.273C2905.72,420.56 2921.66,418.322 2940.12,420.28L2940.12,449.65C2922.22,448.811 2914.39,450.77 2914.39,465.874L2914.39,476.504L2940.12,476.504L2940.12,503.916L2914.39,503.916L2914.39,620L2876.35,620L2876.35,503.916L2856.77,503.916L2856.77,476.504L2876.35,476.504ZM1780.7,680L1780.7,714.126L1720.56,714.126L1720.56,880L1680,880L1680,714.126L1619.86,714.126L1619.86,680L1780.7,680L1780.7,680ZM1776.51,862.098C1763.64,848.671 1757.2,829.371 1757.2,808.112C1757.2,786.853 1764.48,767.832 1777.06,754.406C1789.37,740.979 1806.99,732.587 1827.97,732.587C1851.19,732.587 1868.53,741.259 1880.56,756.643C1892.59,772.028 1898.74,793.287 1898.74,819.021L1794.69,819.021C1797.76,841.399 1809.51,854.825 1831.33,854.825C1846.43,854.825 1854.83,848.112 1859.02,837.203L1896.51,837.203C1893.99,850.07 1886.99,861.538 1876.09,870.21C1864.9,878.881 1850.07,884.196 1831.61,884.196C1807.55,884.196 1789.37,875.804 1776.51,862.098ZM1795.25,792.728L1859.02,792.728C1857.9,774.266 1846.15,761.958 1828.53,761.958C1808.39,761.958 1798.6,773.706 1795.25,792.728ZM1927.55,862.098C1914.68,848.671 1907.69,829.65 1907.69,808.392C1907.69,787.134 1914.68,768.112 1927.27,754.406C1939.58,740.979 1957.2,732.587 1979.3,732.587C1998.04,732.587 2012.87,738.182 2024.06,747.133C2034.96,756.363 2041.96,769.51 2044.48,785.175L2007.27,785.175C2004.75,772.308 1995.24,763.077 1980.98,763.077C1957.76,763.077 1946.29,780.14 1946.29,808.392C1946.29,835.804 1956.92,853.706 1980.42,853.706C1996.08,853.706 2006.71,845.874 2009.23,829.371L2045.87,829.371C2044.75,844.755 2038.04,858.181 2027.13,867.971C2015.94,878.042 2000.28,884.196 1981.26,884.196C1958.32,884.196 1940.42,875.804 1927.55,862.098ZM2099.58,755.245C2110.21,739.86 2121.4,732.587 2141.26,732.587C2156.36,732.587 2168.39,738.182 2177.06,747.692C2185.73,757.482 2190.77,770.629 2190.77,786.294L2190.77,880L2152.73,880L2152.73,791.888C2152.73,776.224 2144.06,765.594 2127.83,765.594C2111.05,765.594 2098.74,778.742 2098.74,798.602L2098.74,880L2060.7,880L2060.7,680L2098.74,680L2098.74,755.245L2099.58,755.245ZM2250.63,756.084C2260.42,740.42 2273.28,732.587 2293.15,732.587C2308.25,732.587 2320.28,738.182 2328.95,747.692C2337.62,757.482 2342.66,770.629 2342.66,786.294L2342.66,880L2304.61,880L2304.61,791.888C2304.61,776.224 2295.94,765.594 2279.72,765.594C2262.94,765.594 2250.63,778.742 2250.63,798.602L2250.63,880L2212.59,880L2212.59,736.504L2249.79,736.504L2249.79,756.084L2250.63,756.084L2250.63,756.084ZM2378.46,862.098C2365.03,848.671 2357.48,829.65 2357.48,808.392C2357.48,787.134 2365.03,768.112 2378.46,754.406C2391.61,740.979 2410.07,732.587 2432.45,732.587C2454.82,732.587 2473.28,740.979 2486.71,754.406C2499.86,768.112 2507.41,787.133 2507.41,808.392C2507.41,829.651 2499.86,848.672 2486.71,862.098C2473.28,875.804 2454.82,884.196 2432.45,884.196C2410.07,884.196 2391.61,875.804 2378.46,862.098ZM2468.81,808.392C2468.81,780.14 2455.94,761.398 2432.45,761.398C2408.95,761.398 2396.08,780.14 2396.08,808.392C2396.08,836.364 2408.95,855.105 2432.45,855.105C2455.94,855.105 2468.81,836.364 2468.81,808.392ZM2561.95,680L2561.95,880L2523.91,880L2523.91,680L2561.95,680ZM2599.44,862.098C2586.01,848.671 2578.46,829.65 2578.46,808.392C2578.46,787.134 2586.01,768.112 2599.44,754.406C2612.58,740.979 2631.05,732.587 2653.42,732.587C2675.8,732.587 2694.26,740.979 2707.69,754.406C2720.84,768.112 2728.39,787.133 2728.39,808.392C2728.39,829.651 2720.84,848.672 2707.69,862.098C2694.26,875.804 2675.8,884.196 2653.42,884.196C2631.05,884.196 2612.58,875.804 2599.44,862.098ZM2689.79,808.392C2689.79,780.14 2676.92,761.398 2653.42,761.398C2629.93,761.398 2617.06,780.14 2617.06,808.392C2617.06,836.364 2629.93,855.105 2653.42,855.105C2676.92,855.105 2689.79,836.364 2689.79,808.392ZM2740.41,884.196L2778.18,884.196C2781.25,893.147 2789.09,900.14 2806.99,900.14C2828.25,900.14 2838.88,890.35 2838.88,870.21L2838.88,854.545L2838.03,854.545C2829.37,864.335 2819.01,871.328 2800.55,871.328C2784.33,871.328 2768.95,865.175 2757.2,853.147C2745.17,841.399 2737.34,824.615 2737.34,802.797C2737.34,781.539 2743.77,763.916 2754.96,751.608C2765.87,739.301 2780.97,732.588 2799.43,732.588C2817.34,732.588 2830.48,739.58 2839.16,751.608L2839.71,751.608L2839.71,736.504L2876.36,736.504L2876.36,869.09C2876.36,889.23 2870.2,902.936 2859.3,912.726C2847.27,923.916 2828.8,928.95 2807.55,928.95C2767.83,928.95 2744.61,912.167 2740.41,884.195L2740.41,884.196ZM2833,829.371C2838.31,822.378 2840.83,812.867 2840.83,801.958C2840.83,791.328 2838.03,781.538 2832.44,774.545C2826.85,767.552 2818.45,763.077 2806.71,763.077C2787.13,763.077 2774.54,777.902 2774.54,802.237C2774.54,826.853 2787.13,840.839 2806.99,840.839C2819.01,840.839 2827.41,836.364 2833,829.371ZM2915.8,897.063C2931.18,897.063 2937.05,889.511 2937.05,877.483C2937.05,873.846 2936.5,869.091 2934.82,863.217C2932.86,857.343 2930.34,849.51 2926.15,838.601L2887.55,736.504L2927.55,736.504L2948.8,801.119C2951.04,807.832 2953,815.385 2954.96,821.819C2955.8,825.455 2956.91,828.811 2958.03,832.448L2958.59,832.448C2959.43,828.811 2960.27,825.455 2961.11,821.818C2962.51,815.385 2964.75,807.832 2966.99,801.119L2987.13,736.504L3025.45,736.504L2975.38,883.637C2969.78,899.86 2964.47,910.49 2956.92,917.203C2949.08,924.196 2939.29,926.993 2924.75,926.993L2902.37,926.993L2902.37,897.063L2915.8,897.063ZM880,880L1040,880L1040,400L880,400L880,880ZM1120,320L1520,320L1520,160L1120,160L1120,320ZM880,160L1040,160L1040,320L880,320L880,160ZM640,880L800,880L800,160L640,160L640,880ZM400,720L560,720L560,160L400,160L400,720ZM160,880L320,880L320,160L160,160L160,880ZM1120,880L1280,880L1280,400L1120,400L1120,880Z" style="fill-rule:nonzero;"/>
+</svg>                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <nav
+    x-cloak
+    x-data="{open: false}"
+    x-show="open"
+    x-trap.noscroll="open"
+    x-on:open-mobile-menu.window="open = true"
+    x-on:close-mobile-menu.window="open = false"
+    x-on:click.away="$dispatch('close-mobile-menu')"
+    x-on:keydown.escape.window="$dispatch('close-mobile-menu')"
+    x-transition:enter="ease-out duration-200"
+    x-transition:enter-start="opacity-0 -translate-y-full"
+    x-transition:enter-end="opacity-100 translate-y-0"
+    x-transition:leave="ease-in duration-150"
+    x-transition:leave-start="opacity-100 translate-y-0"
+    x-transition:leave-end="opacity-0 -translate-y-full"
+    class="fixed inset-0 z-50 w-full overflow-y-auto bg-black pt-nav-height"
+>
+    <div class="container">
+        <ul>
+                            <li x-data="{expanded: false}">
+                    <a x-on:click.prevent="expanded ? window.location = $el.href : expanded = true" href="/impact" class="flex items-center justify-between py-5 text-white border-b heading-4 border-b-white/25">
+                        <span>Impact</span>
+
+                                                    <span class="transition-transform" x-bind:class="expanded ? 'rotate-0' : 'rotate-90'">
+                                <svg class="w-5 text-white/40" xmlns="http://www.w3.org/2000/svg" width="32" height="16" viewBox="0 0 32 16" fill="currentColor">
+    <path d="M31.7071 8.76045C32.0976 8.36992 32.0976 7.73676 31.7071 7.34623L25.3432 0.982274C24.9526 0.59175 24.3195 0.59175 23.9289 0.982274C23.5384 1.3728 23.5384 2.00596 23.9289 2.39649L29.5858 8.05334L23.9289 13.7102C23.5384 14.1007 23.5384 14.7339 23.9289 15.1244C24.3195 15.5149 24.9526 15.5149 25.3432 15.1244L31.7071 8.76045ZM0.968262 9.05334L31 9.05334L31 7.05334L0.968262 7.05334L0.968262 9.05334Z" />
+</svg>
+                            </span>
+                                            </a>
+
+                                            <nav class="p-5 bg-white" x-show="expanded" x-collapse>
+                                                                                                                                                                                                                                                                        <ul class="mb-6 space-y-6 last-of-type:border-b last-of-type:pb-6 last-of-type:border-b-black/25">
+                                                                                            <li>
+                                                                                                            <a href="/impact" target="_self" class="flex items-center justify-between gap-5 heading-4">
+                                                            Areas of impact
+
+                                                            <svg class="w-10" xmlns="http://www.w3.org/2000/svg" width="32" height="16" viewBox="0 0 32 16" fill="currentColor">
+    <path d="M31.7071 8.76045C32.0976 8.36992 32.0976 7.73676 31.7071 7.34623L25.3432 0.982274C24.9526 0.59175 24.3195 0.59175 23.9289 0.982274C23.5384 1.3728 23.5384 2.00596 23.9289 2.39649L29.5858 8.05334L23.9289 13.7102C23.5384 14.1007 23.5384 14.7339 23.9289 15.1244C24.3195 15.5149 24.9526 15.5149 25.3432 15.1244L31.7071 8.76045ZM0.968262 9.05334L31 9.05334L31 7.05334L0.968262 7.05334L0.968262 9.05334Z" />
+</svg>
+                                                        </a>
+                                                                                                    </li>
+                                            
+                                                                                                                                                <li>
+                                                        <a href="/impact/climate" target="_self" class="uppercase">Climate</a>
+                                                    </li>
+                                                                                                    <li>
+                                                        <a href="/impact/economic-prosperity" target="_self" class="uppercase">Economic Prosperity</a>
+                                                    </li>
+                                                                                                    <li>
+                                                        <a href="/impact/health" target="_self" class="uppercase">Health</a>
+                                                    </li>
+                                                                                                    <li>
+                                                        <a href="/impact/learning" target="_self" class="uppercase">Learning</a>
+                                                    </li>
+                                                                                                                                    </ul>
+                                                                                                                                                                                                            <ul class="mb-6 space-y-6 last-of-type:border-b last-of-type:pb-6 last-of-type:border-b-black/25">
+                                            
+                                                                                                                                                <li>
+                                                        <a href="/impact/indigenous-communities" target="_self" class="uppercase">Indigenous Communities</a>
+                                                    </li>
+                                                                                                    <li>
+                                                        <a href="/impact/youth-innovation" target="_self" class="uppercase">Youth Innovation</a>
+                                                    </li>
+                                                                                                    <li>
+                                                        <a href="/partner/sif" target="_self" class="uppercase">Innovative Financing</a>
+                                                    </li>
+                                                                                                                                    </ul>
+                                                                                                                        </nav>
+                                    </li>
+                            <li x-data="{expanded: false}">
+                    <a x-on:click.prevent="expanded ? window.location = $el.href : expanded = true" href="/innovators" class="flex items-center justify-between py-5 text-white border-b heading-4 border-b-white/25">
+                        <span>Innovators</span>
+
+                                                    <span class="transition-transform" x-bind:class="expanded ? 'rotate-0' : 'rotate-90'">
+                                <svg class="w-5 text-white/40" xmlns="http://www.w3.org/2000/svg" width="32" height="16" viewBox="0 0 32 16" fill="currentColor">
+    <path d="M31.7071 8.76045C32.0976 8.36992 32.0976 7.73676 31.7071 7.34623L25.3432 0.982274C24.9526 0.59175 24.3195 0.59175 23.9289 0.982274C23.5384 1.3728 23.5384 2.00596 23.9289 2.39649L29.5858 8.05334L23.9289 13.7102C23.5384 14.1007 23.5384 14.7339 23.9289 15.1244C24.3195 15.5149 24.9526 15.5149 25.3432 15.1244L31.7071 8.76045ZM0.968262 9.05334L31 9.05334L31 7.05334L0.968262 7.05334L0.968262 9.05334Z" />
+</svg>
+                            </span>
+                                            </a>
+
+                                            <nav class="p-5 bg-white" x-show="expanded" x-collapse>
+                                                                                                                                                                                                                                                                        <ul class="mb-6 space-y-6 last-of-type:border-b last-of-type:pb-6 last-of-type:border-b-black/25">
+                                                                                            <li>
+                                                                                                            <a href="/innovators" target="_self" class="flex items-center justify-between gap-5 heading-4">
+                                                            Innovators
+
+                                                            <svg class="w-10" xmlns="http://www.w3.org/2000/svg" width="32" height="16" viewBox="0 0 32 16" fill="currentColor">
+    <path d="M31.7071 8.76045C32.0976 8.36992 32.0976 7.73676 31.7071 7.34623L25.3432 0.982274C24.9526 0.59175 24.3195 0.59175 23.9289 0.982274C23.5384 1.3728 23.5384 2.00596 23.9289 2.39649L29.5858 8.05334L23.9289 13.7102C23.5384 14.1007 23.5384 14.7339 23.9289 15.1244C24.3195 15.5149 24.9526 15.5149 25.3432 15.1244L31.7071 8.76045ZM0.968262 9.05334L31 9.05334L31 7.05334L0.968262 7.05334L0.968262 9.05334Z" />
+</svg>
+                                                        </a>
+                                                                                                    </li>
+                                            
+                                                                                                                                                <li>
+                                                        <a href="/innovators/meet-the-solvers" target="_self" class="uppercase">Meet the Solvers</a>
+                                                    </li>
+                                                                                                    <li>
+                                                        <a href="/innovators/become-a-solver" target="_self" class="uppercase">Become a Solver</a>
+                                                    </li>
+                                                                                                                                    </ul>
+                                                                                                                                                                                                            <div class="relative flex justify-between gap-5">
+                                            <div>
+                                                <span class="block mb-2 uppercase heading-5">Sign up for the Newsletter</span>
+
+                                                <p class="text-sm max-w-[80%]">Get the monthly newsletter designed for busy innovators around the globe.</p>
+                                            </div>
+
+                                            <svg class="w-10" xmlns="http://www.w3.org/2000/svg" width="32" height="16" viewBox="0 0 32 16" fill="currentColor">
+    <path d="M31.7071 8.76045C32.0976 8.36992 32.0976 7.73676 31.7071 7.34623L25.3432 0.982274C24.9526 0.59175 24.3195 0.59175 23.9289 0.982274C23.5384 1.3728 23.5384 2.00596 23.9289 2.39649L29.5858 8.05334L23.9289 13.7102C23.5384 14.1007 23.5384 14.7339 23.9289 15.1244C24.3195 15.5149 24.9526 15.5149 25.3432 15.1244L31.7071 8.76045ZM0.968262 9.05334L31 9.05334L31 7.05334L0.968262 7.05334L0.968262 9.05334Z" />
+</svg>
+
+                                                                                            <a href="https://solve.mit.edu/newsletters#marketplace" target="_self" class="absolute inset-0"></a>
+                                                                                    </div>
+                                                                                                                        </nav>
+                                    </li>
+                            <li x-data="{expanded: false}">
+                    <a x-on:click.prevent="expanded ? window.location = $el.href : expanded = true" href="/challenges" class="flex items-center justify-between py-5 text-white border-b heading-4 border-b-white/25">
+                        <span>Challenges</span>
+
+                                                    <span class="transition-transform" x-bind:class="expanded ? 'rotate-0' : 'rotate-90'">
+                                <svg class="w-5 text-white/40" xmlns="http://www.w3.org/2000/svg" width="32" height="16" viewBox="0 0 32 16" fill="currentColor">
+    <path d="M31.7071 8.76045C32.0976 8.36992 32.0976 7.73676 31.7071 7.34623L25.3432 0.982274C24.9526 0.59175 24.3195 0.59175 23.9289 0.982274C23.5384 1.3728 23.5384 2.00596 23.9289 2.39649L29.5858 8.05334L23.9289 13.7102C23.5384 14.1007 23.5384 14.7339 23.9289 15.1244C24.3195 15.5149 24.9526 15.5149 25.3432 15.1244L31.7071 8.76045ZM0.968262 9.05334L31 9.05334L31 7.05334L0.968262 7.05334L0.968262 9.05334Z" />
+</svg>
+                            </span>
+                                            </a>
+
+                                            <nav class="p-5 bg-white" x-show="expanded" x-collapse>
+                                                                                                                                                                                                                                                                        <ul class="mb-6 space-y-6 last-of-type:border-b last-of-type:pb-6 last-of-type:border-b-black/25">
+                                                                                            <li>
+                                                                                                            <a href="/challenges" target="_self" class="flex items-center justify-between gap-5 heading-4">
+                                                            Challenges
+
+                                                            <svg class="w-10" xmlns="http://www.w3.org/2000/svg" width="32" height="16" viewBox="0 0 32 16" fill="currentColor">
+    <path d="M31.7071 8.76045C32.0976 8.36992 32.0976 7.73676 31.7071 7.34623L25.3432 0.982274C24.9526 0.59175 24.3195 0.59175 23.9289 0.982274C23.5384 1.3728 23.5384 2.00596 23.9289 2.39649L29.5858 8.05334L23.9289 13.7102C23.5384 14.1007 23.5384 14.7339 23.9289 15.1244C24.3195 15.5149 24.9526 15.5149 25.3432 15.1244L31.7071 8.76045ZM0.968262 9.05334L31 9.05334L31 7.05334L0.968262 7.05334L0.968262 9.05334Z" />
+</svg>
+                                                        </a>
+                                                                                                    </li>
+                                            
+                                                                                                                                                <li>
+                                                        <a href="/challenges/index#open-challenges" target="_self" class="uppercase">Open Challenges</a>
+                                                    </li>
+                                                                                                    <li>
+                                                        <a href="/challenges/index#past-challenges" target="_self" class="uppercase">Past Challenges</a>
+                                                    </li>
+                                                                                                    <li>
+                                                        <a href="/events/?searchEventsBy=application+clinic#events" target="_self" class="uppercase">Application Clinics</a>
+                                                    </li>
+                                                                                                                                    </ul>
+                                                                                                                                                                                                            <div class="relative flex justify-between gap-5">
+                                            <div>
+                                                <span class="block mb-2 uppercase heading-5">Launch a custom Challenge</span>
+
+                                                <p class="text-sm max-w-[80%]">Get started with a custom challenge to solve your organization&#039;s most pressing problems.</p>
+                                            </div>
+
+                                            <svg class="w-10" xmlns="http://www.w3.org/2000/svg" width="32" height="16" viewBox="0 0 32 16" fill="currentColor">
+    <path d="M31.7071 8.76045C32.0976 8.36992 32.0976 7.73676 31.7071 7.34623L25.3432 0.982274C24.9526 0.59175 24.3195 0.59175 23.9289 0.982274C23.5384 1.3728 23.5384 2.00596 23.9289 2.39649L29.5858 8.05334L23.9289 13.7102C23.5384 14.1007 23.5384 14.7339 23.9289 15.1244C24.3195 15.5149 24.9526 15.5149 25.3432 15.1244L31.7071 8.76045ZM0.968262 9.05334L31 9.05334L31 7.05334L0.968262 7.05334L0.968262 9.05334Z" />
+</svg>
+
+                                                                                            <a href="/custom-challenges" target="_self" class="absolute inset-0"></a>
+                                                                                    </div>
+                                                                                                                        </nav>
+                                    </li>
+                            <li x-data="{expanded: false}">
+                    <a x-on:click.prevent="expanded ? window.location = $el.href : expanded = true" href="/events" class="flex items-center justify-between py-5 text-white border-b heading-4 border-b-white/25">
+                        <span>Events</span>
+
+                                                    <span class="transition-transform" x-bind:class="expanded ? 'rotate-0' : 'rotate-90'">
+                                <svg class="w-5 text-white/40" xmlns="http://www.w3.org/2000/svg" width="32" height="16" viewBox="0 0 32 16" fill="currentColor">
+    <path d="M31.7071 8.76045C32.0976 8.36992 32.0976 7.73676 31.7071 7.34623L25.3432 0.982274C24.9526 0.59175 24.3195 0.59175 23.9289 0.982274C23.5384 1.3728 23.5384 2.00596 23.9289 2.39649L29.5858 8.05334L23.9289 13.7102C23.5384 14.1007 23.5384 14.7339 23.9289 15.1244C24.3195 15.5149 24.9526 15.5149 25.3432 15.1244L31.7071 8.76045ZM0.968262 9.05334L31 9.05334L31 7.05334L0.968262 7.05334L0.968262 9.05334Z" />
+</svg>
+                            </span>
+                                            </a>
+
+                                            <nav class="p-5 bg-white" x-show="expanded" x-collapse>
+                                                                                                                                                                                                                                                                        <ul class="mb-6 space-y-6 last-of-type:border-b last-of-type:pb-6 last-of-type:border-b-black/25">
+                                                                                            <li>
+                                                                                                            <a href="/events" target="_self" class="flex items-center justify-between gap-5 heading-4">
+                                                            Events
+
+                                                            <svg class="w-10" xmlns="http://www.w3.org/2000/svg" width="32" height="16" viewBox="0 0 32 16" fill="currentColor">
+    <path d="M31.7071 8.76045C32.0976 8.36992 32.0976 7.73676 31.7071 7.34623L25.3432 0.982274C24.9526 0.59175 24.3195 0.59175 23.9289 0.982274C23.5384 1.3728 23.5384 2.00596 23.9289 2.39649L29.5858 8.05334L23.9289 13.7102C23.5384 14.1007 23.5384 14.7339 23.9289 15.1244C24.3195 15.5149 24.9526 15.5149 25.3432 15.1244L31.7071 8.76045ZM0.968262 9.05334L31 9.05334L31 7.05334L0.968262 7.05334L0.968262 9.05334Z" />
+</svg>
+                                                        </a>
+                                                                                                    </li>
+                                            
+                                                                                                                                                <li>
+                                                        <a href="/events/solve-at-mit-2026" target="_self" class="uppercase">Solve at MIT</a>
+                                                    </li>
+                                                                                                    <li>
+                                                        <a href="/events/solve-challenge-finals-2026" target="_self" class="uppercase">Solve Challenge Finals</a>
+                                                    </li>
+                                                                                                                                    </ul>
+                                                                                                                        </nav>
+                                    </li>
+                            <li x-data="{expanded: false}">
+                    <a x-on:click.prevent="expanded ? window.location = $el.href : expanded = true" href="/partner" class="flex items-center justify-between py-5 text-white border-b heading-4 border-b-white/25">
+                        <span>Partner</span>
+
+                                                    <span class="transition-transform" x-bind:class="expanded ? 'rotate-0' : 'rotate-90'">
+                                <svg class="w-5 text-white/40" xmlns="http://www.w3.org/2000/svg" width="32" height="16" viewBox="0 0 32 16" fill="currentColor">
+    <path d="M31.7071 8.76045C32.0976 8.36992 32.0976 7.73676 31.7071 7.34623L25.3432 0.982274C24.9526 0.59175 24.3195 0.59175 23.9289 0.982274C23.5384 1.3728 23.5384 2.00596 23.9289 2.39649L29.5858 8.05334L23.9289 13.7102C23.5384 14.1007 23.5384 14.7339 23.9289 15.1244C24.3195 15.5149 24.9526 15.5149 25.3432 15.1244L31.7071 8.76045ZM0.968262 9.05334L31 9.05334L31 7.05334L0.968262 7.05334L0.968262 9.05334Z" />
+</svg>
+                            </span>
+                                            </a>
+
+                                            <nav class="p-5 bg-white" x-show="expanded" x-collapse>
+                                                                                                                                        <ul class="mb-6 space-y-6 last-of-type:border-b last-of-type:pb-6 last-of-type:border-b-black/25">
+                                                                                            <li>
+                                                                                                            <span class="heading-4">
+                                                            I am a...
+                                                        </span>
+                                                                                                    </li>
+                                            
+                                                                                                                                                <li>
+                                                        <a href="/partner/support" target="_self" class="uppercase">Philanthropist</a>
+                                                    </li>
+                                                                                                    <li>
+                                                        <a href="/partner/sponsorship" target="_self" class="uppercase">Corporation</a>
+                                                    </li>
+                                                                                                    <li>
+                                                        <a href="/partner/foundations" target="_self" class="uppercase">Foundation</a>
+                                                    </li>
+                                                                                                    <li>
+                                                        <a href="/partner/sif" target="_self" class="uppercase">Investor</a>
+                                                    </li>
+                                                                                                                                    </ul>
+                                                                                                                                                                                                            <div class="relative flex justify-between gap-5">
+                                            <div>
+                                                <span class="block mb-2 uppercase heading-5">Launch a Custom Challenge</span>
+
+                                                <p class="text-sm max-w-[80%]">Get started with a custom challenge to solve your organization&#039;s most pressing problems.</p>
+                                            </div>
+
+                                            <svg class="w-10" xmlns="http://www.w3.org/2000/svg" width="32" height="16" viewBox="0 0 32 16" fill="currentColor">
+    <path d="M31.7071 8.76045C32.0976 8.36992 32.0976 7.73676 31.7071 7.34623L25.3432 0.982274C24.9526 0.59175 24.3195 0.59175 23.9289 0.982274C23.5384 1.3728 23.5384 2.00596 23.9289 2.39649L29.5858 8.05334L23.9289 13.7102C23.5384 14.1007 23.5384 14.7339 23.9289 15.1244C24.3195 15.5149 24.9526 15.5149 25.3432 15.1244L31.7071 8.76045ZM0.968262 9.05334L31 9.05334L31 7.05334L0.968262 7.05334L0.968262 9.05334Z" />
+</svg>
+
+                                                                                            <a href="/custom-challenges" target="_self" class="absolute inset-0"></a>
+                                                                                    </div>
+                                                                                                                                                                                                            <div class="relative flex justify-between gap-5">
+                                            <div>
+                                                <span class="block mb-2 uppercase heading-5">Donate to the Solver Impact Fund</span>
+
+                                                <p class="text-sm max-w-[80%]">Direct 100% of your support to social innovators.</p>
+                                            </div>
+
+                                            <svg class="w-10" xmlns="http://www.w3.org/2000/svg" width="32" height="16" viewBox="0 0 32 16" fill="currentColor">
+    <path d="M31.7071 8.76045C32.0976 8.36992 32.0976 7.73676 31.7071 7.34623L25.3432 0.982274C24.9526 0.59175 24.3195 0.59175 23.9289 0.982274C23.5384 1.3728 23.5384 2.00596 23.9289 2.39649L29.5858 8.05334L23.9289 13.7102C23.5384 14.1007 23.5384 14.7339 23.9289 15.1244C24.3195 15.5149 24.9526 15.5149 25.3432 15.1244L31.7071 8.76045ZM0.968262 9.05334L31 9.05334L31 7.05334L0.968262 7.05334L0.968262 9.05334Z" />
+</svg>
+
+                                                                                            <a href="/partner/solver-impact-fund" target="_self" class="absolute inset-0"></a>
+                                                                                    </div>
+                                                                                                                        </nav>
+                                    </li>
+                    </ul>
+    </div>
+</nav></header>
+        <main class="flex flex-col flex-auto">
+            <section class="bg-black text-white py-20">
+
+        <div class="container">
+            <div class="flex flex-col gap-x-16 md:flex-row lg:gap-x-24">
+                <div class="relative flex flex-col items-start">
+                                        <div class="btn btn--primary px-10 mb-5 cursor-auto">Submitted</div>
+                    
+                    <div class="relative -top-2 font-semibold uppercase hidden md:block mt-auto">
+                        <span>Last Updated January 24, 2023</span>
+                    </div>
+                </div>
+                <div class="relative flex-1 flex flex-col">
+                    <div class="text-20 font-bold uppercase mb-4">2023 Solv[ED] Youth Innovation Challenge</div>
+                    <h1 class="heading-2">Virog</h1>
+                                        <h2 class="text-20 mt-4"></h2>
+                                        <div class="mt-12">
+                        <div class="font-bold uppercase">Team Leader</div>
+                        <div class="text-28">Dhruv  Gupta</div>
+                    </div>
+                                    </div>
+            </div>
+        </div>
+    </section>
+    <section class="py-20">
+        <div class="container">
+            <div
+    x-ignore
+    ax-load
+    x-data="tabs('tab')"
+    x-id="['tablist', 'tabpanels']"
+    class="flex flex-col gap-8 lg:flex-row lg:gap-16"
+>
+    
+    <div class="frontend-form lg:hidden">
+        <select x-model="selectedTab">
+            <template x-for="(tab, index) in tabs" hidden>
+                <option x-bind:value="tab.id" x-text="tab.label"></option>
+            </template>
+        </select>
+    </div>
+
+    
+    <div x-bind:id="$id('tabpanels')"
+        class="flex-1 lg:order-last">
+
+        <div
+    x-data="{
+        id: 'solution',
+        label: 'Solution',
+    }"
+    x-init="tabs.push({id, label})"
+    x-show="isSelected(id)"
+    x-bind:id="`tabpanel-${id}`"
+    x-bind:aria-labelledby="`tab-${id}`"
+    role="tabpanel"
+    style="display:none;"
+>
+    <div>
+    
+        <div x-cloak x-data="{expanded: true}" class="group border-b last:border-none">
+    <div x-on:click="expanded = !expanded" class="flex items-center justify-between py-4 group-first:pt-0 cursor-pointer">
+        <div class="text-24 lg:text-32 font-serif">Solution Overview &amp; Team Lead Details</div>
+        <div>
+            <svg x-show="!expanded" class="size-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+</svg>            <svg x-show="expanded" class="size-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14"/>
+</svg>        </div>
+    </div>
+    <div x-collapse x-show="expanded" class="space-y-8 pb-8" style="display:none;">
+        <div>
+    <div class="text-20 lg:text-24 font-semibold mb-2">Solution name.</div>
+    <div class="text-18 lg:text-20">
+        <div>Virog</div>
+    </div>
+</div>                <div>
+    <div class="text-20 lg:text-24 font-semibold mb-2">Provide a one-line summary of your solution.</div>
+    <div class="text-18 lg:text-20">
+        <div class="answer-wysiwyg">
+                        <p>Revolutionizing patient logistics, care, and early threat detection in hospitals for suburban and rural India through cost-effective and accessible medical technology.</p>
+                    </div>
+    </div>
+</div>                <div>
+    <div class="text-20 lg:text-24 font-semibold mb-2">What specific problem are you trying to solve? </div>
+    <div class="text-18 lg:text-20">
+        <div class="answer-wysiwyg">
+                        <p>In India, a significant portion of the population is limited to government healthcare facilities due to financial constraints and geographic remoteness. These facilities are often ill-equipped and understaffed, leading to a disparity in healthcare access. </p>
+<p>Our group initially discussed the prevalence of anemia in India, which affects <a href="https://www.scholarsresearchlibrary.com/articles/anaemia-a-silent-killer-among-women-in-india-present-scenario.pdf">52% of women</a>, with <a href="https://www.scholarsresearchlibrary.com/articles/anaemia-a-silent-killer-among-women-in-india-present-scenario.pdf">even higher rates</a> for expecting mothers. Patients with severe anemia require hospitalization and treatment involving blood transfusions or injections. However, lack of proper hygiene during treatment in rural and sub-urban areas leads to high morbidity and mortality. Lack of access to cost-effective diagnostic testing in rural and remote areas can make diagnosing anemia difficult, particularly in its early stages. However, our research discovered that these issues extend to various other diseases and are rooted in the country's <a href="https://www.oxfamindia.org/press-release/india-inequality-report-2021-indias-unequal-healthcare-story">dysfunctional healthcare systems</a>.</p>
+<p>We observed that the primary cause of patient mortality in hospitals is not their primary disease but secondary or hospital-contracted morbidities. The causes include a lack of continuous monitoring of patients after diagnosis and a lack of hygiene, leading to contamination of sterilized apparatus that results in infections. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7202464/#:~:text=Dysphagia%20occurs%20in%2011%25%20to,need%20for%20the%20artificial%20airway">Up to 93%</a> of patients in the neurology wards can experience choking after tracheostomy, which is fatal in a significant number of cases. These issues can interfere with the patient's treatment and leave them disabled, often financially as well. </p>
+<p>Another issue in rural and sub-urban healthcare is the constraint of resources, both material and human. The <a href="https://www.oxfamindia.org/blog/rural-healthcare-in-india">sheer volume of patients</a> that government healthcare systems treat daily is higher than they can manage. This number is partly owed to patients repeatedly visiting due to improper treatments and partly to the affordability of subsidized government healthcare. </p>
+<p>In summary, our research has revealed many neglected problems in the Indian healthcare system that we propose to tackle without investing considerable extra resources. </p>
+                    </div>
+    </div>
+</div>                <div>
+    <div class="text-20 lg:text-24 font-semibold mb-2">Elevator pitch </div>
+    <div class="text-18 lg:text-20">
+        <div class="w-full mt-5 aspect-video max-w-3xl">
+                        <iframe
+                            src="https://www.youtube.com/embed/aH1HvKu5w_U"
+                            frameborder="0"
+                            allow="autoplay; fullscreen; picture-in-picture"
+                            allowfullscreen
+                            class="size-full"
+                        ></iframe>
+                    </div>
+    </div>
+</div>                <div>
+    <div class="text-20 lg:text-24 font-semibold mb-2">What is your solution? </div>
+    <div class="text-18 lg:text-20">
+        <div class="answer-wysiwyg">
+                        <p>Virog is an <strong>approach </strong>to optimize existing healthcare facilities by integrating low-cost sensors, categorization, and management algorithms into the system.</p>
+<p>From pre-diagnostic patient classification, hospital vacancy management, and tech-optimized nursing to post-diagnostic follow-up, we have an entire suite of innovative solutions for the most pressing issues and a way to integrate and scale them into our overloaded healthcare infrastructure.</p>
+<p>We have the following products under development as part of our Virog Proposal:</p>
+<p><strong>VADE</strong><strong>:</strong></p>
+<ul><li>It is primarily intended to be used as a low-cost continuous monitoring system to track pregnant anemic women's and other hospitalized patients' health and alert associated healthcare professionals of abnormal changes in measured vitals via text notification.</li><li>Along with other intelligent and cost-effective med-tech devices, VADE is intended to be used in pre-diagnostic clinics, where people will be offered preliminary tests to substantially reduce the chances of an erroneous diagnosis <a href="https://www.cmrpjournal.org/text.asp?2022/12/5/199/359939">[1]</a>. </li></ul><p><strong>UV4:</strong></p>
+<ul><li>This is targeted towards preventing secondary antibiotic-resistant infections that creep into the wound created by the I/V (intravenous) insertion, which is the primary cause of worsening patient condition and death at the hospital. </li></ul><p><strong>Transcutaneous tracheal electrode:</strong></p>
+<ul><li>The device is designed to alert the nurse station in case an abnormal activity is measured by the electrode placed on the glossopharyngeal nerve, a cranial nerve responsible for swallowing, allowing timely and efficient intervention to stop patients from asphyxiation caused by dysphagia following tracheostomy. </li></ul><p><strong>Virog Web Services:</strong></p>
+<ul><li>Our web services are designed to match patients with appropriate medical practitioners based on availability, distance, cost, and specialization. Post-matching, the doctor gets a standardized patient report, a summarization of patient history, and symptom description, plus patients are flagged on the basis of severity.<br />Such a system will allow effective management of the humongous patient loads in Indian hospitals and improve accessibility and reduce disparity in services obtained.</li></ul>
+                    </div>
+    </div>
+</div>                <div>
+    <div class="text-20 lg:text-24 font-semibold mb-2">Who does your solution serve? In what ways will the solution impact their lives? </div>
+    <div class="text-18 lg:text-20">
+        <div class="answer-wysiwyg">
+                        <p>Through VIROG, we are mainly trying to serve people in areas where the <a href="https://www.oxfamindia.org/blog/rural-healthcare-in-india">patient load to healthcare resources ratio</a> is very high, such as the rural areas (with meager healthcare resources) and also the densely populated region around the city, such as slums (with very high patient load). Also, our solution aims to provide medical assistance to the nurses by making it easier for them to monitor patients and their vitals. 
+  </p>
+<p>Ways the solution impacts peoples' lives:
+  </p>
+<ul><li>Before diagnosis, we wish to optimally direct patients to the appropriate medical resources quickly and efficiently. Optimization algorithms <a href="https://www.researchgate.net/publication/320253084_ALGORITHMS_FOR_TRAFFIC_MANAGEMENT_IN_THE_INTELLIGENT_TRANSPORT_SYSTEMS">[1]</a>, <a href="https://www.academia.edu/38039070/ALGORITHM_FOR_HOSPITAL_MANAGEMENT_SYSTEM">[2]</a> can help segregate critical patients from the bulk and provide them with immediate and potentially life-saving assistance by intimating the concerned medical personnel. 
+  </li><li>Post-diagnosis, for hospitalized patients, our solution aims to prevent avoidable deaths through sudden, otherwise unnoticed changes in the patient's vitals via continuous monitoring and transmitting systems. 
+  </li><li>In more severe cases, our small but innovative designs can help prevent contamination via IV (intravenous) and blood transfusion, hypoxia, asphyxiation, and many other neglected patient mortality causes. This would significantly help hospitalized people with weak or compromised immune systems, such as the elderly or heavily sedated patients. 
+  </li><li>The information obtained from the patient's vitals makes it possible to detect anemia cases. 
+  </li><li>Continuous monitoring via cost-effective, low-technology devices would help the medical personnel avoid resource-intensive tests repeatedly. This would also allow for taking on a larger pool of patients simultaneously and efficiently. 
+  </li><li>Creating a centralized database of patient records helps reduce paperwork and makes it easier for them to continue their treatment in other places, as earlier records are readily available. </li></ul>
+                    </div>
+    </div>
+</div>                <div>
+    <div class="text-20 lg:text-24 font-semibold mb-2">How are you and your team well-positioned to deliver this solution?</div>
+    <div class="text-18 lg:text-20">
+        <div class="answer-wysiwyg">
+                        <p>Growing up in an industrial town, I (Dhruv) have been surrounded by infections, injuries, and death that plague the slums surrounding the industry owners' bungalows. 
+It was not uncommon to hear of workers losing their wives and children during pregnancy. I later learned that a significant factor in such deaths was undiagnosed/unmonitored anemia. The intense loss of these people, some of whom I knew by name and even used to play with as a kid, left a powerful impression on me.</p>
+<p>During my teens, my father's best friend passed away due to being matched to an ENT clinic by google maps while having a heart attack. The tragic nature of his demise illustrates the urgent need to optimally direct patients to the appropriate medical resources. </p>
+<p>Our team consists of like-minded people who identify with such experiences, draw inspiration from the tragedy we've been exposed to and are driven by a desire to help and make a difference. It comprises six undergraduate students majoring in Biology, Physics, Mathematics, and Material Sciences. We have people skilled in web development, electronics, statistical analysis, and human resource management. </p>
+<p>Our lead, Dhruv, has a background in MedTech devices due to his internship at the Yodh Lab at UPenn, where he studied non-invasive optoelectronic probes. He has also contributed to future-forward newsletters on technology-driven healthcare under the guidance of former UNDP office holder Ugo Bot.</p>
+                    </div>
+    </div>
+</div>                <div>
+    <div class="text-20 lg:text-24 font-semibold mb-2">What steps have you taken to understand the needs of the population you want to serve? </div>
+    <div class="text-18 lg:text-20">
+        <div class="answer-wysiwyg">
+                        <ul><li>During the summer of 2022, I, Dhruv Gupta, interned in the Neurology ward at Sri Ganga Ram Hospital in New Delhi, a semi-private entity. The two-month internship was intended to serve as an excellent opportunity for me to talk to the patients and the nurses about the problems they face in the current healthcare system. </li><li>The inputs they gave us in the initial stages of the product ideation helped us identify a whole new suite of problems we were unaware of: post-diagnostic monitoring and nursing of hospitalized patients for safe recovery. After more research by my team about these issues, we shifted our focus from innovating med-tech for doctors to innovating the same for nurses and hospitalized patients. </li><li>We have developed our solution, through all stages of its maturation, in consultation with patients, their families, and most importantly, nurses who shall use them.</li></ul>
+                    </div>
+    </div>
+</div>                <div>
+    <div class="text-20 lg:text-24 font-semibold mb-2">Which aspects of the Challenge does your solution most closely address? </div>
+    <div class="text-18 lg:text-20">
+        <ul class="list-disc ml-6">
+                        <li>Improving healthcare access and health outcomes; and reducing and ultimately eliminating health disparities (Health)</li>
+                    </ul>
+    </div>
+</div>                <div>
+    <div class="text-20 lg:text-24 font-semibold mb-2">What is your solution’s stage of development?</div>
+    <div class="text-18 lg:text-20">
+        <ul class="list-disc ml-6">
+                        <li>Prototype: A venture or organization building and testing its product, service, or business model</li>
+                    </ul>
+    </div>
+</div>                <div>
+    <div class="text-20 lg:text-24 font-semibold mb-2">In what city, town, or region is your solution team located?</div>
+    <div class="text-18 lg:text-20">
+        <div>Bengaluru, Karnataka, India</div>
+    </div>
+</div>                <div>
+    <div class="text-20 lg:text-24 font-semibold mb-2">Who is the Team Lead for your solution?</div>
+    <div class="text-18 lg:text-20">
+        <div>Dhruv Gupta</div>
+    </div>
+</div>
+    </div>
+</div>        <div x-cloak x-data="{expanded: false}" class="group border-b last:border-none">
+    <div x-on:click="expanded = !expanded" class="flex items-center justify-between py-4 group-first:pt-0 cursor-pointer">
+        <div class="text-24 lg:text-32 font-serif">More About Your Solution</div>
+        <div>
+            <svg x-show="!expanded" class="size-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+</svg>            <svg x-show="expanded" class="size-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14"/>
+</svg>        </div>
+    </div>
+    <div x-collapse x-show="expanded" class="space-y-8 pb-8" style="display:none;">
+        <div>
+    <div class="text-20 lg:text-24 font-semibold mb-2">What makes your solution innovative?</div>
+    <div class="text-18 lg:text-20">
+        <div class="answer-wysiwyg">
+                        <p>Since the genesis of Virog, we have characterized our innovations by making them small but deeply significant. The following points illustrate the uniqueness of our solution:<br /></p>
+<p><strong>VADE:</strong></p>
+<ul><li>While the idea of a wristband measuring important vitals like SpO2 and temperature seems commonplace, its usage in real-time monitoring and crisis management makes it innovative. </li><li>We changed our model to an armband to include two important new parameters: temperature and perspiration. These parameters were included after intensive consultation with the Neurology staff at Sir Ganga Ram Hospital.</li><li>This is an unorthodox approach and allows a more comprehensive, rbst and reliable analysis with significantly reduced false positives than PPG alone. </li><li>Further, we combined machine-learning-based data analysis (based on deviations from dynamic individual normals rather than static population averages) with lower-precision but highly affordable technologies to approach the level of accuracy of ECGs and other highly expensive devices in the market, but at much lower costs. </li></ul><p><strong>UV4 Sterilizer/Transcutaneous Tracheal Electrode:</strong></p>
+<ul><li>Here, the two med-tech devices proposed are entirely novel innovations designed to prevent unnecessary deaths. </li><li>The solutions have been carefully designed to be as inexpensive as possible and also support workshop/small-scale manufacture. </li><li>The key innovation in UV4 is the use of kaolin which is ubiquitous and has unique bacterial adsorption properties and also blocks UV light from reaching the hand. Kaolin further links with detergents which lyses the adsorbed bacteria. It's never been used for bio-containment before but we got positive results in the lab. </li><li>Kaolin costs 50 dollars a metric tonne. It's dirt cheap, because it is clay itself. Secondary infections are an extremely important killer. We are one of the first initiatives to target this problem. Our solution to them is incomparable in price and ease of implementation. </li><li>The tracheal electrode further targets a completely ignored problem: that of death due to dysphagia. Our solution is non-invasive, and inexpensive and works in tandem with the nurses and not as a replacement for them, by acting as an alert system. </li><li>This allows us to keep costs low and not impede on the role of the human staff in hospitals, merely helping them be more efficient. </li></ul><p><strong>Web Services</strong></p>
+<p>The unique feature of our web services is the generation of a standardized patient report received by the doctor on matching.</p>
+<p>This is based on the centralization of patient past records and flagging keywords entered in the symptom description entered by the patients to generate a series of tags that route that help categorize and route the patient to appropriate medical services with a filter for cost and distance. The patients are also sorted in terms of severity inferred. </p>
+<p>This interface between the doctor and patient helps overcome communication barriers and make efficiently presents patient information to doctors.  </p>
+<p>Our investors all found this framework incredibly promising both in terms of social impact and market opportunity. </p>
+<p><strong>Virog as a reinvention of the Indian MedTech market </strong></p>
+<p>We've developed prototype models of our devices and plan to extensively test them in public and private hospitals and clinics to train the ML-based analysis model that evaluates and summarises the continuous monitoring input from our devices. </p>
+<p>The data trends obtained hold high potential for research purposes. </p>
+<p>There is immense value in using the concept innovation in Virog to drive the Medtech market in the country.</p>
+<p>Whilst the doctor's market is saturated, grassroots innovation targeting nursing holds great opportunity for social and economic impact.</p>
+<p><em>Virog holds the potential to significantly change the Indian MedTech market and streamline upcoming breakthroughs into an integrated framework that simultaneously targets the system's biggest problems at once.</em></p>
+                    </div>
+    </div>
+</div>                <div>
+    <div class="text-20 lg:text-24 font-semibold mb-2">What are your impact goals for the next year, and how will you achieve them?</div>
+    <div class="text-18 lg:text-20">
+        <div class="answer-wysiwyg">
+                        <p>Given the nature of the proposal, it's best to discuss our impact goals in the context of each proposed solution.</p>
+<p><strong>VADE:</strong></p>
+<ul><li>At places of implementation, VADE targets to reduce the number of anemic women by 1% and sharply reduce maternal deaths in which anemia is a significant factor by the end of the year.</li><li>As part of a partnership with AIIMS Delhi (India's premiere Medical institute and govt. hospital), we plan to deploy Virog in the blood cancer ward of that hospital as part of an alert and analysis system.</li><li>Based on the success of the above, we shall set up VADE as a general-purpose long-term monitoring device in government hospitals across the national capital region. </li></ul><p><strong>UV4 (IV-UV) Sterilizer and TTE (Transcutaneous Tracheal Electrode):</strong></p>
+<ul><li>The combination of the two devices targets secondary morbidities (i.e., diseases/injuries contracted from the hospital). By December, we plan to reduce their number (as recorded in nursing reports) by 20% in each hospital where these devices are implemented. </li><li>Indirect goals are:<ul><li> Significant reductions in costs incurred by patients during their hospital stay (treatment of secondary morbidities can make up to 85% of the net costs!),</li><li>Reduce patient deaths (secondary morbidities are a significant cause of death in over 75% of cases),</li><li>Increase the patients' quality of life and reduce recovery time measured as faster discharge and higher patient satisfaction with treatment in feedback. </li></ul></li></ul><p><strong>Web Services:</strong></p>
+<p>We plan to reduce patient traffic hours, improve the matching of patients to hospitals based on distance, specialization, and affordability, and optimally segregate critical patients from the bulk based on standard reports generated through compiling past patient records and flagging keywords in patient statements obtained.</p>
+<p><strong>Pre-diagnostic Clinics:</strong></p>
+<ul><li>Our goal is to make healthcare accessible to rural places by allowing long-term remote monitoring and relaying medical advice from professionals. We can measure its impact in terms of reduced mortality due to diseases in areas of implementation. </li><li>We further aim to reduce the number of unnecessary OPDs and reduce hospital loads. We plan to measure the same in terms of the reduced overtime hours spent by the medical staff of associated hospitals.</li></ul><p><strong>Virog:</strong></p>
+<p>Virog as an initiative has far-reaching consequences for improving medical infrastructure and re-inventing the MedTech market in India. By the end of this year (or by mid-2024), we seek a larger, more diverse, more integrated MedTech market in India. We plan to keep track of this goal by tracking the government investment in MedTech over the next financial year. </p>
+                    </div>
+    </div>
+</div>                <div>
+    <div class="text-20 lg:text-24 font-semibold mb-2">Describe the core technology that powers your solution.</div>
+    <div class="text-18 lg:text-20">
+        <div class="answer-wysiwyg">
+                        <p>VIROG is a collection of technologies that we glued together coherently to serve a very pressing problem of our community.</p>
+<p><strong>VADE:</strong></p>
+<ul><li>It's a PPG (Photoplethysmography)-based armband that can transmit SpO2, pulse, temperature, and armpit perspiration to a smartphone interface. (The parameters have been carefully chosen after consultation with doctors and paramedics).</li><li>We compute the SpO2 and pulse and detect anemia by calculating the absorbance ratio of IR vs Red and plugging the value into an empirical equation with statistically/population-derived coefficients. </li></ul><ul><li>We employ maximum likelihood estimator (MLE) based statistical techniques to categorize the patients based on their criticality. This "criticality index" is used to assign priorities to patients.</li><li>We have designed a graph algorithm that is being used to redirect medical attention from the closest available source to the patients based on the real-time status (doctors' location, possible medical assistance needed, etc.).</li></ul><p><strong>UV4:</strong></p>
+<ul><li>This consists of a clip-on UV Led and a solution of Kaolin clay, oil, and detergent.</li><li>The UV LED is to be clipped onto I/V insertions at the end near the patient's arm, and the solution is to be painted onto the bandage in the area where the UV light falls.</li><li>The UV light disinfects the illuminated area, and the solution helps this by slowing the bacteria down (Kaolin adsorbs bacteria) and the detergent helping in killing them. It also prevents UV light from reaching the skin. </li></ul><p><strong>Transcutaneous tracheal electrode:</strong></p>
+<ul><li>This consists of an electrode, an amplifier, and a transmitter and reports the activity of the nerve which controls swallowing, via a smartphone interface.</li></ul><ul><li>The glossopharyngeal nerve approaches the skin at the top of the pharynx, just over the voice box, and is redundant to the vagus nerve in swallowing. Damage to the Vagus nerve blocks swallowing, but a signal is still produced at the glossopharyngeal nerve when excess saliva accumulates.  </li><li>This signal can be measured and reported non-invasively and raise an alarm in case of appropriate deviation in measurement. </li><li>Texas Medical Centre has also created a device (Neurastasis) based on similar technology (for very different purposes). It is being successfully tested out in clinical trials, giving us confidence that our devices will create the same impact on the market.</li></ul><p><br /><strong>Virog Web services:</strong></p>
+<ul><li>Includes a VLDB system like Hadoop, which helps store the semi-automated data recorded by the VADE armbands.</li><li>A real-time updated website containing patient records, facilitating collaborative work across country-wide or global-scale medical personnel, depending on accessibility.</li><li>Local "Virog servers" running an optimization algorithm for patient traffic management can efficiently streamline people to the correct resources as soon as possible. They will be synchronized in real-time from our overall network within hospitals.</li><li>Post-treatment follow-up will be automated. This will provide early warning against relapse of certain diseases like cancer, CoVID, etc.</li></ul><p><br /></p>
+                    </div>
+    </div>
+</div>                <div>
+    <div class="text-20 lg:text-24 font-semibold mb-2">Please select the technologies currently used in your solution:</div>
+    <div class="text-18 lg:text-20">
+        <ul class="list-disc ml-6">
+                        <li>Artificial Intelligence / Machine Learning</li><li>Big Data</li><li>Imaging and Sensor Technology</li><li>Internet of Things</li><li>Software and Mobile Applications</li>
+                    </ul>
+    </div>
+</div>                <div>
+    <div class="text-20 lg:text-24 font-semibold mb-2">In which countries do you currently operate?</div>
+    <div class="text-18 lg:text-20">
+        <ul class="list-disc ml-6">
+                        <li>India</li>
+                    </ul>
+    </div>
+</div>                <div>
+    <div class="text-20 lg:text-24 font-semibold mb-2">How many people does your solution currently serve, and how many do you plan to serve in the next year? If you haven’t yet launched your solution, tell us how many people you plan to serve in the next year. </div>
+    <div class="text-18 lg:text-20">
+        <div class="answer-wysiwyg">
+                        <p>Given a huge beneficiary population and keeping in mind our limitations as undergraduate students, we have devised a stepwise ladder approach:<br /></p>
+<ol><li><strong>Bengaluru, Karnataka (Delivery to beneficiaries)</strong><strong>:</strong> As step one, we have initiated communication with the state's health ministry. 10 government hospitals across the city shall be supplied with our products, each serving ~4000 people a month. <br />This shall be done immediately after the prototype testing is finished, in April. We plan to serve about 40,000 a month by May.</li><li><strong>Karnataka and Delhi (Going public)</strong><strong>:</strong> Based on product performance and making necessary changes with feedback, we shall launch the devices as commercial entities by for private hospitals to purchase across the state of Karnataka. <br />At the same time, we shall launch the web services in Delhi after having trained our RL (Reinforcement Learning) model on appropriate datasets. <br />Delhi has been chosen due to the appropriate market and government schemes and mindset to implement the same. <br />This is expected to increase the number to over 1 million (a year) by November, keeping in mind a 60% acceptance figure. This includes thousands of healthcare professionals who benefit from reduced unnecessary OPDs and improved patient management.</li><li><strong>Setting up the first pre-diagnostic clinics (Refocus on anemia): </strong>The end of the year should see the setup of the first 10 pre-diagnostic clinics in rural Bengaluru. The delay is to ensure we have the necessary amount of surplus funds to do so. While this would barely change the number served, adding about 2000 (monthly) beneficiaries, it marks a critical step for bringing into the fold our primary beneficiaries: anemic mothers in rural India, and sets up our vision for the following year. </li></ol>
+                    </div>
+    </div>
+</div>                <div>
+    <div class="text-20 lg:text-24 font-semibold mb-2">What barriers currently exist for you to accomplish your goals in the next year?</div>
+    <div class="text-18 lg:text-20">
+        <div class="answer-wysiwyg">
+                        <p>As a team of Undergraduate Students from India, these are a few of the barriers we currently face:</p>
+<p><strong><strong>Marketing</strong>: <br /></strong></p>
+<ul><li>We as a group of science undergraduates have most of our mentors being scientists and doctors themselves. </li><li>While the tech is very finely worked out, we need mentorship and guidance to develop sound market strategies and to help us navigate through legal procedures to kick off this project.</li></ul><p><strong>The Virog Pre-diagnostic clinics:</strong></p>
+<ul><li>The Virog pre-diagnostic clinics are challenging to implement in terms of the funds and skilled personnel required to set up such centers at the rural grassroots level. </li><li>A particular barrier we face for the same is convincing a sect of  our beneficiary population to use the service, due to mistrust against medicine and technology in orthodox rural provinces.</li><li>We shall need  to conduct workshops and awareness initiatives to encourage use and acceptance in some such places. </li></ul><p><br /></p>
+                    </div>
+    </div>
+</div>
+    </div>
+</div>        <div x-cloak x-data="{expanded: false}" class="group border-b last:border-none">
+    <div x-on:click="expanded = !expanded" class="flex items-center justify-between py-4 group-first:pt-0 cursor-pointer">
+        <div class="text-24 lg:text-32 font-serif">Your Team</div>
+        <div>
+            <svg x-show="!expanded" class="size-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+</svg>            <svg x-show="expanded" class="size-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14"/>
+</svg>        </div>
+    </div>
+    <div x-collapse x-show="expanded" class="space-y-8 pb-8" style="display:none;">
+        <div>
+    <div class="text-20 lg:text-24 font-semibold mb-2">How many people work on your solution team?</div>
+    <div class="text-18 lg:text-20">
+        <div>6 people work full time</div>
+    </div>
+</div>                <div>
+    <div class="text-20 lg:text-24 font-semibold mb-2">How long have you been working on your solution? </div>
+    <div class="text-18 lg:text-20">
+        <div>10 months</div>
+    </div>
+</div>                <div>
+    <div class="text-20 lg:text-24 font-semibold mb-2">What organizations do you currently partner with, if any? How are you working with them?</div>
+    <div class="text-18 lg:text-20">
+        <div class="answer-wysiwyg">
+                        <p>Virog currently partners with two organizations for incubation and driving our product to the market:</p>
+<ul><li>SID: SID is the incubation cell for the <strong>Indian Institute of Science (IISc Bangalore)</strong>. They provided us the seed funds, a workstation, access to institute resources, and primary business guidance.</li><li>Tata ELXSI: Tata ELXSI is the tech giant's med-tech development division helping us design and lease our devices.</li></ul><p>Upcoming partnerships:</p>
+<ul><li>Bangalore Bio-innovation Centre: The primary government-funded med-tech incubation facility in perhaps all of India, we have initiated contact with them for mentorship, future device development, and reaching out to a diverse <strong>community of med-tech entrepreneurs</strong> for a collaborative venture into the Virog setup. </li><li>Health Ministry of Karnataka: We have initiated talks and are expected to reach an arrangement soon on implementing Virog with government help. This partnership shall be critical to ensure fair access and fast-tracked distribution of Virog. </li><li>Delhi government: The Delhi government has made outstanding strides in improving its healthcare infrastructure over the past few years and is open to innovation. Further, there is a vast beneficiary population and a more extensive private hospital customer base in the national capital. Hence, we seek to secure a strong partnership with the Delhi NCT (National Capital Territory) government. </li></ul><p><br /></p>
+                    </div>
+    </div>
+</div>
+    </div>
+</div>        <div x-cloak x-data="{expanded: false}" class="group border-b last:border-none">
+    <div x-on:click="expanded = !expanded" class="flex items-center justify-between py-4 group-first:pt-0 cursor-pointer">
+        <div class="text-24 lg:text-32 font-serif">Business Model</div>
+        <div>
+            <svg x-show="!expanded" class="size-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+</svg>            <svg x-show="expanded" class="size-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14"/>
+</svg>        </div>
+    </div>
+    <div x-collapse x-show="expanded" class="space-y-8 pb-8" style="display:none;">
+        <div>
+    <div class="text-20 lg:text-24 font-semibold mb-2">What is your business model?</div>
+    <div class="text-18 lg:text-20">
+        <div class="answer-wysiwyg">
+                        <p><strong>Our business model can be described as follows:
+  </strong></p>
+<p> 
+  </p>
+<p>Application:  Long-term patient monitoring, routing, categorizing, and matching to hospitals; product manufacture intended for patient care and a campaign against anaemia. 
+  </p>
+<p>Beneficiaries: Anaemic women, especially expecting mothers, population using government healthcare facilities, and medically vulnerable population which faces hospitalization, Nursing staff.
+  </p>
+<p>Customers: General Public, The government, all hospitals, small clinics, MedTech enterprises
+  </p>
+<p>Revenue: Med-tech devices and web services
+  </p>
+<p>Surplus: Opening of Virog clinics for pre-diagnostic testing and post -diagnostic long term monitoring in semi-urban and rural areas.  
+  </p>
+<p>Collaboration: There is an excellent opportunity to create a collaborative and streamlined market under Virog for all emerging MedTech-based startups. 
+  </p>
+<p> 
+  </p><p><strong>Breakdown of products under Virog:
+  </strong></p>
+<p>One continuous monitoring device and two devices to prevent patient morbidity and mortality during hospitalization.
+  </p>
+<p>All devices are cost-optimized and readily affordable for even the poorest government hospital and are designed to allow local manufacture and maintenance. 
+  </p>
+<p>Web services which include categorizing patients and matching them to hospitals based on optimized cost, distance, and hospital specialty.
+  </p>
+<p> 
+  </p><p><strong>Virog as a collaborative venture:
+  </strong></p>
+<p>Virog as an initiative offers a focused, profitable arena for innovation and entrepreneurship in MedTech to thrive.
+  </p>
+<p>The problems we're trying to solve will be best taken on by a community of solvers rather than a single group. 
+  </p>
+<p>Pre-diagnostic clinics proposed will do best with a diversity of medical devices and collaborative innovation in the sphere of nursing seems to have the potential to be even a tool for nationwide revolution in MedTech services, bringing in new ideation, products and promoting indigenous design and manufacture of scientific products. 
+</p><p><br /></p><p><b>Employment:</b></p>
+<ol><li>Team Virog: We have space for motivated and qualified members to join our team and help with service development and product design. We are seeking marketing and executive members primarily.</li><li>The pre-diagnostic clinics are expected to generate a new field for skilled and semi-skilled workers to join.</li><li>There is a unique opportunity for mothers in rural India to participate in the initiative as clinic staff to create a safe and accessible environment for the target anemic expecting mothers' population.  </li></ol><p><br /></p><p><br /></p><p><b>Investment in Virog:</b></p>
+<p>We're actively seeking investors. Some of our investors/mentors are as below:</p>
+<ol><li>SID (Institute investment)</li><li>Siddharth Dhodhi, Senior Financial Advisor at Google</li><li>Tata ElXSI</li><li>Bangalore Bio-innovation centre (Upcoming)</li></ol><p>Partnered hospitals: </p>
+<p>One of our motivations for joining Solve is to seek better visibility among investors and to get financial and business mentorship. </p>
+                    </div>
+    </div>
+</div>                <div>
+    <div class="text-20 lg:text-24 font-semibold mb-2">What is your path to financial sustainability?</div>
+    <div class="text-18 lg:text-20">
+        <div class="answer-wysiwyg">
+                        <p><strong>Revenue Model -</strong><br /></p><p>Virog devices are designed to be very cost-effective to fit any budget and the expected cost (once in production) should be less than 200 to 500 Rs or 3 to 7 US $ only. Thus, it will easily fit in all government schemes and hospital budgets as its usage would greatly increase efficiency and quality reducing costs and troubles faced by patients and nursing staff. </p><p>Buyers:</p>
+<p><strong>Government</strong>: Virog fits into 4 major government investment schemes and should be able to generate significant government attention and funds.
+  </p>
+<p><strong>Hospitals</strong>: The principal buyers for our web services and devices shall be hospitals (Both private and govt run). Clinics can be pulled into the market with more devices. 
+  </p>
+<p><strong>Large Medtech and Biotech firms</strong>: There seems to be a significant opportunity for synergy between Virog and large enterprises which purchase IP in the POC phase from smaller startups and bring them as finished products to market.</p><p> <strong>Revenue Generation -</strong><br /></p><p><b>Virog Web services</b>: Web services will have maximum impact and require little investment.</p><p><strong>Medtech devices</strong>: The devices are designed in such a way that they will be very cost-effective, useful, and simple to install, and thus we expect high sales and revenue.
+  </p>
+<p><strong>Intellectual Property</strong>: We plan on manufacturing only a limited number of devices. The rest we plan to sell as IP after developing proof of concept. This opens up several new avenues for collaboration and also allows us to focus on further innovation rather than manufacturing and marketing. 
+  </p>
+<p><strong>Revenue generated at the prediagnostic clinics</strong>: this is a long-term proposal that is only possible under government implementation. The small fee charged at such centers shall help recover the cost of setting them up. 
+  </p>
+<p> 
+  </p>
+<p>Further, for us, we seek collaboration primarily in two areas:
+  </p>
+<p>Setting up small Virog Manufacturing Facility and leasing product manufacture and marketing to enterprises with an existing customer base and machinery.</p><p><br /></p>
+                    </div>
+    </div>
+</div>
+    </div>
+</div>    </div>
+</div>
+
+    </div>
+
+    
+    <div class="shrink-0 lg:w-80">
+        <nav x-bind:id="$id('tablist')"
+             aria-label="Tabs"
+             class="flex-col hidden border divide-y rounded lg:flex border-black/25 divide-black/25"
+             role="tablist"
+        >
+            <template x-for="(tab, index) in tabs" hidden>
+                <button
+                    type="button"
+                    x-on:click="selectTab(tab.id)"
+                    x-on:mousedown.prevent
+                    x-bind:id="`tab-${tab.id}`"
+                    x-bind:aria-selected="isSelected(tab.id).toString()"
+                    role="tab"
+                    class="flex items-center justify-between px-6 py-3 font-semibold leading-normal uppercase text-18"
+                >
+                    <span x-text="tab.label" class="truncate"></span>
+                    <svg x-bind:class="{'block': isSelected(tab.id), 'hidden': !isSelected(tab.id)}" class="hidden ml-4 shrink-0" xmlns="http://www.w3.org/2000/svg" width="55" height="16" viewBox="0 0 55 16" fill="currentColor">
+<path d="M54.7071 8.7071C55.0976 8.31658 55.0976 7.68341 54.7071 7.29289L48.3431 0.92893C47.9526 0.538405 47.3195 0.538405 46.9289 0.92893C46.5384 1.31945 46.5384 1.95262 46.9289 2.34314L52.5858 8L46.9289 13.6569C46.5384 14.0474 46.5384 14.6805 46.9289 15.0711C47.3195 15.4616 47.9526 15.4616 48.3431 15.0711L54.7071 8.7071ZM1.44703e-07 9L54 9L54 7L-1.44703e-07 7L1.44703e-07 9Z" />
+</svg>                </button>
+            </template>
+        </nav>
+
+        <div class="h-1 bg-primary w-16 my-8"></div>
+
+                    
+                    <div class="solution-spotlight-wysiwyg">
+        
+    </div>
+
+
+                    
+                    <div class="space-y-2">
+                        <div class="text-20 font-semibold mb-1">Solution Team:</div>
+                                                <div class="flex items-center space-x-2">
+                            <img
+        src="https://d3t35pgnsskh52.cloudfront.net/uploads%2F57902_Handsome_boi.jpeg"
+        style="" class="rounded-full size-9" id="img-69e92402ed48c" alt="Dhruv  Gupta" loading="lazy" decoding="async" fetchpriority="low"
+    />                            <div class="text-18 leading-tighter">
+                                <span>Dhruv  Gupta</span><br/>
+                                <span class="text-14 text-gray-500"></span>
+                            </div>
+                        </div>
+                                                <div class="flex items-center space-x-2">
+                            <img
+        src="https://ui-avatars.com/api/?name=Soumyadeep+Sarma&amp;color=F6B443&amp;background=000000"
+        style="" class="rounded-full size-9" id="img-69e92402ed6b9" alt="Soumyadeep Sarma" loading="lazy" decoding="async" fetchpriority="low"
+    />                            <div class="text-18 leading-tighter">
+                                <span>Soumyadeep Sarma</span><br/>
+                                <span class="text-14 text-gray-500"></span>
+                            </div>
+                        </div>
+                                                <div class="flex items-center space-x-2">
+                            <img
+        src="https://ui-avatars.com/api/?name=Anindya+Guria&amp;color=F6B443&amp;background=000000"
+        style="" class="rounded-full size-9" id="img-69e92402ed7af" alt="Anindya Guria" loading="lazy" decoding="async" fetchpriority="low"
+    />                            <div class="text-18 leading-tighter">
+                                <span>Anindya Guria</span><br/>
+                                <span class="text-14 text-gray-500"></span>
+                            </div>
+                        </div>
+                                                <div class="flex items-center space-x-2">
+                            <img
+        src="https://ui-avatars.com/api/?name=Sourabh+Peruri&amp;color=F6B443&amp;background=000000"
+        style="" class="rounded-full size-9" id="img-69e92402ed873" alt="Sourabh Peruri" loading="lazy" decoding="async" fetchpriority="low"
+    />                            <div class="text-18 leading-tighter">
+                                <span>Sourabh Peruri</span><br/>
+                                <span class="text-14 text-gray-500"></span>
+                            </div>
+                        </div>
+                                                <div class="flex items-center space-x-2">
+                            <img
+        src="https://ui-avatars.com/api/?name=Sagar+Nanda&amp;color=F6B443&amp;background=000000"
+        style="" class="rounded-full size-9" id="img-69e92402ed91b" alt="Sagar Nanda" loading="lazy" decoding="async" fetchpriority="low"
+    />                            <div class="text-18 leading-tighter">
+                                <span>Sagar Nanda</span><br/>
+                                <span class="text-14 text-gray-500"></span>
+                            </div>
+                        </div>
+                                            </div>
+    </div>
+
+</div>
+
+
+        </div>
+    </section>
+        </main>
+
+        <footer class="z-10 py-8 text-white bg-black default-font-settings overflow-x-clip">
+    <div class="w-full px-8 mx-auto max-w-screen-2xl">
+    <div class="grid grid-cols-2 gap-y-10 lg:grid-cols-4 xl:grid-cols-5 gap-x-4">
+                                                <div class="space-y-10">
+                                                    <nav class="space-y-4">
+                                <h2 class="mb-6 heading-5 text-primary">
+                                    <a href="/impact" class="transition-opacity hover:opacity-80">Impact</a>
+                                </h2>
+
+                                                                    <ul class="space-y-4">
+                                                                                    <li>
+                                                <a href="/impact/climate" target="_self" class="transition-opacity text-18 font-book hover:opacity-80">Climate</a>
+                                            </li>
+                                                                                    <li>
+                                                <a href="/impact/economic-prosperity" target="_self" class="transition-opacity text-18 font-book hover:opacity-80">Economic Prosperity</a>
+                                            </li>
+                                                                                    <li>
+                                                <a href="/impact/health" target="_self" class="transition-opacity text-18 font-book hover:opacity-80">Health</a>
+                                            </li>
+                                                                                    <li>
+                                                <a href="/impact/learning" target="_self" class="transition-opacity text-18 font-book hover:opacity-80">Learning</a>
+                                            </li>
+                                                                                    <li>
+                                                <a href="/impact/indigenous-communities" target="_self" class="transition-opacity text-18 font-book hover:opacity-80">Indigenous Communities</a>
+                                            </li>
+                                                                                    <li>
+                                                <a href="/impact/youth-innovation" target="_self" class="transition-opacity text-18 font-book hover:opacity-80">Youth Innovation</a>
+                                            </li>
+                                                                                    <li>
+                                                <a href="/partner/sif" target="_self" class="transition-opacity text-18 font-book hover:opacity-80">Innovative Financing</a>
+                                            </li>
+                                                                            </ul>
+                                                            </nav>
+                                            </div>
+                                                                <div class="space-y-10">
+                                                    <nav class="space-y-4">
+                                <h2 class="mb-6 heading-5 text-primary">
+                                    <a href="/about" class="transition-opacity hover:opacity-80">About Solve</a>
+                                </h2>
+
+                                                                    <ul class="space-y-4">
+                                                                                    <li>
+                                                <a href="/contact" target="_self" class="transition-opacity text-18 font-book hover:opacity-80">Contact </a>
+                                            </li>
+                                                                                    <li>
+                                                <a href="/about/solve-team" target="_self" class="transition-opacity text-18 font-book hover:opacity-80">Solve Team</a>
+                                            </li>
+                                                                                    <li>
+                                                <a href="/careers" target="_self" class="transition-opacity text-18 font-book hover:opacity-80">Careers</a>
+                                            </li>
+                                                                                    <li>
+                                                <a href="/terms-of-service" target="_self" class="transition-opacity text-18 font-book hover:opacity-80">Terms of Service</a>
+                                            </li>
+                                                                                    <li>
+                                                <a href="/privacy-policy" target="_self" class="transition-opacity text-18 font-book hover:opacity-80">Privacy Policy</a>
+                                            </li>
+                                                                                    <li>
+                                                <a href="https://accessibility.mit.edu/" target="_blank" class="transition-opacity text-18 font-book hover:opacity-80">Accessibility</a>
+                                            </li>
+                                                                            </ul>
+                                                            </nav>
+                                            </div>
+                                                                <div class="space-y-10">
+                                                    <nav class="space-y-4">
+                                <h2 class="mb-6 heading-5 text-primary">
+                                    <a href="/partner" class="transition-opacity hover:opacity-80">Get Involved</a>
+                                </h2>
+
+                                                                    <ul class="space-y-4">
+                                                                                    <li>
+                                                <a href="/events" target="_self" class="transition-opacity text-18 font-book hover:opacity-80">Events</a>
+                                            </li>
+                                                                                    <li>
+                                                <a href="/partner" target="_self" class="transition-opacity text-18 font-book hover:opacity-80">Partner</a>
+                                            </li>
+                                                                                    <li>
+                                                <a href="/partner/support" target="_self" class="transition-opacity text-18 font-book hover:opacity-80">Support</a>
+                                            </li>
+                                                                                    <li>
+                                                <a href="/partner/become-a-reviewer" target="_self" class="transition-opacity text-18 font-book hover:opacity-80">Become a Reviewer</a>
+                                            </li>
+                                                                                    <li>
+                                                <a href="/partner/mentorship" target="_self" class="transition-opacity text-18 font-book hover:opacity-80">Mentorship</a>
+                                            </li>
+                                                                            </ul>
+                                                            </nav>
+                                            </div>
+                                                                <div class="space-y-10">
+                                                    <nav class="space-y-4">
+                                <h2 class="mb-6 heading-5 text-primary">
+                                    <a href="/resources" class="transition-opacity hover:opacity-80">Resources</a>
+                                </h2>
+
+                                                                    <ul class="space-y-4">
+                                                                                    <li>
+                                                <a href="/articles" target="_self" class="transition-opacity text-18 font-book hover:opacity-80">Articles</a>
+                                            </li>
+                                                                                    <li>
+                                                <a href="/newsletters" target="_self" class="transition-opacity text-18 font-book hover:opacity-80">Newsletters</a>
+                                            </li>
+                                                                                    <li>
+                                                <a href="/in-the-media" target="_self" class="transition-opacity text-18 font-book hover:opacity-80">In the Media</a>
+                                            </li>
+                                                                                    <li>
+                                                <a href="/resources/the-solve-effect" target="_self" class="transition-opacity text-18 font-book hover:opacity-80">Podcast</a>
+                                            </li>
+                                                                            </ul>
+                                                            </nav>
+                                            </div>
+                            
+            <div class="self-start col-span-2 px-8 border xl:mt-8 lg:col-span-4 xl:col-span-1 py-7 border-primary">
+                <h2 class="mb-5 heading-4">Launch a Custom Challenge</h2>
+                <div>
+                    <p>Design and launch a challenge based on your own or your organization’s social impact goals or industry needs, leveraging our signature methodology and research-backed platform. We’ll work with you on all the details, including promotion, selection, vetting, and support.</p>
+                </div>
+
+                <div class="flex justify-end mt-5">
+                    <a
+    class="flex items-center group font-semibold uppercase space-x-2 block h-5 text-24" href="/custom-challenges" title="Launch a custom challenge"
+>
+    <span></span>
+    <svg class="relative top-px group-hover:translate-x-2 transition-transform ease-in text-primary" xmlns="http://www.w3.org/2000/svg" width="32" height="16" viewBox="0 0 32 16" fill="currentColor">
+    <path d="M31.7071 8.76045C32.0976 8.36992 32.0976 7.73676 31.7071 7.34623L25.3432 0.982274C24.9526 0.59175 24.3195 0.59175 23.9289 0.982274C23.5384 1.3728 23.5384 2.00596 23.9289 2.39649L29.5858 8.05334L23.9289 13.7102C23.5384 14.1007 23.5384 14.7339 23.9289 15.1244C24.3195 15.5149 24.9526 15.5149 25.3432 15.1244L31.7071 8.76045ZM0.968262 9.05334L31 9.05334L31 7.05334L0.968262 7.05334L0.968262 9.05334Z" />
+</svg></a>                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-between w-full gap-8 pt-8 border-t mt-15 md:flex-nowrap border-white/25">
+            <div class="shrink-0 order-1 md:order-1">
+                <a href="https://solve.mit.edu" title="Go to homepage" aria-label="Solve Logo">
+                    <img
+        src="https://solve.mit.edu/img/logos/solve-logo-10.webp"
+        style="" class="h-7" id="img-69e9240313063" loading="lazy" decoding="async" fetchpriority="low"
+    />                    
+                </a>
+            </div>
+
+            <div class="text-14 leading-6 font-book [&>p]:mb-0 text-center order-3 md:order-2 w-full">
+                <p>SOLVE®, SOLVER®, and SOLVEATHON® are registered trademarks and service marks of Massachusetts Institute of Technology.</p>
+                <p>All rights reserved in the United States and worldwide.</p>
+            </div>
+
+            <div class="shrink-0 flex justify-end order-2 md:order-3">
+                <a href="http://mit.edu" title="Massachusetts Institute of Technology" target="_blank" aria-label="Massachusetts Institute of Technology Logo">
+                    <svg class="h-10 text-white" viewBox="0 0 1612 1040" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="currentColor">
+    <path d="M1737.06,160L1765.32,260.42C1768.67,273.287 1772.03,286.154 1774.27,296.783C1775.66,302.937 1776.78,308.811 1777.9,314.406L1778.46,314.406C1779.58,308.811 1780.7,302.937 1782.1,296.783C1784.34,286.153 1787.13,273.287 1790.77,260.419L1819.02,160L1876.92,160L1876.92,360L1839.16,360L1839.16,245.315C1839.16,237.203 1839.16,227.133 1840,218.462C1840.28,213.706 1840.56,208.672 1840.84,203.916L1840.28,203.916C1839.44,208.671 1838.32,213.146 1837.48,217.622C1835.52,225.455 1833.57,234.406 1831.61,241.958L1797.2,360L1758.32,360L1724.76,241.958C1722.52,234.406 1720.84,225.455 1718.88,217.622C1718.04,213.147 1716.92,208.672 1716.08,203.916L1715.52,203.916C1715.8,208.671 1716.08,213.706 1716.36,218.462C1716.64,227.132 1717.2,237.202 1717.2,245.315L1717.2,360L1680,360L1680,160L1737.06,160ZM1988.81,344.056L1988.25,344.056C1984.62,349.65 1980.14,354.406 1973.71,357.762C1966.99,361.119 1958.32,363.357 1946.01,363.357C1916.36,363.357 1895.94,348.252 1895.94,319.441C1895.94,303.776 1902.1,293.147 1912.73,286.154C1923.36,279.161 1937.34,275.524 1953.57,273.287C1977.62,269.93 1988.25,267.972 1988.25,257.063C1988.25,246.433 1980.42,240 1964.19,240C1946.29,240 1937.62,246.154 1936.5,260.14L1902.66,260.14C1902.94,247.273 1908.25,235.804 1918.32,227.133C1928.39,218.462 1943.5,212.867 1964.48,212.867C2007.55,212.867 2024.89,231.888 2024.89,265.735L2024.89,338.741C2024.89,349.651 2026.57,356.084 2029.93,358.601L2029.93,360L1993.29,360C1991.05,356.923 1989.65,350.49 1988.81,344.056ZM1980.42,328.112C1986.01,323.077 1989.09,316.364 1989.09,309.371L1989.09,287.832C1982.38,292.028 1972.31,293.986 1962.52,296.224C1942.38,300.699 1932.87,305.174 1932.87,318.601C1932.87,332.028 1941.82,336.783 1955.24,336.783C1966.15,336.783 1974.55,333.426 1980.42,328.112ZM2038.32,313.566L2073.56,313.566C2076.08,330.35 2087.55,337.343 2104.89,337.343C2121.68,337.343 2131.19,330.909 2131.19,320.839C2131.19,314.126 2126.43,310.209 2119.72,307.692C2112.72,305.175 2103.21,303.776 2093.42,301.818C2080.28,299.301 2067.97,296.504 2058.46,290.07C2048.67,283.637 2042.52,274.126 2042.52,258.461C2042.52,242.797 2048.67,231.608 2059.58,223.776C2070.21,216.224 2084.47,212.587 2100.98,212.587C2139.3,212.587 2159.44,230.769 2162.51,260.14L2128.11,260.14C2126.15,244.475 2116.92,239.16 2100.42,239.16C2085.31,239.16 2075.8,244.475 2075.8,255.105C2075.8,261.539 2080.56,264.615 2088.11,266.853C2095.38,269.371 2105.17,270.49 2115.24,272.728C2127.27,275.245 2139.86,278.042 2149.65,284.476C2159.44,291.189 2165.87,301.259 2165.87,318.042C2165.87,332.587 2159.72,344.056 2149.09,351.888C2138.18,359.72 2123.35,364.196 2105.45,364.196C2063.49,364.196 2040.56,344.336 2038.32,313.566ZM2174.26,313.566L2209.5,313.566C2212.02,330.35 2223.49,337.343 2240.83,337.343C2257.62,337.343 2267.13,330.909 2267.13,320.839C2267.13,314.126 2262.37,310.209 2255.66,307.692C2248.66,305.175 2239.16,303.776 2229.36,301.818C2216.22,299.301 2203.91,296.504 2194.4,290.07C2184.61,283.637 2178.45,274.126 2178.45,258.461C2178.45,242.797 2184.61,231.608 2195.52,223.776C2206.15,216.224 2220.41,212.587 2236.92,212.587C2275.24,212.587 2295.38,230.769 2298.45,260.14L2264.05,260.14C2262.09,244.475 2252.86,239.16 2236.36,239.16C2221.25,239.16 2211.74,244.475 2211.74,255.105C2211.74,261.539 2216.5,264.615 2224.05,266.853C2231.32,269.371 2241.11,270.49 2251.18,272.728C2263.21,275.245 2275.8,278.042 2285.59,284.476C2295.38,291.189 2301.81,301.259 2301.81,318.042C2301.81,332.587 2295.66,344.056 2285.03,351.888C2274.12,359.72 2259.29,364.196 2241.39,364.196C2199.43,364.196 2176.5,344.336 2174.26,313.566ZM2405.03,344.056L2404.47,344.056C2400.83,349.65 2396.35,354.406 2389.92,357.762C2383.21,361.119 2374.54,363.357 2362.23,363.357C2332.58,363.357 2312.16,348.252 2312.16,319.441C2312.16,303.776 2318.31,293.147 2328.94,286.154C2339.57,279.161 2353.56,275.524 2369.78,273.287C2393.84,269.93 2404.47,267.972 2404.47,257.063C2404.47,246.433 2396.63,240 2380.41,240C2362.51,240 2353.84,246.154 2352.72,260.14L2318.87,260.14C2319.15,247.273 2324.47,235.804 2334.54,227.133C2344.61,218.462 2359.71,212.867 2380.69,212.867C2423.77,212.867 2441.11,231.888 2441.11,265.735L2441.11,338.741C2441.11,349.651 2442.79,356.084 2446.14,358.601L2446.14,360L2409.5,360C2407.26,356.923 2405.86,350.49 2405.03,344.056ZM2396.63,328.112C2402.23,323.077 2405.3,316.364 2405.3,309.371L2405.3,287.832C2398.59,292.028 2388.52,293.986 2378.73,296.224C2358.59,300.699 2349.08,305.174 2349.08,318.601C2349.08,332.028 2358.03,336.783 2371.46,336.783C2382.37,336.783 2390.76,333.426 2396.63,328.112ZM2476.35,342.098C2463.48,328.671 2456.49,309.65 2456.49,288.392C2456.49,267.133 2463.48,248.112 2476.07,234.406C2488.38,220.979 2506,212.587 2528.1,212.587C2546.84,212.587 2561.67,218.182 2572.85,227.133C2583.76,236.363 2590.76,249.51 2593.27,265.175L2556.07,265.175C2553.55,252.308 2544.04,243.077 2529.78,243.077C2506.56,243.077 2495.09,260.14 2495.09,288.392C2495.09,315.804 2505.72,333.706 2529.22,333.706C2544.88,333.706 2555.51,325.874 2558.03,309.371L2594.67,309.371C2593.55,324.755 2586.84,338.181 2575.93,347.972C2564.74,358.042 2549.08,364.196 2530.06,364.196C2507.12,364.196 2489.22,355.804 2476.35,342.098ZM2648.38,235.245C2659.01,219.86 2670.2,212.587 2690.06,212.587C2705.16,212.587 2717.19,218.182 2725.86,227.692C2734.53,237.482 2739.57,250.629 2739.57,266.294L2739.57,360L2701.53,360L2701.53,271.888C2701.53,256.224 2692.86,245.594 2676.63,245.594C2659.85,245.594 2647.54,258.741 2647.54,278.602L2647.54,360L2609.5,360L2609.5,160L2647.54,160L2647.54,235.245L2648.38,235.245L2648.38,235.245ZM2852.01,343.217L2851.18,343.217C2841.39,356.364 2830.2,363.916 2810.06,363.916C2777.89,363.916 2760.27,344.056 2760.27,312.168L2760.27,216.504L2798.03,216.504L2798.03,305.734C2798.03,322.517 2805.3,331.748 2821.81,331.748C2839.71,331.748 2850.62,318.322 2850.62,299.301L2850.62,216.504L2888.66,216.504L2888.66,360L2852.01,360L2852.01,343.217ZM2902.64,313.567L2937.89,313.567C2940.41,330.35 2951.88,337.343 2969.22,337.343C2986,337.343 2995.51,330.909 2995.51,320.839C2995.51,314.126 2990.76,310.209 2984.04,307.692C2977.05,305.175 2967.54,303.776 2957.75,301.818C2944.6,299.301 2932.3,296.504 2922.78,290.07C2912.99,283.637 2906.84,274.126 2906.84,258.461C2906.84,242.797 2912.99,231.608 2923.9,223.776C2934.53,216.224 2948.8,212.587 2965.3,212.587C3003.62,212.587 3023.76,230.769 3026.84,260.14L2992.43,260.14C2990.48,244.475 2981.25,239.16 2964.74,239.16C2949.64,239.16 2940.13,244.475 2940.13,255.105C2940.13,261.539 2944.88,264.615 2952.43,266.853C2959.71,269.371 2969.5,270.49 2979.57,272.728C2991.6,275.245 3004.18,278.042 3013.97,284.476C3023.76,291.189 3030.2,301.259 3030.2,318.042C3030.2,332.587 3024.04,344.056 3013.41,351.888C3002.51,359.72 2987.68,364.196 2969.78,364.196C2927.82,364.196 2904.88,344.336 2902.64,313.566L2902.64,313.567ZM3059.28,342.097C3046.41,328.671 3039.98,309.371 3039.98,288.112C3039.98,266.853 3047.25,247.832 3059.84,234.406C3072.15,220.979 3089.77,212.587 3110.75,212.587C3133.97,212.587 3151.31,221.259 3163.34,236.643C3175.37,252.027 3181.52,273.287 3181.52,299.021L3077.46,299.021C3080.54,321.399 3092.29,334.825 3114.11,334.825C3129.21,334.825 3137.6,328.112 3141.8,317.203L3179.28,317.203C3176.76,330.07 3169.77,341.538 3158.86,350.21C3147.67,358.881 3132.85,364.196 3114.39,364.196C3090.33,364.196 3072.15,355.804 3059.28,342.098L3059.28,342.097ZM3078.02,272.727L3141.8,272.727C3140.68,254.266 3128.93,241.957 3111.31,241.957C3091.17,241.957 3081.38,253.707 3078.02,272.727ZM3206.14,216.504L3206.14,171.749L3243.34,171.749L3243.34,216.504L3267.95,216.504L3267.95,243.077L3243.34,243.077L3243.34,317.762C3243.34,328.672 3248.93,332.028 3257.6,332.028L3264.88,332.028C3266.27,332.028 3267.39,332.028 3268.79,331.748L3268.79,359.72C3266.83,360 3264.88,360 3262.64,360C3258.44,360.28 3252.57,360.28 3245.02,360.28C3235.79,360.28 3226.28,358.602 3218.72,353.287C3211.17,347.972 3206.14,339.301 3206.14,325.874L3206.14,243.077L3186.28,243.077L3186.28,216.504L3206.14,216.504ZM3294.53,216.504L3294.53,171.749L3331.73,171.749L3331.73,216.504L3356.34,216.504L3356.34,243.077L3331.73,243.077L3331.73,317.762C3331.73,328.672 3337.32,332.028 3345.99,332.028L3353.26,332.028C3354.66,332.028 3355.78,332.028 3357.18,331.748L3357.18,359.72C3355.22,360 3353.26,360 3351.03,360C3346.83,360.28 3340.96,360.28 3333.41,360.28C3324.18,360.28 3314.66,358.602 3307.11,353.287C3299.56,347.972 3294.52,339.301 3294.52,325.874L3294.52,243.077L3274.66,243.077L3274.66,216.504L3294.53,216.504ZM3366.68,313.566L3401.93,313.566C3404.45,330.35 3415.92,337.343 3433.26,337.343C3450.04,337.343 3459.55,330.909 3459.55,320.839C3459.55,314.126 3454.8,310.209 3448.08,307.692C3441.09,305.175 3431.58,303.776 3421.79,301.818C3408.64,299.301 3396.34,296.504 3386.83,290.07C3377.04,283.637 3370.88,274.126 3370.88,258.461C3370.88,242.797 3377.03,231.608 3387.95,223.776C3398.57,216.224 3412.84,212.587 3429.34,212.587C3467.66,212.587 3487.81,230.769 3490.88,260.14L3456.48,260.14C3454.52,244.475 3445.29,239.16 3428.78,239.16C3413.68,239.16 3404.17,244.475 3404.17,255.105C3404.17,261.539 3408.92,264.615 3416.48,266.853C3423.75,269.371 3433.54,270.49 3443.61,272.728C3455.64,275.245 3468.22,278.042 3478.01,284.476C3487.8,291.189 3494.24,301.259 3494.24,318.042C3494.24,332.587 3488.08,344.056 3477.45,351.888C3466.55,359.72 3451.72,364.196 3433.82,364.196C3391.86,364.196 3368.92,344.336 3366.69,313.566L3366.68,313.566ZM1720.56,420L1720.56,620L1680,620L1680,420L1720.56,420ZM1784.89,496.084C1794.68,480.42 1807.55,472.587 1827.41,472.587C1842.52,472.587 1854.54,478.182 1863.21,487.692C1871.89,497.482 1876.92,510.629 1876.92,526.294L1876.92,620L1838.88,620L1838.88,531.888C1838.88,516.224 1830.21,505.594 1813.98,505.594C1797.2,505.594 1784.89,518.742 1784.89,538.602L1784.89,620L1746.85,620L1746.85,476.504L1784.05,476.504L1784.05,496.084L1784.89,496.084ZM1889.79,573.566L1925.03,573.566C1927.55,590.35 1939.02,597.343 1956.36,597.343C1973.14,597.343 1982.65,590.909 1982.65,580.839C1982.65,574.126 1977.9,570.209 1971.19,567.692C1964.19,565.175 1954.68,563.776 1944.89,561.818C1931.75,559.301 1919.44,556.504 1909.93,550.07C1900.14,543.637 1893.98,534.126 1893.98,518.461C1893.98,502.797 1900.14,491.608 1911.05,483.776C1921.68,476.224 1935.94,472.587 1952.44,472.587C1990.77,472.587 2010.91,490.769 2013.98,520.14L1979.58,520.14C1977.62,504.475 1968.39,499.16 1951.88,499.16C1936.78,499.16 1927.27,504.475 1927.27,515.105C1927.27,521.539 1932.03,524.615 1939.58,526.853C1946.85,529.371 1956.64,530.49 1966.71,532.728C1978.74,535.245 1991.33,538.042 2001.12,544.476C2010.91,551.189 2017.34,561.259 2017.34,578.042C2017.34,592.587 2011.19,604.056 2000.56,611.888C1989.65,619.721 1974.82,624.196 1956.92,624.196C1914.96,624.196 1892.03,604.336 1889.79,573.566ZM2041.39,476.504L2041.39,431.749L2078.6,431.749L2078.6,476.504L2103.21,476.504L2103.21,503.077L2078.6,503.077L2078.6,577.762C2078.6,588.672 2084.19,592.028 2092.86,592.028L2100.14,592.028C2101.53,592.028 2102.65,592.028 2104.05,591.748L2104.05,619.721C2102.09,620 2100.14,620 2097.9,620C2093.7,620.28 2087.83,620.28 2080.28,620.28C2071.05,620.28 2061.53,618.602 2053.98,613.287C2046.43,607.972 2041.39,599.301 2041.39,585.874L2041.39,503.077L2021.53,503.077L2021.53,476.504L2041.39,476.504ZM2159.15,425.315L2159.15,459.441L2121.11,459.441L2121.11,425.315L2159.15,425.315ZM2159.15,476.504L2159.15,620L2121.11,620L2121.11,476.504L2159.15,476.504ZM2193.56,476.504L2193.56,431.749L2230.76,431.749L2230.76,476.504L2255.38,476.504L2255.38,503.077L2230.76,503.077L2230.76,577.762C2230.76,588.672 2236.36,592.028 2245.03,592.028L2252.3,592.028C2253.7,592.028 2254.82,592.028 2256.22,591.748L2256.22,619.721C2254.26,620 2252.3,620 2250.06,620C2245.87,620.28 2239.99,620.28 2232.44,620.28C2223.21,620.28 2213.7,618.602 2206.14,613.287C2198.59,607.972 2193.56,599.301 2193.56,585.874L2193.56,503.077L2173.7,503.077L2173.7,476.504L2193.56,476.504ZM2363.9,603.217L2363.06,603.217C2353.27,616.363 2342.09,623.916 2321.95,623.916C2289.78,623.916 2272.16,604.056 2272.16,572.168L2272.16,476.504L2309.92,476.504L2309.92,565.734C2309.92,582.517 2317.19,591.748 2333.69,591.748C2351.6,591.748 2362.51,578.322 2362.51,559.301L2362.51,476.504L2400.55,476.504L2400.55,620L2363.9,620L2363.9,603.217ZM2434.95,476.504L2434.95,431.749L2472.16,431.749L2472.16,476.504L2496.77,476.504L2496.77,503.077L2472.16,503.077L2472.16,577.762C2472.16,588.672 2477.75,592.028 2486.42,592.028L2493.7,592.028C2495.09,592.028 2496.21,592.028 2497.61,591.748L2497.61,619.721C2495.65,620 2493.7,620 2491.46,620C2487.26,620.28 2481.39,620.28 2473.84,620.28C2464.61,620.28 2455.09,618.602 2447.54,613.287C2439.99,607.972 2434.95,599.301 2434.95,585.874L2434.95,503.077L2415.09,503.077L2415.09,476.504L2434.95,476.504ZM2525.58,602.098C2512.72,588.671 2506.28,569.371 2506.28,548.112C2506.28,526.853 2513.55,507.832 2526.14,494.406C2538.45,480.979 2556.07,472.587 2577.05,472.587C2600.27,472.587 2617.61,481.259 2629.64,496.643C2641.67,512.028 2647.82,533.287 2647.82,559.021L2543.76,559.021C2546.84,581.399 2558.59,594.825 2580.41,594.825C2595.51,594.825 2603.9,588.112 2608.1,577.203L2645.58,577.203C2643.07,590.07 2636.07,601.538 2625.16,610.21C2613.97,618.881 2599.15,624.196 2580.69,624.196C2556.63,624.196 2538.45,615.804 2525.58,602.098ZM2544.32,532.728L2608.1,532.728C2606.98,514.266 2595.23,501.958 2577.61,501.958C2557.47,501.958 2547.68,513.706 2544.32,532.728L2544.32,532.728ZM2723.06,602.098C2709.64,588.671 2702.08,569.65 2702.08,548.392C2702.08,527.134 2709.64,508.112 2723.06,494.406C2736.21,480.979 2754.67,472.587 2777.05,472.587C2799.43,472.587 2817.89,480.979 2831.32,494.406C2844.46,508.112 2852.01,527.133 2852.01,548.392C2852.01,569.651 2844.46,588.672 2831.32,602.098C2817.89,615.804 2799.43,624.196 2777.05,624.196C2754.67,624.196 2736.21,615.804 2723.06,602.098ZM2813.41,548.392C2813.41,520.14 2800.55,501.398 2777.05,501.398C2753.55,501.398 2740.69,520.14 2740.69,548.392C2740.69,576.364 2753.55,595.105 2777.05,595.105C2800.55,595.105 2813.41,576.364 2813.41,548.392ZM2876.35,476.504L2876.35,463.636C2876.35,446.014 2883.06,434.266 2894.53,427.273C2905.72,420.56 2921.66,418.322 2940.12,420.28L2940.12,449.65C2922.22,448.811 2914.39,450.77 2914.39,465.874L2914.39,476.504L2940.12,476.504L2940.12,503.916L2914.39,503.916L2914.39,620L2876.35,620L2876.35,503.916L2856.77,503.916L2856.77,476.504L2876.35,476.504ZM1780.7,680L1780.7,714.126L1720.56,714.126L1720.56,880L1680,880L1680,714.126L1619.86,714.126L1619.86,680L1780.7,680L1780.7,680ZM1776.51,862.098C1763.64,848.671 1757.2,829.371 1757.2,808.112C1757.2,786.853 1764.48,767.832 1777.06,754.406C1789.37,740.979 1806.99,732.587 1827.97,732.587C1851.19,732.587 1868.53,741.259 1880.56,756.643C1892.59,772.028 1898.74,793.287 1898.74,819.021L1794.69,819.021C1797.76,841.399 1809.51,854.825 1831.33,854.825C1846.43,854.825 1854.83,848.112 1859.02,837.203L1896.51,837.203C1893.99,850.07 1886.99,861.538 1876.09,870.21C1864.9,878.881 1850.07,884.196 1831.61,884.196C1807.55,884.196 1789.37,875.804 1776.51,862.098ZM1795.25,792.728L1859.02,792.728C1857.9,774.266 1846.15,761.958 1828.53,761.958C1808.39,761.958 1798.6,773.706 1795.25,792.728ZM1927.55,862.098C1914.68,848.671 1907.69,829.65 1907.69,808.392C1907.69,787.134 1914.68,768.112 1927.27,754.406C1939.58,740.979 1957.2,732.587 1979.3,732.587C1998.04,732.587 2012.87,738.182 2024.06,747.133C2034.96,756.363 2041.96,769.51 2044.48,785.175L2007.27,785.175C2004.75,772.308 1995.24,763.077 1980.98,763.077C1957.76,763.077 1946.29,780.14 1946.29,808.392C1946.29,835.804 1956.92,853.706 1980.42,853.706C1996.08,853.706 2006.71,845.874 2009.23,829.371L2045.87,829.371C2044.75,844.755 2038.04,858.181 2027.13,867.971C2015.94,878.042 2000.28,884.196 1981.26,884.196C1958.32,884.196 1940.42,875.804 1927.55,862.098ZM2099.58,755.245C2110.21,739.86 2121.4,732.587 2141.26,732.587C2156.36,732.587 2168.39,738.182 2177.06,747.692C2185.73,757.482 2190.77,770.629 2190.77,786.294L2190.77,880L2152.73,880L2152.73,791.888C2152.73,776.224 2144.06,765.594 2127.83,765.594C2111.05,765.594 2098.74,778.742 2098.74,798.602L2098.74,880L2060.7,880L2060.7,680L2098.74,680L2098.74,755.245L2099.58,755.245ZM2250.63,756.084C2260.42,740.42 2273.28,732.587 2293.15,732.587C2308.25,732.587 2320.28,738.182 2328.95,747.692C2337.62,757.482 2342.66,770.629 2342.66,786.294L2342.66,880L2304.61,880L2304.61,791.888C2304.61,776.224 2295.94,765.594 2279.72,765.594C2262.94,765.594 2250.63,778.742 2250.63,798.602L2250.63,880L2212.59,880L2212.59,736.504L2249.79,736.504L2249.79,756.084L2250.63,756.084L2250.63,756.084ZM2378.46,862.098C2365.03,848.671 2357.48,829.65 2357.48,808.392C2357.48,787.134 2365.03,768.112 2378.46,754.406C2391.61,740.979 2410.07,732.587 2432.45,732.587C2454.82,732.587 2473.28,740.979 2486.71,754.406C2499.86,768.112 2507.41,787.133 2507.41,808.392C2507.41,829.651 2499.86,848.672 2486.71,862.098C2473.28,875.804 2454.82,884.196 2432.45,884.196C2410.07,884.196 2391.61,875.804 2378.46,862.098ZM2468.81,808.392C2468.81,780.14 2455.94,761.398 2432.45,761.398C2408.95,761.398 2396.08,780.14 2396.08,808.392C2396.08,836.364 2408.95,855.105 2432.45,855.105C2455.94,855.105 2468.81,836.364 2468.81,808.392ZM2561.95,680L2561.95,880L2523.91,880L2523.91,680L2561.95,680ZM2599.44,862.098C2586.01,848.671 2578.46,829.65 2578.46,808.392C2578.46,787.134 2586.01,768.112 2599.44,754.406C2612.58,740.979 2631.05,732.587 2653.42,732.587C2675.8,732.587 2694.26,740.979 2707.69,754.406C2720.84,768.112 2728.39,787.133 2728.39,808.392C2728.39,829.651 2720.84,848.672 2707.69,862.098C2694.26,875.804 2675.8,884.196 2653.42,884.196C2631.05,884.196 2612.58,875.804 2599.44,862.098ZM2689.79,808.392C2689.79,780.14 2676.92,761.398 2653.42,761.398C2629.93,761.398 2617.06,780.14 2617.06,808.392C2617.06,836.364 2629.93,855.105 2653.42,855.105C2676.92,855.105 2689.79,836.364 2689.79,808.392ZM2740.41,884.196L2778.18,884.196C2781.25,893.147 2789.09,900.14 2806.99,900.14C2828.25,900.14 2838.88,890.35 2838.88,870.21L2838.88,854.545L2838.03,854.545C2829.37,864.335 2819.01,871.328 2800.55,871.328C2784.33,871.328 2768.95,865.175 2757.2,853.147C2745.17,841.399 2737.34,824.615 2737.34,802.797C2737.34,781.539 2743.77,763.916 2754.96,751.608C2765.87,739.301 2780.97,732.588 2799.43,732.588C2817.34,732.588 2830.48,739.58 2839.16,751.608L2839.71,751.608L2839.71,736.504L2876.36,736.504L2876.36,869.09C2876.36,889.23 2870.2,902.936 2859.3,912.726C2847.27,923.916 2828.8,928.95 2807.55,928.95C2767.83,928.95 2744.61,912.167 2740.41,884.195L2740.41,884.196ZM2833,829.371C2838.31,822.378 2840.83,812.867 2840.83,801.958C2840.83,791.328 2838.03,781.538 2832.44,774.545C2826.85,767.552 2818.45,763.077 2806.71,763.077C2787.13,763.077 2774.54,777.902 2774.54,802.237C2774.54,826.853 2787.13,840.839 2806.99,840.839C2819.01,840.839 2827.41,836.364 2833,829.371ZM2915.8,897.063C2931.18,897.063 2937.05,889.511 2937.05,877.483C2937.05,873.846 2936.5,869.091 2934.82,863.217C2932.86,857.343 2930.34,849.51 2926.15,838.601L2887.55,736.504L2927.55,736.504L2948.8,801.119C2951.04,807.832 2953,815.385 2954.96,821.819C2955.8,825.455 2956.91,828.811 2958.03,832.448L2958.59,832.448C2959.43,828.811 2960.27,825.455 2961.11,821.818C2962.51,815.385 2964.75,807.832 2966.99,801.119L2987.13,736.504L3025.45,736.504L2975.38,883.637C2969.78,899.86 2964.47,910.49 2956.92,917.203C2949.08,924.196 2939.29,926.993 2924.75,926.993L2902.37,926.993L2902.37,897.063L2915.8,897.063ZM880,880L1040,880L1040,400L880,400L880,880ZM1120,320L1520,320L1520,160L1120,160L1120,320ZM880,160L1040,160L1040,320L880,320L880,160ZM640,880L800,880L800,160L640,160L640,880ZM400,720L560,720L560,160L400,160L400,720ZM160,880L320,880L320,160L160,160L160,880ZM1120,880L1280,880L1280,400L1120,400L1120,880Z" style="fill-rule:nonzero;"/>
+</svg>                </a>
+            </div>
+        </div>
+</div></footer>
+    </div>
+
+        <script  data-navigate-once="true">window.livewireScriptConfig = {"csrf":"wkZzOWHdPBVl6P4f4THKI3XFnLmNi442psiPrgPQ","uri":"\/livewire\/update","progressBar":"","nonce":""};</script>
+                <div wire:snapshot="{&quot;data&quot;:{&quot;modals&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}]},&quot;memo&quot;:{&quot;id&quot;:&quot;0YuE4V7QS0yt2tAcMJRT&quot;,&quot;name&quot;:&quot;modal.modal-manager&quot;,&quot;path&quot;:&quot;solutions\/66531&quot;,&quot;method&quot;:&quot;GET&quot;,&quot;release&quot;:&quot;a-a-a&quot;,&quot;children&quot;:[],&quot;scripts&quot;:[],&quot;assets&quot;:[],&quot;errors&quot;:[],&quot;locale&quot;:&quot;en&quot;},&quot;checksum&quot;:&quot;f67aeefb7bc835535b6f2c5d0d02fc1ef3c54d6c28e8708d80373ecfc3dfc527&quot;}" wire:effects="{&quot;partials&quot;:[],&quot;listeners&quot;:[&quot;open-modal&quot;]}" wire:id="0YuE4V7QS0yt2tAcMJRT"
+    x-data="livewireModalManager($wire)"
+    x-show="show"
+    x-on:active-modal-changed="openModal"
+    style="display: none;"
+>
+    <div
+        x-show="show"
+        x-transition:enter="ease-out duration-200 delay-100"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="ease-in duration-50 delay-100"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        class="fixed inset-0 z-overlay bg-gray-900/50 transition backdrop-blur-sm"
+    ></div>
+
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]--></div>
+
+        <div
+    wire:ignore
+    x-data="{
+        notifications: [],
+        add(e) {
+            this.notifications.unshift({
+                id: e.timeStamp,
+                type: e.detail.type,
+                heading: e.detail.heading,
+                message: e.detail.message,
+            })
+        },
+        remove(notification) {
+            this.notifications = this.notifications.filter(i => i.id !== notification.id)
+        },
+    }"
+    x-on:notify.window="add"
+    role="status"
+    aria-live="polite"
+    class="pointer-events-none fixed top-0 right-0 z-modal w-full max-w-sm px-4 py-6 sm:p-6 flex flex-col space-y-4"
+>
+    <template x-for="notification in notifications" :key="notification.id" hidden>
+        <div
+            x-data="{
+                show: false,
+                transitionOut() {
+                    this.show = false
+                    setTimeout(() => this.remove(this.notification), 1500)
+                },
+            }"
+            x-init="$nextTick(() => show = true);setTimeout(() => transitionOut(), 3000)"
+            x-show="show"
+            x-transition:enter="ease-out duration-200"
+            x-transition:enter-start="opacity-0 translate-x-full"
+            x-transition:enter-end="opacity-100 translate-x-0"
+            x-transition:leave="ease-in duration-300"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0"
+            class="pointer-events-auto w-full bg-white py-3 px-4 border rounded-lg shadow-lg overflow-hidden transform transition"
+        >
+            <div class="flex items-start">
+                <div class="shrink-0 pt-0.5">
+                    <template x-if="notification.type === 'success'">
+                    <svg class="w-6 text-green-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+</svg>                    </template>
+
+                    <template x-if="notification.type === 'info'">
+                    <svg class="w-6 text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"/>
+</svg>                    </template>
+
+                    <template x-if="notification.type === 'warning'">
+                    <svg class="w-6 text-yellow-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"/>
+</svg>                    </template>
+
+                    <template x-if="notification.type === 'error'">
+                    <svg class="w-6 text-red-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z"/>
+</svg>                    </template>
+                </div>
+
+                <div class="ml-3 w-0 flex-1">
+                    <p x-text="notification.heading" class="text-18 font-semibold text-gray-900"></p>
+                    <p x-show="notification.message" x-text="notification.message" class="text-16 text-gray-600 leading-tight"></p>
+                </div>
+
+                <div class="ml-4 shrink-0 flex">
+                    <button
+                        x-on:click="transitionOut"
+                        class="text-gray-400 focus:outline-none hover:text-gray-500 transition"
+                    ><svg class="w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+  <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z"/>
+</svg></button>
+                </div>
+            </div>
+        </div>
+    </template>
+</div>
+        <link rel="modulepreload" as="script" href="https://solve.mit.edu/build/assets/app-CC_yjMee.js" /><script type="module" src="https://solve.mit.edu/build/assets/app-CC_yjMee.js" data-navigate-track="reload"></script>        <script>
+document.addEventListener('alpine:init', () => {
+    Alpine.data('desktopNavDropdown', () => ({
+        showDropdown: false,
+        timeout: null,
+        trigger: {
+            ['x-on:mouseenter']: 'open',
+            ['x-on:mouseleave']: 'close',
+        },
+        open() {
+            clearTimeout(this.timeout)
+            this.timeout = setTimeout(() => {this.showDropdown = true}, 100)
+        },
+        close() {
+            clearTimeout(this.timeout)
+            this.timeout = setTimeout(() => {this.showDropdown = false}, 200)
+        },
+    }))
+})
+</script>
+<script>
+document.addEventListener('livewire:init', () => {
+    window.$openWireModal = (name, ...params) => {
+        Livewire.dispatchTo('modal.modal-manager', 'open-modal', {name, ...params})
+    };
+})
+document.addEventListener('alpine:init', () => {
+    Alpine.data('livewireModalManager', ($modalManager) => ({
+        showActiveModal: false,
+        modalHistory: [],
+
+        get show() {
+            return this.hasModals
+        },
+
+        get hasModals() {
+            return this.modalHistory.length > 0
+        },
+
+        get activeModalId() {
+            return this.modalHistory.slice(-1)
+        },
+
+        init() {
+            // listen for events dispatched from a server-side ModalComponent
+            window.addEventListener('close-wire-modal', ({detail:{ destroy = false, skip = 0}}) => {
+                this.closeModal(destroy, skip)
+            })
+            window.addEventListener('force-close-wire-modal', this.forceCloseModal.bind(this))
+        },
+
+        openModal({detail:{id}}) {
+            if (this.activeModalId == id) {
+                return;
+            }
+            // the delay before the modal transitions in
+            let delay = this.hasModals ? 300 : 0;
+
+            // hide the active modal, if one is open
+            this.hideActiveModal()
+
+            // add modal to history; sets the activeModalId
+            this.modalHistory.push(id);
+
+            // show new modal after delay
+            this.showNextModal(delay)
+        },
+
+        hideActiveModal() {
+            this.showActiveModal = false
+        },
+
+        showNextModal(delay) {
+            setTimeout(() => {
+
+                this.showActiveModal = true
+
+            }, delay);
+        },
+
+        closeModal(destroy = false, skip = 0) {
+            if(destroy instanceof PointerEvent) {
+                destroy = false
+            }
+            if (typeof skip == 'boolean') {
+                skip = this.modalHistory.length
+            }
+
+            this.hideActiveModal()
+
+            const id = this.modalHistory.pop();
+
+            if (!id) {
+                return;
+            }
+
+            this.dispatchCloseEvent(id)
+
+            if (destroy) {
+                this.destroyModal(id)
+            }
+
+            if (skip > 0) {
+                return this.closeModal(destroy, --skip)
+            }
+
+            if (this.hasModals) {
+                this.showNextModal(300)
+            }
+        },
+
+        closeAndDestroyModal(skip = 0) {
+            this.closeModal(true, skip)
+        },
+
+        destroyModal(id) {
+            setTimeout(() => {
+                 $modalManager.destroyModal(id)
+            }, 250);
+        },
+
+        forceCloseModal() {
+            this.hideActiveModal()
+
+            this.clearHistory()
+
+            setTimeout(() => {
+                this.resetState()
+            }, 250);
+        },
+
+        dispatchCloseEvent(id) {
+            Livewire.dispatchTo($modalManager.modals[id]?.name, 'modalClosed');
+        },
+
+        clearHistory() {
+            this.modalHistory = []
+        },
+
+        resetState() {
+            $modalManager.resetState()
+        }
+    }))
+})
+</script>
+<script>
+document.addEventListener('alpine:init', () => {
+
+    window.dataLayer = window.dataLayer || [];
+    const push = window.pushGtmEvent || (function(event, props){ dataLayer.push({event, ...props}); });
+
+    addEventListener('lw:gtm', (event) => {
+        const e = event.detail || {};
+
+        if (!e.event) return;
+
+        push(e.event, e);
+    });
+
+})
+</script>    </body>
+</html>
