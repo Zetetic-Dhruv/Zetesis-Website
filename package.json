@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build:css": "tailwindcss -i ./src/input.css -o ./output.css",
-    "build": "npm run build:css && rm -rf dist && mkdir -p dist && cp index.html lab.html dhruv.html output.css CNAME ping.html dist/ && touch dist/.nojekyll && cp -r public dist/",
+    "prerender:github": "node scripts/prerender-github.js",
+    "build": "npm run build:css && rm -rf dist && mkdir -p dist && cp index.html lab.html output.css CNAME ping.html robots.txt sitemap.xml llms.txt dist/ && touch dist/.nojekyll && cp -r public dist/ && npm run prerender:github",
     "dev": "tailwindcss -i ./src/input.css -o ./output.css --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

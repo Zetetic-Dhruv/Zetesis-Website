@@ -7,6 +7,65 @@
     <title>Zetesis Labs</title>
     <link rel="icon" type="image/png" href="public/images/logos/Zetesis_logo.png">
     <link rel="stylesheet" href="output.css">
+
+    <!-- Schema.org Organization + WebSite: structured data for search engines and LLM crawlers. -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://zetesislabs.com/#organization",
+          "name": "Zetesis Labs",
+          "legalName": "Zetesis Labs",
+          "url": "https://zetesislabs.com/",
+          "logo": "https://zetesislabs.com/public/images/logos/Zetesis_logo.png",
+          "description": "A deep-tech research programme and venture from ARTPARK @ IISc. Zetesis Labs builds verified, long-horizon synthetic discovery systems: measurement, causal world-models, and formal verification kernels.",
+          "foundingLocation": {
+            "@type": "Place",
+            "name": "ARTPARK @ IISc, Bengaluru, India"
+          },
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Bengaluru",
+            "addressRegion": "Karnataka",
+            "addressCountry": "IN"
+          },
+          "founder": {
+            "@type": "Person",
+            "name": "Dhruv Gupta",
+            "url": "https://zetesislabs.com/dhruv.html"
+          },
+          "parentOrganization": {
+            "@type": "Organization",
+            "name": "ARTPARK @ IISc",
+            "url": "https://www.artpark.in/zetesis"
+          },
+          "sameAs": [
+            "https://github.com/Zetesislabs",
+            "https://www.artpark.in/zetesis"
+          ],
+          "knowsAbout": [
+            "Synthetic Discovery",
+            "Causal World Models",
+            "Formal Verification",
+            "Lean4",
+            "Root-Cause Analysis",
+            "Bayesian Calibration",
+            "Measurement Infrastructure"
+          ]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://zetesislabs.com/#website",
+          "url": "https://zetesislabs.com/",
+          "name": "Zetesis Labs",
+          "publisher": { "@id": "https://zetesislabs.com/#organization" },
+          "inLanguage": "en"
+        }
+      ]
+    }
+    </script>
 </head>
 
 <body>
