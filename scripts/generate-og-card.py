@@ -7,7 +7,7 @@ from PIL import Image, ImageDraw, ImageFont
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-PORTRAIT = ROOT / "public" / "images" / "dhruv" / "Dhruv.jpeg"
+PORTRAIT = ROOT / "public" / "images" / "dhruv" / "dhruv-gupta-portrait.jpg"
 OUT_DIR = ROOT / "public" / "images" / "og"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 OUT = OUT_DIR / "dhruv-og.png"
