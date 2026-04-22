@@ -268,6 +268,7 @@
             border: 1px solid var(--color-foreground);
             padding: 1.5rem;
             margin-bottom: 1.25rem;
+            display: flow-root;
         }
 
         .deepdive h4 {
@@ -506,6 +507,63 @@
         }
         .mp-group:first-child {
             margin-top: 1rem;
+        }
+
+        /* Card photos: small, floated right of text, academic-paper scale */
+        .deepdive .card-photo {
+            float: right;
+            width: 42%;
+            max-width: 230px;
+            margin: 0.15rem 0 0.5rem 1.1rem;
+        }
+
+        .deepdive .card-photo img {
+            display: block;
+            width: 100%;
+            height: auto;
+            border: 1px solid var(--color-hairline);
+        }
+
+        .deepdive .card-photo figcaption {
+            font-size: 10.5px;
+            color: var(--color-muted);
+            line-height: 1.4;
+            margin-top: 0.35rem;
+            font-style: italic;
+            text-align: left;
+        }
+
+        /* Variants: --left (float left), --wide (no float, medium width) */
+        .deepdive .card-photo--left {
+            float: left;
+            margin: 0.15rem 1.1rem 0.5rem 0;
+        }
+
+        .deepdive .card-photo--wide {
+            float: none;
+            width: 100%;
+            max-width: 420px;
+            margin: 0.9rem 0 0.4rem;
+        }
+
+        /* Tighter stack for cards that have more than one photo */
+        .deepdive .card-photo--small {
+            max-width: 180px;
+            width: 38%;
+        }
+
+        @media (max-width: 720px) {
+            .deepdive .card-photo,
+            .deepdive .card-photo--left,
+            .deepdive .card-photo--small {
+                float: none;
+                width: 100%;
+                max-width: 320px;
+                margin: 0.8rem auto;
+            }
+            .deepdive .card-photo--wide {
+                max-width: 100%;
+            }
         }
 
         /* Terrapulse gallery: 3-column photo strip inside the card */
@@ -812,14 +870,11 @@
                             <strong>B.S. (Research), Biology</strong>, Indian Institute of Science, Bangalore
                             (2021&ndash;2025). First Class with Distinction, CGPA 8.8/10.<br>
                             Thesis (A+, Rank 1): <em>Measuring What Models Miss.</em>
-                            <figure style="margin: 0.8rem 0 0;">
+                            <figure class="card-photo card-photo--small" style="float: right; margin: 0 0 0.5rem 1rem;">
                                 <img src="public/images/dhruv/graduation.jpeg"
-                                    alt="IISc Convocation 2025, Undergraduate Programme, degree ceremony"
-                                    style="width: 100%; max-width: 360px; display: block; border: 1px solid var(--color-hairline);"
-                                    onerror="this.style.display='none'">
-                                <figcaption class="text-muted text-xs" style="margin-top: 0.35rem; line-height: 1.45;">
-                                    IISc Convocation, Undergraduate Programme, 2025.
-                                </figcaption>
+                                    alt="IISc Convocation 2025, Undergraduate Programme"
+                                    onerror="this.parentElement.style.display='none'">
+                                <figcaption>IISc Convocation 2025.</figcaption>
                             </figure>
                         </dd>
 
@@ -829,15 +884,11 @@
                             clinical neurology internships, Sir Ganga Ram Hospital, Delhi (2022, 2023) &middot;
                             MSOT neuro-endocrine imaging under Prof. Sanhita Sinharay, IISc (2023) &middot;
                             neuro-optics under Prof. Arjun Yodh, U Penn (2022, hybrid).
-                            <figure style="margin: 0.8rem 0 0;">
+                            <figure class="card-photo card-photo--small" style="float: right; margin: 0 0 0.5rem 1rem;">
                                 <img src="public/images/dhruv/sir_ganga_ram.jpeg"
-                                    alt="Dhruv in OR scrubs during the neurology internship at Sir Ganga Ram Hospital"
-                                    style="width: 100%; max-width: 260px; display: block; border: 1px solid var(--color-hairline);"
-                                    onerror="this.style.display='none'">
-                                <figcaption class="text-muted text-xs" style="margin-top: 0.35rem; line-height: 1.45;">
-                                    Neurology rotation, Sir Ganga Ram Hospital, Delhi
-                                    (with Col. Dr. P. K. Sethi).
-                                </figcaption>
+                                    alt="Dhruv in OR scrubs during the Sir Ganga Ram neurology rotation"
+                                    onerror="this.parentElement.style.display='none'">
+                                <figcaption>SGRH neurology rotation, Delhi.</figcaption>
                             </figure>
                         </dd>
 
@@ -1103,27 +1154,21 @@
                                 href="https://iisc.ac.in/events/iisc-students-win-again-at-igem/"
                                 target="_blank" rel="noopener noreferrer">IISc students win again at iGEM</a></strong>.</p>
 
-                        <figure style="margin: 1rem 0 0.25rem;">
+                        <figure class="card-photo card-photo--small">
+                            <img src="public/images/dhruv/bioreactor.jpeg"
+                                alt="Halocleen bioreactor head plate under assembly"
+                                onerror="this.parentElement.style.display='none'">
+                            <figcaption>Patent-filed bioreactor head-plate during assembly.</figcaption>
+                        </figure>
+                        <figure class="card-photo--wide" style="margin-top: 0.9rem;">
                             <img src="public/images/igem/igem-2022.jpg"
-                                alt="IISc iGEM 2022 team at the Grand Jamboree in Paris, holding a Halocleen shirt"
-                                style="width: 100%; max-width: 620px; display: block; border: 1px solid var(--color-hairline);"
-                                onerror="this.style.display='none'">
-                            <figcaption class="text-muted text-xs" style="margin-top: 0.5rem; line-height: 1.55;">
-                                IISc iGEM team at the 2022 Grand Jamboree, Paris (26&ndash;28 October).
+                                alt="IISc iGEM 2022 team at the Grand Jamboree in Paris"
+                                style="display: block; width: 100%; border: 1px solid var(--color-hairline);"
+                                onerror="this.parentElement.style.display='none'">
+                            <figcaption style="font-size: 10.5px; color: var(--color-muted); line-height: 1.4; margin-top: 0.35rem; font-style: italic;">
+                                Team at the 2022 Grand Jamboree, Paris.
                                 Image: <a href="https://iisc.ac.in/events/iisc-students-win-again-at-igem/"
                                     target="_blank" rel="noopener noreferrer">IISc Office of Communications</a>.
-                            </figcaption>
-                        </figure>
-
-                        <figure style="margin: 1rem 0 0.25rem;">
-                            <img src="public/images/dhruv/bioreactor.jpeg"
-                                alt="Halocleen bioreactor head plate under assembly, stainless-steel lid with threaded ports above a glass vessel"
-                                style="width: 100%; max-width: 480px; display: block; border: 1px solid var(--color-hairline);"
-                                onerror="this.style.display='none'">
-                            <figcaption class="text-muted text-xs" style="margin-top: 0.5rem; line-height: 1.55;">
-                                One of the two patent-filed Halocleen bioreactor designs during assembly:
-                                stainless-steel head plate with threaded gas-port fittings over a borosilicate
-                                vessel, optimised for the low-solubility halocarbon substrate regime.
                             </figcaption>
                         </figure>
                     </article>
@@ -1306,15 +1351,11 @@
                             Active lines under the club: lunar rover, rehab exoskeleton, drone, 6-DoF
                             manipulator, legged-locomotion prototypes.</p>
 
-                        <figure style="margin: 1rem 0;">
+                        <figure class="card-photo">
                             <img src="public/images/dhruv/hexabot.jpeg"
                                 alt="Hexapod walking robot built in the IISc Robotics Club"
-                                style="width: 100%; max-width: 560px; display: block; border: 1px solid var(--color-hairline);"
-                                onerror="this.style.display='none'">
-                            <figcaption class="text-muted text-xs" style="margin-top: 0.5rem; line-height: 1.55;">
-                                One of the club prototypes: a six-legged walker with 18 servos
-                                (three per leg), 3-D printed chassis, mid-build on the workbench.
-                            </figcaption>
+                                onerror="this.parentElement.style.display='none'">
+                            <figcaption>Club prototype: 18-servo hexapod walker, 3-D printed chassis.</figcaption>
                         </figure>
 
                         <p style="margin-top: 1.25rem;"><strong>Team Vicharaka &middot; University Rover
@@ -1339,16 +1380,15 @@
                             URSC, securing a &#8377;25 L grant. I was the undergraduate team member
                             contributing the biology half of the lunar-surface assay stack.</p>
 
-                        <figure style="margin: 1rem 0 0;">
+                        <figure class="card-photo--wide" style="margin-top: 0.8rem;">
                             <img src="public/images/dhruv/lunar_rover_isro_team.jpeg"
-                                alt="Biswas lab ISRO IRoC-U 2024 team structure, with mentor Prof. Pradipta Biswas, team lead Ajay Kumar Sandula, eight graduate members, and Dhruv Gupta (4th year UG, Biology) at the bottom right"
-                                style="width: 100%; max-width: 720px; display: block; border: 1px solid var(--color-hairline);"
-                                onerror="this.style.display='none'">
-                            <figcaption class="text-muted text-xs" style="margin-top: 0.5rem; line-height: 1.55;">
-                                Biswas lab team structure for ISRO IRoC-U 2024. Mentor: Prof. Pradipta Biswas
-                                (Associate Professor, Dept. of Design &amp; Manufacturing + Robert Bosch
-                                Centre for Cyber-Physical Systems). Team Lead: Ajay Kumar Sandula. Dhruv
-                                Gupta listed bottom right as the fourth-year Biology UG member.
+                                alt="Biswas lab ISRO IRoC-U 2024 team structure with Dhruv Gupta (UG Biology) at bottom right"
+                                style="display: block; width: 100%; border: 1px solid var(--color-hairline);"
+                                onerror="this.parentElement.style.display='none'">
+                            <figcaption style="font-size: 10.5px; color: var(--color-muted); line-height: 1.4; margin-top: 0.35rem; font-style: italic;">
+                                Biswas lab ISRO IRoC-U 2024 team. Mentor: Prof. Pradipta Biswas.
+                                Team Lead: Ajay Kumar Sandula. I am listed bottom-right, fourth-year
+                                Biology UG.
                             </figcaption>
                         </figure>
                     </article>
@@ -1401,26 +1441,23 @@
                         <p class="text-muted text-sm" style="margin-top: 0.6rem;">Also prototyped SoTA
                             instrumentation for the Karnataka Forensics Lab.</p>
 
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; margin-top: 1.1rem;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; max-width: 380px; margin-top: 0.9rem;">
                             <figure style="margin: 0;">
                                 <img src="public/images/dhruv/jrd_inaugural.jpeg"
-                                    alt="JRD Tata Innovation Support Centre inaugural session poster with team"
+                                    alt="JRD Tata ISC inaugural session, 5 May 2024"
                                     style="width: 100%; display: block; border: 1px solid var(--color-hairline);"
-                                    onerror="this.style.display='none'">
-                                <figcaption class="text-muted text-xs" style="margin-top: 0.4rem; line-height: 1.5;">
-                                    Inaugural session, 5 May 2024. ARTPARK &middot; IISc &middot; JRD Tata
-                                    ISC banner. Session theme: the workhorses of Atmanirbhar Bharat and
-                                    bringing them together.
+                                    onerror="this.parentElement.style.display='none'">
+                                <figcaption style="font-size: 10.5px; color: var(--color-muted); line-height: 1.4; margin-top: 0.3rem; font-style: italic;">
+                                    Inaugural session, 5 May 2024.
                                 </figcaption>
                             </figure>
                             <figure style="margin: 0;">
                                 <img src="public/images/dhruv/jrd_classroom.jpeg"
-                                    alt="Dhruv briefing the JRD summer cohort in a classroom at IISc"
+                                    alt="Briefing the JRD summer cohort at IISc"
                                     style="width: 100%; display: block; border: 1px solid var(--color-hairline);"
-                                    onerror="this.style.display='none'">
-                                <figcaption class="text-muted text-xs" style="margin-top: 0.4rem; line-height: 1.5;">
-                                    Briefing the 40+-student summer cohort on the eight-track applied-R&amp;D
-                                    portfolio at IISc.
+                                    onerror="this.parentElement.style.display='none'">
+                                <figcaption style="font-size: 10.5px; color: var(--color-muted); line-height: 1.4; margin-top: 0.3rem; font-style: italic;">
+                                    Briefing the 40+-student cohort.
                                 </figcaption>
                             </figure>
                         </div>
@@ -1431,15 +1468,11 @@
                         <p class="subtitle">Founder &amp; PI, 2024&ndash;Jun 2025. 18-member institutionally-
                             funded lab at ARTPARK. Transitioned to permanent team.</p>
 
-                        <figure style="margin: 1rem 0;">
+                        <figure class="card-photo">
                             <img src="public/images/dhruv/arcnet.jpeg"
-                                alt="ARCNet team of five in the ARTPARK office under the ARCNet signage"
-                                style="width: 100%; max-width: 520px; display: block; border: 1px solid var(--color-hairline);"
-                                onerror="this.style.display='none'">
-                            <figcaption class="text-muted text-xs" style="margin-top: 0.5rem; line-height: 1.55;">
-                                ARCNet (Applied Research Capability Network) core team in the ARTPARK
-                                office at IISc, with a client prototype mid-build on the workbench.
-                            </figcaption>
+                                alt="ARCNet core team in the ARTPARK office"
+                                onerror="this.parentElement.style.display='none'">
+                            <figcaption>ARCNet core team under the signage at ARTPARK, IISc.</figcaption>
                         </figure>
 
                         <p><strong>What was tested.</strong> Whether an institutionally-funded deep-tech
@@ -1542,14 +1575,13 @@
                                         <a href="https://opensciencestack.org/robotics/" target="_blank"
                                             rel="noopener noreferrer">RAS architecture</a>
                                     </p>
-                                    <figure style="margin: 0.9rem 0 0;">
+                                    <figure style="width: 60%; max-width: 240px; margin: 0.8rem 0 0;">
                                         <img src="public/images/dhruv/oss_roscon.jpeg"
-                                            alt="Open Science Stack team on stage with a 'This is fully open source!' slide"
-                                            style="width: 100%; max-width: 520px; display: block; border: 1px solid var(--color-hairline);"
-                                            onerror="this.style.display='none'">
-                                        <figcaption class="text-muted text-xs" style="margin-top: 0.5rem; line-height: 1.5;">
-                                            OSS team on stage at ROSCon India (Bengaluru), announcing the
-                                            ROS2-based Robotic Application Stack as fully open source.
+                                            alt="OSS team on stage at ROSCon India"
+                                            style="display: block; width: 100%; border: 1px solid var(--color-hairline);"
+                                            onerror="this.parentElement.style.display='none'">
+                                        <figcaption style="font-size: 10.5px; color: var(--color-muted); line-height: 1.4; margin-top: 0.3rem; font-style: italic;">
+                                            OSS team at ROSCon India: RAS announced fully open source.
                                         </figcaption>
                                     </figure>
                                 </div>
