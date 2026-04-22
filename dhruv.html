@@ -509,100 +509,60 @@
             margin-top: 1rem;
         }
 
-        /* Card photos: small, floated right of text, academic-paper scale */
-        .deepdive .card-photo {
-            float: right;
-            width: 42%;
-            max-width: 230px;
-            margin: 0.15rem 0 0.5rem 1.1rem;
+        /* Card photo strip: small thumbnails at the bottom of a card, after the text. */
+        .card-photos {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.7rem;
+            margin-top: 1.1rem;
+            padding-top: 0.85rem;
+            border-top: 1px solid var(--color-hairline);
         }
 
-        .deepdive .card-photo img {
-            display: block;
-            width: 100%;
-            height: auto;
-            border: 1px solid var(--color-hairline);
-        }
-
-        .deepdive .card-photo figcaption {
-            font-size: 10.5px;
-            color: var(--color-muted);
-            line-height: 1.4;
-            margin-top: 0.35rem;
-            font-style: italic;
-            text-align: left;
-        }
-
-        /* Variants: --left (float left), --wide (no float, medium width) */
-        .deepdive .card-photo--left {
-            float: left;
-            margin: 0.15rem 1.1rem 0.5rem 0;
-        }
-
-        .deepdive .card-photo--wide {
-            float: none;
-            width: 100%;
-            max-width: 420px;
-            margin: 0.9rem 0 0.4rem;
-        }
-
-        /* Tighter stack for cards that have more than one photo */
-        .deepdive .card-photo--small {
-            max-width: 180px;
-            width: 38%;
-        }
-
-        @media (max-width: 720px) {
-            .deepdive .card-photo,
-            .deepdive .card-photo--left,
-            .deepdive .card-photo--small {
-                float: none;
-                width: 100%;
-                max-width: 320px;
-                margin: 0.8rem auto;
-            }
-            .deepdive .card-photo--wide {
-                max-width: 100%;
-            }
-        }
-
-        /* Terrapulse gallery: 3-column photo strip inside the card */
-        .tp-gallery {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.75rem;
-            margin: 1rem 0 1.25rem;
-        }
-
-        .tp-gallery figure {
+        .card-photos figure {
             margin: 0;
+            width: 140px;
+            flex: 0 0 auto;
         }
 
-        .tp-gallery img {
+        .card-photos figure.wide {
+            width: 240px;
+        }
+
+        .card-photos a {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .card-photos img {
             display: block;
             width: 100%;
-            height: 180px;
+            height: 100px;
             object-fit: cover;
             border: 1px solid var(--color-hairline);
             background: #000;
         }
 
-        .tp-gallery figcaption {
-            font-size: 11px;
-            color: var(--color-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            margin-top: 0.35rem;
-            text-align: center;
+        .card-photos figure.wide img {
+            height: auto;
+            max-height: 140px;
+            object-fit: contain;
+            background: #fff;
         }
 
-        @media (max-width: 700px) {
-            .tp-gallery {
-                grid-template-columns: 1fr;
-            }
+        .card-photos figcaption {
+            font-size: 10.5px;
+            color: var(--color-muted);
+            line-height: 1.35;
+            margin-top: 0.3rem;
+            font-style: italic;
+        }
 
-            .tp-gallery img {
-                height: 240px;
+        @media (max-width: 600px) {
+            .card-photos figure,
+            .card-photos figure.wide {
+                width: calc(50% - 0.35rem);
             }
         }
 
@@ -870,12 +830,6 @@
                             <strong>B.S. (Research), Biology</strong>, Indian Institute of Science, Bangalore
                             (2021&ndash;2025). First Class with Distinction, CGPA 8.8/10.<br>
                             Thesis (A+, Rank 1): <em>Measuring What Models Miss.</em>
-                            <figure class="card-photo card-photo--small" style="float: right; margin: 0 0 0.5rem 1rem;">
-                                <img src="public/images/dhruv/graduation.jpeg"
-                                    alt="IISc Convocation 2025, Undergraduate Programme"
-                                    onerror="this.parentElement.style.display='none'">
-                                <figcaption>IISc Convocation 2025.</figcaption>
-                            </figure>
                         </dd>
 
                         <dt>Lab training</dt>
@@ -884,12 +838,6 @@
                             clinical neurology internships, Sir Ganga Ram Hospital, Delhi (2022, 2023) &middot;
                             MSOT neuro-endocrine imaging under Prof. Sanhita Sinharay, IISc (2023) &middot;
                             neuro-optics under Prof. Arjun Yodh, U Penn (2022, hybrid).
-                            <figure class="card-photo card-photo--small" style="float: right; margin: 0 0 0.5rem 1rem;">
-                                <img src="public/images/dhruv/sir_ganga_ram.jpeg"
-                                    alt="Dhruv in OR scrubs during the Sir Ganga Ram neurology rotation"
-                                    onerror="this.parentElement.style.display='none'">
-                                <figcaption>SGRH neurology rotation, Delhi.</figcaption>
-                            </figure>
                         </dd>
 
                         <dt>Awards</dt>
@@ -955,6 +903,25 @@
                             Engineering, Ather Energy.
                         </dd>
                     </dl>
+
+                    <div class="card-photos">
+                        <figure>
+                            <a href="public/images/dhruv/graduation.jpeg" target="_blank">
+                                <img src="public/images/dhruv/graduation.jpeg"
+                                    alt="IISc Convocation 2025, Undergraduate Programme"
+                                    onerror="this.parentElement.parentElement.parentElement.style.display='none'">
+                            </a>
+                            <figcaption>IISc Convocation 2025.</figcaption>
+                        </figure>
+                        <figure>
+                            <a href="public/images/dhruv/sir_ganga_ram.jpeg" target="_blank">
+                                <img src="public/images/dhruv/sir_ganga_ram.jpeg"
+                                    alt="SGRH neurology rotation, scrub attire"
+                                    onerror="this.parentElement.parentElement.parentElement.style.display='none'">
+                            </a>
+                            <figcaption>SGRH neurology rotation, Delhi.</figcaption>
+                        </figure>
+                    </div>
                 </section>
 
                 <hr style="border: 0; border-top: 1px solid #ddd; margin: 3rem 0;">
@@ -1094,27 +1061,6 @@
                                 style="font-weight: bold;">github.com/ARC-Net / CO2mmunity</a>
                         </p>
 
-                        <div class="tp-gallery">
-                            <figure>
-                                <img src="public/images/terrapulse/TerraPulse3.jpeg"
-                                    alt="Terrapulse instrument, top view"
-                                    onerror="this.style.display='none'">
-                                <figcaption>Instrument &middot; top</figcaption>
-                            </figure>
-                            <figure>
-                                <img src="public/images/terrapulse/GasManifold1.jpeg"
-                                    alt="Gas manifold subsystem (Arduino + relay bank + 4 solenoid valves)"
-                                    onerror="this.style.display='none'">
-                                <figcaption>Gas manifold</figcaption>
-                            </figure>
-                            <figure>
-                                <img src="public/images/terrapulse/SyringePump.jpeg"
-                                    alt="Syringe-pump subsystem (lead-screw, linear rails, stepper)"
-                                    onerror="this.style.display='none'">
-                                <figcaption>Syringe pump</figcaption>
-                            </figure>
-                        </div>
-
                         <p>Low-cost NDIR CO<sub>2</sub> cell (K33-ELG) on embedded compute, designed to capture
                             sub-minute flux pulses at research-grade precision. Three-layer Bayesian calibration
                             chain: FTIR step-test &rarr; lab pulse simulation &rarr; multi-day field mass-closure
@@ -1133,6 +1079,33 @@
                                 target="_blank" rel="noopener noreferrer">ARC-Net / CO2mmunity</a>.
                             Final 95% posteriors: gain = 0.993 &plusmn; 0.005; offset = 16 &plusmn; 10 ppm;
                             drift = 0.002 &plusmn; 0.020 ppm h<sup>&minus;1</sup>.</p>
+
+                        <div class="card-photos">
+                            <figure>
+                                <a href="public/images/terrapulse/TerraPulse3.jpeg" target="_blank">
+                                    <img src="public/images/terrapulse/TerraPulse3.jpeg"
+                                        alt="Terrapulse instrument, top view"
+                                        onerror="this.parentElement.parentElement.parentElement.style.display='none'">
+                                </a>
+                                <figcaption>Instrument, top view.</figcaption>
+                            </figure>
+                            <figure>
+                                <a href="public/images/terrapulse/GasManifold1.jpeg" target="_blank">
+                                    <img src="public/images/terrapulse/GasManifold1.jpeg"
+                                        alt="Gas manifold: Arduino + 4 solenoid valves"
+                                        onerror="this.parentElement.parentElement.parentElement.style.display='none'">
+                                </a>
+                                <figcaption>Gas manifold subsystem.</figcaption>
+                            </figure>
+                            <figure>
+                                <a href="public/images/terrapulse/SyringePump.jpeg" target="_blank">
+                                    <img src="public/images/terrapulse/SyringePump.jpeg"
+                                        alt="Syringe pump: lead-screw + linear rails"
+                                        onerror="this.parentElement.parentElement.parentElement.style.display='none'">
+                                </a>
+                                <figcaption>Syringe-pump mechanics.</figcaption>
+                            </figure>
+                        </div>
                     </article>
 
                     <article class="deepdive">
@@ -1154,23 +1127,25 @@
                                 href="https://iisc.ac.in/events/iisc-students-win-again-at-igem/"
                                 target="_blank" rel="noopener noreferrer">IISc students win again at iGEM</a></strong>.</p>
 
-                        <figure class="card-photo card-photo--small">
-                            <img src="public/images/dhruv/bioreactor.jpeg"
-                                alt="Halocleen bioreactor head plate under assembly"
-                                onerror="this.parentElement.style.display='none'">
-                            <figcaption>Patent-filed bioreactor head-plate during assembly.</figcaption>
-                        </figure>
-                        <figure class="card-photo--wide" style="margin-top: 0.9rem;">
-                            <img src="public/images/igem/igem-2022.jpg"
-                                alt="IISc iGEM 2022 team at the Grand Jamboree in Paris"
-                                style="display: block; width: 100%; border: 1px solid var(--color-hairline);"
-                                onerror="this.parentElement.style.display='none'">
-                            <figcaption style="font-size: 10.5px; color: var(--color-muted); line-height: 1.4; margin-top: 0.35rem; font-style: italic;">
-                                Team at the 2022 Grand Jamboree, Paris.
-                                Image: <a href="https://iisc.ac.in/events/iisc-students-win-again-at-igem/"
-                                    target="_blank" rel="noopener noreferrer">IISc Office of Communications</a>.
-                            </figcaption>
-                        </figure>
+                        <div class="card-photos">
+                            <figure>
+                                <a href="public/images/dhruv/bioreactor.jpeg" target="_blank">
+                                    <img src="public/images/dhruv/bioreactor.jpeg"
+                                        alt="Halocleen bioreactor head plate under assembly"
+                                        onerror="this.parentElement.parentElement.parentElement.style.display='none'">
+                                </a>
+                                <figcaption>Bioreactor head-plate during assembly.</figcaption>
+                            </figure>
+                            <figure>
+                                <a href="https://iisc.ac.in/events/iisc-students-win-again-at-igem/"
+                                    target="_blank" rel="noopener noreferrer">
+                                    <img src="public/images/igem/igem-2022.jpg"
+                                        alt="IISc iGEM 2022 team at the Grand Jamboree in Paris"
+                                        onerror="this.parentElement.parentElement.parentElement.style.display='none'">
+                                </a>
+                                <figcaption>iGEM 2022 Grand Jamboree, Paris.</figcaption>
+                            </figure>
+                        </div>
                     </article>
 
                     <!-- Formal Kernels -->
@@ -1351,14 +1326,7 @@
                             Active lines under the club: lunar rover, rehab exoskeleton, drone, 6-DoF
                             manipulator, legged-locomotion prototypes.</p>
 
-                        <figure class="card-photo">
-                            <img src="public/images/dhruv/hexabot.jpeg"
-                                alt="Hexapod walking robot built in the IISc Robotics Club"
-                                onerror="this.parentElement.style.display='none'">
-                            <figcaption>Club prototype: 18-servo hexapod walker, 3-D printed chassis.</figcaption>
-                        </figure>
-
-                        <p style="margin-top: 1.25rem;"><strong>Team Vicharaka &middot; University Rover
+                        <p style="margin-top: 1rem;"><strong>Team Vicharaka &middot; University Rover
                             Challenge.</strong> Out of the club, the Mars-rover team
                             <a href="https://vicharaka.iisc.ac.in/" target="_blank"
                                 rel="noopener noreferrer">Vicharaka</a> ("one who thinks") qualified for the
@@ -1380,17 +1348,24 @@
                             URSC, securing a &#8377;25 L grant. I was the undergraduate team member
                             contributing the biology half of the lunar-surface assay stack.</p>
 
-                        <figure class="card-photo--wide" style="margin-top: 0.8rem;">
-                            <img src="public/images/dhruv/lunar_rover_isro_team.jpeg"
-                                alt="Biswas lab ISRO IRoC-U 2024 team structure with Dhruv Gupta (UG Biology) at bottom right"
-                                style="display: block; width: 100%; border: 1px solid var(--color-hairline);"
-                                onerror="this.parentElement.style.display='none'">
-                            <figcaption style="font-size: 10.5px; color: var(--color-muted); line-height: 1.4; margin-top: 0.35rem; font-style: italic;">
-                                Biswas lab ISRO IRoC-U 2024 team. Mentor: Prof. Pradipta Biswas.
-                                Team Lead: Ajay Kumar Sandula. I am listed bottom-right, fourth-year
-                                Biology UG.
-                            </figcaption>
-                        </figure>
+                        <div class="card-photos">
+                            <figure>
+                                <a href="public/images/dhruv/hexabot.jpeg" target="_blank">
+                                    <img src="public/images/dhruv/hexabot.jpeg"
+                                        alt="Hexapod walking robot built in the IISc Robotics Club"
+                                        onerror="this.parentElement.parentElement.parentElement.style.display='none'">
+                                </a>
+                                <figcaption>Club prototype: 18-servo hexapod.</figcaption>
+                            </figure>
+                            <figure class="wide">
+                                <a href="public/images/dhruv/lunar_rover_isro_team.jpeg" target="_blank">
+                                    <img src="public/images/dhruv/lunar_rover_isro_team.jpeg"
+                                        alt="Biswas lab ISRO IRoC-U 2024 team structure diagram"
+                                        onerror="this.parentElement.parentElement.parentElement.style.display='none'">
+                                </a>
+                                <figcaption>Biswas lab IRoC-U team &middot; click to enlarge.</figcaption>
+                            </figure>
+                        </div>
                     </article>
 
                     <article class="deepdive">
@@ -1441,24 +1416,22 @@
                         <p class="text-muted text-sm" style="margin-top: 0.6rem;">Also prototyped SoTA
                             instrumentation for the Karnataka Forensics Lab.</p>
 
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; max-width: 380px; margin-top: 0.9rem;">
-                            <figure style="margin: 0;">
-                                <img src="public/images/dhruv/jrd_inaugural.jpeg"
-                                    alt="JRD Tata ISC inaugural session, 5 May 2024"
-                                    style="width: 100%; display: block; border: 1px solid var(--color-hairline);"
-                                    onerror="this.parentElement.style.display='none'">
-                                <figcaption style="font-size: 10.5px; color: var(--color-muted); line-height: 1.4; margin-top: 0.3rem; font-style: italic;">
-                                    Inaugural session, 5 May 2024.
-                                </figcaption>
+                        <div class="card-photos">
+                            <figure>
+                                <a href="public/images/dhruv/jrd_inaugural.jpeg" target="_blank">
+                                    <img src="public/images/dhruv/jrd_inaugural.jpeg"
+                                        alt="JRD Tata ISC inaugural session, 5 May 2024"
+                                        onerror="this.parentElement.parentElement.parentElement.style.display='none'">
+                                </a>
+                                <figcaption>Inaugural session, 5 May 2024.</figcaption>
                             </figure>
-                            <figure style="margin: 0;">
-                                <img src="public/images/dhruv/jrd_classroom.jpeg"
-                                    alt="Briefing the JRD summer cohort at IISc"
-                                    style="width: 100%; display: block; border: 1px solid var(--color-hairline);"
-                                    onerror="this.parentElement.style.display='none'">
-                                <figcaption style="font-size: 10.5px; color: var(--color-muted); line-height: 1.4; margin-top: 0.3rem; font-style: italic;">
-                                    Briefing the 40+-student cohort.
-                                </figcaption>
+                            <figure>
+                                <a href="public/images/dhruv/jrd_classroom.jpeg" target="_blank">
+                                    <img src="public/images/dhruv/jrd_classroom.jpeg"
+                                        alt="Briefing the JRD summer cohort at IISc"
+                                        onerror="this.parentElement.parentElement.parentElement.style.display='none'">
+                                </a>
+                                <figcaption>Briefing the 40+-student cohort.</figcaption>
                             </figure>
                         </div>
                     </article>
@@ -1467,14 +1440,6 @@
                         <h4>ARCNet Research &middot; R&amp;D foundry at ARTPARK @ IISc</h4>
                         <p class="subtitle">Founder &amp; PI, 2024&ndash;Jun 2025. 18-member institutionally-
                             funded lab at ARTPARK. Transitioned to permanent team.</p>
-
-                        <figure class="card-photo">
-                            <img src="public/images/dhruv/arcnet.jpeg"
-                                alt="ARCNet core team in the ARTPARK office"
-                                onerror="this.parentElement.style.display='none'">
-                            <figcaption>ARCNet core team under the signage at ARTPARK, IISc.</figcaption>
-                        </figure>
-
                         <p><strong>What was tested.</strong> Whether an institutionally-funded deep-tech
                             foundry can deliver three unrelated research engagements end-to-end, each on its
                             own scientific terms. Three independent research deployments below.</p>
@@ -1575,17 +1540,27 @@
                                         <a href="https://opensciencestack.org/robotics/" target="_blank"
                                             rel="noopener noreferrer">RAS architecture</a>
                                     </p>
-                                    <figure style="width: 60%; max-width: 240px; margin: 0.8rem 0 0;">
-                                        <img src="public/images/dhruv/oss_roscon.jpeg"
-                                            alt="OSS team on stage at ROSCon India"
-                                            style="display: block; width: 100%; border: 1px solid var(--color-hairline);"
-                                            onerror="this.parentElement.style.display='none'">
-                                        <figcaption style="font-size: 10.5px; color: var(--color-muted); line-height: 1.4; margin-top: 0.3rem; font-style: italic;">
-                                            OSS team at ROSCon India: RAS announced fully open source.
-                                        </figcaption>
-                                    </figure>
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="card-photos">
+                            <figure>
+                                <a href="public/images/dhruv/arcnet.jpeg" target="_blank">
+                                    <img src="public/images/dhruv/arcnet.jpeg"
+                                        alt="ARCNet core team at ARTPARK, IISc"
+                                        onerror="this.parentElement.parentElement.parentElement.style.display='none'">
+                                </a>
+                                <figcaption>ARCNet core team at ARTPARK, IISc.</figcaption>
+                            </figure>
+                            <figure>
+                                <a href="public/images/dhruv/oss_roscon.jpeg" target="_blank">
+                                    <img src="public/images/dhruv/oss_roscon.jpeg"
+                                        alt="OSS team on stage at ROSCon India"
+                                        onerror="this.parentElement.parentElement.parentElement.style.display='none'">
+                                </a>
+                                <figcaption>OSS on stage at ROSCon India.</figcaption>
+                            </figure>
                         </div>
                     </article>
 
