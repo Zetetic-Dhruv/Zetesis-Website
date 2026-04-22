@@ -255,6 +255,9 @@
   .mb-18 {
     margin-bottom: calc(var(--spacing) * 18);
   }
+  .block {
+    display: block;
+  }
   .contents {
     display: contents;
   }

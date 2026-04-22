@@ -25,7 +25,7 @@
 
     <!-- Content-Security-Policy: locked to known origins. 'unsafe-inline' retained for this page's inline CSS/JS; can be tightened with hashes later. -->
     <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; img-src 'self' data: https://ghchart.rshah.org; object-src https://ghchart.rshah.org; connect-src 'self' https://api.github.com; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; font-src 'self' data:; base-uri 'self'; form-action 'self';">
+        content="default-src 'self'; img-src 'self' data: https://ghchart.rshah.org; connect-src 'self' https://api.github.com; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; font-src 'self' data:; base-uri 'self'; form-action 'self';">
     <meta name="referrer" content="strict-origin-when-cross-origin">
 
     <link rel="stylesheet" href="output.css">
@@ -519,10 +519,15 @@
                     <div style="font-weight: bold; font-size: 20px;">Zetesis Labs</div>
                 </a>
             </div>
-            <div class="flex gap-4">
+            <div class="flex gap-4 items-center">
                 <a href="index.html">Main</a>
                 <a href="lab.html">Lab</a>
                 <a href="https://discovery.zetesislabs.com" target="_blank" rel="noopener noreferrer">Demo</a>
+                <a href="#hero" aria-label="Dhruv Gupta" style="display: inline-block; line-height: 0;">
+                    <img src="public/images/dhruv.jpg" alt="Dhruv Gupta"
+                        style="height: 40px; width: 40px; border-radius: 50% !important; object-fit: cover; border: 1px solid var(--color-hairline); display: block;"
+                        onerror="this.style.display='none'">
+                </a>
             </div>
         </nav>
 
@@ -1625,13 +1630,15 @@
         var el = document.getElementById('gh-contrib');
         if (!el) return;
         el.innerHTML = USERS.map(function (u) {
+          var fallbackId = 'gh-contrib-fallback-' + esc(u).replace(/[^a-z0-9_-]/gi, '');
           return '<div style="margin-bottom: 1rem;">' +
             '<div class="text-xs text-muted" style="margin-bottom: 0.35rem;">@' + esc(u) + '</div>' +
-            '<object type="image/svg+xml" data="https://ghchart.rshah.org/000000/' + esc(u) + '" ' +
-              'style="max-width: 100%; min-width: 600px; display: block;" ' +
-              'aria-label="' + esc(u) + ' GitHub contribution graph">' +
-            '<div class="text-muted text-xs">Contribution graph unavailable for @' + esc(u) + '.</div>' +
-            '</object>' +
+            '<img src="https://ghchart.rshah.org/000000/' + esc(u) + '" ' +
+              'alt="' + esc(u) + ' GitHub contribution graph" ' +
+              'style="max-width: 100%; min-width: 600px; width: 100%; display: block;" ' +
+              'loading="lazy" ' +
+              'onerror="this.style.display=' + "'none'" + '; var f=document.getElementById(' + "'" + fallbackId + "'" + '); if(f)f.style.display=' + "'block'" + ';">' +
+            '<div id="' + fallbackId + '" class="text-muted text-xs" style="display:none;">Contribution graph unavailable for @' + esc(u) + '.</div>' +
             '</div>';
         }).join('');
       }
