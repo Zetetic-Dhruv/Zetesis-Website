@@ -508,6 +508,86 @@
             margin-top: 1rem;
         }
 
+        /* Terrapulse gallery: 3-column photo strip inside the card */
+        .tp-gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            margin: 1rem 0 1.25rem;
+        }
+
+        .tp-gallery figure {
+            margin: 0;
+        }
+
+        .tp-gallery img {
+            display: block;
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border: 1px solid var(--color-hairline);
+            background: #000;
+        }
+
+        .tp-gallery figcaption {
+            font-size: 11px;
+            color: var(--color-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-top: 0.35rem;
+            text-align: center;
+        }
+
+        @media (max-width: 700px) {
+            .tp-gallery {
+                grid-template-columns: 1fr;
+            }
+
+            .tp-gallery img {
+                height: 240px;
+            }
+        }
+
+        /* Lean4 code block (FLT fundamental theorem) */
+        .lean-code {
+            background: #fafafa;
+            border: 1px solid var(--color-hairline);
+            border-left: 3px solid #000;
+            padding: 0.85rem 1rem;
+            margin: 1rem 0 0.5rem;
+            font-size: 12.5px;
+            line-height: 1.55;
+            overflow-x: auto;
+        }
+
+        .lean-code pre {
+            font-family: var(--font-mono);
+            margin: 0;
+            white-space: pre;
+            color: #111;
+        }
+
+        .lean-code .kw {
+            font-weight: 600;
+            color: #000;
+        }
+
+        .lean-code .cmt {
+            color: #888;
+            font-style: italic;
+        }
+
+        .lean-code .op {
+            color: #555;
+        }
+
+        .lean-code-caption {
+            font-size: 11.5px;
+            color: var(--color-muted);
+            margin: 0.15rem 0 1rem;
+            font-style: italic;
+        }
+
         /* Client engagement row (used inside ARCNet card) */
         .client-row {
             display: grid;
@@ -754,12 +834,26 @@
 
                         <dt>Teaching &amp; workshops</dt>
                         <dd>
-                            <em>Neuromorphic Computing</em> at IISc IEEE (120 participants, 3 days, March 2024);
-                            <em>Neural Networks &rarr; Circuits &rarr; DNA</em> at the All-India iGEM Meet
-                            (60 participants, 16 institutions, July 2024);
-                            <em>GNNs for Breast-Cancer Drug Discovery</em> at IIT Delhi (35 h, 26 M.Tech./PhD,
-                            October 2024); embedded C / RTOS / Cortex-M crash course via IISc Robotics Club
-                            (Jan&ndash;May 2023). Member, Eta Kappa Nu (HKN).
+                            <ul style="padding-left: 1.25rem; line-height: 1.7; margin: 0;">
+                                <li style="margin-bottom: 0.5rem;">
+                                    <strong><em>A Textbook of Formal Learning Theory</em></strong> &middot;
+                                    self-authored open-access monograph (202 pp, 18 chapters, 142-node concept
+                                    graph). &nbsp;
+                                    <a href="public/formal_learning_theory_textbook.pdf"
+                                        style="font-weight: bold;">PDF</a>
+                                    &middot;
+                                    <a href="https://github.com/Zetetic-Dhruv/formal-learning-theory-book"
+                                        target="_blank" rel="noopener noreferrer">source</a>.
+                                </li>
+                                <li>
+                                    <em>Neuromorphic Computing</em> at IISc IEEE (120 participants, 3 days,
+                                    March 2024); <em>Neural Networks &rarr; Circuits &rarr; DNA</em> at the
+                                    All-India iGEM Meet (60 participants, 16 institutions, July 2024);
+                                    <em>GNNs for Breast-Cancer Drug Discovery</em> at IIT Delhi (35 h, 26
+                                    M.Tech./PhD, October 2024); embedded C / RTOS / Cortex-M crash course via
+                                    IISc Robotics Club (Jan&ndash;May 2023). Member, Eta Kappa Nu (HKN).
+                                </li>
+                            </ul>
                         </dd>
 
                         <dt>Industrial leadership</dt>
@@ -922,6 +1016,28 @@
                                 target="_blank" rel="noopener noreferrer"
                                 style="font-weight: bold;">github.com/ARC-Net / CO2mmunity</a>
                         </p>
+
+                        <div class="tp-gallery">
+                            <figure>
+                                <img src="public/images/terrapulse/TerraPulse3.jpeg"
+                                    alt="Terrapulse instrument, top view"
+                                    onerror="this.style.display='none'">
+                                <figcaption>Instrument &middot; top</figcaption>
+                            </figure>
+                            <figure>
+                                <img src="public/images/terrapulse/GasManifold1.jpeg"
+                                    alt="Gas manifold subsystem (Arduino + relay bank + 4 solenoid valves)"
+                                    onerror="this.style.display='none'">
+                                <figcaption>Gas manifold</figcaption>
+                            </figure>
+                            <figure>
+                                <img src="public/images/terrapulse/SyringePump.jpeg"
+                                    alt="Syringe-pump subsystem (lead-screw, linear rails, stepper)"
+                                    onerror="this.style.display='none'">
+                                <figcaption>Syringe pump</figcaption>
+                            </figure>
+                        </div>
+
                         <p>Low-cost NDIR CO<sub>2</sub> cell (K33-ELG) on embedded compute, designed to capture
                             sub-minute flux pulses at research-grade precision. Three-layer Bayesian calibration
                             chain: FTIR step-test &rarr; lab pulse simulation &rarr; multi-day field mass-closure
@@ -980,6 +1096,40 @@
                             </li>
                         </ul>
                         <p style="margin-top: 0.9rem;">Formalization is the claim. The claim is checked.</p>
+
+                        <p style="margin-top: 1.25rem;"><strong>The fundamental theorem</strong>, stated and
+                            proved in the kernel as a single term
+                            (<code>FLT_Proofs/Theorem/PAC.lean</code>):</p>
+                        <div class="lean-code"><pre><code><span class="cmt">/-- Fundamental theorem of statistical learning (5-way equivalence, BP₅). -/</span>
+<span class="kw">theorem</span> fundamental_theorem (X : <span class="kw">Type</span> u) [MeasurableSpace X]
+    [MeasurableSingletonClass X]
+    (C : ConceptClass X Bool) [MeasurableConceptClass X C] :
+    (PACLearnable X C <span class="op">↔</span> VCDim X C <span class="op">&lt;</span> <span class="op">⊤</span>) <span class="op">∧</span>
+    ((VCDim X C <span class="op">&lt;</span> <span class="op">⊤</span>) <span class="op">↔</span>
+      <span class="op">∃</span> (k : <span class="op">ℕ</span>) (cs : CompressionSchemeWithInfo0 X Bool C), cs.size = k) <span class="op">∧</span>
+    ((VCDim X C <span class="op">&lt;</span> <span class="op">⊤</span>) <span class="op">↔</span>
+      <span class="op">∀</span> ε <span class="op">&gt;</span> 0, <span class="op">∃</span> m₀, <span class="op">∀</span> (D : MeasureTheory.Measure X),
+        MeasureTheory.IsProbabilityMeasure D <span class="op">→</span>
+        <span class="op">∀</span> m <span class="op">≥</span> m₀, RademacherComplexity X C D m <span class="op">&lt;</span> ε) <span class="op">∧</span>
+    (PACLearnable X C <span class="op">→</span>
+      <span class="op">∃</span> (L : BatchLearner X Bool) (mf : <span class="op">ℝ</span> <span class="op">→</span> <span class="op">ℝ</span> <span class="op">→</span> <span class="op">ℕ</span>),
+        <span class="cmt">-- PAC guarantee, sample-complexity upper bound, and matching lower bound</span>
+        ...) <span class="op">∧</span>
+    ((VCDim X C <span class="op">&lt;</span> <span class="op">⊤</span>) <span class="op">↔</span>
+      <span class="op">∃</span> (d : <span class="op">ℕ</span>), <span class="op">∀</span> (m : <span class="op">ℕ</span>), d <span class="op">≤</span> m <span class="op">→</span>
+        GrowthFunction X C m <span class="op">≤</span>
+          <span class="op">∑</span> i <span class="op">∈</span> Finset.range (d + 1), Nat.choose m i) :=
+  <span class="cmt">-- BP₅: 5-way conjunction assembles from component theorems</span>
+  <span class="op">⟨</span>vc_characterization X C,
+   fundamental_vc_compression X C,
+   (vc_characterization X C).symm.trans (fundamental_rademacher X C),
+   pac_sample_complexity_sandwich X C,
+   <span class="op">⟨</span>vcdim_finite_imp_growth_bounded X C,
+    growth_bounded_imp_vcdim_finite X C<span class="op">⟩⟩</span></code></pre></div>
+                        <p class="lean-code-caption">PAC-learnability ↔ finite VC dim ↔ bounded compression
+                            scheme ↔ vanishing Rademacher complexity ↔ polynomial growth function.
+                            Sauer–Shelah, symmetrisation, and concentration inequalities are the three
+                            loadbearing lemmas.</p>
                     </article>
 
                     <article class="deepdive">
