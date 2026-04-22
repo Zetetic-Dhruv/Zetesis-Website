@@ -6,7 +6,8 @@
   "scripts": {
     "build:css": "tailwindcss -i ./src/input.css -o ./output.css",
     "prerender:github": "node scripts/prerender-github.js",
-    "build": "npm run build:css && rm -rf dist && mkdir -p dist && cp index.html lab.html output.css CNAME ping.html robots.txt sitemap.xml llms.txt dist/ && touch dist/.nojekyll && cp -r public dist/ && npm run prerender:github",
+    "indexnow": "node scripts/indexnow-ping.js",
+    "build": "npm run build:css && rm -rf dist && mkdir -p dist && cp index.html lab.html output.css CNAME ping.html robots.txt sitemap.xml llms.txt 9b9e2a83c35fb9e6e7a601e0acb2510e.txt dist/ && touch dist/.nojekyll && cp -r public dist/ && npm run prerender:github",
     "dev": "tailwindcss -i ./src/input.css -o ./output.css --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
