@@ -432,6 +432,54 @@
             font-style: italic;
         }
 
+        /* Hero two-column layout with portrait on the right */
+        .hero-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 220px;
+            column-gap: 2.5rem;
+            align-items: start;
+        }
+
+        .hero-portrait {
+            width: 220px;
+            justify-self: end;
+        }
+
+        .hero-portrait img {
+            width: 220px;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 50% !important;
+            border: 1px solid var(--color-hairline);
+            display: block;
+        }
+
+        .hero-portrait .caption {
+            font-size: 12px;
+            color: var(--color-muted);
+            text-align: center;
+            margin-top: 0.6rem;
+            font-style: italic;
+            letter-spacing: 0.02em;
+        }
+
+        @media (max-width: 800px) {
+            .hero-row {
+                grid-template-columns: 1fr;
+                row-gap: 1.5rem;
+            }
+
+            .hero-portrait {
+                justify-self: start;
+                width: 160px;
+            }
+
+            .hero-portrait img {
+                width: 160px;
+                height: 160px;
+            }
+        }
+
         /* Client engagement row (used inside ARCNet card) */
         .client-row {
             display: grid;
@@ -519,15 +567,10 @@
                     <div style="font-weight: bold; font-size: 20px;">Zetesis Labs</div>
                 </a>
             </div>
-            <div class="flex gap-4 items-center">
+            <div class="flex gap-4">
                 <a href="index.html">Main</a>
                 <a href="lab.html">Lab</a>
                 <a href="https://discovery.zetesislabs.com" target="_blank" rel="noopener noreferrer">Demo</a>
-                <a href="#hero" aria-label="Dhruv Gupta" style="display: inline-block; line-height: 0;">
-                    <img src="public/images/dhruv/Dhruv.jpeg" alt="Dhruv Gupta"
-                        style="height: 40px; width: 40px; border-radius: 50% !important; object-fit: cover; border: 1px solid var(--color-hairline); display: block;"
-                        onerror="this.style.display='none'">
-                </a>
             </div>
         </nav>
 
@@ -582,32 +625,44 @@
             <main id="content">
                 <!-- HERO -->
                 <section id="hero">
-                    <h1 style="font-size: 44px; margin-bottom: 0.5rem;">Dhruv Gupta</h1>
-                    <p class="font-bold text-lg mb-2">Principal Investigator, Zetesis Labs
-                        (<a href="https://www.artpark.in/zetesis" target="_blank"
-                            rel="noopener noreferrer">ARTPARK @ IISc</a>) &middot; Innovator-in-Residence</p>
-                    <p class="italic text-muted mb-6">Bengaluru, India</p>
+                    <div class="hero-row">
+                        <div class="hero-text">
+                            <h1 style="font-size: 44px; margin-bottom: 0.5rem;">Dhruv Gupta</h1>
+                            <p class="font-bold text-lg mb-2">Principal Investigator, Zetesis Labs
+                                (<a href="https://www.artpark.in/zetesis" target="_blank"
+                                    rel="noopener noreferrer">ARTPARK @ IISc</a>) &middot;
+                                Innovator-in-Residence</p>
+                            <p class="italic text-muted mb-6">Bengaluru, India</p>
 
-                    <p style="font-size: 20px; line-height: 1.55; max-width: 780px; margin-bottom: 1.25rem;">
-                        Building <strong>verified, long-horizon synthetic discovery</strong>: measurement,
-                        causal world-models, and formal verification kernels composed into systems that stay
-                        correct as conditions change.
-                    </p>
+                            <p style="font-size: 20px; line-height: 1.55; max-width: 780px; margin-bottom: 1.25rem;">
+                                Building <strong>verified, long-horizon synthetic discovery</strong>:
+                                measurement, causal world-models, and formal verification kernels composed
+                                into systems that stay correct as conditions change.
+                            </p>
 
-                    <div class="flex gap-6 text-sm mb-6" style="flex-wrap: wrap;">
-                        <a href="mailto:dhruv@zetesislabs.com">dhruv@zetesislabs.com</a>
-                        <a href="mailto:dhruvgupta@iisc.ac.in">dhruvgupta@iisc.ac.in</a>
-                        <a href="tel:+918059996663">+91 80599 96663</a>
-                        <a href="https://linkedin.com/in/dhruv-gupta-iir" target="_blank"
-                            rel="noopener noreferrer">LinkedIn</a>
-                        <a href="https://github.com/Zetetic-Dhruv" target="_blank" rel="noopener noreferrer">GitHub</a>
-                        <a href="public/dhruv_gupta_resume_v6.pdf">CV (PDF)</a>
+                            <div class="flex gap-6 text-sm mb-6" style="flex-wrap: wrap;">
+                                <a href="mailto:dhruv@zetesislabs.com">dhruv@zetesislabs.com</a>
+                                <a href="mailto:dhruvgupta@iisc.ac.in">dhruvgupta@iisc.ac.in</a>
+                                <a href="tel:+918059996663">+91 80599 96663</a>
+                                <a href="https://linkedin.com/in/dhruv-gupta-iir" target="_blank"
+                                    rel="noopener noreferrer">LinkedIn</a>
+                                <a href="https://github.com/Zetetic-Dhruv" target="_blank"
+                                    rel="noopener noreferrer">GitHub</a>
+                                <a href="public/dhruv_gupta_resume_v6.pdf">CV (PDF)</a>
+                            </div>
+
+                            <blockquote class="pullquote">
+                                I want to change the world to match an image in my mind, a world where
+                                discovery is faster, more reliable, and less hostage to luck.
+                            </blockquote>
+                        </div>
+
+                        <figure class="hero-portrait">
+                            <img src="public/images/dhruv/Dhruv.jpeg" alt="Dhruv Gupta"
+                                onerror="this.parentElement.style.display='none'">
+                            <figcaption class="caption">Bengaluru, 2026</figcaption>
+                        </figure>
                     </div>
-
-                    <blockquote class="pullquote">
-                        I want to change the world to match an image in my mind, a world where discovery is
-                        faster, more reliable, and less hostage to luck.
-                    </blockquote>
 
                     <div class="pillars" aria-label="Three operating principles">
                         <div class="pillar">
