@@ -480,6 +480,34 @@
             }
         }
 
+        /* Project label tag (e.g. "Synthetic Discovery"). Applied as a span inside .deepdive h4 or alongside. */
+        .sd-tag {
+            display: inline-block;
+            font-size: 10.5px;
+            letter-spacing: 0.09em;
+            text-transform: uppercase;
+            color: var(--color-muted);
+            border: 1px solid var(--color-muted);
+            padding: 1px 7px;
+            margin-left: 0.6rem;
+            vertical-align: middle;
+            font-weight: normal;
+        }
+
+        /* More Projects dropdown — group headings within <details> */
+        .mp-group {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-muted);
+            margin: 1.25rem 0 0.35rem;
+            padding-bottom: 0.25rem;
+            border-bottom: 1px solid var(--color-hairline);
+        }
+        .mp-group:first-child {
+            margin-top: 1rem;
+        }
+
         /* Client engagement row (used inside ARCNet card) */
         .client-row {
             display: grid;
@@ -597,7 +625,6 @@
                         <li><a href="#work">Selected Work</a></li>
                         <li style="padding-left: 0.9rem;"><a href="#work-pilots" style="font-size: 12px;">&middot; Applied Pilots</a></li>
                         <li style="padding-left: 0.9rem;"><a href="#work-formal" style="font-size: 12px;">&middot; Formal Kernels</a></li>
-                        <li style="padding-left: 0.9rem;"><a href="#work-discovery" style="font-size: 12px;">&middot; Synthetic Discovery</a></li>
                         <li style="padding-left: 0.9rem;"><a href="#work-neuroscience" style="font-size: 12px;">&middot; Neuroscience</a></li>
                         <li><a href="#studying-discovery">Studying Discovery While Doing It</a></li>
                         <li><a href="#more-projects">More Projects</a></li>
@@ -649,6 +676,8 @@
                                 <a href="https://github.com/Zetetic-Dhruv" target="_blank"
                                     rel="noopener noreferrer">GitHub</a>
                                 <a href="public/dhruv_gupta_resume_v6.pdf">CV (PDF)</a>
+                                <a href="https://github.com/Zetetic-Dhruv/formal-learning-theory-book"
+                                    target="_blank" rel="noopener noreferrer">FLT Textbook</a>
                             </div>
 
                             <blockquote class="pullquote">
@@ -826,7 +855,9 @@
                 <!-- SELECTED WORK -->
                 <section id="work">
                     <h2>Selected Work</h2>
-                    <p class="text-muted mb-6">Shipped artifacts and active pilots, organized by layer.</p>
+                    <p class="text-muted mb-6">Shipped artifacts and active pilots, organised by layer.
+                        Projects tagged <span class="sd-tag">Synthetic Discovery</span> are long-horizon
+                        verified outputs generated and maintained using AI.</p>
 
                     <!-- Applied Pilots -->
                     <h3 id="work-pilots" class="mb-4"
@@ -896,30 +927,14 @@
                             drift = 0.002 &plusmn; 0.020 ppm h<sup>&minus;1</sup>.</p>
                     </article>
 
-                    <article class="deepdive">
-                        <h4>Cerebral Blood Flow &middot; SPG wearable (with Continue Research)</h4>
-                        <p class="subtitle">Physics world-model &rarr; novel sensing &rarr; cross-modal transfer.
-                        </p>
-                        <p>A cerebral-blood-flow physics world-model feeding an SPG-based wearable sensor; brain
-                            phantoms for controlled validation; and a transfer-learning bridge from SPG to PPG so
-                            the physics stays tethered to the sensor that survives reality.</p>
-                    </article>
-
-                    <article class="deepdive" style="padding: 1rem 1.5rem;">
-                        <h4 style="font-size: 16px;">Deterministic hemodynamics via radiometric inference</h4>
-                        <p style="line-height: 1.6; margin: 0;">Physics-first pipeline for cuffless
-                            hemodynamics: stiffness discrimination under controlled perturbations, treated
-                            as an inverse problem against a tractable forward model rather than a regression
-                            on raw PPG.</p>
-                    </article>
-
                     <!-- Formal Kernels -->
                     <h3 id="work-formal" class="mb-4"
                         style="font-size: 20px; border-bottom: 1px solid var(--color-hairline); padding-bottom: 0.5rem; margin-top: 3rem;">
                         Formal Kernels &middot; Lean4</h3>
 
                     <article class="deepdive">
-                        <h4>Formal Learning Theory Kernel</h4>
+                        <h4>Formal Learning Theory Kernel
+                            <span class="sd-tag">Synthetic Discovery</span></h4>
                         <p class="subtitle">21,522 lines of Lean4, machine-checked with no gaps.</p>
                         <p>A self-contained Lean4 kernel of formal learning theory, currently under arXiv
                             review and being upstreamed to Lean4 <code>cslib</code> and <code>mathlib</code>.
@@ -936,16 +951,6 @@
                     </article>
 
                     <article class="deepdive">
-                        <h4>ICM Unbundling</h4>
-                        <p class="subtitle">Lean4 formalization of OOD geometry for factored knowledge-graph
-                            embeddings.</p>
-                        <p>Seven theorems proving that independent causal mechanisms make distribution shift
-                            geometrically visible, with VC-dimension bounds, a risk decomposition, and an
-                            entanglement-vulnerability converse. The converse does the work:
-                            <em>entanglement is a vulnerability, not a feature</em>.</p>
-                    </article>
-
-                    <article class="deepdive">
                         <h4>Transformer Learning Theory</h4>
                         <p class="subtitle">Measurability-theoretic foundations for attention architectures.</p>
                         <p>Lean4 results: attention-routing measurability; softmax&ndash;argmax equivalence under
@@ -953,37 +958,31 @@
                             <em>is</em> attention); and a NullMeasurable necessity result.</p>
                     </article>
 
-                    <!-- Synthetic Discovery -->
-                    <h3 id="work-discovery" class="mb-4"
-                        style="font-size: 20px; border-bottom: 1px solid var(--color-hairline); padding-bottom: 0.5rem; margin-top: 3rem;">
-                        Synthetic Discovery</h3>
+                    <article class="deepdive">
+                        <h4>Spekkens 2007 &middot; Hidden Capacity
+                            <span class="sd-tag">Synthetic Discovery</span></h4>
+                        <p class="subtitle">31 machine-checked theorems extending Spekkens's epistemic
+                            toy-theory of quantum states.</p>
+                        <p>A Lean4 formalization of Spekkens's 2007 epistemic toy-theory of quantum states,
+                            together with <strong>HC(&kappa;)</strong> &mdash; the first continuous measure of
+                            interpolation failure in epistemic theories of mechanics. HC&nbsp;=&nbsp;0 iff the
+                            theory's admissible configurations are rectangular (decomposable).</p>
+                        <p><strong>Boundary results.</strong> The four entangled states admit HC&nbsp;=&nbsp;2.00 bits;
+                            the three separable states admit HC&nbsp;=&nbsp;0. Only private-evidence
+                            conditioning collapses nonzero HC; shared evidence resolves 0% of it &mdash; a
+                            cross-domain oscillation theorem the Lean4 kernel checks by construction. Three
+                            predictions beyond Spekkens follow as corollaries and are verified in the kernel.</p>
+                    </article>
 
                     <article class="deepdive">
-                        <h4>LLM harness &middot; First Proof Challenge</h4>
+                        <h4>LLM harness &middot; First Proof Challenge
+                            <span class="sd-tag">Synthetic Discovery</span></h4>
                         <p class="subtitle">Operational pipeline; Harvard benchmark, commodity compute.</p>
                         <p>An LLM-driven proof search harness that reached <strong>4 of 10</strong> on Harvard's
                             First Proof Challenge benchmark using <strong>$32 of commodity API compute</strong>
                             on a single MacBook. The number is not the point. The shape of the failures is.
                             Where the harness succeeds is where formalization gates exist; where it fails is
                             where they are absent.</p>
-                    </article>
-
-                    <article class="deepdive">
-                        <h4>Knowledge-creation engine (JRD)</h4>
-                        <p class="subtitle">Generate-and-verify pipeline for physics problems.</p>
-                        <p>Compile/filter workflow producing <strong>500+ labeled mechanics problems with
-                                verified solutions</strong>. A concrete test of whether synthetic problem
-                            generation can cross the quality threshold required for training data. The
-                            answer was yes, when verification is load-bearing.</p>
-                    </article>
-
-                    <article class="deepdive">
-                        <h4>BCI/EEG &rarr; text with generative-AI post-editing (JRD)</h4>
-                        <p class="subtitle">Neural signal decoding with coherence-checked synthesis.</p>
-                        <p>Decoding pipeline from low-density EEG to natural-language text, with synthetic
-                            data augmentation and a coherence-checked LLM post-edit stage. Exploratory
-                            decoding metrics; the useful result was the post-edit gate: without it, fluent
-                            hallucination dominates.</p>
                     </article>
 
                     <!-- Neuroscience -->
@@ -1007,18 +1006,10 @@
                     </article>
 
                     <article class="deepdive">
-                        <h4>Information&ndash;energy efficiency operator</h4>
-                        <p class="subtitle">Complex-valued tradeoff operator for neural computation.</p>
-                        <p>A complex-valued operator that expresses the energy&ndash;information tradeoff in
-                            neural computation, validated in Brian2 simulations. System-level
-                            energy&ndash;information efficiency in visual cortex served as the undergraduate
-                            project in the Arun lab at IISc.</p>
-                    </article>
-
-                    <article class="deepdive">
                         <h4><a href="https://github.com/ARC-Net-Applied-Research-and-NPD/DawnArbor"
                                 target="_blank" rel="noopener noreferrer"
-                                style="color: inherit;">Dawn Arbor</a></h4>
+                                style="color: inherit;">Dawn Arbor</a>
+                            <span class="sd-tag">Synthetic Discovery</span></h4>
                         <p class="subtitle">Open Python platform for machine-checked neurobiophysics.</p>
                         <p>Converts ModelDB <code>.hoc</code> models into a type-inheritance DAG so
                             neurobiophysics models can be composed, type-checked, and verified like programs
@@ -1054,9 +1045,16 @@
                         <p><strong>What was tested.</strong> Whether a five-person student team could ship
                             three independent deployable medtech devices from first principles on pre-clinical
                             timelines.</p>
-                        <p><strong>Devices.</strong> OECT wound bandage; UV-SSI patch; physics-driven CVD
-                            predictor (J&amp;J Quickfire shortlist; IIC 2025 1st prize).</p>
-                        <p class="text-muted text-sm" style="margin-top: 0.5rem;">The company did not survive,
+                        <p><strong>Devices.</strong> OECT wound bandage; UV-SSI patch; <strong>physics-driven
+                            CVD predictor</strong>.</p>
+                        <p style="background: #f9f9f9; border-left: 3px solid #000; padding: 0.55rem 0.9rem; margin-top: 0.65rem;">
+                            <strong>Highlight:</strong> the CVD predictor won
+                            <strong>1st prize at IIC 2025</strong> (IISc Innovation Challenge) and was
+                            shortlisted for the <strong>Johnson &amp; Johnson Quickfire Challenge</strong>
+                            &mdash; one physics-first device carried the portfolio further than the startup
+                            did.
+                        </p>
+                        <p class="text-muted text-sm" style="margin-top: 0.6rem;">The company did not survive,
                             but the three devices and the mentors came from it; the structure of the
                             experiment is what we kept.</p>
                     </article>
@@ -1073,11 +1071,30 @@
                     </article>
 
                     <article class="deepdive">
-                        <h4>IISc Robotics Club</h4>
-                        <p class="subtitle">Founder &amp; President, 2023&ndash;. ~30 members. &#8377;5 L budget.</p>
+                        <h4>IISc Robotics Club &middot; Team Vicharaka</h4>
+                        <p class="subtitle">Founder &amp; President, 2023&ndash;. ~30 members.
+                            &#8377;5 L club budget; additional &#8377;25 L external grant (ISRO IRoC-U
+                            finalist).</p>
                         <p><strong>What was tested.</strong> Whether parallel multi-domain student robotics
                             projects can run concurrently under a shared budget without losing depth.
-                            Active lines: lunar rover, rehab exoskeleton, drone, manipulator.</p>
+                            Active lines under the club: lunar rover, rehab exoskeleton, drone, 6-DoF
+                            manipulator.</p>
+                        <p><strong>Lunar rover &middot; Team Vicharaka.</strong> Out of the club, the
+                            Mars/lunar-rover team
+                            <a href="https://vicharaka.iisc.ac.in/URC_2025.html" target="_blank"
+                                rel="noopener noreferrer">Vicharaka</a>
+                            ("one who thinks") qualified for the
+                            <a href="https://urc.marssociety.org/" target="_blank"
+                                rel="noopener noreferrer">University Rover Challenge (URC)</a>
+                            at the Mars Desert Research Station, Utah. I led the
+                            <strong>Life-Detection</strong> subsystem &mdash; biosignature-sampling and
+                            onboard assay for the Martian-soil analogue, pipelined to the rover's onboard
+                            compute.</p>
+                        <p>The same team was a <strong>finalist in the
+                            <a href="https://www.ursc.gov.in/IRoC-U2024/" target="_blank"
+                                rel="noopener noreferrer">ISRO Robotics Challenge (IRoC-U 2024)</a></strong>
+                            run by URSC, winning a &#8377;25 L grant &mdash; supported by the Nahar Centre
+                            for Robotics at IISc under Prof. Pradipta Biswas.</p>
                     </article>
 
                     <article class="deepdive">
@@ -1244,16 +1261,16 @@
                 <!-- MORE PROJECTS (collapsible dropdown for clientless / secondary research) -->
                 <section id="more-projects">
                     <h2>More Projects</h2>
-                    <p class="text-muted mb-6" style="max-width: 780px;">Clientless research projects and
-                        internal experiments. Self-funded or ARCNet-internal; kept collapsed by default so
-                        headline work is not diluted.</p>
 
-                    <details style="border-top: 1px solid var(--color-hairline); padding-top: 1rem;">
+                    <details style="border-top: 1px solid var(--color-hairline); padding-top: 1rem; margin-top: 1.5rem;">
                         <summary style="cursor: pointer; font-weight: bold; font-size: 15px;">
-                            Expand (1 project)
+                            Expand (10 projects)
                         </summary>
 
-                        <article class="deepdive" style="margin-top: 1rem;">
+                        <!-- Clientless research -->
+                        <div class="mp-group">Clientless research</div>
+
+                        <article class="deepdive" style="margin-top: 0.5rem;">
                             <h4>Artificial Neuroscientist</h4>
                             <p class="subtitle">Clientless research &middot; ARCNet-funded, same model as
                                 Terrapulse.</p>
@@ -1261,6 +1278,100 @@
                                 automated hypothesis &rarr; proof pipeline. Studies what a minimum-viable
                                 neuroscience pipeline looks like when human-in-the-loop is optional and the
                                 protocol is ontology-driven.</p>
+                        </article>
+
+                        <!-- Applied & biomedical -->
+                        <div class="mp-group">Applied &amp; biomedical (secondary)</div>
+
+                        <article class="deepdive" style="margin-top: 0.5rem;">
+                            <h4>Cerebral Blood Flow &middot; SPG wearable (with Continue Research)</h4>
+                            <p class="subtitle">Physics world-model &rarr; novel sensing &rarr; cross-modal
+                                transfer.</p>
+                            <p>A cerebral-blood-flow physics world-model feeding an SPG-based wearable sensor;
+                                brain phantoms for controlled validation; and a transfer-learning bridge from
+                                SPG to PPG so the physics stays tethered to the sensor that survives reality.</p>
+                        </article>
+
+                        <article class="deepdive" style="padding: 1rem 1.5rem;">
+                            <h4 style="font-size: 16px;">Deterministic hemodynamics via radiometric inference</h4>
+                            <p style="line-height: 1.6; margin: 0;">Physics-first pipeline for cuffless
+                                hemodynamics: stiffness discrimination under controlled perturbations, treated
+                                as an inverse problem against a tractable forward model rather than a regression
+                                on raw PPG.</p>
+                        </article>
+
+                        <article class="deepdive" style="padding: 1rem 1.5rem;">
+                            <h4 style="font-size: 16px;">Multigas sensor suite &middot; CO<sub>2</sub> /
+                                N<sub>2</sub>O / CH<sub>4</sub></h4>
+                            <p style="line-height: 1.6; margin: 0;">Sibling programme to Terrapulse extending
+                                low-cost field chemistry to three greenhouse gases. KOH / V<sup>2+</sup>-HCl /
+                                KI colourimetric chemistries paired with NDIR and catalytic readouts; LoD
+                                &lt; 10 ppb across species.</p>
+                        </article>
+
+                        <article class="deepdive" style="padding: 1rem 1.5rem;">
+                            <h4 style="font-size: 16px;">Siemens knee-resection robot</h4>
+                            <p style="line-height: 1.6; margin: 0;">6-DoF surgical manipulator with a physics-
+                                accurate digital twin driving pre-cut trajectory planning; &plusmn;0.2 mm
+                                bone-cut fidelity at proof-of-concept. Shared platform for kinematic
+                                verification experiments.</p>
+                        </article>
+
+                        <!-- Formal theory -->
+                        <div class="mp-group">Formal theory (secondary)</div>
+
+                        <article class="deepdive" style="margin-top: 0.5rem;">
+                            <h4>ICM Unbundling</h4>
+                            <p class="subtitle">Lean4 formalisation of OOD geometry for factored
+                                knowledge-graph embeddings.</p>
+                            <p>Seven theorems proving that independent causal mechanisms make distribution
+                                shift geometrically visible, with VC-dimension bounds, a risk decomposition,
+                                and an entanglement-vulnerability converse. The converse does the work:
+                                <em>entanglement is a vulnerability, not a feature</em>.</p>
+                        </article>
+
+                        <article class="deepdive" style="padding: 1rem 1.5rem;">
+                            <h4 style="font-size: 16px;">FLT dataset + fine-tuned SLM</h4>
+                            <p style="line-height: 1.6; margin: 0;">Structured JSON dataset for formal learning
+                                theory paired with a fine-tuned small language model specialised in FLT
+                                formalisation. Built to close the gap between high-effort human proofs and
+                                machine-assisted formalisation. Repo:
+                                <a href="https://github.com/Zetetic-Dhruv/formal-learning-theory-dataset"
+                                    target="_blank" rel="noopener noreferrer">formal-learning-theory-dataset</a>.</p>
+                        </article>
+
+                        <!-- Synthetic discovery (projects tagged but secondary depth) -->
+                        <div class="mp-group">Synthetic discovery (secondary)</div>
+
+                        <article class="deepdive" style="margin-top: 0.5rem;">
+                            <h4>Knowledge-creation engine (JRD)
+                                <span class="sd-tag">Synthetic Discovery</span></h4>
+                            <p class="subtitle">Generate-and-verify pipeline for physics problems.</p>
+                            <p>Compile/filter workflow producing <strong>500+ labelled mechanics problems with
+                                    verified solutions</strong>. A concrete test of whether synthetic problem
+                                generation can cross the quality threshold required for training data. The
+                                answer was yes, when verification is load-bearing.</p>
+                        </article>
+
+                        <article class="deepdive" style="margin-top: 0.5rem;">
+                            <h4>BCI/EEG &rarr; text with generative-AI post-editing (JRD)</h4>
+                            <p class="subtitle">Neural signal decoding with coherence-checked synthesis.</p>
+                            <p>Decoding pipeline from low-density EEG to natural-language text, with synthetic
+                                data augmentation and a coherence-checked LLM post-edit stage. Exploratory
+                                decoding metrics; the useful result was the post-edit gate: without it, fluent
+                                hallucination dominates.</p>
+                        </article>
+
+                        <!-- Neuroscience -->
+                        <div class="mp-group">Neuroscience (secondary)</div>
+
+                        <article class="deepdive" style="margin-top: 0.5rem;">
+                            <h4>Information&ndash;energy efficiency operator</h4>
+                            <p class="subtitle">Complex-valued tradeoff operator for neural computation.</p>
+                            <p>A complex-valued operator that expresses the energy&ndash;information tradeoff in
+                                neural computation, validated in Brian2 simulations. System-level
+                                energy&ndash;information efficiency in visual cortex served as the undergraduate
+                                project in the Arun lab at IISc.</p>
                         </article>
                     </details>
                 </section>
