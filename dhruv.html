@@ -431,6 +431,76 @@
             font-family: var(--font-serif);
             font-style: italic;
         }
+
+        /* Client engagement row (used inside ARCNet card) */
+        .client-row {
+            display: grid;
+            grid-template-columns: 104px 1fr;
+            column-gap: 1.25rem;
+            align-items: start;
+            padding: 0.9rem 0;
+            border-top: 1px solid var(--color-hairline);
+        }
+
+        .client-row:first-of-type {
+            border-top: 0;
+            padding-top: 0.4rem;
+        }
+
+        .client-row .logo-slot {
+            width: 96px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .client-row .logo-slot img {
+            max-width: 96px;
+            max-height: 48px;
+            object-fit: contain;
+            display: block;
+        }
+
+        .client-row .client-title {
+            font-weight: bold;
+            font-size: 15.5px;
+            margin: 0 0 0.1rem;
+        }
+
+        .client-row .client-tagline {
+            color: var(--color-muted);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            margin-bottom: 0.5rem;
+        }
+
+        .client-row .client-desc {
+            font-size: 14.5px;
+            line-height: 1.6;
+            margin-bottom: 0.35rem;
+        }
+
+        .client-row .client-links {
+            font-size: 12.5px;
+            line-height: 1.9;
+            color: var(--color-muted);
+        }
+
+        .client-row .client-links a {
+            color: var(--color-foreground);
+        }
+
+        @media (max-width: 640px) {
+            .client-row {
+                grid-template-columns: 1fr;
+            }
+
+            .client-row .logo-slot {
+                margin-bottom: 0.5rem;
+            }
+        }
     </style>
 </head>
 
@@ -803,8 +873,82 @@
                         <h4>ARCNet Research &middot; Deep-tech consultancy</h4>
                         <p class="subtitle">Founder, 2024&ndash;Jun 2025. Transitioned to permanent team.</p>
                         <p>An SRI-inspired deep-tech consultancy and pre-incubator built inside ARTPARK. Three
-                            named client engagements delivered end-to-end: remote-sensing QC, multimodal
-                            evaluation, lab automation.</p>
+                            named client engagements delivered end-to-end.</p>
+
+                        <div style="margin-top: 1rem;">
+                            <!-- Satsure / Satellite Cloud Segmentation -->
+                            <div class="client-row">
+                                <div class="logo-slot">
+                                    <img src="public/images/logos/satsure.svg" alt="Satsure (KALIDEO)"
+                                        onerror="this.style.display='none'">
+                                </div>
+                                <div>
+                                    <h5 class="client-title">Satsure &middot; KALIDEO</h5>
+                                    <div class="client-tagline">Remote-sensing QC &middot; classical + deep-learning
+                                    </div>
+                                    <p class="client-desc">Dockerized pipeline testing classical and
+                                        deep-learning approaches for cloud segmentation on satellite hardware.
+                                        Optimized for on-device inference under bandwidth and power
+                                        constraints.</p>
+                                    <p class="client-links">
+                                        <a href="https://github.com/ARC-Net-Applied-Research-and-NPD/Satellite-Cloud-Segmentation"
+                                            target="_blank" rel="noopener noreferrer">Satellite-Cloud-Segmentation
+                                            on GitHub</a>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- School of Meaningful Experiences / LMS Speech Platform -->
+                            <div class="client-row">
+                                <div class="logo-slot">
+                                    <img src="public/images/logos/some.svg"
+                                        alt="School of Meaningful Experiences"
+                                        onerror="this.style.display='none'">
+                                </div>
+                                <div>
+                                    <h5 class="client-title">School of Meaningful Experiences</h5>
+                                    <div class="client-tagline">Multimodal evaluation &middot; full-stack
+                                        deployment &middot; 5 microservices</div>
+                                    <p class="client-desc">Automated grading of interviews, presentations,
+                                        and speech, with LMS integration. Audio capture, video capture,
+                                        grading pipeline, LLM feedback, and report generation run as
+                                        independent microservices so each can be scaled, swapped, or audited
+                                        without touching the others.</p>
+                                    <p class="client-links">
+                                        <a href="https://github.com/ARC-Net-Applied-Research-and-NPD/Audio-Server"
+                                            target="_blank" rel="noopener noreferrer">Audio</a> &middot;
+                                        <a href="https://github.com/ARC-Net-Applied-Research-and-NPD/Video-Server"
+                                            target="_blank" rel="noopener noreferrer">Video</a> &middot;
+                                        <a href="https://github.com/ARC-Net-Applied-Research-and-NPD/Flask-Server"
+                                            target="_blank" rel="noopener noreferrer">Flask</a> &middot;
+                                        <a href="https://github.com/ARC-Net-Applied-Research-and-NPD/Report-Server"
+                                            target="_blank" rel="noopener noreferrer">Report</a> &middot;
+                                        <a href="https://github.com/ARC-Net-Applied-Research-and-NPD/LLM-SERVER"
+                                            target="_blank" rel="noopener noreferrer">LLM</a>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Open Science Stack (pending client permission) -->
+                            <div class="client-row">
+                                <div class="logo-slot">
+                                    <img src="public/images/logos/opensciencestack.svg"
+                                        alt="Open Science Stack" onerror="this.style.display='none'">
+                                </div>
+                                <div>
+                                    <h5 class="client-title">Open Science Stack
+                                        <span class="text-muted" style="font-weight: normal; font-size: 12px;">
+                                            &middot; pending client permission</span>
+                                    </h5>
+                                    <div class="client-tagline">Research infrastructure for open-science
+                                        workflows</div>
+                                    <p class="client-desc">Details to be published when
+                                        <a href="https://opensciencestack.org" target="_blank"
+                                            rel="noopener noreferrer">opensciencestack.org</a>
+                                        approves disclosure.</p>
+                                </div>
+                            </div>
+                        </div>
                     </article>
 
                     <article class="deepdive">
@@ -850,9 +994,11 @@
                 <section id="open-source">
                     <h2>Open Source</h2>
                     <p class="text-muted mb-6">
-                        Featured ARCNet deployments (below) &middot; live feed from
+                        Personal and Zetesis research code, live from
                         <a href="https://github.com/Zetetic-Dhruv" target="_blank"
-                            rel="noopener noreferrer">@Zetetic-Dhruv</a>
+                            rel="noopener noreferrer">@Zetetic-Dhruv</a>.
+                        ARCNet client deployments are listed with their clients under
+                        <a href="#work-institution">Institution Building &rarr; ARCNet</a>.
                     </p>
 
                     <div id="gh-stats" class="border p-4 mb-8 bg-gray-50" aria-live="polite">
@@ -861,56 +1007,7 @@
                         <!-- PRERENDER_STATS_END -->
                     </div>
 
-                    <h3 class="mb-4">Featured &middot; ARCNet client deployments</h3>
-                    <div class="flex flex-col gap-4 mb-8">
-                        <!-- Compound card: LMS speech-grading platform, 5 microservices -->
-                        <div class="border p-4">
-                            <div class="flex gap-4" style="justify-content: space-between; align-items: baseline; flex-wrap: wrap;">
-                                <h4 class="font-bold" style="margin: 0;">LMS Speech &amp; Interview Grading Platform</h4>
-                                <span class="text-muted text-xs">@ARC-Net &middot; 5 microservices &middot; 2024</span>
-                            </div>
-                            <p class="text-sm text-muted" style="margin-top: 0.5rem; line-height: 1.5;">
-                                Full-stack client deployment: automated grading of interviews, presentations, and
-                                speech with LMS integration. Audio capture, video capture, grading pipeline, LLM
-                                feedback, and report generation run as independent microservices so each can be
-                                scaled, swapped, or audited without touching the others. Corresponds to the
-                                &ldquo;multimodal evaluation&rdquo; ARCNet client engagement.
-                            </p>
-                            <div class="text-xs" style="margin-top: 0.6rem; line-height: 1.9;">
-                                <a href="https://github.com/ARC-Net-Applied-Research-and-NPD/Audio-Server"
-                                    target="_blank" rel="noopener noreferrer">Audio-Server</a>
-                                &middot;
-                                <a href="https://github.com/ARC-Net-Applied-Research-and-NPD/Video-Server"
-                                    target="_blank" rel="noopener noreferrer">Video-Server</a>
-                                &middot;
-                                <a href="https://github.com/ARC-Net-Applied-Research-and-NPD/Flask-Server"
-                                    target="_blank" rel="noopener noreferrer">Flask-Server</a>
-                                &middot;
-                                <a href="https://github.com/ARC-Net-Applied-Research-and-NPD/Report-Server"
-                                    target="_blank" rel="noopener noreferrer">Report-Server</a>
-                                &middot;
-                                <a href="https://github.com/ARC-Net-Applied-Research-and-NPD/LLM-SERVER"
-                                    target="_blank" rel="noopener noreferrer">LLM-SERVER</a>
-                            </div>
-                        </div>
-
-                        <!-- Satellite-Cloud-Segmentation: remote-sensing QC ARCNet client engagement -->
-                        <a href="https://github.com/ARC-Net-Applied-Research-and-NPD/Satellite-Cloud-Segmentation"
-                            target="_blank" rel="noopener noreferrer" class="border p-4"
-                            style="text-decoration: none; color: inherit; display: block;">
-                            <div class="flex gap-4" style="justify-content: space-between; align-items: baseline; flex-wrap: wrap;">
-                                <h4 class="font-bold" style="margin: 0;">Satellite-Cloud-Segmentation</h4>
-                                <span class="text-muted text-xs">@ARC-Net &middot; remote-sensing QC pilot</span>
-                            </div>
-                            <p class="text-sm text-muted" style="margin-top: 0.5rem; line-height: 1.5;">
-                                Dockerized pipeline testing classical and deep-learning approaches for cloud
-                                segmentation on satellite hardware. The &ldquo;remote-sensing QC&rdquo; ARCNet
-                                client engagement.
-                            </p>
-                        </a>
-                    </div>
-
-                    <h3 class="mb-4">Repositories <span class="text-muted text-sm">(live &middot; @Zetetic-Dhruv)</span></h3>
+                    <h3 class="mb-4">Repositories</h3>
                     <div id="gh-repos" class="flex flex-col gap-4 mb-8" aria-live="polite">
                         <!-- PRERENDER_REPOS_START -->
                         <div class="text-muted text-sm">Loading repositories&hellip;</div>
