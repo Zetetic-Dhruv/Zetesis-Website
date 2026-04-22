@@ -494,7 +494,7 @@
             font-weight: normal;
         }
 
-        /* More Projects dropdown — group headings within <details> */
+        /* More Projects dropdown: group headings within <details> */
         .mp-group {
             font-size: 11px;
             text-transform: uppercase;
@@ -777,6 +777,8 @@
                             (undergraduate thesis advisor, Terrapulse) &middot;
                             <strong>Prof. S. P. Arun</strong>, Centre for Neuroscience, IISc (TCN instructor,
                             neuroscience collaborator) &middot;
+                            <strong>Prof. Dipankar Nandi</strong>, Dept. of Biochemistry, IISc Bangalore
+                            (Essentials in Immunology course instructor; course-based recommender) &middot;
                             <strong>Gopika Kannan</strong>, Executive Advisor, Zetesis Labs &middot;
                             <strong>Narayan Rangarajan</strong>, Head of Agile R&amp;D, Ather Energy &middot;
                             <strong>Dr. Sudip Mondal</strong>, Head of Hardware, Firmware, and Systems
@@ -832,7 +834,7 @@
                     <p style="line-height: 1.7; max-width: 780px;">
                         At Zetesis Labs I run one research programme across seven fields, asking whether
                         discovery can be engineered rather than left to chance. Current work separates into three
-                        layers, each with shipped artifacts: a <strong>formal verification kernel</strong> written
+                        layers, each with concrete artifacts: a <strong>formal verification kernel</strong> written
                         in Lean4; a <strong>synthetic-discovery stack</strong> (LLM harness &rarr; compile-filter
                         pipelines &rarr; verified outputs); and <strong>industrial and biomedical pilots</strong>
                         that test each piece against reality. The commercial wedge is Layer-2 outcomes
@@ -846,7 +848,7 @@
                         the discovery stack reachable in practice.
                     </p>
                     <p class="text-muted italic" style="line-height: 1.7; max-width: 780px; margin-top: 1rem; font-size: 15px;">
-                        What follows is what each layer looks like as a shipped thing.
+                        What follows is what each layer looks like as a working instance.
                     </p>
                 </section>
 
@@ -855,7 +857,7 @@
                 <!-- SELECTED WORK -->
                 <section id="work">
                     <h2>Selected Work</h2>
-                    <p class="text-muted mb-6">Shipped artifacts and active pilots, organised by layer.
+                    <p class="text-muted mb-6">Active pilots and released artifacts, organised by layer.
                         Projects tagged <span class="sd-tag">Synthetic Discovery</span> are long-horizon
                         verified outputs generated and maintained using AI.</p>
 
@@ -927,6 +929,22 @@
                             drift = 0.002 &plusmn; 0.020 ppm h<sup>&minus;1</sup>.</p>
                     </article>
 
+                    <article class="deepdive">
+                        <h4>Halocleen &middot; Methanotroph bio-circuits for halocarbon biodegradation</h4>
+                        <p class="subtitle">iGEM 2022 IISc project, Paris Jamboree Gold Medal, Climate-track
+                            finalist. Two patent-filed bioreactor designs.</p>
+                        <p><strong>Problem.</strong> CFC-11 and CFC-12 persist in the stratosphere for decades
+                            with no scalable biological degradation path. The project asked whether engineered
+                            methanotrophs could be coaxed into degrading halocarbons at rates relevant to
+                            atmospheric removal.</p>
+                        <p><strong>Approach.</strong> Modified <em>Methylococcus capsulatus</em> and
+                            <em>Methylosinus trichosporium</em> strains carrying synthetic circuits for
+                            co-metabolic halocarbon oxidation. Two bioreactor designs (continuous-flow
+                            trickle-bed and gas-lift variants) were optimised for the low-solubility
+                            substrate regime and filed as patents.</p>
+                        <p>Team Lead, 2022. ~10-person team (bio, hardware, modelling, wet-lab validation).</p>
+                    </article>
+
                     <!-- Formal Kernels -->
                     <h3 id="work-formal" class="mb-4"
                         style="font-size: 20px; border-bottom: 1px solid var(--color-hairline); padding-bottom: 0.5rem; margin-top: 3rem;">
@@ -964,12 +982,12 @@
                         <p class="subtitle">31 machine-checked theorems extending Spekkens's epistemic
                             toy-theory of quantum states.</p>
                         <p>A Lean4 formalization of Spekkens's 2007 epistemic toy-theory of quantum states,
-                            together with <strong>HC(&kappa;)</strong> &mdash; the first continuous measure of
+                            together with <strong>HC(&kappa;)</strong>: the first continuous measure of
                             interpolation failure in epistemic theories of mechanics. HC&nbsp;=&nbsp;0 iff the
                             theory's admissible configurations are rectangular (decomposable).</p>
                         <p><strong>Boundary results.</strong> The four entangled states admit HC&nbsp;=&nbsp;2.00 bits;
                             the three separable states admit HC&nbsp;=&nbsp;0. Only private-evidence
-                            conditioning collapses nonzero HC; shared evidence resolves 0% of it &mdash; a
+                            conditioning collapses nonzero HC; shared evidence resolves 0% of it. A
                             cross-domain oscillation theorem the Lean4 kernel checks by construction. Three
                             predictions beyond Spekkens follow as corollaries and are verified in the kernel.</p>
                     </article>
@@ -1034,7 +1052,7 @@
                     <p class="text-muted mb-6" style="max-width: 780px;">
                         Each of the programmes below was run as a <em>nested experiment</em>: a social and
                         research test of what makes discovery faster, more reliable, and less accidental at a
-                        given scale. The order is ascending &mdash; founder / student-club to team, team to
+                        given scale. The order is ascending: founder / student-club to team, team to
                         chapter, chapter to programme, programme to venture.
                     </p>
 
@@ -1042,32 +1060,19 @@
                         <h4>Virog MedTech</h4>
                         <p class="subtitle">Founder &middot; student-club era. ~5 people.
                             Failed startup, &#8377;10 L seed.</p>
-                        <p><strong>What was tested.</strong> Whether a five-person student team could ship
-                            three independent deployable medtech devices from first principles on pre-clinical
+                        <p><strong>What was tested.</strong> Whether a five-person student team could deliver
+                            three independent medtech devices from first principles on pre-clinical
                             timelines.</p>
                         <p><strong>Devices.</strong> OECT wound bandage; UV-SSI patch; <strong>physics-driven
                             CVD predictor</strong>.</p>
                         <p style="background: #f9f9f9; border-left: 3px solid #000; padding: 0.55rem 0.9rem; margin-top: 0.65rem;">
-                            <strong>Highlight:</strong> the CVD predictor won
-                            <strong>1st prize at IIC 2025</strong> (IISc Innovation Challenge) and was
-                            shortlisted for the <strong>Johnson &amp; Johnson Quickfire Challenge</strong>
-                            &mdash; one physics-first device carried the portfolio further than the startup
-                            did.
+                            <strong>Highlight.</strong> The CVD predictor won
+                            <strong>1st prize at IIC 2025</strong> (IISc Innovation Challenge). One
+                            physics-first device carried the portfolio further than the startup did.
                         </p>
                         <p class="text-muted text-sm" style="margin-top: 0.6rem;">The company did not survive,
                             but the three devices and the mentors came from it; the structure of the
                             experiment is what we kept.</p>
-                    </article>
-
-                    <article class="deepdive">
-                        <h4>iGEM IISc &middot; Halocleen</h4>
-                        <p class="subtitle">Team Lead, 2022. ~10 people. Paris Jamboree &middot; Gold Medal
-                            &middot; Climate-track finalist.</p>
-                        <p><strong>What was tested.</strong> Whether a synthetic-biology team with no prior
-                            industrial-scale work could reach a Gold-medal standard at an international
-                            jamboree on a one-year cycle with a single load-bearing hypothesis &mdash;
-                            methanotroph bio-circuits degrading CFC-11/12. Two patent-filed bioreactor
-                            designs came out as the artifact.</p>
                     </article>
 
                     <article class="deepdive">
@@ -1087,13 +1092,13 @@
                             <a href="https://urc.marssociety.org/" target="_blank"
                                 rel="noopener noreferrer">University Rover Challenge (URC)</a>
                             at the Mars Desert Research Station, Utah. I led the
-                            <strong>Life-Detection</strong> subsystem &mdash; biosignature-sampling and
+                            <strong>Life-Detection</strong> subsystem: biosignature-sampling and
                             onboard assay for the Martian-soil analogue, pipelined to the rover's onboard
                             compute.</p>
                         <p>The same team was a <strong>finalist in the
                             <a href="https://www.ursc.gov.in/IRoC-U2024/" target="_blank"
                                 rel="noopener noreferrer">ISRO Robotics Challenge (IRoC-U 2024)</a></strong>
-                            run by URSC, winning a &#8377;25 L grant &mdash; supported by the Nahar Centre
+                            run by URSC, winning a &#8377;25 L grant; supported by the Nahar Centre
                             for Robotics at IISc under Prof. Pradipta Biswas.</p>
                     </article>
 
@@ -1146,7 +1151,7 @@
                             to permanent team.</p>
                         <p><strong>What was tested.</strong> Whether a deep-tech pre-incubator can deliver
                             three unrelated client engagements end-to-end, each on its own scientific terms.
-                            Three independent shipped deployments below.</p>
+                            Three independent client deployments below.</p>
 
                         <div style="margin-top: 1rem;">
                             <!-- Satsure / Satellite Cloud Segmentation -->
@@ -1397,7 +1402,7 @@
                         <div class="border p-4">
                             <h4 class="font-bold uppercase text-sm mb-2">Applied Causal / RCA Pilots</h4>
                             <p class="text-sm">Ather-template engagements: build a causal world-model for a
-                                client's failure-mode analysis; ship dashboards with verification gates.
+                                client's failure-mode analysis; deliver dashboards with verification gates.
                                 Evidence: <a href="#work-pilots">Ather K383</a>, 2,586 nodes / 7,934 edges,
                                 deployed 2025.</p>
                         </div>
