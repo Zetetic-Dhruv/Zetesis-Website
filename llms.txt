@@ -37,22 +37,21 @@ Dhruv Gupta (b. 2003, Bengaluru, India). Principal Investigator at Zetesis Labs.
 - **Four measurement classes**: Plausibility (Pl), Coherence (Coh), Invariance (Inv), Completeness (Comp). Not aggregable; each orthogonal.
 - **Efficiency metric**: η = ΔK_validated / (E × I_prior).
 
-## Institutional affiliations
+## Studying Discovery While Doing It (experiments at ascending scale)
 
-- Principal Investigator, Zetesis Labs (2025–present)
-- Innovator-in-Residence, ARTPARK @ IISc (2025–present)
-- Board Member, ARTPARK Industry 5.0 programme (partners: BEL, Bosch, Toyota)
-- Founder, ARCNet Research (2024–Jun 2025)
-- PI, JRD Tata Innovation Support Center, IISc (2024)
-- Team Lead, iGEM IISc (Paris Jamboree, Gold Medal, 2022)
+The framing: each of the programmes below was run as a nested experiment — a social and research test of what makes discovery faster, more reliable, and less accidental at a given scale.
 
-## ARCNet client engagements
-
-Three named client engagements delivered end-to-end through ARCNet Research (2024–Jun 2025):
-
-1. **Satsure (KALIDEO)** — Remote-sensing QC. Dockerized classical + deep-learning pipeline for cloud segmentation on satellite hardware. [Satellite-Cloud-Segmentation](https://github.com/ARC-Net-Applied-Research-and-NPD/Satellite-Cloud-Segmentation).
-2. **School of Meaningful Experiences** — Multimodal evaluation. Full-stack LMS-integrated grading platform for interviews, presentations, and speech. Five microservices: [Audio](https://github.com/ARC-Net-Applied-Research-and-NPD/Audio-Server), [Video](https://github.com/ARC-Net-Applied-Research-and-NPD/Video-Server), [Flask](https://github.com/ARC-Net-Applied-Research-and-NPD/Flask-Server), [Report](https://github.com/ARC-Net-Applied-Research-and-NPD/Report-Server), [LLM](https://github.com/ARC-Net-Applied-Research-and-NPD/LLM-SERVER).
-3. **Open Science Stack** ([opensciencestack.org](https://opensciencestack.org)) — pending client permission to disclose.
+1. **Virog MedTech** — Founder, student-club era, ~5 people, failed startup (₹10 L seed). Three devices shipped: OECT wound bandage, UV-SSI patch, physics-driven CVD predictor (J&J Quickfire shortlist, IIC 2025 1st prize).
+2. **iGEM IISc · Halocleen** (2022) — Team Lead, ~10 people. Gold Medal, Paris Jamboree, Climate-track finalist. Methanotroph bio-circuits degrading CFC-11/12; two patent-filed bioreactor designs.
+3. **IISc Robotics Club** (2023–) — Founder & President, ~30 members, ₹5 L budget. Lunar rover, rehab exoskeleton, drone, manipulator running in parallel.
+4. **IEEE Computer Society / CIS Student Chapter, IISc** — Chair, 80+ members, open-source 6G lecture series.
+5. **EntIISc Entrepreneurship Cell** — Vice-President. 44 deep-tech proposals screened; ₹15 L seed pool via FSID; Boeing sponsorship.
+6. **JRD Tata Innovation Support Center, IISc** (2024) — Founder-Director & PI, 40+ students, 8-project portfolio. All 8 tracks reached working prototype.
+7. **ARCNet Research** (2024–Jun 2025) — Founder & PI, 18-member lab. Three named client engagements:
+   - **Satsure (KALIDEO)** — Remote-sensing QC. [Satellite-Cloud-Segmentation](https://github.com/ARC-Net-Applied-Research-and-NPD/Satellite-Cloud-Segmentation).
+   - **School of Meaningful Experiences** — Multimodal evaluation. Full-stack LMS-integrated speech/interview grading platform. Five microservices: [Audio](https://github.com/ARC-Net-Applied-Research-and-NPD/Audio-Server), [Video](https://github.com/ARC-Net-Applied-Research-and-NPD/Video-Server), [Flask](https://github.com/ARC-Net-Applied-Research-and-NPD/Flask-Server), [Report](https://github.com/ARC-Net-Applied-Research-and-NPD/Report-Server), [LLM](https://github.com/ARC-Net-Applied-Research-and-NPD/LLM-SERVER).
+   - **Open Science Stack** ([opensciencestack.org](https://opensciencestack.org)) — OSS is a volunteer-driven non-profit building digital public infrastructure for AI-powered self-driving labs, backed by ARTPARK (IISc) and the Red Black Trust. Contribution: the **Science Compiler**, a three-layer behaviour-tree architecture for robotic laboratories that compiles high-level scientific intent into robot-agnostic execution via ontology-driven protocol synthesis. Feeds the ROS2-based [Robotic Application Stack](https://opensciencestack.org/robotics/).
+8. **Zetesis Labs + ARTPARK Industry 5.0** (2025–present) — Principal Investigator, Innovator-in-Residence, Board Member. Industry partners: BEL, Bosch, Toyota.
 
 ## Awards
 
