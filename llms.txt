@@ -1,6 +1,6 @@
 # Zetesis Labs
 
-> A deep-tech research programme and venture operating from ARTPARK @ IISc (Bengaluru, India). Zetesis Labs builds verified, long-horizon synthetic discovery systems: measurement, causal world-models, and formal verification kernels composed into systems that stay correct as conditions change.
+> An institutionally-funded deep-tech research programme at ARTPARK @ IISc (Bengaluru, India). Zetesis Labs builds verified, long-horizon synthetic discovery systems: measurement, causal world-models, and formal verification kernels composed into systems that stay correct as conditions change.
 
 Zetesis is built around a research framework called **Zetema**: discovery as inquiry over structured ignorance. The framework is formalized in Lean4 and applied to industrial pilots, biomedical sensing, and scientific-discovery infrastructure.
 
@@ -15,11 +15,11 @@ Dhruv Gupta (b. 2003, Bengaluru, India). Principal Investigator at Zetesis Labs.
 - [Lab — research programme detail](https://zetesislabs.com/lab.html): framework, case studies, takeaways
 - [CV (PDF)](https://zetesislabs.com/public/dhruv_gupta_resume_v6.pdf): machine-readable curriculum vitae, two-page lean mathematical style
 
-## Services (commercial)
+## Research engagements
 
-- **Applied Causal / RCA Pilots** — Ather-template engagements: build a causal world-model for a client's failure-mode analysis; ship dashboards with verification gates. Evidence: Ather K383 (2,586-node / 7,934-edge causal world-model deployed 2025).
-- **Formal Verification Consulting** — Lean4 kernel design and type-theoretic audits of reasoning systems. Evidence: 21,522-line Formal Learning Theory kernel on arXiv.
-- **Advisory & Research Fellowships** — retained advisory for research-heavy teams; short fellowships for focused problems. Evidence: three ARCNet client engagements, 2024–2025.
+- **Applied causal / RCA pilots**: Ather-template programme engagements that build a causal world-model for a partner's failure-mode analysis; deliver dashboards with verification gates. Evidence: Ather K383 (2,586-node / 7,934-edge causal world-model deployed 2025).
+- **Formal verification**: Lean4 kernel design and type-theoretic audits of reasoning systems. Evidence: 21,522-line Formal Learning Theory kernel on arXiv.
+- **Advisory and research fellowships**: retained advisory for research-heavy teams; short fellowships for focused problems. Evidence: three ARCNet research engagements, 2024–2025.
 
 ## Selected evidence
 
@@ -41,17 +41,18 @@ Dhruv Gupta (b. 2003, Bengaluru, India). Principal Investigator at Zetesis Labs.
 
 The framing: each of the programmes below was run as a nested experiment — a social and research test of what makes discovery faster, more reliable, and less accidental at a given scale.
 
-1. **Virog MedTech** — Founder, student-club era, ~5 people, failed startup (₹10 L seed). Three devices shipped: OECT wound bandage, UV-SSI patch, physics-driven CVD predictor (J&J Quickfire shortlist, IIC 2025 1st prize).
-2. **iGEM IISc · Halocleen** (2022) — Team Lead, ~10 people. Gold Medal, Paris Jamboree, Climate-track finalist. Methanotroph bio-circuits degrading CFC-11/12; two patent-filed bioreactor designs.
-3. **IISc Robotics Club** (2023–) — Founder & President, ~30 members, ₹5 L budget. Lunar rover, rehab exoskeleton, drone, manipulator running in parallel.
-4. **IEEE Computer Society / CIS Student Chapter, IISc** — Chair, 80+ members, open-source 6G lecture series.
-5. **EntIISc Entrepreneurship Cell** — Vice-President. 44 deep-tech proposals screened; ₹15 L seed pool via FSID; Boeing sponsorship.
-6. **JRD Tata Innovation Support Center, IISc** (2024) — Founder-Director & PI, 40+ students, 8-project portfolio. All 8 tracks reached working prototype.
-7. **ARCNet Research** (2024–Jun 2025) — Founder & PI, 18-member lab. Three named client engagements:
-   - **Satsure (KALIDEO)** — Remote-sensing QC. [Satellite-Cloud-Segmentation](https://github.com/ARC-Net-Applied-Research-and-NPD/Satellite-Cloud-Segmentation).
-   - **School of Meaningful Experiences** — Multimodal evaluation. Full-stack LMS-integrated speech/interview grading platform. Five microservices: [Audio](https://github.com/ARC-Net-Applied-Research-and-NPD/Audio-Server), [Video](https://github.com/ARC-Net-Applied-Research-and-NPD/Video-Server), [Flask](https://github.com/ARC-Net-Applied-Research-and-NPD/Flask-Server), [Report](https://github.com/ARC-Net-Applied-Research-and-NPD/Report-Server), [LLM](https://github.com/ARC-Net-Applied-Research-and-NPD/LLM-SERVER).
-   - **Open Science Stack** ([opensciencestack.org](https://opensciencestack.org)) — OSS is a volunteer-driven non-profit building digital public infrastructure for AI-powered self-driving labs, backed by ARTPARK (IISc) and the Red Black Trust. Contribution: the **Science Compiler**, a three-layer behaviour-tree architecture for robotic laboratories that compiles high-level scientific intent into robot-agnostic execution via ontology-driven protocol synthesis. Feeds the ROS2-based [Robotic Application Stack](https://opensciencestack.org/robotics/).
-8. **Zetesis Labs + ARTPARK Industry 5.0** (2025–present) — Principal Investigator, Innovator-in-Residence, Board Member. Industry partners: BEL, Bosch, Toyota.
+1. **Virog MedTech**: Founder, IISc-funded student medtech club, ~5 people, institutional grant pool of ₹10 L. Three devices delivered: OECT wound bandage, UV-SSI patch (HAI prevention), physics-driven CVD predictor. The CVD predictor won 1st prize at IIC 2025.
+2. **IISc Robotics Club · Team Vicharaka** (2023–): Founder & President, ~30 members, ₹5 L budget. Active lines: lunar rover, rehab exoskeleton, drone, 6-DoF manipulator. Out of the club, the rover team Vicharaka qualified for the Mars-Society University Rover Challenge (Mars Desert Research Station, Utah); Dhruv led the Life-Detection subsystem. The same team was ISRO IRoC-U 2024 finalist (₹25 L grant), supported by the Nahar Centre for Robotics at IISc under Prof. Pradipta Biswas.
+3. **IEEE Computer Society / CIS Student Chapter, IISc**: Chair, 80+ members, open-source 6G lecture series.
+4. **EntIISc Entrepreneurship Cell**: Vice-President. 44 deep-tech student proposals screened and routed to the FSID institutional grant pool (~₹15 L); Boeing sponsorship.
+5. **JRD Tata Innovation Support Center, IISc** (2024): Founder-Director and PI of an IISc-funded summer research programme; 40+ students; 8-project portfolio with all tracks reaching working prototype.
+6. **ARCNet Research** (2024–Jun 2025): Founder and PI of an institutionally-funded R&D foundry at ARTPARK, 18-member lab. Three named research engagements:
+   - **Satsure (KALIDEO)**: Remote-sensing QC. [Satellite-Cloud-Segmentation](https://github.com/ARC-Net-Applied-Research-and-NPD/Satellite-Cloud-Segmentation).
+   - **School of Meaningful Experiences**: Multimodal evaluation. Full-stack LMS-integrated speech/interview grading platform. Five microservices: [Audio](https://github.com/ARC-Net-Applied-Research-and-NPD/Audio-Server), [Video](https://github.com/ARC-Net-Applied-Research-and-NPD/Video-Server), [Flask](https://github.com/ARC-Net-Applied-Research-and-NPD/Flask-Server), [Report](https://github.com/ARC-Net-Applied-Research-and-NPD/Report-Server), [LLM](https://github.com/ARC-Net-Applied-Research-and-NPD/LLM-SERVER).
+   - **Open Science Stack** ([opensciencestack.org](https://opensciencestack.org)): OSS is a volunteer-driven non-profit building digital public infrastructure for AI-powered self-driving labs, backed by ARTPARK (IISc) and the Red Black Trust. Contribution: the **Science Compiler**, a three-layer behaviour-tree architecture for robotic laboratories that compiles high-level scientific intent into robot-agnostic execution via ontology-driven protocol synthesis. Feeds the ROS2-based [Robotic Application Stack](https://opensciencestack.org/robotics/).
+7. **Zetesis Labs + ARTPARK Industry 5.0** (2025–present): Principal Investigator, Innovator-in-Residence, Board Member. Industry partners: BEL, Bosch, Toyota.
+
+> iGEM IISc · Halocleen (2022) is listed as a project under Applied Pilots, not as a discovery-scaling programme: Team Lead, ~10-person team; Paris Jamboree Gold Medal; Climate-track finalist. Engineered *Pseudomonas putida* as the chassis, carrying synthetic circuits assembled from plasmids drawn from the methanotroph halocarbon-oxidation literature; two patent-filed bioreactor designs.
 
 ## Awards
 
