@@ -548,38 +548,45 @@
             }
         }
 
-        /* Lean4 code block (FLT fundamental theorem) */
+        /* Lean4 code block · VSCode Dark+ palette */
         .lean-code {
-            background: #fafafa;
-            border: 1px solid var(--color-hairline);
-            border-left: 3px solid #000;
-            padding: 0.85rem 1rem;
+            background: #1e1e1e;
+            border: 1px solid #000;
+            padding: 1rem 1.1rem;
             margin: 1rem 0 0.5rem;
             font-size: 12.5px;
             line-height: 1.55;
             overflow-x: auto;
         }
 
+        .lean-code::before {
+            content: "Lean 4 · FLT_Proofs/Theorem/PAC.lean";
+            display: block;
+            font-family: var(--font-mono);
+            font-size: 10.5px;
+            color: #858585;
+            letter-spacing: 0.04em;
+            margin-bottom: 0.7rem;
+            padding-bottom: 0.55rem;
+            border-bottom: 1px solid #2a2a2a;
+        }
+
         .lean-code pre {
             font-family: var(--font-mono);
             margin: 0;
             white-space: pre;
-            color: #111;
+            color: #d4d4d4;
+            -webkit-font-smoothing: antialiased;
         }
 
-        .lean-code .kw {
-            font-weight: 600;
-            color: #000;
-        }
-
-        .lean-code .cmt {
-            color: #888;
-            font-style: italic;
-        }
-
-        .lean-code .op {
-            color: #555;
-        }
+        .lean-code .cmt { color: #6a9955; font-style: italic; }
+        .lean-code .kw  { color: #c586c0; }
+        .lean-code .ty  { color: #4ec9b0; }
+        .lean-code .id  { color: #9cdcfe; }
+        .lean-code .fn  { color: #dcdcaa; }
+        .lean-code .op  { color: #569cd6; }
+        .lean-code .num { color: #b5cea8; }
+        .lean-code .pnc { color: #d4d4d4; }
 
         .lean-code-caption {
             font-size: 11.5px;
@@ -1101,31 +1108,31 @@
                             proved in the kernel as a single term
                             (<code>FLT_Proofs/Theorem/PAC.lean</code>):</p>
                         <div class="lean-code"><pre><code><span class="cmt">/-- Fundamental theorem of statistical learning (5-way equivalence, BP₅). -/</span>
-<span class="kw">theorem</span> fundamental_theorem (X : <span class="kw">Type</span> u) [MeasurableSpace X]
-    [MeasurableSingletonClass X]
-    (C : ConceptClass X Bool) [MeasurableConceptClass X C] :
-    (PACLearnable X C <span class="op">↔</span> VCDim X C <span class="op">&lt;</span> <span class="op">⊤</span>) <span class="op">∧</span>
-    ((VCDim X C <span class="op">&lt;</span> <span class="op">⊤</span>) <span class="op">↔</span>
-      <span class="op">∃</span> (k : <span class="op">ℕ</span>) (cs : CompressionSchemeWithInfo0 X Bool C), cs.size = k) <span class="op">∧</span>
-    ((VCDim X C <span class="op">&lt;</span> <span class="op">⊤</span>) <span class="op">↔</span>
-      <span class="op">∀</span> ε <span class="op">&gt;</span> 0, <span class="op">∃</span> m₀, <span class="op">∀</span> (D : MeasureTheory.Measure X),
-        MeasureTheory.IsProbabilityMeasure D <span class="op">→</span>
-        <span class="op">∀</span> m <span class="op">≥</span> m₀, RademacherComplexity X C D m <span class="op">&lt;</span> ε) <span class="op">∧</span>
-    (PACLearnable X C <span class="op">→</span>
-      <span class="op">∃</span> (L : BatchLearner X Bool) (mf : <span class="op">ℝ</span> <span class="op">→</span> <span class="op">ℝ</span> <span class="op">→</span> <span class="op">ℕ</span>),
+<span class="kw">theorem</span> <span class="fn">fundamental_theorem</span> (<span class="id">X</span> : <span class="kw">Type</span> <span class="id">u</span>) [<span class="ty">MeasurableSpace</span> <span class="id">X</span>]
+    [<span class="ty">MeasurableSingletonClass</span> <span class="id">X</span>]
+    (<span class="id">C</span> : <span class="ty">ConceptClass</span> <span class="id">X</span> <span class="ty">Bool</span>) [<span class="ty">MeasurableConceptClass</span> <span class="id">X</span> <span class="id">C</span>] :
+    (<span class="ty">PACLearnable</span> <span class="id">X</span> <span class="id">C</span> <span class="op">↔</span> <span class="ty">VCDim</span> <span class="id">X</span> <span class="id">C</span> <span class="op">&lt;</span> <span class="op">⊤</span>) <span class="op">∧</span>
+    ((<span class="ty">VCDim</span> <span class="id">X</span> <span class="id">C</span> <span class="op">&lt;</span> <span class="op">⊤</span>) <span class="op">↔</span>
+      <span class="op">∃</span> (<span class="id">k</span> : <span class="ty">ℕ</span>) (<span class="id">cs</span> : <span class="ty">CompressionSchemeWithInfo0</span> <span class="id">X</span> <span class="ty">Bool</span> <span class="id">C</span>), <span class="id">cs</span>.<span class="fn">size</span> = <span class="id">k</span>) <span class="op">∧</span>
+    ((<span class="ty">VCDim</span> <span class="id">X</span> <span class="id">C</span> <span class="op">&lt;</span> <span class="op">⊤</span>) <span class="op">↔</span>
+      <span class="op">∀</span> <span class="id">ε</span> <span class="op">&gt;</span> <span class="num">0</span>, <span class="op">∃</span> <span class="id">m₀</span>, <span class="op">∀</span> (<span class="id">D</span> : <span class="ty">MeasureTheory.Measure</span> <span class="id">X</span>),
+        <span class="ty">MeasureTheory.IsProbabilityMeasure</span> <span class="id">D</span> <span class="op">→</span>
+        <span class="op">∀</span> <span class="id">m</span> <span class="op">≥</span> <span class="id">m₀</span>, <span class="ty">RademacherComplexity</span> <span class="id">X</span> <span class="id">C</span> <span class="id">D</span> <span class="id">m</span> <span class="op">&lt;</span> <span class="id">ε</span>) <span class="op">∧</span>
+    (<span class="ty">PACLearnable</span> <span class="id">X</span> <span class="id">C</span> <span class="op">→</span>
+      <span class="op">∃</span> (<span class="id">L</span> : <span class="ty">BatchLearner</span> <span class="id">X</span> <span class="ty">Bool</span>) (<span class="id">mf</span> : <span class="ty">ℝ</span> <span class="op">→</span> <span class="ty">ℝ</span> <span class="op">→</span> <span class="ty">ℕ</span>),
         <span class="cmt">-- PAC guarantee, sample-complexity upper bound, and matching lower bound</span>
         ...) <span class="op">∧</span>
-    ((VCDim X C <span class="op">&lt;</span> <span class="op">⊤</span>) <span class="op">↔</span>
-      <span class="op">∃</span> (d : <span class="op">ℕ</span>), <span class="op">∀</span> (m : <span class="op">ℕ</span>), d <span class="op">≤</span> m <span class="op">→</span>
-        GrowthFunction X C m <span class="op">≤</span>
-          <span class="op">∑</span> i <span class="op">∈</span> Finset.range (d + 1), Nat.choose m i) :=
+    ((<span class="ty">VCDim</span> <span class="id">X</span> <span class="id">C</span> <span class="op">&lt;</span> <span class="op">⊤</span>) <span class="op">↔</span>
+      <span class="op">∃</span> (<span class="id">d</span> : <span class="ty">ℕ</span>), <span class="op">∀</span> (<span class="id">m</span> : <span class="ty">ℕ</span>), <span class="id">d</span> <span class="op">≤</span> <span class="id">m</span> <span class="op">→</span>
+        <span class="ty">GrowthFunction</span> <span class="id">X</span> <span class="id">C</span> <span class="id">m</span> <span class="op">≤</span>
+          <span class="op">∑</span> <span class="id">i</span> <span class="op">∈</span> <span class="ty">Finset</span>.<span class="fn">range</span> (<span class="id">d</span> + <span class="num">1</span>), <span class="ty">Nat</span>.<span class="fn">choose</span> <span class="id">m</span> <span class="id">i</span>) :=
   <span class="cmt">-- BP₅: 5-way conjunction assembles from component theorems</span>
-  <span class="op">⟨</span>vc_characterization X C,
-   fundamental_vc_compression X C,
-   (vc_characterization X C).symm.trans (fundamental_rademacher X C),
-   pac_sample_complexity_sandwich X C,
-   <span class="op">⟨</span>vcdim_finite_imp_growth_bounded X C,
-    growth_bounded_imp_vcdim_finite X C<span class="op">⟩⟩</span></code></pre></div>
+  <span class="op">⟨</span><span class="fn">vc_characterization</span> <span class="id">X</span> <span class="id">C</span>,
+   <span class="fn">fundamental_vc_compression</span> <span class="id">X</span> <span class="id">C</span>,
+   (<span class="fn">vc_characterization</span> <span class="id">X</span> <span class="id">C</span>).<span class="fn">symm</span>.<span class="fn">trans</span> (<span class="fn">fundamental_rademacher</span> <span class="id">X</span> <span class="id">C</span>),
+   <span class="fn">pac_sample_complexity_sandwich</span> <span class="id">X</span> <span class="id">C</span>,
+   <span class="op">⟨</span><span class="fn">vcdim_finite_imp_growth_bounded</span> <span class="id">X</span> <span class="id">C</span>,
+    <span class="fn">growth_bounded_imp_vcdim_finite</span> <span class="id">X</span> <span class="id">C</span><span class="op">⟩⟩</span></code></pre></div>
                         <p class="lean-code-caption">PAC-learnability ↔ finite VC dim ↔ bounded compression
                             scheme ↔ vanishing Rademacher complexity ↔ polynomial growth function.
                             Sauer–Shelah, symmetrisation, and concentration inequalities are the three
