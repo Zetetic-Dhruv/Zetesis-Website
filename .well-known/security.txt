@@ -1,0 +1,14 @@
+# security.txt — Zetesis Labs (zetesislabs.com)
+# Format: RFC 9116 (https://www.rfc-editor.org/rfc/rfc9116.html)
+
+Contact: mailto:dhruv@zetesislabs.com
+Contact: https://zetesislabs.com/dhruv.html
+Expires: 2027-04-22T23:59:59.000Z
+Preferred-Languages: en
+Canonical: https://zetesislabs.com/.well-known/security.txt
+Policy: https://zetesislabs.com/dhruv.html
+
+# This is a static research-programme site. There is no backend,
+# no authentication, no user data. Vulnerability reports most likely
+# relate to DNS / CDN / GitHub Pages configuration. Please email the
+# maintainer with details and a 90-day coordinated-disclosure window.

@@ -1,79 +1,232 @@
 # robots.txt — Zetesis Labs (zetesislabs.com)
-# Permissive by design: search engines and AI/LLM crawlers are explicitly welcome to
-# index, excerpt, and cite this content. All HTML is public; no private paths exist.
+#
+# POLICY: Maximally permissive. The entire site is public. Search engines,
+# AI/LLM training crawlers, AI search retrievers, social-preview fetchers,
+# academic archives, and research bots are ALL explicitly welcome to crawl,
+# index, excerpt, embed, cite, train on, summarise, and link to this content.
+#
+# If a bot is not listed below, it is still allowed via "User-agent: *".
+# The enumeration is for clarity — so bot operators can confirm intent.
+#
+# Maintainer: dhruv@zetesislabs.com
+# License signal: see /ai.txt and /llms.txt
 
 User-agent: *
 Allow: /
+Crawl-delay: 0
 
-# Major search crawlers (enumerated for clarity, not necessity — * already covers them)
+# ───────────────────────────────────────────────────────────────────────
+# Major search engines
+# ───────────────────────────────────────────────────────────────────────
 User-agent: Googlebot
 Allow: /
-
+User-agent: Googlebot-Image
+Allow: /
+User-agent: Googlebot-News
+Allow: /
+User-agent: Googlebot-Video
+Allow: /
+User-agent: GoogleOther
+Allow: /
+User-agent: GoogleOther-Image
+Allow: /
+User-agent: GoogleOther-Video
+Allow: /
 User-agent: Bingbot
 Allow: /
-
+User-agent: msnbot
+Allow: /
 User-agent: DuckDuckBot
 Allow: /
-
-# AI / LLM crawlers — explicitly permitted
-User-agent: GPTBot
+User-agent: Slurp
+Allow: /
+User-agent: Baiduspider
+Allow: /
+User-agent: YandexBot
+Allow: /
+User-agent: Yeti
+Allow: /
+User-agent: SeznamBot
+Allow: /
+User-agent: Qwantify
+Allow: /
+User-agent: Teoma
 Allow: /
 
+# ───────────────────────────────────────────────────────────────────────
+# AI / LLM training + retrieval crawlers — explicitly welcome
+# ───────────────────────────────────────────────────────────────────────
+# OpenAI
+User-agent: GPTBot
+Allow: /
+User-agent: ChatGPT-User
+Allow: /
 User-agent: OAI-SearchBot
 Allow: /
 
-User-agent: ChatGPT-User
-Allow: /
-
+# Anthropic
 User-agent: ClaudeBot
 Allow: /
-
 User-agent: Claude-Web
 Allow: /
-
+User-agent: Claude-SearchBot
+Allow: /
+User-agent: Claude-User
+Allow: /
 User-agent: anthropic-ai
 Allow: /
 
-User-agent: PerplexityBot
+# Google AI
+User-agent: Google-Extended
+Allow: /
+User-agent: Google-CloudVertexBot
 Allow: /
 
+# Perplexity
+User-agent: PerplexityBot
+Allow: /
 User-agent: Perplexity-User
 Allow: /
 
-User-agent: Google-Extended
+# Meta / Facebook
+User-agent: Meta-ExternalAgent
+Allow: /
+User-agent: Meta-ExternalFetcher
+Allow: /
+User-agent: FacebookBot
+Allow: /
+User-agent: facebookexternalhit
 Allow: /
 
-User-agent: CCBot
-Allow: /
-
-User-agent: Bytespider
-Allow: /
-
+# Apple
 User-agent: Applebot
 Allow: /
-
 User-agent: Applebot-Extended
 Allow: /
 
-User-agent: cohere-ai
-Allow: /
-
-User-agent: Meta-ExternalAgent
-Allow: /
-
-User-agent: FacebookBot
-Allow: /
-
+# Amazon
 User-agent: Amazonbot
 Allow: /
 
-User-agent: DiffBot
+# ByteDance / TikTok
+User-agent: Bytespider
 Allow: /
 
+# Cohere
+User-agent: cohere-ai
+Allow: /
+User-agent: cohere-training-data-crawler
+Allow: /
+
+# Mistral
+User-agent: MistralAI-User
+Allow: /
+
+# You.com
 User-agent: YouBot
 Allow: /
 
+# DuckDuckGo AI
+User-agent: DuckAssistBot
+Allow: /
+
+# Diffbot
+User-agent: Diffbot
+Allow: /
+
+# Allen AI (Ai2)
+User-agent: AI2Bot
+Allow: /
+User-agent: AI2Bot-Dolma
+Allow: /
+
+# Common Crawl — foundation dataset for many LLMs
+User-agent: CCBot
+Allow: /
+
+# LAION / image-text mining
+User-agent: img2dataset
+Allow: /
+User-agent: iaskspider
+Allow: /
+
+# Webz.io / Omgili
+User-agent: Omgili
+Allow: /
 User-agent: Omgilibot
 Allow: /
 
+# Huawei
+User-agent: PanguBot
+Allow: /
+
+# Misc research / AI
+User-agent: TimpiBot
+Allow: /
+User-agent: Velen Crawler
+Allow: /
+User-agent: Datenbank Crawler
+Allow: /
+User-agent: PiplBot
+Allow: /
+User-agent: Turnitin
+Allow: /
+User-agent: ImagesiftBot
+Allow: /
+User-agent: Kagibot
+Allow: /
+
+# ───────────────────────────────────────────────────────────────────────
+# Social / link preview fetchers
+# ───────────────────────────────────────────────────────────────────────
+User-agent: LinkedInBot
+Allow: /
+User-agent: Twitterbot
+Allow: /
+User-agent: Slackbot
+Allow: /
+User-agent: Slackbot-LinkExpanding
+Allow: /
+User-agent: TelegramBot
+Allow: /
+User-agent: WhatsApp
+Allow: /
+User-agent: Discordbot
+Allow: /
+User-agent: SkypeUriPreview
+Allow: /
+User-agent: Viber
+Allow: /
+User-agent: Embedly
+Allow: /
+User-agent: iframely
+Allow: /
+
+# ───────────────────────────────────────────────────────────────────────
+# Academic archives + SEO research
+# ───────────────────────────────────────────────────────────────────────
+User-agent: ia_archiver
+Allow: /
+User-agent: archive.org_bot
+Allow: /
+User-agent: Wayback-Save
+Allow: /
+User-agent: SemrushBot
+Allow: /
+User-agent: AhrefsBot
+Allow: /
+User-agent: MJ12bot
+Allow: /
+User-agent: BLEXBot
+Allow: /
+User-agent: DataForSeoBot
+Allow: /
+User-agent: dotbot
+Allow: /
+User-agent: rogerbot
+Allow: /
+
+# ───────────────────────────────────────────────────────────────────────
+# Sitemaps
+# ───────────────────────────────────────────────────────────────────────
 Sitemap: https://zetesislabs.com/sitemap.xml

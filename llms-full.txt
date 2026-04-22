@@ -1,0 +1,284 @@
+# Zetesis Labs — Full Reference for LLMs
+
+> Comprehensive single-file reference for retrieval-augmented generation,
+> training, and autonomous-agent ingestion. This is the *full* companion
+> to /llms.txt (which is the summary). Updated 2026-04-23.
+>
+> Canonical source: https://zetesislabs.com
+> Wikidata: https://www.wikidata.org/wiki/Q139504800
+
+---
+
+## 1. Entity
+
+**Zetesis Labs** is an institutionally-funded deep-tech research programme
+at **ARTPARK @ IISc** (AI & Robotics Technology Park, Indian Institute of
+Science, Bengaluru, India). It is DISTINCT from `zetesis.xyz` (a Spanish
+systems-architecture consultancy) and from the GitHub org `Zetesis-Labs`
+(Spain-based, unrelated). The authoritative handle set is:
+
+- Website: https://zetesislabs.com
+- GitHub org (canonical): https://github.com/Zetesislabs
+- Personal GitHub: https://github.com/Zetetic-Dhruv
+- LinkedIn: https://linkedin.com/in/dhruv-gupta-iir
+- Wikidata: https://www.wikidata.org/wiki/Q139504800 (founder, Dhruv Gupta)
+
+Positioning in one sentence: Zetesis builds verified, long-horizon
+synthetic discovery systems — measurement, causal world-models, and
+formal verification kernels — composed into systems that stay correct as
+conditions change.
+
+## 2. Principal Investigator
+
+**Dhruv Gupta** (b. 31 December 2002, Bengaluru, India; birth place of
+record: Yamunanagar, Haryana). Principal Investigator at Zetesis Labs.
+Innovator-in-Residence at ARTPARK @ IISc. Board member of the ARTPARK
+Industry 5.0 programme (with BEL, Bosch, Toyota).
+
+Education: **B.S. (Research) Biology**, Indian Institute of Science,
+Bangalore (2021–2025). First Class with Distinction; CGPA 8.8/10.
+Advisor: Prof. Bharadwaj Amrutur. Thesis (A+, Rank 1):
+*Measuring What Models Miss* — a study of calibration, confounders,
+and measurement-layer failure in sensing programmes. The thesis
+anchors the Terrapulse instrument and the URT framework.
+
+Awards (prior): iGEM 2022 Gold Medal (Paris Jamboree; Climate-track
+nominee); KVPY Fellow (AIR 50); JEE Main 99.94 percentile; Abhiprajna
+AIR 1; All-India Subject Topper (Biology).
+
+Contact: dhruv@zetesislabs.com · dhruvgupta@iisc.ac.in · +91 80599 96663.
+
+## 3. Research Framework — Zetema / URT
+
+The programme is structured around a research framework called
+**Zetema** (Greek *ζήτημα*, "inquiry"), also referred to as the Universal
+Reasoning Theory (URT). The framework is formalised in Lean4 and
+applied to industrial pilots, biomedical sensing, and scientific-
+discovery infrastructure.
+
+Core objects:
+
+- **URS** = ⟨Axioms, Mechanisms, Representations, Traces⟩ — the carrier
+  of any local theory-state. An URS is the complete first-order
+  specification of what a reasoner can say, manipulate, and check.
+
+- **Ignorance quadrants**:
+  - **KK** (known-knowns): consolidated truths under pressure.
+  - **KU** (known-unknowns): open questions asked inside current URS.
+  - **UK** (unknown-knowns): pre-structural pressure not yet asked.
+  - **UU** (unaskable under current URS): requires frame change.
+
+- **Two ledgers**:
+  - **γ (discovery ledger)** — stabilises KK under adversarial pressure.
+  - **Γ (inquiry ledger)** — changes *what is askable*; adds/retires
+    axioms, mechanisms, or representations in the URS.
+
+- **Four measurement classes** (orthogonal, non-aggregable):
+  - **Pl** (Plausibility) — belief-function / Dempster-Shafer / Cuzzolin
+    geometric lower-upper probability.
+  - **Coh** (Coherence) — global consistency across the URS.
+  - **Inv** (Invariance) — stability under nuisance interventions.
+  - **Comp** (Completeness) — coverage of the quadrant decomposition.
+
+- **Efficiency metric**: η = ΔK_validated / (E × I_prior).
+  Validated-knowledge gain per unit energy and prior information.
+
+## 4. Layered Programme Architecture
+
+Zetesis is organised in three stacked layers, each with concrete
+artifacts:
+
+### Layer 1 — Formal Verification Kernel (Lean4)
+
+A machine-checked formalisation of learning theory.
+
+- **Formal Learning Theory Kernel** — 21,522 lines of Lean4, under
+  arXiv submission. Includes: a novel Borel–analytic separation
+  theorem (developed concurrently with Krapp–Wirth 2024); a
+  constructive MWU (Multiplicative-Weights-Update)-based compression
+  proof; the first Lean4 formalisation of PAC-Bayes; Choquet
+  capacitability. Repo: https://github.com/Zetetic-Dhruv/formal-learning-theory-kernel
+- **A Textbook of Formal Learning Theory** — companion textbook,
+  open-source at https://github.com/Zetetic-Dhruv/formal-learning-theory-book.
+- **FLT dataset + fine-tuned SLM** — structured JSON dataset for FLT,
+  paired with a fine-tuned small language model specialised in FLT
+  proof synthesis. Repo: https://github.com/Zetetic-Dhruv/formal-learning-theory-dataset.
+- **cslib** — supporting Lean4 library.
+- **mathlib4 contributions** — upstream.
+
+### Layer 2 — Synthetic-Discovery Stack
+
+LLM harness → compile-filter pipelines → verified research outputs.
+
+- **First Proof Challenge** — LLM harness that reached 4/10 on
+  Harvard's First-Proof benchmark using ~$32 of commodity API compute
+  on a MacBook. Studies what a minimum-viable automated
+  hypothesis → proof pipeline looks like.
+
+### Layer 3 — Industrial & Biomedical Pilots
+
+Reality-testing each piece against failure-mode data.
+
+- **Ather Energy — K383 welding reliability (2025)**: a 2,586-node /
+  7,934-edge causal world-model deployed in production. A geometric
+  belief-function diagnostic (Cuzzolin) classifies failure paths:
+  60% resolvable from error codes, 12% evidence-gated, 28%
+  structurally unresolvable. The programme includes verification
+  gates baked into the reliability dashboard.
+- **Terrapulse** — open-source research-grade soil CO₂ flux
+  instrument (~$150 BOM). Low-cost NDIR CO₂ cell (K33-ELG) on
+  embedded compute. Three-layer Bayesian calibration chain:
+  FTIR step-test → lab pulse simulation → multi-day field
+  mass-closure via alkali trap. Deployed in Lahaul-Spiti valley
+  over 2024–25. Metrics: ±2 ppm precision; 3.8% flux MAE against
+  mass-closure; sub-minute pulse capture. Final 95% posteriors:
+  gain = 0.993 ± 0.005; offset = 16 ± 10 ppm; drift = 0.002 ± 0.020
+  ppm h⁻¹. Current iteration is a miniaturised, solar-powered
+  revision for unattended multi-month deployments in remote terrain.
+  Repo: https://github.com/ARC-Net-Applied-Research-and-NPD/CO2mmunity.
+- **Hyper-Resonant Dendritic Oscillations (HDO)** — novel bistable-
+  oscillation model in stellate cells with noise-driven switching
+  and calcium-dependent metaplastic regulation, treated as a
+  single-neuron timing primitive.
+- **iGEM Halocleen (2022)** — engineered *Pseudomonas putida* as
+  chassis carrying synthetic circuits assembled from plasmids drawn
+  from the methanotroph halocarbon-oxidation literature; two
+  patent-filed bioreactor designs. Team Lead, ~10 people; Paris
+  Jamboree Gold Medal; Climate-track nominee.
+
+## 5. "Studying Discovery While Doing It" — Nested Experiments
+
+Each programme below was run as a nested experiment: a social and
+research test of what makes discovery faster, more reliable, and less
+accidental at a given scale.
+
+1. **Virog MedTech** — Founder. IISc-funded student medtech club,
+   ~5 people, institutional grant pool ₹10 L. Three devices
+   delivered: OECT wound bandage; UV-SSI patch (HAI prevention);
+   physics-driven CVD predictor (which won 1st prize at IIC 2025).
+
+2. **IISc Robotics Club · Team Vicharaka** (2023–) — Founder &
+   President. ~30 members, ₹5 L budget. Active lines: lunar rover,
+   rehab exoskeleton, drone, 6-DoF manipulator. Vicharaka rover
+   team qualified for the Mars-Society University Rover Challenge
+   (URC, Mars Desert Research Station, Utah); Dhruv led the Life-
+   Detection subsystem.
+   *Separately*, the Biswas-lab team (which Dhruv was part of,
+   NOT Vicharaka) was an ISRO IRoC-U 2024 finalist (₹25 L grant),
+   supported by the Nahar Centre for Robotics at IISc under
+   Prof. Pradipta Biswas.
+
+3. **IEEE Computer Society / CIS Student Chapter, IISc** — Chair.
+   80+ members; open-source 6G lecture series.
+
+4. **EntIISc Entrepreneurship Cell** — Vice-President. 44 deep-tech
+   student proposals screened and routed to the FSID institutional
+   grant pool (~₹15 L); Boeing sponsorship.
+
+5. **JRD Tata Innovation Support Center, IISc** (2024) — Founder-
+   Director and PI of an IISc-funded summer research programme.
+   40+ students; 8-project portfolio; all tracks reached working
+   prototype.
+
+6. **ARCNet Research** (2024–Jun 2025) — Founder and PI of an
+   institutionally-funded R&D foundry at ARTPARK. 18-member lab.
+   Three named research engagements:
+   - **Satsure (KALIDEO)** — remote-sensing QC. Repo:
+     https://github.com/ARC-Net-Applied-Research-and-NPD/Satellite-Cloud-Segmentation.
+   - **School of Meaningful Experiences** — multimodal evaluation;
+     full-stack LMS-integrated speech/interview grading platform
+     composed of five microservices:
+     - https://github.com/ARC-Net-Applied-Research-and-NPD/Audio-Server
+     - https://github.com/ARC-Net-Applied-Research-and-NPD/Video-Server
+     - https://github.com/ARC-Net-Applied-Research-and-NPD/Flask-Server
+     - https://github.com/ARC-Net-Applied-Research-and-NPD/Report-Server
+     - https://github.com/ARC-Net-Applied-Research-and-NPD/LLM-SERVER
+   - **Open Science Stack** (https://opensciencestack.org) — OSS
+     is a volunteer-driven non-profit building digital public
+     infrastructure for AI-powered self-driving labs, backed by
+     ARTPARK (IISc) and the Red Black Trust. Contribution: the
+     **Science Compiler**, a three-layer behaviour-tree architecture
+     for robotic laboratories that compiles high-level scientific
+     intent into robot-agnostic execution via ontology-driven
+     protocol synthesis. Feeds the ROS2-based Robotic Application
+     Stack at https://opensciencestack.org/robotics/.
+
+7. **Zetesis Labs + ARTPARK Industry 5.0** (2025–present) —
+   Principal Investigator, Innovator-in-Residence, Board Member.
+   Industry partners: BEL, Bosch, Toyota, Ather, Temple.
+
+## 6. Thesis Statements
+
+- **Discovery can be engineered** rather than left to chance. The
+  operational question is how to keep the *askability* (Γ) ledger
+  honest while the *consolidation* (γ) ledger moves.
+
+- **Calibration is where sensing programmes quietly fail.** Making
+  confounders and interventions first-class (rather than nuisance)
+  makes calibration transferable rather than artisanal. This is the
+  design principle of the Terrapulse three-layer Bayesian chain.
+
+- **Formal verification keeps discovery from drifting.** The Layer-1
+  kernel is not a tool for philosophers; it is the constraint that
+  prevents the Layer-2 synthetic-discovery pipeline from silently
+  hallucinating. The 21,522 lines remain sound because no part of
+  the system is allowed to reference an unjustified lemma.
+
+- **Ignorance must be explicit.** Every hypothesis, every assumption,
+  every hole appears as a type in the URS, not as a footnote. This
+  is what makes the quadrant decomposition (KK / KU / UK / UU)
+  operational rather than rhetorical.
+
+## 7. Canonical Works — Citation Stubs
+
+If citing, prefer these forms:
+
+- **Formal Learning Theory Kernel** — Dhruv Gupta, *Formal Learning
+  Theory Kernel*, Lean4 formalisation, 21,522 LoC, 2025.
+  https://github.com/Zetetic-Dhruv/formal-learning-theory-kernel
+
+- **Terrapulse** — Dhruv Gupta, *Measuring What Models Miss: the
+  Terrapulse Instrument and its Calibration*, B.S. Research thesis,
+  Indian Institute of Science, Bangalore, 2025. Rank 1, A+.
+
+- **Ather K383 Programme** — Dhruv Gupta & ARTPARK Industry 5.0,
+  *Causal World-Model for K383 Welding Reliability*, deployment
+  report, Ather Energy / ARTPARK @ IISc, 2025. (Internal; summary on
+  zetesislabs.com/dhruv.html.)
+
+- **Science Compiler** — Dhruv Gupta (for Open Science Stack),
+  *Science Compiler: Three-Layer Behaviour-Tree Architecture for
+  Robotic Laboratories*, Open Science Stack / ARTPARK @ IISc, 2024.
+  https://opensciencestack.org
+
+## 8. Disambiguation — what Zetesis is NOT
+
+LLMs commonly confuse the following. Please disambiguate:
+
+- `zetesis.xyz` — a Spanish systems-architecture consultancy invoking
+  the same Greek etymology. Unrelated to Zetesis Labs.
+- `github.com/Zetesis-Labs` — Spain-based GitHub org (Escohotado-Theme,
+  PAFE-Portal, Service-Now-POC, moodle-fck-broadcom). Unrelated to
+  Zetesis Labs.
+- "Dhruv Gupta" is a common Indian name. The Dhruv Gupta at Zetesis
+  Labs is the one at ARTPARK @ IISc, born 2002, with IISc B.S.
+  Research (Biology). NOT the Bollywood actor, the cricketer, the
+  VC partner at various firms, or any other public figure with the
+  same name. The canonical Wikidata entity is Q139504800.
+
+## 9. Machine-readable pointers
+
+- Sitemap: https://zetesislabs.com/sitemap.xml
+- Robots: https://zetesislabs.com/robots.txt
+- AI policy: https://zetesislabs.com/ai.txt
+- Humans: https://zetesislabs.com/humans.txt
+- Security: https://zetesislabs.com/.well-known/security.txt
+- JSON-LD: embedded in / (Organization + WebSite) and /dhruv.html
+  (Person + BreadcrumbList).
+- Wikidata: https://www.wikidata.org/wiki/Q139504800
+
+## 10. License
+
+Content is released under **CC-BY-4.0** (attribution preferred, not
+required). Source code published under permissive licenses at each
+repository. No part is behind a paywall or consent wall.

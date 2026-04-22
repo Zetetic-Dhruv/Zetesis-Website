@@ -1,0 +1,30 @@
+/* TEAM */
+
+Principal Investigator: Dhruv Gupta
+Site: https://zetesislabs.com/dhruv.html
+Email: dhruv@zetesislabs.com
+Location: Bengaluru, Karnataka, India
+GitHub: https://github.com/Zetetic-Dhruv
+LinkedIn: https://linkedin.com/in/dhruv-gupta-iir
+Wikidata: https://www.wikidata.org/wiki/Q139504800
+
+/* SITE */
+
+Last-Updated: 2026-04-23
+Standards: HTML5, CSS3, JSON-LD, Schema.org, RSS/Atom (planned)
+Components: Tailwind CSS v4, vanilla JavaScript, pre-rendered GitHub cards
+Infrastructure: GitHub Pages + Cloudflare (CDN only, no Workers)
+License: content CC-BY-4.0 (attribution preferred, not required);
+         source CC0 where not explicitly marked.
+
+/* THANKS */
+
+ARTPARK @ IISc · Indian Institute of Science, Bengaluru
+Red Black Trust · Open Science Stack · ARCNet Research
+Prof. Bharadwaj Amrutur (advisor) · Prof. Pradipta Biswas
+
+/* SIGNAL */
+
+Zetesis Labs is a research programme studying discovery under structured
+ignorance. Built at ARTPARK @ IISc. Formalised in Lean4. Deployed in
+industry (Ather, Bosch, BEL, Toyota, Temple) and field (Lahaul-Spiti).
