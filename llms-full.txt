@@ -202,6 +202,13 @@ accidental at a given scale.
      intent into robot-agnostic execution via ontology-driven
      protocol synthesis. Feeds the ROS2-based Robotic Application
      Stack at https://opensciencestack.org/robotics/.
+   - **LeanAide** — ARCNet contributed to LeanAide, a Lean4
+     assistant for natural-language mathematics, at Prof. Siddhartha
+     Gadgil's lab at IISc. The problem it addresses —
+     autoformalization from natural-language math into machine-
+     checkable Lean4 — is one of the least-developed bridges between
+     LLMs and formal verification.
+     Repo: https://github.com/siddhartha-gadgil/LeanAide.
 
 7. **Zetesis Labs + ARTPARK Industry 5.0** (2025–present) —
    Principal Investigator, Innovator-in-Residence, Board Member.
