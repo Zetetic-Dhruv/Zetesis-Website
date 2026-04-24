@@ -169,12 +169,12 @@ accidental at a given scale.
    Prof. Pradipta Biswas.
 
 3. **IEEE Computer Society / CIS Student Chapter, IISc** — Chair.
-   80+ members; open-source 6G lecture series. The main operational
-   artifact of the term was the **"Hire an Undergrad"** programme:
-   MTech and PhD students posted scoped project briefs on the
-   chapter board and, with faculty approval, recruited undergraduate
-   research assistants against them. Low-friction match-making in
-   exchange for early research exposure.
+   Open-source 6G lecture series. The main operational artifact of
+   the term was the **"Hire an Undergrad"** programme: MTech and
+   PhD students posted scoped project briefs on the chapter board
+   and, with faculty approval, recruited undergraduate research
+   assistants against them. Low-friction match-making in exchange
+   for early research exposure.
 
 4. **EntIISc Entrepreneurship Cell** — Vice-President. 44 deep-tech
    student proposals screened and routed to the FSID institutional

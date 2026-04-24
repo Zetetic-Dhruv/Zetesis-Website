@@ -43,7 +43,7 @@ The framing: each of the programmes below was run as a nested experiment — a s
 
 1. **Virog MedTech**: Founder, IISc-funded student medtech club, ~5 people, institutional grant pool of ₹10 L. Three devices delivered: OECT wound bandage, UV-SSI patch (HAI prevention), physics-driven CVD predictor. The CVD predictor won 1st prize at IIC 2025.
 2. **IISc Robotics Club · Team Vicharaka** (2023–): Founder & President, ~30 members, ₹5 L budget. Active lines: lunar rover, rehab exoskeleton, drone, 6-DoF manipulator. Out of the club, the rover team Vicharaka qualified for the Mars-Society University Rover Challenge (Mars Desert Research Station, Utah); Dhruv led the Life-Detection subsystem. The same team was ISRO IRoC-U 2024 finalist (₹25 L grant), supported by the Nahar Centre for Robotics at IISc under Prof. Pradipta Biswas.
-3. **IEEE Computer Society / CIS Student Chapter, IISc**: Chair, 80+ members, open-source 6G lecture series.
+3. **IEEE Computer Society / CIS Student Chapter, IISc**: Chair. Open-source 6G lecture series. "Hire an Undergrad" matching programme (MTech/PhD students posted briefs, with faculty sign-off undergrads were recruited as research assistants).
 4. **EntIISc Entrepreneurship Cell**: Vice-President. 44 deep-tech student proposals screened and routed to the FSID institutional grant pool (~₹15 L); Boeing sponsorship.
 5. **JRD Tata Innovation Support Center, IISc** (2024): Founder-Director and PI of an IISc-funded summer research programme; 40+ students; 8-project portfolio with all tracks reaching working prototype.
 6. **ARCNet Research** (2024–Jun 2025): Founder and PI of an institutionally-funded R&D foundry at ARTPARK, 18-member lab. Three named research engagements:
