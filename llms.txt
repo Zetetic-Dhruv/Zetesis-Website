@@ -18,13 +18,13 @@ Dhruv Gupta (b. 31 December 2002, Bengaluru, India). Principal Investigator at Z
 ## Research engagements
 
 - **Applied causal / RCA pilots**: Ather-template programme engagements that build a causal world-model for a partner's failure-mode analysis; deliver dashboards with verification gates. Evidence: Ather K383 (2,586-node / 7,934-edge causal world-model deployed 2025).
-- **Formal verification**: Lean4 kernel design and type-theoretic audits of reasoning systems. Evidence: 21,522-line Formal Learning Theory kernel on arXiv.
+- **Formal verification**: Lean4 kernel design and type-theoretic audits of reasoning systems. Evidence: 21,728-line Formal Learning Theory kernel on arXiv.
 - **Advisory and research fellowships**: retained advisory for research-heavy teams; short fellowships for focused problems. Evidence: three ARCNet research engagements, 2024–2025.
 
 ## Selected evidence
 
 - **Ather Energy welding reliability (K383, 2025)**: 2,586-node / 7,934-edge causal world-model deployed in production. Geometric belief-function diagnostic (Cuzzolin) classifies failure paths: 60% resolvable from error codes, 12% evidence-gated, 28% structurally unresolvable.
-- **Formal Learning Theory Kernel**: 21,522 lines of Lean4, machine-checked. Novel Borel–analytic separation theorem (concurrent with Krapp–Wirth 2024), constructive MWU-based compression proof, first Lean4 PAC-Bayes, Choquet capacitability.
+- **Formal Learning Theory Kernel**: 21,728 lines of Lean4, machine-checked. Borel–analytic separation theorem that weakens Krapp–Wirth 2024's Borel-measurability hypothesis to analytic / null-measurable, with a strict separation witness; constructive MWU-based compression proof; first Lean4 PAC-Bayes; Choquet capacitability.
 - **Terrapulse**: open-source research-grade soil CO₂ flux instrument (~$150 BOM). Three-layer Bayesian calibration. Lahaul–Spiti field deployment, 3.8% flux MAE, ±2 ppm precision, sub-minute pulse capture.
 - **Hyper-Resonant Dendritic Oscillations (HDO)**: novel bistable-oscillation model in stellate cells with noise-driven switching and calcium-dependent metaplastic regulation as a single-neuron timing primitive.
 - **First Proof Challenge**: LLM harness reached 4/10 on Harvard's benchmark using $32 of commodity API compute on a MacBook.

@@ -1242,13 +1242,16 @@
                     <article class="deepdive">
                         <h4>Formal Learning Theory Kernel
                             <span class="sd-tag">Synthetic Discovery</span></h4>
-                        <p class="subtitle">21,522 lines of Lean4, machine-checked with no gaps.</p>
+                        <p class="subtitle">21,728 lines of Lean4, machine-checked with no gaps.</p>
                         <p>A self-contained Lean4 kernel of formal learning theory, currently under arXiv
                             review and being upstreamed to Lean4 <code>cslib</code> and <code>mathlib</code>.
                             Four results it carries that the field had been citing rather than proving:</p>
                         <ul style="padding-left: 1.5rem; line-height: 1.7; font-size: 15px;">
-                            <li><strong>Borel&ndash;analytic separation theorem</strong> (concurrent with
-                                Krapp&ndash;Wirth 2024).</li>
+                            <li><strong>Borel&ndash;analytic separation theorem</strong>: weakens the
+                                Borel-measurability hypothesis of Krapp&ndash;Wirth 2024 to
+                                analytic / null-measurable, with a strict separation witness (a concept class
+                                whose bad event is null-measurable but not Borel). Closure under patching,
+                                interpolation, and amalgamation. All main results formalised in Lean4.</li>
                             <li><strong>Constructive MWU-based compression proof.</strong></li>
                             <li><strong>PAC-Bayes bound</strong>: first Lean4 formalization of record.</li>
                             <li><strong>Choquet capacitability</strong>: previously absent from Mathlib4.
@@ -2142,7 +2145,7 @@
                         certifies, not a citation to one. Second, the <strong>type system</strong> makes
                         ignorance explicit: every hypothesis, every assumption, every hole appears as a type
                         obligation that cannot hide. Third, decidable type-checking with explicit universe
-                        management scales: the 21,522-line FLT kernel stays sound because no part of
+                        management scales: the 21,728-line FLT kernel stays sound because no part of
                         it relies on a human's mental model of what should have been proved.
                     </p>
                     <p style="line-height: 1.7; max-width: 780px; margin-top: 1rem;">

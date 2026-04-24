@@ -92,12 +92,18 @@ artifacts:
 
 A machine-checked formalisation of learning theory.
 
-- **Formal Learning Theory Kernel** — 21,522 lines of Lean4, under
-  arXiv submission. Includes: a novel Borel–analytic separation
-  theorem (developed concurrently with Krapp–Wirth 2024); a
+- **Formal Learning Theory Kernel** — 21,728 lines of Lean4, under
+  COLT submission. Includes: a Borel–analytic separation theorem that
+  weakens Krapp–Wirth 2024's Borel-measurability hypothesis to
+  analytic / null-measurable, with a strict separation witness (a
+  concept class whose bad event is null-measurable but not Borel) and
+  closure under patching, interpolation, and amalgamation; a
   constructive MWU (Multiplicative-Weights-Update)-based compression
   proof; the first Lean4 formalisation of PAC-Bayes; Choquet
-  capacitability. Repo: https://github.com/Zetetic-Dhruv/formal-learning-theory-kernel
+  capacitability. Associated paper: *Null Measurability in the
+  Fundamental Theorem of Statistical Learning: Separation, Closure,
+  and a Lean-Verified Correction to the Symmetrization Interface*
+  (Gupta, 2025). Repo: https://github.com/Zetetic-Dhruv/formal-learning-theory-kernel
 - **A Textbook of Formal Learning Theory** — companion textbook,
   open-source at https://github.com/Zetetic-Dhruv/formal-learning-theory-book.
 - **FLT dataset + fine-tuned SLM** — structured JSON dataset for FLT,
@@ -235,7 +241,7 @@ accidental at a given scale.
 - **Formal verification keeps discovery from drifting.** The Layer-1
   kernel is not a tool for philosophers; it is the constraint that
   prevents the Layer-2 synthetic-discovery pipeline from silently
-  hallucinating. The 21,522 lines remain sound because no part of
+  hallucinating. The 21,728 lines remain sound because no part of
   the system is allowed to reference an unjustified lemma.
 
 - **Ignorance must be explicit.** Every hypothesis, every assumption,
@@ -248,8 +254,16 @@ accidental at a given scale.
 If citing, prefer these forms:
 
 - **Formal Learning Theory Kernel** — Dhruv Gupta, *Formal Learning
-  Theory Kernel*, Lean4 formalisation, 21,522 LoC, 2025.
+  Theory Kernel*, Lean4 formalisation, 21,728 LoC, 2025.
   https://github.com/Zetetic-Dhruv/formal-learning-theory-kernel
+
+- **Null measurability paper (COLT submission)** — Dhruv Gupta,
+  *Null Measurability in the Fundamental Theorem of Statistical
+  Learning: Separation, Closure, and a Lean-Verified Correction to
+  the Symmetrization Interface*, 2025. Core technical contribution:
+  weakens Krapp–Wirth 2024's Borel-measurability hypothesis to
+  analytic / null-measurable, with strict separation witness. All
+  main results formalised in Lean4.
 
 - **Terrapulse** — Dhruv Gupta, *Measuring What Models Miss: the
   Terrapulse Instrument and its Calibration*, B.S. Research thesis,
