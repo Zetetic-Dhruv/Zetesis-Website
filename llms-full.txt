@@ -149,7 +149,7 @@ Reality-testing each piece against failure-mode data.
 - **iGEM Halocleen (2022)** — engineered *Pseudomonas putida* as
   chassis carrying synthetic circuits assembled from plasmids drawn
   from the methanotroph halocarbon-oxidation literature; two
-  bioreactor designs with patents pending. Team Lead, ~10 people; Paris
+  bioreactor designs with patents pending. Team Lead, Hardware; ~10 people; Paris
   Jamboree Gold Medal; Climate-track nominee.
 
 ## 5. "Studying Discovery While Doing It" — Nested Experiments
