@@ -37,7 +37,7 @@ Industry 5.0 programme (with BEL, Bosch, Toyota).
 
 Education: **B.S. (Research) Biology**, Indian Institute of Science,
 Bangalore (2021–2025). First Class with Distinction; CGPA 8.8/10.
-Advisor: Prof. Bharadwaj Amrutur. Thesis (A+, Rank 1):
+Advisor: Prof. Bharadwaj Amrutur. Top-ranked thesis (A+):
 *Measuring What Models Miss* — a study of calibration, confounders,
 and measurement-layer failure in sensing programmes. The thesis
 anchors the Terrapulse instrument and the URT framework.
@@ -267,7 +267,7 @@ If citing, prefer these forms:
 
 - **Terrapulse** — Dhruv Gupta, *Measuring What Models Miss: the
   Terrapulse Instrument and its Calibration*, B.S. Research thesis,
-  Indian Institute of Science, Bangalore, 2025. Rank 1, A+.
+  Indian Institute of Science, Bangalore, 2025. Top-ranked, A+.
 
 - **Ather K383 Programme** — Dhruv Gupta & ARTPARK Industry 5.0,
   *Causal World-Model for K383 Welding Reliability*, deployment
