@@ -69,12 +69,11 @@ async function fetchUser(user) {
 
 // ---------- render ----------
 function renderStats(data) {
-  let totalRepos = 0, totalFollowers = 0;
+  let totalRepos = 0;
   const bios = [];
   data.forEach((u) => {
     if (u.profile) {
       totalRepos += u.profile.public_repos || 0;
-      totalFollowers += u.profile.followers || 0;
       if (u.profile.bio) bios.push(`@${u.user}: ${u.profile.bio}`);
     }
   });
@@ -84,7 +83,6 @@ function renderStats(data) {
   return [
     `<div class="flex gap-8 text-sm" style="flex-wrap: wrap; align-items: baseline;">`,
     `<div><strong>${totalRepos}</strong> <span class="text-muted">public repos</span></div>`,
-    `<div><strong>${totalFollowers}</strong> <span class="text-muted">followers</span></div>`,
     userLinks,
     `</div>`,
     bios.length ? `<p class="text-muted text-sm italic" style="margin-top: 0.75rem;">${esc(bios.join(' \u00b7 '))}</p>` : ''
