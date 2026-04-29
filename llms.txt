@@ -1,6 +1,6 @@
 # Zetesis Labs
 
-> An institutionally-funded deep-tech research programme at ARTPARK @ IISc (Bengaluru, India). Zetesis Labs builds verified, long-horizon synthetic discovery systems: measurement, causal world-models, and formal verification kernels composed into systems that stay correct as conditions change.
+> An institutionally-funded deep-tech research programme at ARTPARK @ IISc (Bengaluru, India). Zetesis Labs builds verified, long-horizon synthetic discovery systems: measurement, causal world-models, and a formal verification platform composed into systems that stay correct as conditions change.
 
 Zetesis is built around a research framework called **Zetema**: discovery as inquiry over structured ignorance. The framework is formalized in Lean4 and applied to industrial pilots, biomedical sensing, and scientific-discovery infrastructure.
 

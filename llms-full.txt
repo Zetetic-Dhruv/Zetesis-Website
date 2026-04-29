@@ -25,7 +25,7 @@ systems-architecture consultancy) and from the GitHub org `Zetesis-Labs`
 
 Positioning in one sentence: Zetesis builds verified, long-horizon
 synthetic discovery systems — measurement, causal world-models, and
-formal verification kernels — composed into systems that stay correct as
+a formal verification platform — composed into systems that stay correct as
 conditions change.
 
 ## 2. Principal Investigator
@@ -88,7 +88,7 @@ Core objects:
 Zetesis is organised in three stacked layers, each with concrete
 artifacts:
 
-### Layer 1 — Formal Verification Kernel (Lean4)
+### Layer 1 — Formal Verification Platform (Lean4)
 
 A machine-checked formalisation of learning theory.
 
