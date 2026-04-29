@@ -133,6 +133,46 @@
     }
     </script>
 
+    <!-- Schema.org ScholarlyArticle: arXiv preprint companion to the FLT kernel. -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ScholarlyArticle",
+      "headline": "Null Measurability at the Symmetrization Interface in VC Learning",
+      "name": "Null Measurability at the Symmetrization Interface in VC Learning",
+      "author": {
+        "@type": "Person",
+        "name": "Dhruv Gupta",
+        "url": "https://zetesislabs.com/dhruv.html",
+        "sameAs": "https://www.wikidata.org/wiki/Q139504800"
+      },
+      "datePublished": "2026-04-27",
+      "url": "https://arxiv.org/abs/2604.25028",
+      "sameAs": "https://arxiv.org/abs/2604.25028",
+      "identifier": [
+        {
+          "@type": "PropertyValue",
+          "propertyID": "arXiv",
+          "value": "2604.25028"
+        }
+      ],
+      "isPartOf": {
+        "@type": "Periodical",
+        "name": "arXiv"
+      },
+      "about": [
+        "VC dimension",
+        "PAC learnability",
+        "Symmetrization",
+        "Borel measurability",
+        "Analytic sets",
+        "Choquet capacitability",
+        "Lean 4 formalization"
+      ],
+      "abstract": "Recent work revisiting measurability in the fundamental theorem of statistical learning imposes Borel measurability of ghost-gap suprema. We show that, at the one-sided ghost-gap interface actually used by the standard symmetrization proof, this requirement is stronger than necessary. For any Borel-parameterized concept class on a Polish domain, the bad event 'there exists a hypothesis whose ghost empirical error exceeds its training empirical error by at least ε/2' is analytic. By Choquet capacitability, it is therefore measurable in the completion of every finite Borel measure. We then construct a concept class whose bad event is null-measurable but not Borel, giving a strict separation from the Borel supremum condition. Finally, we prove closure under patching, fixed and countable interpolation, and fiber-product amalgamation, showing that the weaker regularity level is stable under natural concept-class constructors. In the realizable setting, where targets belong to the class and are measurable, these results weaken the measurability hypothesis needed by the symmetrization route from finite VC dimension to PAC learnability. The main results and the descriptive-set-theoretic infrastructure used by them are formalized in Lean 4."
+    }
+    </script>
+
     <!-- Schema.org BreadcrumbList: enables breadcrumb rich-result in Google SERP. -->
     <script type="application/ld+json">
     {
@@ -1248,10 +1288,14 @@
                     <article class="deepdive">
                         <h4>Formal Learning Theory Kernel
                             <span class="sd-tag">Synthetic Discovery</span></h4>
-                        <p class="subtitle">21,728 lines of Lean4, machine-checked with no gaps.</p>
-                        <p>A self-contained Lean4 kernel of formal learning theory, currently under arXiv
-                            review and being upstreamed to Lean4 <code>cslib</code> and <code>mathlib</code>.
-                            Four results it carries that the field had been citing rather than proving:</p>
+                        <p class="subtitle">21,728 lines of Lean4, machine-checked with no gaps.
+                            Companion to <strong><a href="https://arxiv.org/abs/2604.25028"
+                            target="_blank" rel="noopener noreferrer"><em>Null Measurability at the
+                            Symmetrization Interface in VC Learning</em></a></strong>
+                            (arXiv:2604.25028, April 2026).</p>
+                        <p>A self-contained Lean4 kernel of formal learning theory, being upstreamed to
+                            Lean4 <code>cslib</code> and <code>mathlib</code>. Four results it carries
+                            that the field had been citing rather than proving:</p>
                         <ul style="padding-left: 1.5rem; line-height: 1.7; font-size: 15px;">
                             <li><strong>Borel&ndash;analytic separation theorem</strong>: weakens the
                                 Borel-measurability hypothesis of Krapp&ndash;Wirth 2024 to
