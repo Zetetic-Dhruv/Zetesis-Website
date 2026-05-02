@@ -52,7 +52,7 @@ The framing: each of the programmes below was run as a nested experiment — a s
    - **Open Science Stack** ([opensciencestack.org](https://opensciencestack.org)): OSS is a volunteer-driven non-profit building digital public infrastructure for AI-powered self-driving labs, backed by ARTPARK (IISc) and the Red Black Trust. Contribution: the **Science Compiler**, a three-layer behaviour-tree architecture for robotic laboratories that compiles high-level scientific intent into robot-agnostic execution via ontology-driven protocol synthesis. Feeds the ROS2-based [Robotic Application Stack](https://opensciencestack.org/robotics/).
 7. **Zetesis Labs + ARTPARK Industry 5.0** (2025–present): Principal Investigator, Innovator-in-Residence, Board Member. Industry partners: BEL, Bosch, Toyota.
 
-> iGEM IISc · Halocleen (2022) is listed as a project under Applied Pilots, not as a discovery-scaling programme: Team Lead, Hardware; ~10-person team; Paris Jamboree Gold Medal; Climate-track finalist. Engineered *Pseudomonas putida* as the chassis, carrying synthetic circuits assembled from plasmids drawn from the methanotroph halocarbon-oxidation literature; two bioreactor designs with patents pending.
+> iGEM IISc · Halocleen (2022) is listed as a project under Applied Pilots, not as a discovery-scaling programme: Lead of the Hardware subteam (bioreactors and initial biology research); Paris Jamboree Gold Medal; Climate-track finalist. Engineered *Pseudomonas putida* as the chassis, carrying synthetic circuits assembled from plasmids drawn from the methanotroph halocarbon-oxidation literature; two bioreactor designs with patents pending.
 
 ## Awards
 
