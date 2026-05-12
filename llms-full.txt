@@ -153,6 +153,40 @@ Reality-testing each piece against failure-mode data.
   bioreactor designs with patents pending. Lead, Hardware subteam (bioreactors
   and initial biology research); Paris Jamboree Gold Medal; Climate-track nominee.
 
+## Research Methods, Metascience, and Discovery
+
+A research-methods pillar that sits across the layered programme rather
+than inside any one layer. The unit of study is the discovery procedure
+itself, not the artifacts a given procedure produces.
+
+**Synthetic discovery (coinage).** Within this programme, *synthetic
+discovery* names the deliberate engineering and process-level evaluation
+of discovery procedures as objects of study in their own right, including
+procedures that experiment on the scientist as much as on the world they
+study. Where natural discovery takes the scientist as a black-box agent
+and asks what new world-knowledge results, synthetic discovery makes the
+procedure itself the system under test, and asks what makes one procedure
+better, faster, or more reliable than another. The term is intentionally
+distinct from "AI-for-science" or "automated science": automating discovery
+is one instance of synthetic discovery, not its definition.
+
+**Evidence anchors:**
+
+- **Discovery Tetrad** — Dhruv Gupta, *Process-Level Evaluation of
+  Synthetic Discovery: The Discovery Tetrad*, Zenodo v1, May 2026,
+  DOI:10.5281/zenodo.20147210. https://doi.org/10.5281/zenodo.20147210.
+  A four-part process-level evaluation framework for synthetic-discovery
+  procedures, with the unit of evaluation being the procedure itself
+  rather than the artifacts produced.
+
+- **Measuring What Models Miss** — Dhruv Gupta, *Measuring What Models
+  Miss: Open Specifications hardware by Dhruv Gupta as BS Thesis at IISc*,
+  B.S. (Research) Biology thesis, Indian Institute of Science, Bangalore,
+  2025, Zenodo DOI:10.5281/zenodo.15391354. https://doi.org/10.5281/zenodo.15391354.
+  Open-specifications hardware design and calibration methodology for the
+  Terrapulse soil CO₂ flux instrument, taking the measurement layer itself
+  as the methodological unit under study.
+
 ## 5. "Studying Discovery While Doing It" — Nested Experiments
 
 Each programme below was run as a nested experiment: a social and
@@ -271,9 +305,17 @@ If citing, prefer these forms:
   countable interpolation, and fiber-product amalgamation. Main results
   and the descriptive-set-theoretic infrastructure formalised in Lean4.
 
-- **Terrapulse** — Dhruv Gupta, *Measuring What Models Miss: the
-  Terrapulse Instrument and its Calibration*, B.S. Research thesis,
-  Indian Institute of Science, Bangalore, 2025. Top-ranked, A+.
+- **Discovery Tetrad preprint** — Dhruv Gupta, *Process-Level
+  Evaluation of Synthetic Discovery: The Discovery Tetrad*, Zenodo v1,
+  May 2026, DOI:10.5281/zenodo.20147210.
+  https://doi.org/10.5281/zenodo.20147210. Four-part process-level
+  evaluation framework for synthetic-discovery procedures.
+
+- **Terrapulse / B.S. Research thesis** — Dhruv Gupta, *Measuring
+  What Models Miss: Open Specifications hardware by Dhruv Gupta as BS
+  Thesis at IISc*, B.S. (Research) Biology thesis, Indian Institute of
+  Science, Bangalore, 2025. Top-ranked, A+. Zenodo
+  DOI:10.5281/zenodo.15391354. https://doi.org/10.5281/zenodo.15391354.
 
 - **Ather K383 Programme** — Dhruv Gupta & ARTPARK Industry 5.0,
   *Causal World-Model for K383 Welding Reliability*, deployment
