@@ -61,7 +61,8 @@ iGEM 2022 Gold Medal (Paris), Best Climate-Crisis nomination · KVPY Fellow (AIR
 
 ## Open source
 
-- [github.com/Zetetic-Dhruv](https://github.com/Zetetic-Dhruv) — FLT kernel, transformer learning theory, First-Proof benchmark results, formal-learning-theory book/dataset, cslib, mathlib4 contributions
+- [github.com/Zetetic-Dhruv](https://github.com/Zetetic-Dhruv) — FLT kernel, transformer learning theory, First-Proof benchmark results, formal-learning-theory book/dataset
+- **Upstream contributions:** Lean4 `cslib` `versionSpace` abstraction ([PR #592](https://github.com/leanprover/cslib/pull/592), first merge, May 2026): classical Mitchell–Angluin version-space object added to `Cslib/MachineLearning/PACLearning/VersionSpace.lean`. Validates that portions of the FLT kernel meet upstream quality standards.
 
 ## Contact
 

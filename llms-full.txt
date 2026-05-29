@@ -110,8 +110,15 @@ A machine-checked formalisation of learning theory.
 - **FLT dataset + fine-tuned SLM** — structured JSON dataset for FLT,
   paired with a fine-tuned small language model specialised in FLT
   proof synthesis. Repo: https://github.com/Zetetic-Dhruv/formal-learning-theory-dataset.
-- **cslib** — supporting Lean4 library.
-- **mathlib4 contributions** — upstream.
+- **cslib `versionSpace` (first merged contribution, May 2026)** —
+  PR https://github.com/leanprover/cslib/pull/592, merged 29 May 2026 by
+  Samuel Schlesinger. Adds the classical Mitchell–Angluin version-space
+  abstraction to `Cslib/MachineLearning/PACLearning/VersionSpace.lean`
+  (350 lines; foundation for downstream Sauer–Shelah, PAC lower bounds,
+  and infinite no-free-lunch results). Establishes Dhruv as a cslib
+  contributor and validates that portions of the FLT kernel meet the
+  upstream quality bar cslib enforces on merges.
+- **mathlib4 contributions** — upstreaming in progress.
 
 ### Layer 2 — Synthetic-Discovery Stack
 

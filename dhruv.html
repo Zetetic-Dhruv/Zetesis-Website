@@ -1527,6 +1527,61 @@
                     </article>
 
                     <article class="deepdive">
+                        <h4>cslib &middot; Version Space Abstraction
+                            <span class="sd-tag">Synthetic Discovery</span></h4>
+                        <p class="subtitle">First merged upstream contribution to Lean4 <code>cslib</code>:
+                            <strong><a href="https://github.com/leanprover/cslib/pull/592"
+                                target="_blank" rel="noopener noreferrer">PR #592</a></strong>,
+                            merged 29 May 2026 by Samuel Schlesinger.
+                            350 lines, new file
+                            <code>Cslib/MachineLearning/PACLearning/VersionSpace.lean</code>.</p>
+                        <p>The version space is the classical &ldquo;concepts still consistent with the
+                            data&rdquo; object of Mitchell (1977) and Angluin (1980). The contribution adds
+                            it to cslib's PAC-learning library as the foundation for downstream
+                            Sauer&ndash;Shelah, PAC lower bounds, and infinite no-free-lunch results.</p>
+                        <ul style="padding-left: 1.5rem; line-height: 1.7; font-size: 15px;">
+                            <li><strong>The abstraction</strong> as a refinement of
+                                <code>ConceptClass</code>, parametric over the labeled sample.</li>
+                            <li><strong>Structural properties:</strong> subset of the original class,
+                                equality on the empty sample, monotonicity in the concept class, and
+                                antitonicity in the sample (more data, smaller version space).</li>
+                            <li><strong>Combinatorial bridge</strong>
+                                (<code>mem_versionSpace_iff_empiricalMiscount_zero</code>): version-space
+                                membership equals concept-class membership plus zero empirical miscount.</li>
+                            <li><strong>Measure-theoretic bridge</strong>
+                                (<code>mem_versionSpace_iff_empiricalError_zero</code>): the same statement
+                                against the empirical Dirac mixture, which is what PAC-learning needs
+                                downstream.</li>
+                            <li><strong>Realizable-case results:</strong> realizable samples produce
+                                non-empty version spaces, and under iid sampling from a realizable joint
+                                distribution the target concept lies in the version space almost surely.</li>
+                        </ul>
+                        <p style="margin-top: 0.9rem;">This contribution validates that portions of the
+                            FLT kernel meet the upstream quality bar that <code>cslib</code> maintainers
+                            enforce on merges.</p>
+
+                        <p style="margin-top: 1.25rem;"><strong>The abstraction and its headline structural
+                            theorem</strong>, from the merged file
+                            (<code>Cslib/MachineLearning/PACLearning/VersionSpace.lean</code>):</p>
+                        <div class="lean-code"><pre><code><span class="cmt">/-- The *version space* of a concept class `C` given a labeled sample `S`:
+the set of concepts in `C` whose labels agree with `S` on every observed point. -/</span>
+<span class="kw">def</span> <span class="fn">VersionSpace</span> {<span class="id">m</span> : <span class="ty">ℕ</span>} (<span class="id">C</span> : <span class="ty">ConceptClass</span> <span class="id">α</span> <span class="id">β</span>) (<span class="id">S</span> : <span class="ty">LabeledSample</span> <span class="id">α</span> <span class="id">β</span> <span class="id">m</span>) :
+    <span class="ty">ConceptClass</span> <span class="id">α</span> <span class="id">β</span> :=
+  {<span class="id">h</span> <span class="op">∈</span> <span class="id">C</span> | <span class="op">∀</span> <span class="id">i</span> : <span class="ty">Fin</span> <span class="id">m</span>, <span class="id">h</span> (<span class="id">S</span> <span class="id">i</span>).<span class="num">1</span> = (<span class="id">S</span> <span class="id">i</span>).<span class="num">2</span>}
+
+<span class="cmt">/-- *Version space antitonicity.* Given a sample of size `n` and `m &le; n`, the
+version space on all `n` observations is a subset of the version space on the
+first `m` observations. -/</span>
+<span class="kw">theorem</span> <span class="fn">versionSpace_antitone</span> {<span class="id">m</span> <span class="id">n</span> : <span class="ty">ℕ</span>} (<span class="id">hmn</span> : <span class="id">m</span> <span class="op">≤</span> <span class="id">n</span>) (<span class="id">C</span> : <span class="ty">ConceptClass</span> <span class="id">α</span> <span class="id">β</span>)
+    (<span class="id">S</span> : <span class="ty">LabeledSample</span> <span class="id">α</span> <span class="id">β</span> <span class="id">n</span>) :
+    <span class="ty">VersionSpace</span> <span class="id">C</span> <span class="id">S</span> <span class="op">⊆</span> <span class="ty">VersionSpace</span> <span class="id">C</span> (<span class="id">S</span> <span class="op">∘</span> <span class="ty">Fin</span>.<span class="fn">castLE</span> <span class="id">hmn</span>) :=
+  <span class="fn">versionSpace_reindex</span> (<span class="ty">Fin</span>.<span class="fn">castLE</span> <span class="id">hmn</span>) <span class="id">C</span> <span class="id">S</span></code></pre></div>
+                        <p class="lean-code-caption">More data refines the version space: the version space
+                            on a larger sample is contained in the version space on any prefix. The proof
+                            is a one-liner via the reindexing lemma.</p>
+                    </article>
+
+                    <article class="deepdive">
                         <h4>Transformer Learning Theory</h4>
                         <p class="subtitle">Measurability-theoretic foundations for attention architectures.</p>
                         <p>Lean4 results: attention-routing measurability; softmax&ndash;argmax equivalence under
