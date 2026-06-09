@@ -1,0 +1,29 @@
+# Wrangler config for the section-view beacon worker.
+#
+# Deploy once-off:
+#   cd worker
+#   wrangler login                # OAuth in browser; or set CLOUDFLARE_API_TOKEN
+#   wrangler deploy
+#
+# After deploy, hits to https://zetesislabs.com/api/section-view route to this
+# worker; it writes one row per beacon to the `section_views_dhruv` Analytics
+# Engine dataset.
+
+name = "zetesislabs-section-view"
+main = "src/section-view.js"
+compatibility_date = "2026-01-01"
+account_id = "75a11ac71fbcc3ddc793675245c3d95b"
+
+# Analytics Engine binding. The dataset name is created on first write; no
+# explicit provisioning step is needed.
+[[analytics_engine_datasets]]
+binding = "SECTION_VIEWS"
+dataset = "section_views_dhruv"
+
+# Route binding. Cloudflare will create the route on the zone at deploy time.
+[[routes]]
+pattern = "zetesislabs.com/api/section-view"
+zone_id = "e18a1fe40e3f82d744a62612ebf3f0f2"
+
+# Disable workers.dev preview URL; this worker only runs on the route above.
+workers_dev = false

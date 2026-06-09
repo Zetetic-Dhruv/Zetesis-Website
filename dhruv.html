@@ -2787,6 +2787,49 @@ first `m` observations. -/</span>
 
     })();
     </script>
+
+    <!-- Section-view beacon. Fires one POST per section-id when it first
+         scrolls into view at >=50% visibility. Endpoint:
+         /api/section-view (Cloudflare worker). Silent if the endpoint is
+         missing; the page never depends on this completing. -->
+    <script>
+    (function () {
+      if (!('IntersectionObserver' in window) || !navigator.sendBeacon) return;
+      var sid = '';
+      try {
+        sid = sessionStorage.getItem('sv_sid') || '';
+        if (!sid) {
+          sid = (window.crypto && crypto.randomUUID)
+            ? crypto.randomUUID()
+            : (Date.now() + '_' + Math.random().toString(36).slice(2, 10));
+          sessionStorage.setItem('sv_sid', sid);
+        }
+      } catch (e) { /* storage may be disabled in private mode */ }
+      var seen = Object.create(null);
+      var path = location.pathname || '/';
+      function emit(sectionId) {
+        if (seen[sectionId]) return;
+        seen[sectionId] = 1;
+        try {
+          var blob = new Blob(
+            [JSON.stringify({ sectionId: sectionId, path: path, sessionId: sid })],
+            { type: 'application/json' }
+          );
+          navigator.sendBeacon('/api/section-view', blob);
+        } catch (e) { /* sendBeacon refused; nothing we can do here */ }
+      }
+      var obs = new IntersectionObserver(function (entries) {
+        for (var i = 0; i < entries.length; i++) {
+          var e = entries[i];
+          if (e.isIntersecting && e.target.id) emit(e.target.id);
+        }
+      }, { threshold: 0.5 });
+      var nodes = document.querySelectorAll(
+        'section[id], article[id], h2[id], h3[id]'
+      );
+      for (var i = 0; i < nodes.length; i++) obs.observe(nodes[i]);
+    })();
+    </script>
 </body>
 
 </html>
