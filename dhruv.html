@@ -133,6 +133,50 @@
     }
     </script>
 
+    <!-- Schema.org ScholarlyArticle: Signed Compression Progress / Goodhart-resistant intrinsic reward (arXiv, June 2026). -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ScholarlyArticle",
+      "headline": "Signed Compression Progress on a Sealed Audit is Goodhart-Resistant",
+      "name": "Signed Compression Progress on a Sealed Audit is Goodhart-Resistant",
+      "author": [
+        {
+          "@type": "Person",
+          "name": "Ayush Mittal"
+        },
+        {
+          "@type": "Person",
+          "name": "Dhruv Gupta",
+          "url": "https://zetesislabs.com/dhruv.html",
+          "sameAs": "https://www.wikidata.org/wiki/Q139504800"
+        }
+      ],
+      "datePublished": "2026-06",
+      "url": "https://arxiv.org/abs/2606.11417",
+      "sameAs": "https://arxiv.org/abs/2606.11417",
+      "identifier": [
+        {
+          "@type": "PropertyValue",
+          "propertyID": "arXiv",
+          "value": "2606.11417"
+        }
+      ],
+      "about": [
+        "Intrinsic motivation",
+        "Compression progress",
+        "Goodhart's law",
+        "Sealed audit",
+        "Recursive self-improvement",
+        "Reward hacking",
+        "Adaptive data analysis",
+        "Lean 4 mechanization",
+        "ARC-TGI"
+      ],
+      "abstract": "Compression progress is a long-standing proposal for intrinsic motivation: reward an agent when its world model becomes better at predicting or compressing experience. The folk claim is that this reward is 'credible' because it is paid only for learning. We make this precise and prove it. If intrinsic reward is the signed decrease of a fixed sealed-audit loss, r_t = E(theta_{t-1}) - E(theta_t), then cumulative reward telescopes exactly to endpoint audit improvement, so no policy can drive reward upward indefinitely while true audit performance stagnates or degrades. For finite audit panels the same result holds with a sharp false-positive budget: cumulative empirical reward is at most true audit improvement plus 2 Delta_n(F, delta), the uniform audit deviation of the model class. This is horizon-free: adaptivity over time costs nothing once the sealed panel uniformly controls the class."
+    }
+    </script>
+
     <!-- Schema.org ScholarlyArticle: arXiv preprint companion to the FLT kernel. -->
     <script type="application/ld+json">
     {
@@ -784,6 +828,34 @@
             font-style: italic;
         }
 
+        /* Display-style math block (used in the Peer-Reviewed Work cards). */
+        .math-display {
+            margin: 1.25rem 0;
+            padding: 0.85rem 1.1rem;
+            border-left: 2px solid var(--color-hairline);
+            background: #fafafa;
+            font-family: 'Georgia', 'Times New Roman', Times, serif;
+        }
+        .math-display .math-label {
+            display: block;
+            font-size: 12px;
+            font-style: italic;
+            color: var(--color-muted);
+            margin-bottom: 0.4rem;
+        }
+        .math-display .math-eq {
+            display: block;
+            text-align: center;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        .math-display .math-eq-eq {
+            margin: 0 0.4em;
+        }
+        .math-display .math-eq-op {
+            margin: 0 0.25em;
+        }
+
         /* Phasor block: reuses .lean-code styles, overrides the filename header */
         .phasor-code::before {
             content: "Complex Λ · phase-lag taxonomy";
@@ -1131,6 +1203,88 @@
                     <p class="text-muted mb-6">
                         Preprints, upstream library contributions, and theses.
                     </p>
+
+                    <article class="deepdive">
+                        <h4><a href="https://arxiv.org/abs/2606.11417" target="_blank"
+                            rel="noopener noreferrer">Signed Compression Progress on a Sealed
+                            Audit is Goodhart-Resistant</a></h4>
+                        <p class="subtitle">
+                            Ayush Mittal &middot; Dhruv Gupta &middot;
+                            <strong>arXiv:2606.11417</strong> &middot; June 2026 &middot;
+                            cs.LG / stat.ML &middot; 16 pages.
+                        </p>
+                        <p>Intrinsic motivation by compression progress is a long-standing
+                            Schmidhuber proposal: reward an agent when its world model becomes
+                            better at predicting or compressing experience. The folk claim is
+                            that this reward is &ldquo;credible&rdquo; because it is paid only
+                            for learning. The paper makes that precise and proves it. If the
+                            intrinsic reward is the signed decrease of a fixed sealed-audit
+                            loss, then cumulative reward telescopes exactly to endpoint audit
+                            improvement, so no policy can push reward up indefinitely while
+                            true audit performance stagnates or degrades.</p>
+                        <div class="math-display">
+                            <span class="math-label">Theorem 1
+                                (exact-audit telescoping):</span>
+                            <span class="math-eq">
+                                &sum;<sub><em>t</em>=1</sub><sup><em>T</em></sup>
+                                <em>r<sub>t</sub></em>
+                                <span class="math-eq-eq">=</span>
+                                &Escr;(&theta;<sub>0</sub>)
+                                <span class="math-eq-op">&minus;</span>
+                                &Escr;(&theta;<sub>T</sub>).
+                            </span>
+                        </div>
+                        <p>For finite audit panels the same result holds with a sharp
+                            false-positive budget: cumulative empirical reward is at most
+                            true audit improvement plus
+                            2&Delta;<sub><em>n</em></sub>(&Fscr;, &delta;), the uniform audit
+                            deviation of the model class. The bound is horizon-free.
+                            Adaptivity over time costs nothing once the sealed panel uniformly
+                            controls the class.</p>
+                        <div class="math-display">
+                            <span class="math-label">Theorem 2
+                                (finite-audit Goodhart resistance):</span>
+                            <span class="math-eq">
+                                &sum;<sub><em>t</em>=1</sub><sup><em>T</em></sup>
+                                <em>r&#770;<sub>t</sub></em><sup>CP</sup>
+                                <span class="math-eq-eq">&le;</span>
+                                &Escr;(&theta;<sub>0</sub>)
+                                <span class="math-eq-op">&minus;</span>
+                                &Escr;(&theta;<sub>T</sub>)
+                                <span class="math-eq-op">+</span>
+                                2&Delta;<sub><em>n</em></sub>.
+                            </span>
+                        </div>
+                        <p>The theorem also identifies four failure modes, each with a worked
+                            construction: the guarantee disappears if progress is
+                            <em>clipped</em> (two-state cycles accumulate positive reward at
+                            zero net improvement), scored on the agent's <em>own selected
+                            stream</em> (no fixed potential to telescope), exposed to a
+                            <em>high-capacity reusable panel</em> (the
+                            &Delta;<sub><em>n</em></sub> term becomes vacuous), or applied to
+                            a class whose effective audit capacity is unbounded. The
+                            structural core (telescoping, the finite-audit bound, finite Gibbs
+                            nonnegativity, and the entropy floor that prevents noisy-TV
+                            curiosity from paying forever) is mechanized in Lean&nbsp;4 as
+                            <code>cumCP_telescope</code>, <code>cumCP_le_of_lb</code>, and
+                            <code>finite_audit_goodhart</code>.</p>
+                        <p>Experiments on ARC-TGI grid-transformation generators with adaptive
+                            holdout attacks confirm the theory: finite-audit deviation scales
+                            empirically as <em>n</em><sup>&minus;0.527</sup>; signed progress
+                            resists clip-farming, stream leakage, and noisy-TV curiosity;
+                            naive reusable audits are exploitable by black-box scalar
+                            feedback, while standard release defenses (fresh subsampling,
+                            laddering, rounding, one-shot release) keep the attack below the
+                            2&Delta;<sub><em>n</em></sub> threshold. The takeaway:
+                            <em>signed compression progress on a sealed audit is an accounting
+                            signal of genuine improvement.</em></p>
+                        <p style="margin-top: 0.9rem;">
+                            <strong><a href="https://arxiv.org/abs/2606.11417" target="_blank"
+                                rel="noopener noreferrer">arXiv abstract</a></strong> &middot;
+                            <a href="https://arxiv.org/pdf/2606.11417" target="_blank"
+                                rel="noopener noreferrer">PDF</a>.
+                        </p>
+                    </article>
 
                     <article class="deepdive">
                         <h4><a href="https://github.com/leanprover/cslib/pull/592" target="_blank"
