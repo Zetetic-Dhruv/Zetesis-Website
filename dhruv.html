@@ -882,6 +882,50 @@
             color: var(--color-foreground);
         }
 
+        /* Three-column row that places both theorems and the figure side by
+           side as joint witnesses for the same claim. Stacks on narrow
+           viewports. */
+        .triple-witness {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 0.9rem;
+            align-items: start;
+            margin: 1.4rem 0;
+        }
+        .triple-witness .math-display {
+            margin: 0;
+            padding: 0.75rem 0.85rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.55rem;
+        }
+        .triple-witness .math-display .math-eq {
+            font-size: 14.5px;
+            line-height: 1.5;
+        }
+        .triple-witness .paper-figure {
+            margin: 0;
+        }
+        .triple-witness .paper-figure img {
+            max-width: 100%;
+            padding: 0.35rem;
+        }
+        .triple-witness .paper-figure figcaption {
+            max-width: 100%;
+            font-size: 12.5px;
+            line-height: 1.5;
+        }
+        @media (max-width: 820px) {
+            .triple-witness {
+                grid-template-columns: 1fr;
+                gap: 1.1rem;
+            }
+            .triple-witness .paper-figure img {
+                max-width: 360px;
+                margin: 0 auto;
+            }
+        }
+
         /* Phasor block: reuses .lean-code styles, overrides the filename header */
         .phasor-code::before {
             content: "Complex Λ · phase-lag taxonomy";
@@ -1245,49 +1289,50 @@
                             sealed-audit loss, cumulative reward equals endpoint audit
                             improvement exactly. No policy can push reward up while true audit
                             performance stagnates.</p>
-                        <div class="math-display">
-                            <span class="math-label">Theorem 1
-                                (exact-audit telescoping, zero false-positive budget):</span>
-                            <span class="math-eq">
-                                &sum;<sub><em>t</em>=1</sub><sup><em>T</em></sup>
-                                <em>r<sub>t</sub></em>
-                                <span class="math-eq-eq">=</span>
-                                &Escr;(&theta;<sub>0</sub>)
-                                <span class="math-eq-op">&minus;</span>
-                                &Escr;(&theta;<sub>T</sub>).
-                            </span>
+                        <div class="triple-witness">
+                            <div class="math-display">
+                                <span class="math-label">Theorem 1
+                                    (exact-audit telescoping, zero false-positive budget):</span>
+                                <span class="math-eq">
+                                    &sum;<sub><em>t</em>=1</sub><sup><em>T</em></sup>
+                                    <em>r<sub>t</sub></em>
+                                    <span class="math-eq-eq">=</span>
+                                    &Escr;(&theta;<sub>0</sub>)
+                                    <span class="math-eq-op">&minus;</span>
+                                    &Escr;(&theta;<sub>T</sub>).
+                                </span>
+                            </div>
+                            <div class="math-display">
+                                <span class="math-label">Theorem 2
+                                    (finite-audit Goodhart resistance,
+                                    horizon-free 2&Delta;<sub><em>n</em></sub> budget):</span>
+                                <span class="math-eq">
+                                    &sum;<sub><em>t</em>=1</sub><sup><em>T</em></sup>
+                                    <em>r&#770;<sub>t</sub></em><sup>CP</sup>
+                                    <span class="math-eq-eq">&le;</span>
+                                    &Escr;(&theta;<sub>0</sub>)
+                                    <span class="math-eq-op">&minus;</span>
+                                    &Escr;(&theta;<sub>T</sub>)
+                                    <span class="math-eq-op">+</span>
+                                    2&Delta;<sub><em>n</em></sub>.
+                                </span>
+                            </div>
+                            <figure class="paper-figure">
+                                <img src="public/images/signed-compression-progress/fig3-finite-audit-concentration.png"
+                                    alt="Empirical finite-audit deviation on ARC-TGI: log-log plot showing uniform deviation Δ_n decaying with panel size n at slope −0.527, matching theory n^(−1/2)."
+                                    onerror="this.parentElement.style.display='none'">
+                                <figcaption>
+                                    <strong>Figure 3 (witnesses both theorems).</strong>
+                                    &Delta;<sub><em>n</em></sub> decays with audit panel size
+                                    <em>n</em> at slope &minus;0.527, matching the theoretical
+                                    <em>n</em><sup>&minus;1/2</sup> rate (ARC-TGI, 20 seeds).
+                                    The 2&Delta;<sub><em>n</em></sub> budget in Theorem&nbsp;2
+                                    is therefore empirically small and monotonically shrinking;
+                                    in the limit it collapses to Theorem&nbsp;1's exact
+                                    zero-budget case.
+                                </figcaption>
+                            </figure>
                         </div>
-                        <div class="math-display">
-                            <span class="math-label">Theorem 2
-                                (finite-audit Goodhart resistance,
-                                horizon-free 2&Delta;<sub><em>n</em></sub> budget):</span>
-                            <span class="math-eq">
-                                &sum;<sub><em>t</em>=1</sub><sup><em>T</em></sup>
-                                <em>r&#770;<sub>t</sub></em><sup>CP</sup>
-                                <span class="math-eq-eq">&le;</span>
-                                &Escr;(&theta;<sub>0</sub>)
-                                <span class="math-eq-op">&minus;</span>
-                                &Escr;(&theta;<sub>T</sub>)
-                                <span class="math-eq-op">+</span>
-                                2&Delta;<sub><em>n</em></sub>.
-                            </span>
-                        </div>
-                        <figure class="paper-figure">
-                            <img src="public/images/signed-compression-progress/fig3-finite-audit-concentration.png"
-                                alt="Empirical finite-audit deviation on ARC-TGI: log-log plot showing uniform deviation Δ_n decaying with panel size n at slope −0.527, matching theory n^(−1/2)."
-                                onerror="this.parentElement.style.display='none'">
-                            <figcaption>
-                                <strong>Figure 3 (witnesses both theorems).</strong> Empirical
-                                uniform deviation &Delta;<sub><em>n</em></sub> of floored
-                                cross-entropy over a finite family decays with audit panel
-                                size <em>n</em> at slope &minus;0.527, matching the theoretical
-                                <em>n</em><sup>&minus;1/2</sup> rate (ARC-TGI, 20 seeds). The
-                                2&Delta;<sub><em>n</em></sub> false-positive budget in
-                                Theorem&nbsp;2 is therefore empirically small and
-                                monotonically shrinking; in the limit it collapses to
-                                Theorem&nbsp;1's exact zero-budget case.
-                            </figcaption>
-                        </figure>
                         <p style="margin-top: 0.9rem;">
                             <strong><a href="https://arxiv.org/abs/2606.11417" target="_blank"
                                 rel="noopener noreferrer">arXiv abstract</a></strong> &middot;
