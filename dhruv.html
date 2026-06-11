@@ -1119,10 +1119,28 @@
             color: var(--color-foreground);
         }
 
-        /* Inverted-causality pyramid (thesis Fig. 2): five horizontal layers
-           stacked vertically, each labelled by its role in the misdiagnosis
-           chain. Arrows point upward to show propagation from Layer 1
-           (biology, BASE) to Layer 5 (climate policy, TOP). */
+        /* Thesis-figure variant of .paper-figure: image fills the math-display
+           column, link target is the full-resolution PNG, no caption (caption
+           moves into the surrounding .cell-count / .cell-examples). */
+        .math-display .thesis-figure {
+            margin: 0.5rem 0 0.4rem;
+        }
+        .math-display .thesis-figure img {
+            max-width: 100%;
+            width: 100%;
+            height: auto;
+            border: 1px solid var(--color-hairline);
+            padding: 4px;
+            background: #ffffff;
+            box-sizing: border-box;
+        }
+        .math-display .thesis-figure a {
+            display: block;
+        }
+
+        /* (Legacy CSS — kept for compatibility; no current consumer.)
+           Inverted-causality pyramid: five horizontal layers stacked
+           vertically. */
         .causality-pyramid {
             display: grid;
             grid-template-rows: repeat(9, auto);
@@ -1856,73 +1874,43 @@ first `m` observations. -/</span>
                             contradiction.</em></p>
                         <div class="dual-witness">
                             <div class="math-display">
-                                <span class="math-label">Inverted-causality pyramid (Thesis
-                                    Fig.&nbsp;2): one missing biological measurement at the
-                                    base inverts climate policy at the top.</span>
-                                <div class="causality-pyramid"
-                                    aria-label="Five stacked layers showing how a missing biological measurement propagates upward into model simplification, divergent prediction, causal misdiagnosis, and finally strategic climate misdirection.">
-                                    <div class="pyramid-layer">
-                                        <span class="layer-label">L5 &middot; TOP</span>
-                                        Strategic misdirection
-                                    </div>
-                                    <div class="pyramid-arrow">&uarr;</div>
-                                    <div class="pyramid-layer">
-                                        <span class="layer-label">L4</span>
-                                        Causal misdiagnosis
-                                    </div>
-                                    <div class="pyramid-arrow">&uarr;</div>
-                                    <div class="pyramid-layer">
-                                        <span class="layer-label">L3</span>
-                                        Divergence in prediction
-                                    </div>
-                                    <div class="pyramid-arrow">&uarr;</div>
-                                    <div class="pyramid-layer">
-                                        <span class="layer-label">L2</span>
-                                        Model simplifications
-                                    </div>
-                                    <div class="pyramid-arrow">&uarr;</div>
-                                    <div class="pyramid-layer base">
-                                        <span class="layer-label">L1 &middot; BASE</span>
-                                        Missing biological measurement
-                                    </div>
-                                </div>
-                                <span class="cell-count">Policy targets 10&nbsp;Pg&nbsp;yr<sup>&minus;1</sup>
-                                    anthropogenic flux while the 90&ndash;100&nbsp;Pg&nbsp;yr<sup>&minus;1</sup>
-                                    biological flux is treated as a residual.</span>
-                                <span class="cell-examples">L1 cells: <code>high-freq
-                                    CO<sub>2</sub> during rewetting</code>,
-                                    <code>microbial activity states</code>,
-                                    <code>enzyme saturation thresholds</code>,
-                                    <code>isotopic priming traces</code>.</span>
+                                <span class="math-label">Thesis Figure 1: Quadrant Diagram of
+                                    Soil Carbon Modeling (original contribution).</span>
+                                <figure class="paper-figure thesis-figure">
+                                    <a href="public/images/measuring-models-miss/fig1-quadrant-map.png"
+                                        target="_blank" rel="noopener noreferrer">
+                                        <img src="public/images/measuring-models-miss/fig1-quadrant-map.png"
+                                            alt="Quadrant Diagram of Soil Carbon Modeling: 2-axis ontological map placing modeling approaches by mechanistic vs phenomenological structure (horizontal) and inferred vs empirical parameter derivation (vertical), with biological drivers listed on the left and Atmospheric CO2 as the natural cycle anchor on the right."
+                                            onerror="this.parentElement.parentElement.parentElement.style.display='none'">
+                                    </a>
+                                </figure>
+                                <span class="cell-count">Biological drivers (substrate
+                                    accessibility, microbial diversity, enzyme limitation,
+                                    redox oscillations, &hellip;) sit at the LEFT,
+                                    untouched by most modelling cells.</span>
+                                <span class="cell-examples">Each quadrant has a distinct
+                                    failure mode; the missing axis is empirical&ndash;mechanistic
+                                    high-resolution constraints on the CO<sub>2</sub> flux
+                                    scalar (arrow&nbsp;A).</span>
                             </div>
                             <div class="math-display">
-                                <span class="math-label">The Birch effect as microcosm:
-                                    aggregation erases the biological signal.</span>
-                                <svg class="birch-svg" viewBox="0 0 260 160"
-                                    preserveAspectRatio="xMidYMid meet"
-                                    aria-label="Two stacked plots of soil CO2 flux over time. The top plot shows transient Birch-effect pulses spiking above baseline; the bottom plot shows a flat weekly aggregate that erases the pulses.">
-                                    <text x="4" y="11" class="label muted">true signal
-                                        (sub-minute)</text>
-                                    <line x1="14" y1="58" x2="252" y2="58" class="axis"/>
-                                    <path class="true-fill" d="M 14 58 L 30 58 L 36 22 L 42 36 L 50 30 L 56 58 L 80 58 L 92 26 L 100 48 L 108 30 L 116 58 L 156 58 L 168 18 L 176 38 L 184 28 L 192 58 L 224 58 L 234 32 L 240 50 L 248 58 L 252 58 L 14 58 Z"/>
-                                    <path class="true-line" d="M 14 58 L 30 58 L 36 22 L 42 36 L 50 30 L 56 58 L 80 58 L 92 26 L 100 48 L 108 30 L 116 58 L 156 58 L 168 18 L 176 38 L 184 28 L 192 58 L 224 58 L 234 32 L 240 50 L 248 58"/>
-                                    <text x="36" y="18" class="pulse-tag">Birch pulse</text>
-                                    <text x="146" y="14" class="pulse-tag">rewetting burst</text>
-                                    <text x="4" y="90" class="label muted">weekly aggregate
-                                        (what models see)</text>
-                                    <line x1="14" y1="130" x2="252" y2="130" class="axis"/>
-                                    <line x1="14" y1="118" x2="252" y2="118" class="agg-line"/>
-                                    <text x="14" y="151" class="label">&larr; 20% of annual
-                                        flux hides in transient pulses (Xiang et al. 2008;
-                                        Chakrawal et al. 2020)</text>
-                                </svg>
-                                <span class="cell-count">5&ndash;10&nbsp;s sampling is the
-                                    minimum needed to resolve the actual biology.</span>
-                                <span class="cell-examples">Terrapulse: open-source
-                                    NDIR&nbsp;CO<sub>2</sub> system + HCl&ndash;CaCO<sub>3</sub>
-                                    in-situ calibration + alkali-trap mass closure, deployed
-                                    at 5&ndash;10&nbsp;s in semi-arid sites to actually
-                                    observe the Birch pulses.</span>
+                                <span class="math-label">Thesis Figure 2: Inverted Causality
+                                    of Climate Misdiagnosis.</span>
+                                <figure class="paper-figure thesis-figure">
+                                    <a href="public/images/measuring-models-miss/fig2-inverted-causality.png"
+                                        target="_blank" rel="noopener noreferrer">
+                                        <img src="public/images/measuring-models-miss/fig2-inverted-causality.png"
+                                            alt="Inverted Causality of Climate Misdiagnosis: five horizontal layers from Missing Measurements (BASE) up through Model Simplifications, Divergence in Prediction, Causal Misdiagnosis, to Strategic Misdirection (TOP). Each unmeasured biological variable at the base becomes a model simplification at L2, a divergent prediction at L3, a causal misdiagnosis at L4, and a policy misdirection at L5.">
+                                    </a>
+                                </figure>
+                                <span class="cell-count">One unmeasured biological variable at
+                                    the base becomes belief, projection, and policy at the
+                                    top.</span>
+                                <span class="cell-examples">Base cells include high-frequency
+                                    CO<sub>2</sub> during rewetting (Birch effect), microbial
+                                    activity states, pollutant&ndash;flux coupling, enzyme
+                                    saturation thresholds, isotopic priming traces, spatial
+                                    flux variance.</span>
                             </div>
                         </div>
                         <p style="margin-top: 0.9rem;">
