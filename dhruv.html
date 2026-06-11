@@ -1401,35 +1401,56 @@ first `m` observations. -/</span>
                             rel="noopener noreferrer">Process-Level Evaluation of Synthetic
                             Discovery: The Discovery Tetrad</a></h4>
                         <p class="subtitle">
-                            Dhruv Gupta &middot; <strong>Zenodo (v1), DOI 10.5281/zenodo.20147210</strong>
-                            &middot; May 2026.
+                            Dhruv Gupta &middot; <strong>Zenodo (v1),
+                            DOI 10.5281/zenodo.20147210</strong> &middot; May 2026 &middot;
+                            five substrates (FLT, SLT, FirstProof, AI&nbsp;Scientist&nbsp;v1,
+                            AI&nbsp;Scientist&nbsp;v2) &middot; 620 evaluated units, 282
+                            schema-valid goal records.
                         </p>
-                        <p>Long-horizon LLM-driven research produces artifacts whose
-                            endpoint correctness is not the same question as whether their
-                            path is reusable: theorem statements with proof terms,
-                            natural-language proof attempts, formalization kernels,
-                            benchmark traces, and paper-shaped experimental reports. The
-                            Discovery Tetrad introduces a process-level audit object for
-                            these completed artifacts. It separates two layers: the
-                            <em>goal</em>, the target to be established, and the
-                            <em>witness</em>, the proof, experiment, computation, or
-                            derivation offered for that goal. Each layer is evaluated by
-                            four role-stable audit gates: plausibility, coherence,
-                            completeness, and invariance. Goals have an independent 16-cell
-                            outcome map. Witnesses have a 9-cell cascade map in which
-                            invariance is evaluated only after plausibility, coherence, and
-                            completeness pass. Together these maps give a 25-outcome
-                            vocabulary for process evidence, including a <em>sophism</em>
-                            category for hidden-method witness failures.</p>
-                        <p style="margin-top: 0.6rem;">The v1 release applies the same
-                            audit object to two LLM-driven Lean&nbsp;4 formalization
-                            projects (FLT and SLT), an LLM-produced solution set for the
-                            FirstProof mathematical benchmark, and AI Scientist v1 and v2
-                            papers, totaling 282 goal records, 288 witness records, 50 step
-                            records, and 620 evaluated units. The contribution is a general
-                            evaluation device for asking whether a completed
-                            synthetic-discovery trace leaves reusable process evidence; it
-                            is not a model leaderboard.</p>
+                        <p>A backward audit instrument for completed LLM-driven research
+                            artifacts. Four invariant predicates (plausibility, coherence,
+                            completeness, invariance) over two object-types (the
+                            <em>goal</em> and the <em>witness</em>) give a 25-cell
+                            process-evidence vocabulary that endpoint accept/reject metrics
+                            cannot resolve.</p>
+                        <div class="triple-witness">
+                            <div class="math-display">
+                                <span class="math-label">Goal layer (all four gates fire
+                                    independently, no cascade):</span>
+                                <span class="math-eq">
+                                    <em>n</em><sub>goal</sub>
+                                    <span class="math-eq-eq">=</span>
+                                    2<sup>4</sup>
+                                    <span class="math-eq-eq">=</span>
+                                    16 cells.
+                                </span>
+                            </div>
+                            <div class="math-display">
+                                <span class="math-label">Witness layer (Invariance is
+                                    cascade-gated on Plausibility &#x2227; Coherence
+                                    &#x2227; Completeness):</span>
+                                <span class="math-eq">
+                                    <em>n</em><sub>witness</sub>
+                                    <span class="math-eq-eq">=</span>
+                                    9 cells.
+                                </span>
+                            </div>
+                            <figure class="paper-figure">
+                                <img src="public/images/discovery-tetrad/fig8-sophism-density.png"
+                                    alt="Sophism flag density per goal across five substrates: FLT 0.06, SLT 0.00, FP 0.78, AS-v2 0.43, AS-v1 0.91."
+                                    onerror="this.parentElement.style.display='none'">
+                                <figcaption>
+                                    <strong>Figure 8 (witnesses the 25-cell vocabulary
+                                    bites).</strong> Sophism flag density per goal:
+                                    6&thinsp;/&thinsp;108 (FLT), 0&thinsp;/&thinsp;95 (SLT),
+                                    7&thinsp;/&thinsp;9 (FirstProof), 6&thinsp;/&thinsp;14
+                                    (AS-v2), 51&thinsp;/&thinsp;56 (AS-v1). Pre-verified
+                                    Lean substrates concentrate near zero; autonomous
+                                    AI-paper substrates concentrate near one. Lean
+                                    vs.&nbsp;AI-paper discriminative gap &#x2248; 27&times;.
+                                </figcaption>
+                            </figure>
+                        </div>
                         <p style="margin-top: 0.9rem;">
                             <strong><a href="https://doi.org/10.5281/zenodo.20147210"
                                 target="_blank" rel="noopener noreferrer">Zenodo record</a></strong>.
