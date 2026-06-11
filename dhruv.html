@@ -972,6 +972,156 @@
             font-style: normal;
             color: var(--color-foreground);
         }
+
+        /* Dual-witness row: two equal-width columns, used in the Null
+           Measurability card. Same vertical balance behaviour as
+           triple-witness, but two columns instead of three. */
+        .dual-witness {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.9rem;
+            align-items: stretch;
+            margin: 1.4rem 0;
+        }
+        @media (max-width: 820px) {
+            .dual-witness {
+                grid-template-columns: 1fr;
+                gap: 1.1rem;
+            }
+        }
+
+        /* Descriptive-set-theory hierarchy diagram: three nested rounded
+           rectangles representing Universally measurable ⊃ Analytic ⊃
+           Borel, with a marker positioned between the analytic and Borel
+           boundaries to show where the witness's bad event lives. */
+        .ds-hierarchy {
+            display: block;
+            position: relative;
+            margin: 0.6rem auto 0.5rem;
+            width: 100%;
+            max-width: 260px;
+            aspect-ratio: 1.05 / 1;
+        }
+        .ds-hierarchy .ring {
+            position: absolute;
+            border: 1px solid var(--color-hairline);
+            border-radius: 6px;
+            background: #ffffff;
+        }
+        .ds-hierarchy .ring.outer {
+            inset: 0;
+            background: #fbfbfb;
+        }
+        .ds-hierarchy .ring.middle {
+            inset: 14% 9% 36% 9%;
+            background: #f0f0f0;
+        }
+        .ds-hierarchy .ring.inner {
+            inset: 26% 22% 50% 22%;
+            background: #d8d8d8;
+            border-color: var(--color-muted);
+        }
+        .ds-hierarchy .ring-label {
+            position: absolute;
+            font-family: var(--font-serif);
+            font-size: 10.5px;
+            font-style: italic;
+            color: var(--color-foreground);
+            text-align: center;
+            left: 0;
+            right: 0;
+            line-height: 1.25;
+        }
+        .ds-hierarchy .ring-label.outer  { top: 4px; }
+        .ds-hierarchy .ring-label.middle { top: calc(14% + 4px); }
+        .ds-hierarchy .ring-label.inner  { top: calc(26% + 4px); font-size: 10px; }
+        .ds-hierarchy .witness-dot {
+            position: absolute;
+            top: 17%;
+            left: 50%;
+            transform: translate(-50%, 0);
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--color-foreground);
+            border: 1.5px solid #ffffff;
+            box-shadow: 0 0 0 1px var(--color-foreground);
+            z-index: 2;
+        }
+        .ds-hierarchy .witness-tag {
+            position: absolute;
+            top: calc(17% + 16px);
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 1px 5px;
+            background: #ffffff;
+            border-radius: 3px;
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-size: 10.5px;
+            color: var(--color-foreground);
+            white-space: nowrap;
+            z-index: 2;
+        }
+
+        /* Depth-L softmax/argmax cascade: two horizontal tracks of L cells
+           each, with τ→∞ arrows connecting corresponding cells. */
+        .depth-cascade {
+            display: grid;
+            grid-template-rows: auto auto auto;
+            row-gap: 4px;
+            margin: 0.6rem auto 0.3rem;
+            max-width: 250px;
+            width: 100%;
+            font-family: var(--font-serif);
+        }
+        .depth-cascade .track-label {
+            font-size: 10.5px;
+            font-style: italic;
+            color: var(--color-muted);
+            text-align: left;
+            padding-left: 2px;
+        }
+        .depth-cascade .track {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4px;
+        }
+        .depth-cascade .track .layer {
+            aspect-ratio: 1.05 / 1;
+            background: #ffffff;
+            border: 1px solid var(--color-hairline);
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9.5px;
+            color: var(--color-muted);
+            font-family: var(--font-serif);
+            font-style: italic;
+        }
+        .depth-cascade .track.argmax .layer {
+            background: var(--color-foreground);
+            border-color: var(--color-foreground);
+            color: #ffffff;
+        }
+        .depth-cascade .arrows {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4px;
+            font-size: 10px;
+            color: var(--color-muted);
+            text-align: center;
+            font-style: italic;
+            line-height: 1.1;
+            padding: 1px 0;
+        }
+        .depth-cascade .arrows .arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-foreground);
+        }
         @media (max-width: 820px) {
             .triple-witness {
                 grid-template-columns: 1fr;
@@ -1527,17 +1677,75 @@ first `m` observations. -/</span>
                             &middot; April 2026 &middot; cs.LG / cs.LO / stat.ML
                             &middot; 12 pages.
                         </p>
-                        <p>At the one-sided ghost-gap interface used by the standard
-                            symmetrization proof, the bad event for any Borel-parameterized
-                            concept class on a Polish domain is analytic, and hence measurable
-                            in the completion of every finite Borel measure by Choquet
-                            capacitability. A strict separation witness (a concept class whose
-                            bad event is null-measurable but not Borel) shows the
-                            null-measurable level is genuinely weaker than Krapp&ndash;Wirth
-                            2024's Borel supremum condition. Closure under patching, fixed and
-                            countable interpolation, and fiber-product amalgamation. Main
-                            results and the descriptive-set-theoretic infrastructure
-                            formalised in Lean&nbsp;4.</p>
+                        <p>The Borel-measurability hypothesis Krapp&ndash;Wirth 2024 places on
+                            the symmetrization step is unnecessarily strong. A continuous
+                            parameterization of an analytic non-Borel set yields a concept
+                            class whose bad event is null-measurable but not Borel; the
+                            construction is non-pathological because the same
+                            projection-through-argmax step is what attention does at every
+                            depth of a true transformer.</p>
+                        <div class="dual-witness">
+                            <div class="math-display">
+                                <span class="math-label">Where the witness's bad event sits in
+                                    descriptive-set-theory:</span>
+                                <div class="ds-hierarchy"
+                                    aria-label="Three nested rectangles showing Borel, Analytic, and Universally measurable classes; a dot marks the witness's bad event living in Analytic but outside Borel">
+                                    <div class="ring outer"></div>
+                                    <span class="ring-label outer">Universally measurable
+                                        &nbsp;(null-measurable, PAC-learnable)</span>
+                                    <div class="ring middle"></div>
+                                    <span class="ring-label middle">Analytic
+                                        &nbsp;(closed under Suslin projection)</span>
+                                    <div class="ring inner"></div>
+                                    <span class="ring-label inner">Borel
+                                        &nbsp;(KW&#8202;2024 assumes)</span>
+                                    <span class="witness-dot"></span>
+                                    <span class="witness-tag">bad event B</span>
+                                </div>
+                                <span class="cell-count">B = projection of a
+                                    Borel-parameterized class through
+                                    <em>g</em>:&nbsp;&beta;&nbsp;&rarr;&nbsp;&Ropf;.</span>
+                                <span class="cell-examples">Strict separation:
+                                    Borel&nbsp;&subnE;&nbsp;Analytic,
+                                    so&nbsp;the&nbsp;witness escapes KW while&nbsp;Luzin keeps
+                                    it&nbsp;PAC-learnable.</span>
+                            </div>
+                            <div class="math-display">
+                                <span class="math-label">Same construction at depth <em>L</em>
+                                    of a true transformer (TLT
+                                    <code>depthTemperatureCliff</code>):</span>
+                                <div class="depth-cascade" aria-label="Two parallel four-layer transformer cascades. The softmax track stays Borel at every depth; the argmax track is non-Borel at every depth. Temperature τ→∞ at each layer crosses the cliff.">
+                                    <span class="track-label">softmax routing
+                                        (&tau;&nbsp;&lt;&nbsp;&infin;): Borel at every depth</span>
+                                    <div class="track softmax">
+                                        <div class="layer">L<sub>1</sub></div>
+                                        <div class="layer">L<sub>2</sub></div>
+                                        <div class="layer">&hellip;</div>
+                                        <div class="layer">L<sub><em>L</em></sub></div>
+                                    </div>
+                                    <div class="arrows">
+                                        <span class="arrow">&darr; &tau;&rarr;&infin;</span>
+                                        <span class="arrow">&darr;</span>
+                                        <span class="arrow">&darr;</span>
+                                        <span class="arrow">&darr;</span>
+                                    </div>
+                                    <div class="track argmax">
+                                        <div class="layer">L<sub>1</sub></div>
+                                        <div class="layer">L<sub>2</sub></div>
+                                        <div class="layer">&hellip;</div>
+                                        <div class="layer">L<sub><em>L</em></sub></div>
+                                    </div>
+                                    <span class="track-label">argmax routing
+                                        (&tau;&nbsp;=&nbsp;&infin;): non-Borel at every
+                                        depth</span>
+                                </div>
+                                <span class="cell-count">Temperature is the toggle; the
+                                    cliff fires at every layer.</span>
+                                <span class="cell-examples">Same tree object, same parameter
+                                    space &#8212; the bad event drops from Borel to analytic
+                                    uniformly in <em>L</em>.</span>
+                            </div>
+                        </div>
                         <p style="margin-top: 0.9rem;">
                             <strong><a href="https://arxiv.org/abs/2604.25028" target="_blank"
                                 rel="noopener noreferrer">arXiv abstract</a></strong> &middot;
@@ -1545,7 +1753,11 @@ first `m` observations. -/</span>
                                 rel="noopener noreferrer">PDF</a> &middot;
                             <a href="https://github.com/Zetetic-Dhruv/formal-learning-theory-kernel/tree/v3.3.0-paper"
                                 target="_blank" rel="noopener noreferrer">Lean&nbsp;4 companion
-                                (v3.3.0-paper)</a>.
+                                (v3.3.0-paper)</a> &middot;
+                            <a href="https://github.com/Zetetic-Dhruv/transformer-learning-theory"
+                                target="_blank" rel="noopener noreferrer">TLT depth-lift
+                                (<code>measurabilityCliff</code>,
+                                <code>depthTemperatureCliff</code>)</a>.
                         </p>
                     </article>
 
