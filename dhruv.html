@@ -918,6 +918,60 @@
             font-size: 12.5px;
             line-height: 1.5;
         }
+        /* Cell-grid block: a math-display variant whose body is a CSS grid of
+           small squares rather than an equation. Used in the Discovery Tetrad
+           card to show the 16-cell goal layer and the 9-cell witness layer as
+           the visual cardinality they already are. */
+        .math-display .cell-grid {
+            display: grid;
+            gap: 4px;
+            margin: 0.5rem auto 0.25rem;
+            width: 100%;
+        }
+        .math-display .cell-grid.goal-grid {
+            grid-template-columns: repeat(4, 44px);
+            grid-template-rows: repeat(4, 44px);
+            justify-content: center;
+        }
+        .math-display .cell-grid.witness-grid {
+            grid-template-columns: repeat(3, 44px);
+            grid-template-rows: repeat(3, 44px);
+            justify-content: center;
+        }
+        .math-display .cell-grid .cell {
+            width: 44px;
+            height: 44px;
+            background: #ffffff;
+            border: 1px solid var(--color-hairline);
+            border-radius: 2px;
+        }
+        .math-display .cell-grid .cell.terminal {
+            background: var(--color-foreground);
+            border-color: var(--color-foreground);
+        }
+        .math-display .cell-count {
+            display: block;
+            text-align: center;
+            font-size: 13px;
+            color: var(--color-foreground);
+            margin-top: 0.45rem;
+            font-style: normal;
+        }
+        .math-display .cell-examples {
+            display: block;
+            text-align: center;
+            font-size: 11.5px;
+            line-height: 1.45;
+            color: var(--color-muted);
+            font-style: italic;
+            margin-top: 0.15rem;
+        }
+        .math-display .cell-examples code {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-style: normal;
+            color: var(--color-foreground);
+        }
         @media (max-width: 820px) {
             .triple-witness {
                 grid-template-columns: 1fr;
@@ -1415,25 +1469,32 @@ first `m` observations. -/</span>
                             cannot resolve.</p>
                         <div class="triple-witness">
                             <div class="math-display">
-                                <span class="math-label">Goal layer (all four gates fire
-                                    independently, no cascade):</span>
-                                <span class="math-eq">
-                                    <em>n</em><sub>goal</sub>
-                                    <span class="math-eq-eq">=</span>
-                                    2<sup>4</sup>
-                                    <span class="math-eq-eq">=</span>
-                                    16 cells.
-                                </span>
+                                <span class="math-label">Goal layer: all four gates fire
+                                    independently.</span>
+                                <div class="cell-grid goal-grid" aria-label="Goal layer outcome map: 4 by 4 grid of 16 cells">
+                                    <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+                                    <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+                                    <div class="cell"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+                                    <div class="cell"></div><div class="cell"></div><div class="cell terminal"></div><div class="cell terminal"></div>
+                                </div>
+                                <span class="cell-count">16 reachable verdicts.</span>
+                                <span class="cell-examples">incl. <code>pseudo_problem</code>,
+                                    <code>zombie_theorem</code>, <code>supporting_argument</code>,
+                                    <code>fundamental_result</code>.</span>
                             </div>
                             <div class="math-display">
-                                <span class="math-label">Witness layer (Invariance is
-                                    cascade-gated on Plausibility &#x2227; Coherence
-                                    &#x2227; Completeness):</span>
-                                <span class="math-eq">
-                                    <em>n</em><sub>witness</sub>
-                                    <span class="math-eq-eq">=</span>
-                                    9 cells.
-                                </span>
+                                <span class="math-label">Witness layer: Invariance fires only
+                                    after Plausibility, Coherence, Completeness all pass.</span>
+                                <div class="cell-grid witness-grid" aria-label="Witness layer outcome map: 3 by 3 grid of 9 cells, narrower than the goal grid because the cascade collapses 7 of 16 vectors">
+                                    <div class="cell"></div><div class="cell"></div><div class="cell"></div>
+                                    <div class="cell"></div><div class="cell"></div><div class="cell"></div>
+                                    <div class="cell"></div><div class="cell terminal"></div><div class="cell terminal"></div>
+                                </div>
+                                <span class="cell-count">9 reachable verdicts
+                                    (cascade collapses 7 of 16).</span>
+                                <span class="cell-examples">incl. <code>sophism</code>,
+                                    <code>hallucination</code>, <code>merely_true</code>,
+                                    <code>established_result</code>.</span>
                             </div>
                             <figure class="paper-figure">
                                 <img src="public/images/discovery-tetrad/fig8-sophism-density.png"
