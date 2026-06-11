@@ -856,6 +856,32 @@
             margin: 0 0.25em;
         }
 
+        /* Paper figure inside a deepdive card. */
+        .paper-figure {
+            margin: 1.5rem 0 0.25rem;
+            text-align: center;
+        }
+        .paper-figure img {
+            max-width: 360px;
+            width: 100%;
+            height: auto;
+            border: 1px solid var(--color-hairline);
+            padding: 0.5rem;
+            background: #fff;
+            box-sizing: border-box;
+        }
+        .paper-figure figcaption {
+            font-size: 13px;
+            line-height: 1.55;
+            color: var(--color-muted);
+            margin: 0.6rem auto 0;
+            max-width: 580px;
+            text-align: left;
+        }
+        .paper-figure figcaption strong {
+            color: var(--color-foreground);
+        }
+
         /* Phasor block: reuses .lean-code styles, overrides the filename header */
         .phasor-code::before {
             content: "Complex Λ · phase-lag taxonomy";
@@ -1211,20 +1237,17 @@
                         <p class="subtitle">
                             Ayush Mittal &middot; Dhruv Gupta &middot;
                             <strong>arXiv:2606.11417</strong> &middot; June 2026 &middot;
-                            cs.LG / stat.ML &middot; 16 pages.
+                            cs.LG / stat.ML &middot; 16 pages &middot; Lean&nbsp;4
+                            mechanization of the structural core.
                         </p>
-                        <p>Intrinsic motivation by compression progress is a long-standing
-                            Schmidhuber proposal: reward an agent when its world model becomes
-                            better at predicting or compressing experience. The folk claim is
-                            that this reward is &ldquo;credible&rdquo; because it is paid only
-                            for learning. The paper makes that precise and proves it. If the
-                            intrinsic reward is the signed decrease of a fixed sealed-audit
-                            loss, then cumulative reward telescopes exactly to endpoint audit
-                            improvement, so no policy can push reward up indefinitely while
-                            true audit performance stagnates or degrades.</p>
+                        <p>An intrinsic-reward signal paid only for learning, with a
+                            certificate. If reward is the signed decrease of a fixed
+                            sealed-audit loss, cumulative reward equals endpoint audit
+                            improvement exactly. No policy can push reward up while true audit
+                            performance stagnates.</p>
                         <div class="math-display">
                             <span class="math-label">Theorem 1
-                                (exact-audit telescoping):</span>
+                                (exact-audit telescoping, zero false-positive budget):</span>
                             <span class="math-eq">
                                 &sum;<sub><em>t</em>=1</sub><sup><em>T</em></sup>
                                 <em>r<sub>t</sub></em>
@@ -1234,16 +1257,10 @@
                                 &Escr;(&theta;<sub>T</sub>).
                             </span>
                         </div>
-                        <p>For finite audit panels the same result holds with a sharp
-                            false-positive budget: cumulative empirical reward is at most
-                            true audit improvement plus
-                            2&Delta;<sub><em>n</em></sub>(&Fscr;, &delta;), the uniform audit
-                            deviation of the model class. The bound is horizon-free.
-                            Adaptivity over time costs nothing once the sealed panel uniformly
-                            controls the class.</p>
                         <div class="math-display">
                             <span class="math-label">Theorem 2
-                                (finite-audit Goodhart resistance):</span>
+                                (finite-audit Goodhart resistance,
+                                horizon-free 2&Delta;<sub><em>n</em></sub> budget):</span>
                             <span class="math-eq">
                                 &sum;<sub><em>t</em>=1</sub><sup><em>T</em></sup>
                                 <em>r&#770;<sub>t</sub></em><sup>CP</sup>
@@ -1255,29 +1272,22 @@
                                 2&Delta;<sub><em>n</em></sub>.
                             </span>
                         </div>
-                        <p>The theorem also identifies four failure modes, each with a worked
-                            construction: the guarantee disappears if progress is
-                            <em>clipped</em> (two-state cycles accumulate positive reward at
-                            zero net improvement), scored on the agent's <em>own selected
-                            stream</em> (no fixed potential to telescope), exposed to a
-                            <em>high-capacity reusable panel</em> (the
-                            &Delta;<sub><em>n</em></sub> term becomes vacuous), or applied to
-                            a class whose effective audit capacity is unbounded. The
-                            structural core (telescoping, the finite-audit bound, finite Gibbs
-                            nonnegativity, and the entropy floor that prevents noisy-TV
-                            curiosity from paying forever) is mechanized in Lean&nbsp;4 as
-                            <code>cumCP_telescope</code>, <code>cumCP_le_of_lb</code>, and
-                            <code>finite_audit_goodhart</code>.</p>
-                        <p>Experiments on ARC-TGI grid-transformation generators with adaptive
-                            holdout attacks confirm the theory: finite-audit deviation scales
-                            empirically as <em>n</em><sup>&minus;0.527</sup>; signed progress
-                            resists clip-farming, stream leakage, and noisy-TV curiosity;
-                            naive reusable audits are exploitable by black-box scalar
-                            feedback, while standard release defenses (fresh subsampling,
-                            laddering, rounding, one-shot release) keep the attack below the
-                            2&Delta;<sub><em>n</em></sub> threshold. The takeaway:
-                            <em>signed compression progress on a sealed audit is an accounting
-                            signal of genuine improvement.</em></p>
+                        <figure class="paper-figure">
+                            <img src="public/images/signed-compression-progress/fig3-finite-audit-concentration.png"
+                                alt="Empirical finite-audit deviation on ARC-TGI: log-log plot showing uniform deviation Δ_n decaying with panel size n at slope −0.527, matching theory n^(−1/2)."
+                                onerror="this.parentElement.style.display='none'">
+                            <figcaption>
+                                <strong>Figure 3 (witnesses both theorems).</strong> Empirical
+                                uniform deviation &Delta;<sub><em>n</em></sub> of floored
+                                cross-entropy over a finite family decays with audit panel
+                                size <em>n</em> at slope &minus;0.527, matching the theoretical
+                                <em>n</em><sup>&minus;1/2</sup> rate (ARC-TGI, 20 seeds). The
+                                2&Delta;<sub><em>n</em></sub> false-positive budget in
+                                Theorem&nbsp;2 is therefore empirically small and
+                                monotonically shrinking; in the limit it collapses to
+                                Theorem&nbsp;1's exact zero-budget case.
+                            </figcaption>
+                        </figure>
                         <p style="margin-top: 0.9rem;">
                             <strong><a href="https://arxiv.org/abs/2606.11417" target="_blank"
                                 rel="noopener noreferrer">arXiv abstract</a></strong> &middot;
