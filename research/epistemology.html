@@ -48,11 +48,13 @@
                 Epistemology
             </h1>
             <p style="font-size: 19px; line-height: 1.7; max-width: 800px; margin-bottom: 1.5rem; color: #222;">
-                The next patient is already in the room. The signs fit three conditions, and one of
-                them kills by morning. The doctor cannot run every test before he has to act. So he
-                picks the one test that, whichever way it comes back, rules the dangerous condition
-                in or out. He is not collecting evidence. He is choosing the single question that
-                makes his ignorance smaller in the place it costs the most.
+                A discovery agent has a model that fits every run it has logged. It can propose
+                the experiment that most reduces its uncertainty, and it is good at that. The move
+                it cannot make on its own is the one that matters: the variable that would explain
+                the residual is not in its vocabulary, so the question that would settle things
+                cannot yet be posed. It keeps running experiments inside a frame that will never
+                contain the answer. The decisive act is not collecting more evidence. It is
+                changing what can be asked, in the place where the current frame is blind.
             </p>
             <p class="text-muted" style="font-size: 22px; line-height: 1.4; max-width: 800px; margin-bottom: 2rem;">
                 That move has a name on this page. It is an attempt to make discovery engineerable.
@@ -187,8 +189,8 @@
                 <div class="border p-4">
                     <h4 class="font-bold uppercase text-sm mb-2">Experiment</h4>
                     <p class="text-sm">Design minimum interventions that collapse uncertainty
-                        cheaply. This is the doctor's single test: the cheapest action that
-                        collapses the dangerous branch.</p>
+                        cheaply. This is the agent's single decisive probe: the cheapest
+                        experiment that rules a live branch in or out.</p>
                 </div>
                 <div class="border p-4">
                     <h4 class="font-bold uppercase text-sm mb-2">Describe</h4>
@@ -219,25 +221,25 @@
                     <tr>
                         <td><strong>Plausibility</strong></td>
                         <td>Could a claim be made consistent with current structure?
-                            <span style="display:block; margin-top:0.4rem; color:#777; font-style:italic; font-size:13.5px;">The doctor's third guess still fits every symptom in front of her, so it stays on the table.</span></td>
+                            <span style="display:block; margin-top:0.4rem; color:#777; font-style:italic; font-size:13.5px;">A candidate mechanism still fits every run logged so far, so the agent keeps it on the table.</span></td>
                     </tr>
                     <tr>
                         <td><strong>Verification</strong></td>
                         <td>Is there evidence or proof for this claim against the current
                             traces and representations?
-                            <span style="display:block; margin-top:0.4rem; color:#777; font-style:italic; font-size:13.5px;">One test would confirm it or kill it. Until the result is back, plausible is all it is.</span></td>
+                            <span style="display:block; margin-top:0.4rem; color:#777; font-style:italic; font-size:13.5px;">One held-out probe would confirm the mechanism or break it. Until it runs, fits-the-data is all it is.</span></td>
                     </tr>
                     <tr>
                         <td><strong>Invariance</strong></td>
                         <td>How robust is a claim under future coherent challenges (threat
                             sets, stress tests)?
-                            <span style="display:block; margin-top:0.4rem; color:#777; font-style:italic; font-size:13.5px;">The sensor read true all winter. The question is whether it survives the first hot, humid week, when the confounder the lab never saw arrives.</span></td>
+                            <span style="display:block; margin-top:0.4rem; color:#777; font-style:italic; font-size:13.5px;">The model held across every regime it was trained on. What happens on the first distribution it was never shown?</span></td>
                     </tr>
                     <tr>
                         <td><strong>Efficiency</strong></td>
                         <td>Validated novelty per unit resource: how much externally checkable
                             knowledge obtained per budget.
-                            <span style="display:block; margin-top:0.4rem; color:#777; font-style:italic; font-size:13.5px;">The hunter has one attempt and one afternoon of light. Which single question buys the most certainty before the chance is gone?</span></td>
+                            <span style="display:block; margin-top:0.4rem; color:#777; font-style:italic; font-size:13.5px;">Compute and labelled runs are finite. Which single experiment buys the most settled knowledge per unit of both?</span></td>
                     </tr>
                 </tbody>
             </table>
@@ -304,9 +306,9 @@
                 <div style="display: flex; gap: 1rem; align-items: flex-start;">
                     <span class="font-mono" style="min-width: 30px;">III.</span>
                     <p>What is <strong>implicitly present</strong> in traces and regularities but
-                        not yet structured into the current representation. This is the senior who
-                        just knows the machine is about to fail and cannot yet say which sensor told
-                        her. The regularity is sitting in the data; nobody has named the variable.</p>
+                        not yet structured into the current representation. This is the model whose
+                        residuals carry a structure no feature captures: the regularity is sitting
+                        in the data, and no variable in the current representation names it yet.</p>
                 </div>
                 <div style="display: flex; gap: 1rem; align-items: flex-start;">
                     <span class="font-mono" style="min-width: 30px;">IV.</span>
@@ -345,20 +347,21 @@
                 </div>
 
                 <div class="border p-6">
-                    <h3 class="font-mono text-lg mb-4">Case 2 &middot; A doctor with the next patient</h3>
+                    <h3 class="font-mono text-lg mb-4">Case 2 &middot; A discovery agent at the edge of its model</h3>
                     <p class="mb-4" style="line-height: 1.7;">
-                        The next patient is already in the room. The signs fit three things, one of
-                        them kills by morning, and he cannot run every test before he has to decide.
+                        Every run so far fits the model. The next experiment it would propose only
+                        shaves uncertainty inside the variables it already has. The mechanism it is
+                        missing does not live among them.
                     </p>
                     <div class="font-mono text-xs bg-gray-50 p-4 mb-4" style="line-height: 2;">
-                        sparse presentation traces &rarr; candidate explanations &rarr;
-                        single discriminating test &rarr; collapse of dangerous branch &rarr;
-                        constrained action &rarr; follow-up verification
+                        fits-everything model &rarr; structured residual with no name &rarr;
+                        expand the representation &rarr; new variable &rarr; directed experiment
+                        &rarr; mechanism or refutation
                     </div>
                     <p class="text-sm border-l-2 pl-4" style="border-color: #000;">
-                        <strong>Takeaway:</strong> Diagnosis begins as a working explanation;
-                        tests are chosen to eliminate possibilities with minimum cost, not to
-                        maximize confidence.
+                        <strong>Takeaway:</strong> The decisive move is not the next measurement.
+                        It is noticing the question the current vocabulary cannot pose, and growing
+                        the vocabulary until it can.
                     </p>
                 </div>
 
