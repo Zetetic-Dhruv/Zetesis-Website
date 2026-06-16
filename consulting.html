@@ -139,6 +139,266 @@
 
         <hr class="section-rule">
 
+        <!-- Thesis statement -->
+        <section style="padding-bottom: 1.5rem;">
+            <div style="border: 1px solid #000; padding: 2rem; margin-bottom: 2.5rem; background: #fafafa;">
+                <p style="font-size: 18px; line-height: 1.7; margin-bottom: 1rem;">
+                    <strong>A research-driven venture from ARTPARK @ IISc.</strong>
+                </p>
+                <p style="font-size: 18px; line-height: 1.7;">
+                    We build systems that make discovery measurable and dependable: grounded
+                    in measurement, world-model based, and verification-aware.
+                </p>
+            </div>
+        </section>
+
+        <!-- 1. The Bet -->
+        <section>
+            <h2>1. The Bet</h2>
+
+            <!-- Market Context -->
+            <div class="border mb-4">
+                <div class="bg-black text-white p-4 text-center uppercase tracking-wide text-xs font-bold">
+                    Market Context: Industry Shift to 'Features'
+                </div>
+                <div class="p-6 bg-white">
+                    <div class="grid grid-cols-4 gap-4 mb-6">
+                        <div class="flex flex-col items-center text-center bet-card">
+                            <div class="text-lg font-bold">[ I ]</div>
+                            <div class="text-xs uppercase font-bold">Post-Training LLMs</div>
+                            <div class="uppercase text-muted" style="font-size: 10px;">RL Infrastructure</div>
+                        </div>
+                        <div class="flex flex-col items-center text-center bet-card">
+                            <div class="text-lg font-bold">[ II ]</div>
+                            <div class="text-xs uppercase font-bold">Neuro-Symbolic</div>
+                            <div class="uppercase text-muted" style="font-size: 10px;">(NeSy)</div>
+                        </div>
+                        <div class="flex flex-col items-center text-center bet-card">
+                            <div class="text-lg font-bold">[ III ]</div>
+                            <div class="text-xs uppercase font-bold">Small Models</div>
+                            <div class="uppercase text-muted" style="font-size: 10px;">(SLMs)</div>
+                        </div>
+                        <div class="flex flex-col items-center text-center bet-card">
+                            <div class="text-lg font-bold">[ IV ]</div>
+                            <div class="text-xs uppercase font-bold">Causal AI</div>
+                            <div class="uppercase text-muted" style="font-size: 10px;">Scientific Reasoning</div>
+                        </div>
+                    </div>
+                    <div class="text-center" style="border-top: 1px solid #eee; padding-top: 1rem;">
+                        <p class="text-muted italic">
+                            Industry seeks specialized intelligence not generic Q/A (coding, RCA, etc).
+                            This has invited 4 main paradigms. Each needs local context, a world model.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cold Start -->
+            <div class="border" style="max-width: 600px; margin: 0 auto; background: #f1f5f9; position: relative;">
+                <div class="p-2 text-center text-xs uppercase tracking-widest font-bold border-b"
+                    style="color: black;">
+                    The Bottleneck
+                </div>
+                <div class="p-6 text-center">
+                    <h3 class="text-lg mb-2">The "Cold Start" Problem</h3>
+                    <p class="text-sm border-l-2 pl-4 mx-auto inline-block text-left"
+                        style="border-color: #000; max-width: 400px;">
+                        Specialized answers and verification require structured knowledge,
+                        a world model. Lacking one is the terminal constraint on deployment.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Split Paths -->
+            <div class="grid grid-cols-2 gap-6 mt-4">
+                <div class="border p-6 text-center">
+                    <h3 class="text-sm uppercase font-bold border-b mb-2 pb-2">Failure Mode: Path A</h3>
+                    <p class="text-xs text-muted mb-2">Theoretical Route &middot; God Model / Universal World Model</p>
+                    <div class="font-mono text-xs bg-gray-50 border-hairline p-2 mb-2">f(m) = &part;V/&part;x ...</div>
+                    <p class="text-sm font-bold">Computationally intractable.</p>
+                </div>
+                <div class="border p-6 text-center">
+                    <h3 class="text-sm uppercase font-bold border-b mb-2 pb-2">Failure Mode: Path B</h3>
+                    <p class="text-xs text-muted mb-2">Wiring Knowledge from Experience</p>
+                    <div class="font-mono text-xs bg-gray-50 border-hairline p-2 mb-2">&#375; = &theta;<sub>0</sub> + &theta;<sub>1</sub>x ...</div>
+                    <p class="text-sm font-bold">Bespoke services. "Consultancy".</p>
+                </div>
+            </div>
+
+            <!-- Zetesis Resolution -->
+            <div class="bg-black text-white p-6 text-center mt-6"
+                style="border: 2px solid black; max-width: 600px; margin: 1.5rem auto 0 auto; box-shadow: 4px 4px 0 rgba(0,0,0,0.2);">
+                <h3 class="uppercase tracking-wide text-base font-bold">Zetesis Resolution</h3>
+                <p class="font-light text-gray-300 mb-4">Principled Calculus of Discovery</p>
+                <div class="grid grid-cols-2 gap-4 text-black mb-4">
+                    <div class="bg-white p-2">
+                        <div class="text-xs font-bold uppercase">URT</div>
+                        <div class="text-xs text-muted">Universal Process of Discovery</div>
+                    </div>
+                    <div class="bg-white p-2">
+                        <div class="text-xs font-bold uppercase">Automated Discovery</div>
+                        <div class="text-xs text-muted">Verifiable, Adaptable Construction</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. The Solution: Intelligence Stack -->
+        <section id="stack" style="margin-top: 3rem;">
+            <h2>2. The Solution: Intelligence Stack</h2>
+            <div class="flex flex-col gap-12" style="padding-left: 1rem;">
+
+                <!-- Layer 1 -->
+                <div style="border-left: 2px solid black; padding-left: 1.5rem; position: relative;">
+                    <div
+                        style="position: absolute; left: -9px; top: 0; width: 16px; height: 16px; background: black; border-radius: 50%;">
+                    </div>
+                    <h3 class="uppercase text-lg font-bold mb-2">Layer 1: World Model Building</h3>
+                    <p class="text-muted mb-4">Construction of World Model G. Internal mechanism is encapsulated.</p>
+                    <div class="bg-gray-50 border-hairline p-4 flex justify-between items-center">
+                        <span class="text-sm text-muted"><strong>Using:</strong> Universal Representation
+                            &amp; Reasoning Theory (URT).</span>
+                        <a href="https://api.zetesislabs.com/docs" target="_blank" rel="noopener noreferrer"
+                            class="uppercase text-sm border p-2 hover:bg-black hover:text-white">View Demo
+                            API &rarr;</a>
+                    </div>
+                </div>
+
+                <!-- Layer 2 -->
+                <div style="border-left: 2px solid black; padding-left: 1.5rem; position: relative;">
+                    <div
+                        style="position: absolute; left: -9px; top: 0; width: 16px; height: 16px; background: white; border: 2px solid black; border-radius: 50%;">
+                    </div>
+                    <h3 class="uppercase text-lg font-bold mb-2">Layer 2: Planning &amp; Execution</h3>
+                    <p class="text-muted mb-4">Neuro-symbolic RCA circuit. Ingests fault-context, isolation.</p>
+                    <div class="grid grid-cols-2 gap-6">
+                        <!-- RCA Cell -->
+                        <div class="border p-4">
+                            <h4 class="font-bold mb-2">RCA</h4>
+                            <p class="text-sm text-muted mb-4">Root cause analysis with ranked suspects and
+                                minimum next checks.</p>
+
+                            <div class="mb-4">
+                                <p class="text-xs uppercase tracking-wide mb-2 font-bold">4M Framework</p>
+                                <div class="grid grid-cols-2 gap-2 text-xs">
+                                    <div class="bg-gray-50 p-2 border-l-2" style="border-color: #000;">
+                                        <strong>Man</strong><br><span class="text-muted">Operator context</span>
+                                    </div>
+                                    <div class="bg-gray-50 p-2 border-l-2" style="border-color: #000;">
+                                        <strong>Machine</strong><br><span class="text-muted">Telemetry / configs</span>
+                                    </div>
+                                    <div class="bg-gray-50 p-2 border-l-2" style="border-color: #000;">
+                                        <strong>Method</strong><br><span class="text-muted">Process recipes</span>
+                                    </div>
+                                    <div class="bg-gray-50 p-2 border-l-2" style="border-color: #000;">
+                                        <strong>Material</strong><br><span class="text-muted">Batch provenance</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="font-mono text-xs bg-gray-50 p-3" style="line-height: 1.8;">
+                                incident &rarr; candidate causes &rarr;
+                                <strong>ranked suspects</strong> &rarr; minimum checks &rarr; resolution
+                            </div>
+
+                            <p class="text-xs text-muted italic mt-3">
+                                Outputs are tethered to evidence, not narrative fluency.
+                            </p>
+                        </div>
+
+                        <!-- Calibration Cell -->
+                        <div class="border p-4">
+                            <h4 class="font-bold mb-2">Calibration</h4>
+                            <p class="text-sm text-muted mb-4">Maintained mapping under changing conditions,
+                                not one-time correction.</p>
+
+                            <div class="mb-4">
+                                <p class="text-xs uppercase tracking-wide mb-2 font-bold">Multi-Layer Stack</p>
+                                <div class="flex flex-col gap-1 text-xs">
+                                    <div class="flex items-center gap-2">
+                                        <span class="font-mono bg-black text-white p-1"
+                                            style="min-width: 24px; text-align: center;">1</span>
+                                        <span>Step tests (controlled lab)</span>
+                                    </div>
+                                    <div style="text-align: center; color: #999; font-size: 10px;">&darr;</div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="font-mono bg-black text-white p-1"
+                                            style="min-width: 24px; text-align: center;">2</span>
+                                        <span>Phantom validation (confounders explicit)</span>
+                                    </div>
+                                    <div style="text-align: center; color: #999; font-size: 10px;">&darr;</div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="font-mono bg-black text-white p-1"
+                                            style="min-width: 24px; text-align: center;">3</span>
+                                        <span>Field closure (drift accounting)</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="border-l-2 pl-3 text-xs" style="border-color: #000;">
+                                <strong>Bayesian calibration:</strong> drift and confounding treated as
+                                ignorance objects, not nuisances.
+                            </div>
+
+                            <p class="text-xs text-muted italic mt-3">
+                                Where sensing startups die. Made transferable, not artisanal.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Layer 3 -->
+                <div style="border-left: 2px solid black; padding-left: 1.5rem; position: relative;">
+                    <div
+                        style="position: absolute; left: -9px; top: 0; width: 16px; height: 16px; background: white; border: 2px solid black; border-radius: 50%;">
+                    </div>
+                    <h3 class="uppercase text-lg font-bold mb-2">Layer 3: Verification</h3>
+                    <p class="text-muted mb-4">Inductive reasoning gate. Checks claims against ground truth.</p>
+
+                    <div style="background: #1e1e1e; padding: 1.5rem; overflow-x: auto; margin-top: 1rem;">
+                        <pre
+                            style="margin: 0; font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace; font-size: 13px; line-height: 1.6; color: #d4d4d4;">
+<span style="color: #569cd6;">/-</span><span style="color: #6a9955;">- No Free Lunch Theorem: No learner outperforms uniform random guessing
+   across all possible target functions. -/</span>
+
+<span style="color: #c586c0;">structure</span> <span style="color: #4ec9b0;">Learner</span> (<span style="color: #9cdcfe;">X</span> <span style="color: #9cdcfe;">Y</span> : <span style="color: #4ec9b0;">Type</span>) <span style="color: #c586c0;">where</span>
+  <span style="color: #9cdcfe;">hypothesis</span> : <span style="color: #4ec9b0;">List</span> (X &times; Y) &rarr; X &rarr; Y
+
+<span style="color: #c586c0;">def</span> <span style="color: #dcdcaa;">offTrainingError</span> (<span style="color: #9cdcfe;">L</span> : <span style="color: #4ec9b0;">Learner</span> X Y) (<span style="color: #9cdcfe;">f</span> : X &rarr; Y)
+    (<span style="color: #9cdcfe;">train</span> <span style="color: #9cdcfe;">test</span> : <span style="color: #4ec9b0;">Finset</span> X) : &#8469; :=
+  (test \ train).card.filter <span style="color: #c586c0;">fun</span> <span style="color: #9cdcfe;">x</span> =&gt; L.hypothesis (train.toList.map <span style="color: #c586c0;">fun</span> <span style="color: #9cdcfe;">t</span> =&gt; (t, f t)) x &ne; f x
+
+<span style="color: #c586c0;">theorem</span> <span style="color: #dcdcaa;">noFreeLunch</span> [<span style="color: #4ec9b0;">Fintype</span> X] [<span style="color: #4ec9b0;">DecidableEq</span> X] [<span style="color: #4ec9b0;">Fintype</span> Y]
+    (<span style="color: #9cdcfe;">L&#8321;</span> <span style="color: #9cdcfe;">L&#8322;</span> : <span style="color: #4ec9b0;">Learner</span> X Y) (<span style="color: #9cdcfe;">train</span> <span style="color: #9cdcfe;">test</span> : <span style="color: #4ec9b0;">Finset</span> X) :
+    <span style="color: #569cd6;">&Sigma;</span> <span style="color: #9cdcfe;">f</span> : X &rarr; Y, offTrainingError L&#8321; f train test =
+    <span style="color: #569cd6;">&Sigma;</span> <span style="color: #9cdcfe;">f</span> : X &rarr; Y, offTrainingError L&#8322; f train test := <span style="color: #c586c0;">by</span>
+  <span style="color: #6a9955;">-- The sum over all target functions is invariant to learner choice</span>
+  <span style="color: #6a9955;">-- Each off-training point contributes equally across the uniform distribution</span>
+  <span style="color: #dcdcaa;">apply</span> Fintype.sum_equiv (Equiv.refl _)
+  <span style="color: #dcdcaa;">intro</span> f
+  <span style="color: #dcdcaa;">simp</span> [offTrainingError]
+  <span style="color: #6a9955;">-- Symmetry: permuting outputs preserves error count</span>
+  <span style="color: #dcdcaa;">exact</span> uniformDistribution_symmetry L&#8321; L&#8322; f train test
+</pre>
+                    </div>
+                    <p class="text-xs text-muted mt-2 italic">
+                        Formal verification in Lean4 ensures claims survive scrutiny.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <hr class="section-rule">
+
+        <!-- 3. In Practice -->
+        <section style="margin-bottom: 1.5rem;">
+            <h2>3. In Practice</h2>
+            <p class="text-muted" style="font-size: 16px; line-height: 1.65; max-width: 780px;">
+                The thesis runs through every engagement. Each of the cards below is one
+                instance of the stack put to work on a problem the customer brought.
+            </p>
+        </section>
+
         <!-- Industrial -->
         <section style="padding-bottom: 1rem;">
             <h2 class="work-section-h">Industrial</h2>
