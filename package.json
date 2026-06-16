@@ -8,7 +8,7 @@
     "prerender:github": "node scripts/prerender-github.js",
     "og:card": "python3 scripts/generate-og-card.py",
     "indexnow": "node scripts/indexnow-ping.js",
-    "build": "npm run build:css && rm -rf dist && mkdir -p dist dist/.well-known && cp index.html lab.html output.css CNAME ping.html robots.txt sitemap.xml llms.txt llms-full.txt ai.txt humans.txt 9b9e2a83c35fb9e6e7a601e0acb2510e.txt googlea48e04b5a4f46a18.html dist/ && cp .well-known/security.txt dist/.well-known/ && touch dist/.nojekyll && cp -r public dist/ && npm run prerender:github",
+    "build": "npm run build:css && rm -rf dist && mkdir -p dist dist/.well-known && cp index.html lab.html research.html consulting.html people.html output.css CNAME ping.html robots.txt sitemap.xml llms.txt llms-full.txt ai.txt humans.txt 9b9e2a83c35fb9e6e7a601e0acb2510e.txt googlea48e04b5a4f46a18.html dist/ && cp .well-known/security.txt dist/.well-known/ && touch dist/.nojekyll && cp -r public research people dist/ && npm run prerender:github",
     "deploy": "git push live main && npm run indexnow",
     "dev": "tailwindcss -i ./src/input.css -o ./output.css --watch",
     "test": "echo \"Error: no test specified\" && exit 1"

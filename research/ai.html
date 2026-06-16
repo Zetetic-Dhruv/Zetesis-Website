@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI &middot; Research &middot; Zetesis Labs</title>
+    <meta name="description"
+        content="AI research at Zetesis Labs. Synthetic discovery as the centerpiece: process-level evaluation, a Goodhart-resistant intrinsic reward, machine-checked learning theory, and transformer foundations.">
+    <link rel="icon" type="image/png" href="../public/images/logos/Zetesis_logo.png">
+    <link rel="canonical" href="https://zetesislabs.com/research/ai.html">
+    <meta property="og:title" content="AI &middot; Zetesis Labs">
+    <meta property="og:description"
+        content="Synthetic discovery as the centerpiece. Foundations in machine-checked learning theory and transformer measurability.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://zetesislabs.com/research/ai.html">
+    <meta property="og:image" content="https://zetesislabs.com/public/images/logos/Zetesis_logo.png">
+    <link rel="stylesheet" href="../output.css">
+
+    <style>
+        .work-card {
+            border: 1px solid var(--color-hairline);
+            padding: 1.75rem 1.75rem 1.5rem;
+            margin-bottom: 1.5rem;
+            background: #fff;
+        }
+        .work-card.featured {
+            border: 1.5px solid #000;
+            padding: 2rem 2rem 1.75rem;
+            background: #fafafa;
+        }
+        .work-card h4 {
+            font-size: 19px;
+            line-height: 1.3;
+            margin: 0 0 0.5rem 0;
+        }
+        .work-card .subtitle {
+            font-size: 14px;
+            color: #555;
+            font-style: italic;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+        .work-card p {
+            font-size: 15px;
+            line-height: 1.65;
+            margin: 0 0 0.75rem 0;
+            color: #222;
+        }
+        .work-card .meta-row {
+            display: flex;
+            gap: 0.85rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+            padding-top: 0.85rem;
+            border-top: 1px solid var(--color-hairline);
+            font-size: 13px;
+            font-family: 'SF Mono', Monaco, monospace;
+            color: #666;
+        }
+        .work-card .meta-row a {
+            color: #444;
+            text-decoration: underline;
+            text-decoration-color: #bbb;
+        }
+        .sd-tag {
+            display: inline-block;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 10.5px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            background: #000;
+            color: #fff;
+            padding: 3px 8px;
+            margin-left: 0.5rem;
+            vertical-align: middle;
+            border-radius: 2px;
+        }
+        .section-rule {
+            border: 0;
+            border-top: 1px solid var(--color-hairline);
+            margin: 3rem 0;
+        }
+        .programme-frame {
+            border: 1.5px solid #000;
+            padding: 2rem;
+            background: #fff;
+            margin: 2.25rem 0 3rem;
+        }
+        .programme-frame .row {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 1.25rem;
+            align-items: center;
+            margin-top: 1rem;
+        }
+        .programme-frame .step {
+            border: 1px solid var(--color-hairline);
+            background: #fafafa;
+            padding: 0.9rem 0.95rem;
+            text-align: center;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .programme-frame .step .lbl {
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 10.5px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #888;
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+        .programme-frame .arrow {
+            font-size: 20px;
+            color: #888;
+            text-align: center;
+        }
+        .programme-frame .reward {
+            margin-top: 1.25rem;
+            background: #1a1a1a;
+            color: #fff;
+            padding: 0.95rem 1rem;
+            text-align: center;
+            font-size: 15px;
+        }
+        .programme-frame .reward .lbl {
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 10.5px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #bbb;
+            display: block;
+            margin-top: 0.3rem;
+        }
+        .programme-frame .reward .formula {
+            font-family: Georgia, 'Times New Roman', serif;
+            font-size: 17px;
+            font-weight: 700;
+        }
+        @media (max-width: 720px) {
+            .programme-frame .row { grid-template-columns: 1fr; }
+            .programme-frame .arrow { transform: rotate(90deg); }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Navigation -->
+        <nav>
+            <div class="flex items-center gap-3">
+                <a href="../index.html" class="flex items-center gap-3" style="text-decoration: none; color: inherit;">
+                    <img src="../public/images/logos/Zetesis_logo.png" alt="Zetesis"
+                        style="height: 32px; width: auto;">
+                    <div style="font-weight: bold; font-size: 20px;">Zetesis Labs</div>
+                </a>
+            </div>
+            <div class="flex gap-4">
+                <a href="../research.html" style="font-weight: bold; text-decoration: underline;">Research</a>
+                <a href="../consulting.html">Consulting</a>
+                <a href="../people.html">People</a>
+            </div>
+        </nav>
+
+        <!-- Breadcrumb -->
+        <div
+            style="padding-top: 1.5rem; font-family: 'SF Mono', Monaco, monospace; font-size: 12px; color: #888; letter-spacing: 0.05em; text-transform: uppercase;">
+            <a href="../research.html" style="color: #888;">Research</a> &middot; AI
+        </div>
+
+        <!-- Hero -->
+        <section style="padding-top: 1.5rem; padding-bottom: 2rem;">
+            <h1 style="font-size: 52px; font-weight: 400; letter-spacing: -0.02em; margin: 0 0 1.25rem; line-height: 1.05;">
+                AI
+            </h1>
+            <p class="text-muted" style="font-size: 22px; line-height: 1.45; max-width: 800px;">
+                The central question is <em>synthetic discovery</em>: AI that conducts inquiry,
+                not AI that answers questions. The work below clusters around that question,
+                from the operational evaluation framework outward through to the formal
+                kernels that let any of it be checked.
+            </p>
+        </section>
+
+        <hr class="section-rule">
+
+        <!-- Centerpiece -->
+        <section style="padding-bottom: 1rem;">
+            <h2 style="font-size: 28px; margin-bottom: 0.75rem;">Centerpiece &middot; Synthetic Discovery</h2>
+            <p class="text-muted" style="font-size: 16px; line-height: 1.6; max-width: 760px;">
+                Two preprints define the programme. One asks how you would <em>tell</em>
+                whether an AI is conducting discovery; the other asks what a reward signal
+                must look like for the answer to mean anything.
+            </p>
+
+            <!-- Visual frame: the synthetic-discovery loop -->
+            <div class="programme-frame">
+                <div style="text-align: center; font-style: italic; color: #555; font-size: 15px; margin-bottom: 0.25rem;">
+                    The signal we train on, and the process we evaluate.
+                </div>
+                <div class="row">
+                    <div class="step">
+                        <span class="lbl">Process</span>
+                        <strong>Discovery tetrad</strong><br>
+                        a recoverable causal core; a process-level test.
+                    </div>
+                    <div class="arrow">&rarr;</div>
+                    <div class="step">
+                        <span class="lbl">Reward</span>
+                        <strong>Signed compression progress</strong><br>
+                        endpoint audit improvement, no horizon games.
+                    </div>
+                </div>
+                <div class="reward">
+                    <span class="formula">&Sigma; r<sub>t</sub> = &Escr;(&theta;<sub>0</sub>) &minus; &Escr;(&theta;<sub>T</sub>)</span>
+                    <span class="lbl">Telescoping identity &middot; Goodhart-resistant by construction</span>
+                </div>
+            </div>
+
+            <!-- Discovery Tetrad -->
+            <article class="work-card featured">
+                <h4>Process-Level Evaluation of Synthetic Discovery: The Discovery Tetrad
+                    <span class="sd-tag">Synthetic Discovery</span>
+                </h4>
+                <p class="subtitle">D. Gupta &middot; Zenodo, May 2026 &middot; v1 preprint</p>
+                <p>
+                    Final answers in AI science are easy to game. The Discovery Tetrad
+                    moves the evaluation upstream to the <em>process</em>: did the system
+                    recover a goal structure, a witness structure, an explanation, and a
+                    refutation pathway? The result is a process-level test that does not
+                    care whether the answer happens to be right; it cares whether the
+                    discovery was reproducible.
+                </p>
+                <p>
+                    The construction is small enough to fit on a slide and strict enough
+                    to fail systems that look impressive on aggregate benchmarks.
+                </p>
+                <div class="meta-row">
+                    <span>doi:10.5281/zenodo.20147210</span>
+                    <a href="https://doi.org/10.5281/zenodo.20147210" target="_blank" rel="noopener noreferrer">Zenodo &rarr;</a>
+                    <a href="../dhruv.html" style="margin-left: auto;">Founder mirror &rarr;</a>
+                </div>
+            </article>
+
+            <!-- Signed Compression Progress -->
+            <article class="work-card featured">
+                <h4>Signed Compression Progress on a Sealed Audit is Goodhart-Resistant
+                    <span class="sd-tag">Synthetic Discovery</span>
+                </h4>
+                <p class="subtitle">A. Mittal &amp; D. Gupta &middot; arXiv:2606.11417, June 2026 &middot;
+                    Lean4 mechanized</p>
+                <p>
+                    If your reward is the audit&apos;s opinion of the next checkpoint minus
+                    the audit&apos;s opinion of the previous one, two things follow.
+                    Cumulative reward telescopes to a single endpoint quantity; no policy
+                    can run up the reward while the audit stagnates. Theorem 1 makes this
+                    precise; Theorem 2 gives the finite-audit concentration bound. The full
+                    argument is mechanized in Lean4.
+                </p>
+                <p>
+                    The point is structural: the safety property is not "stay close to the
+                    base model" but "your reward is literally the thing the audit measures."
+                </p>
+                <div class="meta-row">
+                    <span>arXiv:2606.11417</span>
+                    <a href="https://arxiv.org/abs/2606.11417" target="_blank" rel="noopener noreferrer">arXiv &rarr;</a>
+                    <a href="https://arxiv.org/pdf/2606.11417" target="_blank" rel="noopener noreferrer">PDF &rarr;</a>
+                    <a href="../dhruv.html" style="margin-left: auto;">Founder mirror &rarr;</a>
+                </div>
+            </article>
+        </section>
+
+        <hr class="section-rule">
+
+        <!-- Foundations -->
+        <section style="padding-bottom: 1rem;">
+            <h2 style="font-size: 28px; margin-bottom: 0.75rem;">Foundations &middot; Learning theory, formalized</h2>
+            <p class="text-muted" style="font-size: 16px; line-height: 1.6; max-width: 760px;">
+                The centerpiece carries weight only if the learning theory underneath it
+                actually holds. These are the pieces that make the formal layer load-bearing
+                rather than decorative.
+            </p>
+
+            <!-- Null Measurability -->
+            <article class="work-card">
+                <h4>Null Measurability at the Symmetrization Interface in VC Learning</h4>
+                <p class="subtitle">D. Gupta &middot; arXiv:2604.25028, April 2026</p>
+                <p>
+                    The hypothesis "the loss is Borel-measurable," repeated through decades
+                    of learning-theory proofs, is stronger than necessary. The right object
+                    is null-measurability on the symmetrization side. A strict separation
+                    witness shows that the relaxation is not cosmetic: there are concept
+                    classes whose bad event is null-measurable but not Borel.
+                </p>
+                <p>
+                    Practically, this is what removes a measurability lemma from the path
+                    between an architecture and a PAC guarantee.
+                </p>
+                <div class="meta-row">
+                    <span>arXiv:2604.25028</span>
+                    <a href="https://arxiv.org/abs/2604.25028" target="_blank" rel="noopener noreferrer">arXiv &rarr;</a>
+                    <a href="../dhruv.html" style="margin-left: auto;">Founder mirror &rarr;</a>
+                </div>
+            </article>
+
+            <!-- FLT kernel -->
+            <article class="work-card">
+                <h4>Formal Learning Theory Kernel
+                    <span class="sd-tag">Synthetic Discovery</span>
+                </h4>
+                <p class="subtitle">21,728 lines of Lean4, machine-checked with no gaps.</p>
+                <p>
+                    A self-contained Lean4 kernel of formal learning theory, organized
+                    around the five-way equivalence at the heart of PAC theory: learnability
+                    iff finite VC dim iff bounded compression scheme iff vanishing Rademacher
+                    iff polynomial growth function. The Borel-analytic separation result above
+                    is one of the kernel&apos;s loadbearing lemmas; constructive MWU
+                    compression, PAC-Bayes (first Lean4 formalization on record), and Choquet
+                    capacitability (previously absent from Mathlib4) sit alongside it.
+                </p>
+                <p>
+                    Formalization is the claim, checked by the Lean4 compiler. Portions
+                    upstream where the upstream quality bar is met.
+                </p>
+                <div class="meta-row">
+                    <a href="../dhruv.html" style="margin-left: auto;">Founder mirror &rarr;</a>
+                </div>
+            </article>
+
+            <!-- TLT -->
+            <article class="work-card">
+                <h4>Transformer Learning Theory</h4>
+                <p class="subtitle">Measurability-theoretic foundations for attention architectures.</p>
+                <p>
+                    Lean4 results for attention as a measurable router: attention-routing
+                    measurability; the softmax / argmax equivalence under appropriate
+                    limits; a universality statement (every measurable router <em>is</em>
+                    attention); and a null-measurable necessity result that ties the
+                    transformer back to the symmetrization-interface paper above.
+                </p>
+                <div class="meta-row">
+                    <a href="../dhruv.html" style="margin-left: auto;">Founder mirror &rarr;</a>
+                </div>
+            </article>
+
+            <!-- cslib Version Space -->
+            <article class="work-card">
+                <h4>Version Space Abstraction in Lean4 <code>cslib</code></h4>
+                <p class="subtitle">D. Gupta &middot; <code>cslib</code> PR #592, merged 2026-05-29</p>
+                <p>
+                    First upstream contribution from the kernel to Lean4&apos;s
+                    <code>cslib</code>: a version-space abstraction over PAC learning,
+                    following Mitchell (1977) and Angluin (1980). The piece carries the
+                    standing of a kernel module that meets <code>cslib</code> maintainers&apos;
+                    quality bar, which is the operational criterion we use to decide what
+                    counts as finished.
+                </p>
+                <div class="meta-row">
+                    <a href="https://github.com/leanprover/cslib/pull/592" target="_blank"
+                        rel="noopener noreferrer">PR #592 &rarr;</a>
+                    <a href="../dhruv.html" style="margin-left: auto;">Founder mirror &rarr;</a>
+                </div>
+            </article>
+        </section>
+
+        <hr class="section-rule">
+
+        <!-- Frontier -->
+        <section style="padding-bottom: 1rem;">
+            <h2 style="font-size: 28px; margin-bottom: 0.75rem;">Frontier &middot; Where the harness meets the world</h2>
+            <p class="text-muted" style="font-size: 16px; line-height: 1.6; max-width: 760px;">
+                Two strands at the edge: a practical proof-search harness, and an
+                epistemic-theory line that the kernel formalises end to end.
+            </p>
+
+            <!-- First Proof Challenge -->
+            <article class="work-card">
+                <h4>LLM Harness &middot; First Proof Challenge
+                    <span class="sd-tag">Synthetic Discovery</span>
+                </h4>
+                <p class="subtitle">Operational pipeline against Harvard's benchmark; commodity compute.</p>
+                <p>
+                    An LLM-driven proof-search harness reaching 4 of 10 on Harvard&apos;s
+                    First Proof Challenge using $32 of commodity API compute on a single
+                    MacBook. The headline number is not the point. The shape of the
+                    failures is. Where the harness succeeds is where formalization gates
+                    exist; where it fails is where they are absent.
+                </p>
+                <div class="meta-row">
+                    <a href="../dhruv.html" style="margin-left: auto;">Founder mirror &rarr;</a>
+                </div>
+            </article>
+
+            <!-- Spekkens HC -->
+            <article class="work-card">
+                <h4>Spekkens 2007 &middot; Hidden Capacity
+                    <span class="sd-tag">Synthetic Discovery</span>
+                </h4>
+                <p class="subtitle">31 machine-checked theorems extending the toy-theory of epistemic quantum states.</p>
+                <p>
+                    A Lean4 formalization of Spekkens&apos;s 2007 epistemic toy-theory of
+                    quantum states, together with HC(&kappa;): the first continuous measure
+                    of interpolation failure in epistemic theories of mechanics.
+                    HC = 0 iff the theory&apos;s admissible configurations are rectangular.
+                    The four entangled states admit HC = 2 bits; the three separable states
+                    admit HC = 0; only private-evidence conditioning collapses nonzero HC.
+                </p>
+                <div class="meta-row">
+                    <a href="../dhruv.html" style="margin-left: auto;">Founder mirror &rarr;</a>
+                </div>
+            </article>
+        </section>
+
+        <hr class="section-rule">
+
+        <!-- Pointer -->
+        <section style="padding: 0.5rem 0 3rem;">
+            <p style="font-size: 14px; color: #777; font-style: italic; line-height: 1.6; max-width: 760px;">
+                The founder mirror on
+                <a href="../dhruv.html" style="color: #444; text-decoration: underline; text-decoration-color: #bbb;">dhruv.html</a>
+                carries the full deep-dive versions of these cards, including theorems,
+                figures, and Lean snippets.
+            </p>
+        </section>
+
+        <!-- Footer -->
+        <footer
+            style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--hairline); padding-bottom: 2rem;">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                <div class="flex gap-6 text-sm">
+                    <a href="mailto:dhruv@zetesislabs.com">Contact</a>
+                    <a href="https://github.com/Zetesislabs" target="_blank" rel="noopener noreferrer">GitHub</a>
+                </div>
+                <div class="flex items-center gap-3">
+                    <img src="../public/images/logos/Zetesis_logo.png" alt="Zetesis"
+                        style="height: 20px; width: auto; opacity: 0.6;">
+                    <div class="text-muted text-xs">&copy; 2026 Zetesis Labs.</div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Section-view beacon -->
+    <script>
+    (function () {
+      if (!('IntersectionObserver' in window) || !navigator.sendBeacon) return;
+      var sid = '';
+      try {
+        sid = sessionStorage.getItem('sv_sid') || '';
+        if (!sid) {
+          sid = (window.crypto && crypto.randomUUID)
+            ? crypto.randomUUID()
+            : (Date.now() + '_' + Math.random().toString(36).slice(2, 10));
+          sessionStorage.setItem('sv_sid', sid);
+        }
+      } catch (e) {}
+      var seen = Object.create(null);
+      var path = location.pathname || '/';
+      function emit(sectionId) {
+        if (seen[sectionId]) return;
+        seen[sectionId] = 1;
+        try {
+          var blob = new Blob(
+            [JSON.stringify({ sectionId: sectionId, path: path, sessionId: sid })],
+            { type: 'application/json' }
+          );
+          navigator.sendBeacon('/api/section-view', blob);
+        } catch (e) {}
+      }
+      var obs = new IntersectionObserver(function (entries) {
+        for (var i = 0; i < entries.length; i++) {
+          var e = entries[i];
+          if (e.isIntersecting && e.target.id) emit(e.target.id);
+        }
+      }, { threshold: 0.5 });
+      var nodes = document.querySelectorAll(
+        'section[id], article[id], h2[id], h3[id]'
+      );
+      for (var i = 0; i < nodes.length; i++) obs.observe(nodes[i]);
+    })();
+    </script>
+</body>
+
+</html>

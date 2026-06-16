@@ -14,6 +14,10 @@ main = "src/section-view.js"
 compatibility_date = "2026-01-01"
 account_id = "75a11ac71fbcc3ddc793675245c3d95b"
 
+# Disable workers.dev preview URL; this worker only runs on the zetesislabs.com
+# route below.
+workers_dev = false
+
 # Analytics Engine binding. The dataset name is created on first write; no
 # explicit provisioning step is needed.
 [[analytics_engine_datasets]]
@@ -24,6 +28,3 @@ dataset = "section_views_dhruv"
 [[routes]]
 pattern = "zetesislabs.com/api/section-view"
 zone_id = "e18a1fe40e3f82d744a62612ebf3f0f2"
-
-# Disable workers.dev preview URL; this worker only runs on the route above.
-workers_dev = false
