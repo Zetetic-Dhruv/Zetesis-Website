@@ -16,6 +16,83 @@
     <meta property="og:url" content="https://zetesislabs.com/research.html">
     <meta property="og:image" content="https://zetesislabs.com/public/images/logos/Zetesis_logo.png">
     <link rel="stylesheet" href="output.css">
+    <style>
+        .research-card {
+            display: grid;
+            grid-template-columns: 104px 1fr auto;
+            gap: 1.75rem;
+            align-items: center;
+            border: 1px solid var(--color-hairline);
+            padding: 2rem;
+            text-decoration: none;
+            color: inherit;
+            background: #fff;
+            margin-bottom: 1.25rem;
+            transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+        }
+        .research-card:hover {
+            border-color: #000;
+            transform: translateX(4px);
+            box-shadow: -4px 0 0 #000;
+        }
+        .research-card .emblem {
+            width: 104px;
+            height: 104px;
+            border-radius: 50%;
+            border: 1px solid var(--color-hairline);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Georgia, 'Times New Roman', serif;
+            font-size: 48px;
+            line-height: 1;
+            color: #1a1a1a;
+            background: #fafafa;
+            transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+        }
+        .research-card:hover .emblem {
+            background: #000;
+            color: #fff;
+            border-color: #000;
+        }
+        .research-card .kicker {
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 11px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #888;
+            margin-bottom: 0.5rem;
+        }
+        .research-card .rtitle {
+            font-size: 30px;
+            line-height: 1.15;
+            margin: 0 0 0.6rem;
+            font-weight: 400;
+        }
+        .research-card .rdesc {
+            font-size: 15.5px;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            max-width: 620px;
+        }
+        .research-card .rarrow {
+            font-size: 24px;
+            color: #888;
+            transition: color 0.15s ease;
+        }
+        .research-card:hover .rarrow { color: #000; }
+        @media (max-width: 640px) {
+            .research-card {
+                grid-template-columns: 64px 1fr;
+                gap: 1.1rem;
+                padding: 1.5rem;
+            }
+            .research-card .emblem { width: 64px; height: 64px; font-size: 32px; }
+            .research-card .rarrow { display: none; }
+            .research-card .rtitle { font-size: 24px; }
+        }
+    </style>
 </head>
 
 <body>
@@ -50,71 +127,52 @@
 
         <!-- Index -->
         <section style="padding-top: 1rem; padding-bottom: 3rem;">
-            <div style="max-width: 820px;">
+            <div style="max-width: 860px;">
 
                 <!-- Epistemology -->
-                <div style="border-top: 1px solid var(--color-hairline); padding: 2.25rem 0;">
-                    <a href="research/epistemology.html" class="index-row"
-                        style="color: inherit; text-decoration: none; display: block;">
-                        <div style="display: flex; align-items: flex-start; gap: 1.5rem;">
-                            <span
-                                style="font-family: 'SF Mono', Monaco, monospace; font-size: 13px; color: #888; letter-spacing: 0.05em; min-width: 28px; padding-top: 0.4rem;">I.</span>
-                            <div style="flex: 1;">
-                                <div style="font-size: 28px; line-height: 1.2;">Epistemology</div>
-                                <p
-                                    style="font-size: 16px; line-height: 1.65; color: #444; margin-top: 0.75rem; max-width: 640px;">
-                                    The agent-independent part. A calculus of inquiry: imagine, experiment,
-                                    describe, communicate. Treating ignorance as a first-class object with internal
-                                    geometry, and verification as the operator that keeps a model honest.
-                                </p>
-                            </div>
-                            <span style="font-size: 22px; color: #888; padding-top: 0.4rem;">&rarr;</span>
-                        </div>
-                    </a>
-                </div>
+                <a href="research/epistemology.html" class="research-card">
+                    <div class="emblem">&Phi;</div>
+                    <div>
+                        <div class="kicker">I &middot; The calculus of inquiry</div>
+                        <h2 class="rtitle">Epistemology</h2>
+                        <p class="rdesc">
+                            The agent-independent part. A calculus of inquiry &mdash; imagine, experiment,
+                            describe, communicate &mdash; treating ignorance as a first-class object with internal
+                            geometry, and verification as the operator that keeps a model honest.
+                        </p>
+                    </div>
+                    <span class="rarrow">&rarr;</span>
+                </a>
 
                 <!-- AI -->
-                <div style="border-top: 1px solid var(--color-hairline); padding: 2.25rem 0;">
-                    <a href="research/ai.html" class="index-row"
-                        style="color: inherit; text-decoration: none; display: block;">
-                        <div style="display: flex; align-items: flex-start; gap: 1.5rem;">
-                            <span
-                                style="font-family: 'SF Mono', Monaco, monospace; font-size: 13px; color: #888; letter-spacing: 0.05em; min-width: 28px; padding-top: 0.4rem;">II.</span>
-                            <div style="flex: 1;">
-                                <div style="font-size: 28px; line-height: 1.2;">AI</div>
-                                <p
-                                    style="font-size: 16px; line-height: 1.65; color: #444; margin-top: 0.75rem; max-width: 640px;">
-                                    Synthetic discovery as the centerpiece: process-level evaluation, a
-                                    Goodhart-resistant intrinsic reward, machine-checked learning theory, and the
-                                    transformer foundations that make any of it carry weight in practice.
-                                </p>
-                            </div>
-                            <span style="font-size: 22px; color: #888; padding-top: 0.4rem;">&rarr;</span>
-                        </div>
-                    </a>
-                </div>
+                <a href="research/ai.html" class="research-card">
+                    <div class="emblem">&lambda;</div>
+                    <div>
+                        <div class="kicker">II &middot; Synthetic discovery</div>
+                        <h2 class="rtitle">AI</h2>
+                        <p class="rdesc">
+                            Synthetic discovery as the centerpiece: process-level evaluation, a
+                            Goodhart-resistant intrinsic reward, machine-checked learning theory, and the
+                            transformer foundations that make any of it carry weight in practice.
+                        </p>
+                    </div>
+                    <span class="rarrow">&rarr;</span>
+                </a>
 
                 <!-- Economics -->
-                <div
-                    style="border-top: 1px solid var(--color-hairline); border-bottom: 1px solid var(--color-hairline); padding: 2.25rem 0;">
-                    <a href="research/economics.html" class="index-row"
-                        style="color: inherit; text-decoration: none; display: block;">
-                        <div style="display: flex; align-items: flex-start; gap: 1.5rem;">
-                            <span
-                                style="font-family: 'SF Mono', Monaco, monospace; font-size: 13px; color: #888; letter-spacing: 0.05em; min-width: 28px; padding-top: 0.4rem;">III.</span>
-                            <div style="flex: 1;">
-                                <div style="font-size: 28px; line-height: 1.2;">Economics</div>
-                                <p
-                                    style="font-size: 16px; line-height: 1.65; color: #444; margin-top: 0.75rem; max-width: 640px;">
-                                    Discovery, inquiry, and the structure of ignorance treated as economic objects.
-                                    Automation debt, decision engineering, and an ignorance damage function for the
-                                    AI-saturated economy.
-                                </p>
-                            </div>
-                            <span style="font-size: 22px; color: #888; padding-top: 0.4rem;">&rarr;</span>
-                        </div>
-                    </a>
-                </div>
+                <a href="research/economics.html" class="research-card">
+                    <div class="emblem">&int;</div>
+                    <div>
+                        <div class="kicker">III &middot; Ignorance as object</div>
+                        <h2 class="rtitle">Economics</h2>
+                        <p class="rdesc">
+                            Discovery, inquiry, and the structure of ignorance treated as economic objects.
+                            Automation debt, decision engineering, and an ignorance damage function for the
+                            AI-saturated economy.
+                        </p>
+                    </div>
+                    <span class="rarrow">&rarr;</span>
+                </a>
 
             </div>
         </section>
