@@ -12,7 +12,9 @@ Dhruv Gupta (b. 31 December 2002, Bengaluru, India). Principal Investigator at Z
 
 - [Home](https://zetesislabs.com/): Zetesis Labs positioning, services, pilots, intelligence stack
 - [Dhruv Gupta — PI profile](https://zetesislabs.com/dhruv.html): full work record, live GitHub integration, research programme, contact
-- [Lab — research programme detail](https://zetesislabs.com/lab.html): framework, case studies, takeaways
+- [Research — epistemology, AI, economics](https://zetesislabs.com/research.html): the three research threads, each with its own page
+- [Consulting — industrial & applied engagements](https://zetesislabs.com/consulting.html): causal world-models, neurosymbolic twins, sensor calibration
+- [People](https://zetesislabs.com/people.html): Dhruv Gupta (PI) and Gopika Kannan (advisor)
 - [CV (PDF)](https://zetesislabs.com/public/dhruv_gupta_resume_v6.pdf): machine-readable curriculum vitae, two-page lean mathematical style
 
 ## Research engagements
