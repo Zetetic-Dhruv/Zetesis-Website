@@ -138,6 +138,30 @@
             font-size: 17px;
             font-weight: 700;
         }
+
+        /* ---- hero scene (warm concrete entry) ---- */
+        .hook { max-width: 800px; }
+        .hook .scene { font-size: 18px; line-height: 1.75; color: #222; margin: 0 0 1.1rem; }
+        .hook .scene strong { font-weight: 700; }
+
+        /* ---- hero two-column: scene (left) + TL;DR card (right) ---- */
+        .hero-grid { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 2.25rem; align-items: start; }
+        .hero-main { min-width: 0; }
+
+        /* ---- TL;DR card (right rail) ---- */
+        .tldr-card { background: #fafafa; border: 1px solid var(--color-hairline); padding: 1.35rem 1.4rem 1.1rem; }
+        .tldr-card .tag { font-family: 'SF Mono', Monaco, monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #1a1a1a; font-weight: 700; }
+        .tldr-card h2 { font-size: 18px; font-weight: 700; margin: 0.25rem 0 0.35rem; letter-spacing: 0; }
+        .tldr-card .lead { font-size: 12.5px; line-height: 1.55; color: #555; margin: 0 0 0.4rem; }
+        .move { display: grid; grid-template-columns: 18px 1fr; gap: 0.6rem; padding: 0.85rem 0; border-top: 1px solid var(--color-hairline); }
+        .move .mn { font-family: 'SF Mono', Monaco, monospace; font-size: 12px; color: #999; padding-top: 0.1rem; }
+        .move h4 { margin: 0 0 0.25rem; font-size: 14px; }
+        .move p { margin: 0; font-size: 12.5px; line-height: 1.5; color: #333; }
+        .move code { font-family: 'SF Mono', Monaco, monospace; font-size: 11px; }
+
+        @media (max-width: 900px) {
+            .hero-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+        }
         @media (max-width: 720px) {
             .programme-frame .row { grid-template-columns: 1fr; }
             .programme-frame .arrow { transform: rotate(90deg); }
@@ -174,12 +198,79 @@
             <h1 style="font-size: 52px; font-weight: 400; letter-spacing: -0.02em; margin: 0 0 1.25rem; line-height: 1.05;">
                 AI
             </h1>
-            <p class="text-muted" style="font-size: 22px; line-height: 1.45; max-width: 800px;">
-                The central question is <em>synthetic discovery</em>: AI that conducts inquiry,
-                not AI that answers questions. The work below clusters around that question,
-                from the operational evaluation framework outward through to the formal
-                kernels that let any of it be checked.
-            </p>
+
+            <div class="hero-grid">
+                <div class="hero-main">
+                <div class="hook">
+                <p class="scene">
+                    You have probably already caught one of these tools red-handed. It cited a case
+                    that does not exist, or stated a fact with total composure and was flatly wrong.
+                    The unsettling part was never the mistake. It was the <strong>confidence</strong>:
+                    the answer read clean, every line plausible, and nothing on its face told you to
+                    doubt it.
+                </p>
+                <p class="scene">
+                    Now run that forward. Point one of these systems at a hard open problem and ask it
+                    for a proof. It returns one. The steps look right. It is the kind of write-up a
+                    tired referee skims at midnight and waves through. If the proof has to compile in
+                    a system like Lean before anyone trusts it, the bluff dies on contact: the
+                    machine either closes every step or it does not, and no amount of fluent prose
+                    moves that verdict. Where no such gate exists, nobody catches it, and the wrong
+                    result travels until someone, much later, builds on it.
+                </p>
+                <p class="scene">
+                    That is the gap that should worry you, because you live on the wrong side of it.
+                    You are the one who acts on the answer. The machine pays nothing if it was wrong.
+                </p>
+                <p class="text-muted" style="font-size: 22px; line-height: 1.45; margin: 1.5rem 0 0;">
+                    So the question this page is built around is <em>synthetic discovery</em>: AI that
+                    conducts inquiry, not AI that answers questions. The work below clusters around it,
+                    from the operational evaluation framework outward through to the formal kernels
+                    that let any of it be checked.
+                </p>
+                </div>
+                </div>
+
+                <aside class="tldr-card">
+                    <div class="tag">TL;DR</div>
+                    <h2>Trust you can check, by construction</h2>
+                    <p class="lead">
+                        An answer that sounds right is not the same as one you can verify. The only
+                        checks that cannot be gamed are the ones built into the rules, not enforced by
+                        someone watching. Three ways to make trust structural instead of supervised.
+                    </p>
+
+                    <div class="move">
+                        <div class="mn">1</div>
+                        <div>
+                            <h4>Judge the process, not the answer</h4>
+                            <p>Answers are cheap to fake. Ask what the system was trying to find, what
+                                would count as finding it, why it holds, and what would have refuted it.
+                                That is the <strong>Discovery Tetrad</strong>.</p>
+                        </div>
+                    </div>
+
+                    <div class="move">
+                        <div class="mn">2</div>
+                        <div>
+                            <h4>Make the reward equal the gain</h4>
+                            <p>Set the score to how much a sealed audit the AI never sees has improved.
+                                Then running up the score and actually getting better become the same
+                                act. <strong>Signed Compression Progress</strong>, arXiv:2606.11417;
+                                the telescoping identity &Sigma; r<sub>t</sub> = &Escr;(&theta;<sub>0</sub>) &minus; &Escr;(&theta;<sub>T</sub>).</p>
+                        </div>
+                    </div>
+
+                    <div class="move">
+                        <div class="mn">3</div>
+                        <div>
+                            <h4>Force it through a compiler</h4>
+                            <p>Push the whole guarantee through a checker that accepts no bluff:
+                                <strong>21,728 lines</strong> of Lean4, machine-checked with no gaps.</p>
+                        </div>
+                    </div>
+                </aside>
+            </div>
         </section>
 
         <hr class="section-rule">
@@ -188,7 +279,8 @@
         <section style="padding-bottom: 1rem;">
             <h2 style="font-size: 28px; margin-bottom: 0.75rem;">Centerpiece &middot; Synthetic Discovery</h2>
             <p class="text-muted" style="font-size: 16px; line-height: 1.6; max-width: 760px;">
-                Two preprints define the programme. One asks how you would <em>tell</em>
+                Two preprints define the programme, and both attack the same gap from the hero:
+                a confident answer you cannot check. One asks how you would <em>tell</em>
                 whether an AI is conducting discovery; the other asks what a reward signal
                 must look like for the answer to mean anything.
             </p>
@@ -215,6 +307,11 @@
                     <span class="formula">&Sigma; r<sub>t</sub> = &Escr;(&theta;<sub>0</sub>) &minus; &Escr;(&theta;<sub>T</sub>)</span>
                     <span class="lbl">Telescoping identity &middot; Goodhart-resistant by construction</span>
                 </div>
+                <p style="font-size: 13.5px; line-height: 1.6; color: #555; text-align: center; max-width: 620px; margin: 0.9rem auto 0;">
+                    Goodhart-resistant by construction means the machine cannot win by trying harder
+                    at the wrong thing. The only way to raise the score is to actually improve what
+                    the audit measures.
+                </p>
             </div>
 
             <!-- Discovery Tetrad -->
@@ -224,16 +321,20 @@
                 </h4>
                 <p class="subtitle">D. Gupta &middot; Zenodo, May 2026 &middot; v1 preprint</p>
                 <p>
-                    Final answers in AI science are easy to game. The Discovery Tetrad
-                    moves the evaluation upstream to the <em>process</em>: did the system
-                    recover a goal structure, a witness structure, an explanation, and a
-                    refutation pathway? The result is a process-level test that does not
-                    care whether the answer happens to be right; it cares whether the
-                    discovery was reproducible.
+                    There are two ways a result fools you. It looks right and is, but for reasons
+                    that will not hold next time. Or it is faked and still reads clean. A final
+                    answer cannot tell those apart, which is why final answers in AI science are
+                    easy to game. The Discovery Tetrad moves the evaluation upstream to the
+                    <em>process</em>, and asks the four questions a real investigator&apos;s notebook
+                    would have to answer: what was the system trying to find (goal structure), what
+                    would count as having found it (witness structure), why does the answer hold
+                    (explanation), and what would have proved it wrong (refutation pathway)?
                 </p>
                 <p>
-                    The construction is small enough to fit on a slide and strict enough
-                    to fail systems that look impressive on aggregate benchmarks.
+                    The result is a process-level test that does not care whether the answer happens
+                    to be right; it cares whether the discovery was reproducible. The construction is
+                    small enough to fit on a slide and strict enough to fail systems that look
+                    impressive on aggregate benchmarks.
                 </p>
                 <div class="meta-row">
                     <span>doi:10.5281/zenodo.20147210</span>
@@ -319,8 +420,10 @@
                     capacitability (previously absent from Mathlib4) sit alongside it.
                 </p>
                 <p>
-                    Formalization is the claim, checked by the Lean4 compiler. Portions
-                    upstream where the upstream quality bar is met.
+                    Formalization is the claim, checked by the Lean4 compiler. Portions are
+                    upstreamed where the maintainers' quality bar is met. The compiler is the referee
+                    the opening scene was missing: it cannot be charmed, flattered, or rushed, and
+                    every one of those 21,728 lines had to satisfy it.
                 </p>
                 <div class="meta-row">
                     <a href="../dhruv.html" style="margin-left: auto;">Founder mirror &rarr;</a>
@@ -384,7 +487,9 @@
                     First Proof Challenge using $32 of commodity API compute on a single
                     MacBook. The headline number is not the point. The shape of the
                     failures is. Where the harness succeeds is where formalization gates
-                    exist; where it fails is where they are absent.
+                    exist; where it fails is where they are absent. That is the whole argument of
+                    this page shown in one cheap experiment: the harness wins exactly where a gate
+                    forces honesty, and loses exactly where nothing does.
                 </p>
                 <div class="meta-row">
                     <a href="../dhruv.html" style="margin-left: auto;">Founder mirror &rarr;</a>

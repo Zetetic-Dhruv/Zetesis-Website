@@ -128,12 +128,33 @@
                 Consulting
             </h1>
             <div style="width: 60px; height: 1.5px; background: #000; margin: 1.75rem 0;"></div>
-            <p style="font-size: 20px; line-height: 1.55; max-width: 780px; color: #222;">
-                Where the research is put to work. We take on engagements in industry and
-                biomedicine where the problem is not a missing model but a missing
-                <em>measurement discipline</em>: calibration that survives drift, root-cause
-                analysis tethered to evidence, instrumentation that is reproducible by the
-                team that did not build it.
+
+            <p style="font-size: 19px; line-height: 1.7; max-width: 780px; color: #222; margin: 0 0 1.1rem;">
+                A soil-CO<sub>2</sub> cell costs about $150 to build. On the bench it reads
+                true: you puff a known pulse of gas past it and the number it returns is the
+                number you put in. Then you carry it up into Lahaul-Spiti and leave it in the
+                cold, unattended, to measure what the ground is breathing out.
+            </p>
+            <p style="font-size: 19px; line-height: 1.7; max-width: 780px; color: #222; margin: 0 0 1.1rem;">
+                Three weeks in, the number it reports is no longer the number coming out of the
+                soil. The cell has drifted. No alarm fires, because nothing broke. The reading
+                that was right in the lab is quietly wrong in the field, and the carbon estimate
+                that rides on that flux inherits the error and never knows it is carrying one.
+            </p>
+            <p style="font-size: 19px; line-height: 1.7; max-width: 780px; color: #222; margin: 0 0 1.1rem;">
+                The reason you can trust this instrument at all: its readings were checked
+                against a physical count. An alkali trap sits over the same soil and chemically
+                captures every molecule of CO<sub>2</sub> the ground released, then you weigh it.
+                That is ground truth you cannot argue with. The sensor's flux landed within
+                <strong>3.8%</strong> of it. Drift caught, books closed.
+            </p>
+            <p style="font-size: 20px; line-height: 1.55; max-width: 780px; color: #222; margin: 0;">
+                Where the research is put to work. The customers who reach us rarely need a
+                smarter model. They need to know which of their numbers they can stake a
+                decision on. The problem is a missing <em>measurement discipline</em>: a
+                reading that holds when conditions change, a root cause backed by evidence
+                instead of a story, an instrument the next team can run without the people who
+                built it in the room.
             </p>
         </section>
 
@@ -146,8 +167,10 @@
                     <strong>An independent research group.</strong>
                 </p>
                 <p style="font-size: 18px; line-height: 1.7;">
-                    We build systems that make discovery measurable and dependable: grounded
-                    in measurement, world-model based, and verification-aware.
+                    A number you cannot check is a liability waiting to be paid. We build
+                    systems whose every claim can be checked against ground truth: grounded in
+                    measurement, world-model based, and verification-aware, so the number you
+                    act on is one you can defend.
                 </p>
             </div>
         </section>
@@ -155,6 +178,12 @@
         <!-- 1. The Bet -->
         <section>
             <h2>1. The Bet</h2>
+
+            <p class="text-muted" style="font-size: 16px; line-height: 1.65; max-width: 780px; margin: 0 0 1.5rem;">
+                Every approach below fails the same way the field sensor did: it sounds
+                confident with nothing underneath it. Each one needs a local world model before
+                you can stake a decision on what it says.
+            </p>
 
             <!-- Market Context -->
             <div class="border mb-4">
@@ -354,6 +383,12 @@
                     </div>
                     <h3 class="uppercase text-lg font-bold mb-2">Layer 3: Verification</h3>
                     <p class="text-muted mb-4">Inductive reasoning gate. Checks claims against ground truth.</p>
+                    <p class="text-sm" style="line-height: 1.6; max-width: 720px; margin-bottom: 1rem; color: #444;">
+                        Below is a machine-checked proof that no learner is universally best:
+                        across all possible target functions, no method beats guessing. That is
+                        why the stack commits to checking each claim rather than trusting any one
+                        model's confidence.
+                    </p>
 
                     <div style="background: #1e1e1e; padding: 1.5rem; overflow-x: auto; margin-top: 1rem;">
                         <pre
@@ -382,7 +417,9 @@
 </pre>
                     </div>
                     <p class="text-xs text-muted mt-2 italic">
-                        Formal verification in Lean4 ensures claims survive scrutiny.
+                        This is the same instinct as the alkali trap: refuse to take a system's
+                        word for its own correctness, and check it against something that cannot
+                        be argued with. Formal verification in Lean4 is that check.
                     </p>
                 </div>
             </div>
@@ -430,8 +467,11 @@
                     analysis (Cuzzolin framework) classifies each failure path by
                     <em>resolvability</em>: 60% are diagnosable from error codes alone, 12%
                     require targeted additional evidence, and 28% are structurally
-                    unresolvable without live data integration. The diagnostic tells the
-                    operator not just what happened, but what else needs to be known.</p>
+                    unresolvable without live data integration. That 28% is not the model
+                    failing. It is the line where no amount of staring at error codes will
+                    help, and the only honest move is to instrument something new. The
+                    diagnostic tells the operator not just what happened, but what else needs
+                    to be known, and where the money actually has to go.</p>
                 <p><strong>Output.</strong> Ranked suspects, fault-path narrative, and
                     minimum next checks that collapse uncertainty fastest. Drift is treated
                     as first-class; verification gates keep explanations tethered to
@@ -567,7 +607,10 @@
                 <p>Low-cost NDIR CO<sub>2</sub> cell (K33-ELG) on embedded compute, designed
                     to capture sub-minute flux pulses at research-grade precision.
                     Three-layer Bayesian calibration chain: FTIR step-test &rarr; lab pulse
-                    simulation &rarr; multi-day field mass-closure via alkali trap.</p>
+                    simulation &rarr; multi-day field mass-closure via alkali trap. The 3.8%
+                    flux MAE is the number that catches the cell being honest: the sensor's
+                    flux measured against what the trap physically counted, not against its
+                    own report.</p>
                 <div class="metric-grid">
                     <div class="m"><span class="n">~$150</span><span class="l">Bill of materials</span></div>
                     <div class="m"><span class="n">&plusmn;2 ppm</span><span class="l">Precision</span></div>
@@ -594,9 +637,9 @@
             <div class="border p-6" style="background: #fafafa;">
                 <h3 style="font-size: 18px; margin: 0 0 0.6rem;">Engage</h3>
                 <p style="font-size: 15px; line-height: 1.65; color: #333; margin: 0;">
-                    If you have a measurement-bound problem where the model is not the
-                    bottleneck (calibration drift, ambiguous root cause, sensing
-                    transferability), write to
+                    Write when you have a number you are being asked to trust and cannot prove
+                    you should, a reading that drifts after you stop watching it, or a root
+                    cause everyone has a story for and no one has evidence for. Reach
                     <a href="mailto:dhruv@zetesislabs.com"
                         style="color: #000; font-weight: bold;">dhruv@zetesislabs.com</a>.
                 </p>

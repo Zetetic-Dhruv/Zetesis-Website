@@ -47,10 +47,19 @@
             <h1 style="font-size: 52px; font-weight: 400; letter-spacing: -0.02em; margin-bottom: 1.25rem; line-height: 1.05;">
                 Epistemology
             </h1>
+            <p style="font-size: 19px; line-height: 1.7; max-width: 800px; margin-bottom: 1.5rem; color: #222;">
+                The next patient is already in the room. The signs fit three conditions, and one of
+                them kills by morning. The doctor cannot run every test before he has to act. So he
+                picks the one test that, whichever way it comes back, rules the dangerous condition
+                in or out. He is not collecting evidence. He is choosing the single question that
+                makes his ignorance smaller in the place it costs the most.
+            </p>
             <p class="text-muted" style="font-size: 22px; line-height: 1.4; max-width: 800px; margin-bottom: 2rem;">
-                An attempt to make discovery engineerable. We treat ignorance as a first-class object
-                with internal geometry, and inquiry as a controllable operator that changes what can
-                be expressed, tested, and retained.
+                That move has a name on this page. It is an attempt to make discovery engineerable.
+                We treat ignorance as a first-class object with internal geometry, and inquiry as a
+                controllable operator that changes what can be expressed, tested, and retained. The
+                question to carry through: what would change your mind, and what is the smallest
+                experiment that would settle it?
             </p>
             <div style="border-left: 3px solid #000; padding-left: 1.5rem; margin-bottom: 2rem;">
                 <p style="font-size: 18px; line-height: 1.6;">
@@ -68,7 +77,11 @@
             <h2>The Thesis</h2>
             <div class="border p-6" style="background: #fafafa;">
                 <p style="font-size: 18px; line-height: 1.7;">
-                    AI should not output "answers"; it should solve real problems:
+                    AI should not output "answers"; it should solve real problems. An answer is the
+                    fluent paragraph the chatbot hands you, the one that reads perfectly and is
+                    sometimes flatly wrong. A solved problem is when something in the world is
+                    different afterward, and you can show why it worked and what would have told you
+                    it was failing:
                 </p>
                 <ol style="padding-left: 2rem; margin-top: 1rem; line-height: 2;">
                     <li><strong>(i)</strong> a local world model,</li>
@@ -115,11 +128,13 @@
                 </div>
             </div>
 
-            <div class="mt-8 p-4 bg-gray-50 border text-sm">
-                <strong>Key motivation:</strong> Humans do not merely adapt their internal
-                model to the world; they repeatedly try to reshape the world to match
-                internal models. That capability is what produces disproportionate impact,
-                and also disproportionate failure.
+            <div style="border-left: 3px solid #000; padding-left: 1.5rem; margin-top: 2rem;">
+                <p style="font-size: 18px; line-height: 1.7;">
+                    Here is the part that carries the weight. Humans do not merely adapt their
+                    internal model to the world; they repeatedly try to reshape the world to match
+                    internal models. The hunter does it. Every founder does it. That one capability
+                    is what produces disproportionate impact, and also disproportionate failure.
+                </p>
             </div>
         </section>
 
@@ -133,7 +148,9 @@
                 believes is going on, what it is holding fixed, what it can express, and what
                 it has actually observed. Internally we represent a theory-state in a compact,
                 typed format (URS), and we track not just "uncertainty," but
-                <strong>structured ignorance</strong>.
+                <strong>structured ignorance</strong>. In plain words: a running picture of what the
+                system currently believes, what it is holding fixed for now, and what it has actually
+                seen with its own eyes versus what it has only assumed.
             </p>
 
             <div class="border p-6 bg-gray-50">
@@ -170,7 +187,8 @@
                 <div class="border p-4">
                     <h4 class="font-bold uppercase text-sm mb-2">Experiment</h4>
                     <p class="text-sm">Design minimum interventions that collapse uncertainty
-                        cheaply.</p>
+                        cheaply. This is the doctor's single test: the cheapest action that
+                        collapses the dangerous branch.</p>
                 </div>
                 <div class="border p-4">
                     <h4 class="font-bold uppercase text-sm mb-2">Describe</h4>
@@ -185,6 +203,11 @@
             </div>
 
             <h3 class="mb-4">Measurement Classes</h3>
+            <p class="mb-6" style="line-height: 1.7;">
+                What are the four classes for? They tell you what to do next, what would change your
+                mind, and which parts of the model are stable under stress. The goal is not "truth."
+                It is a world model with explicit ignorance.
+            </p>
             <table>
                 <thead>
                     <tr>
@@ -195,31 +218,29 @@
                 <tbody>
                     <tr>
                         <td><strong>Plausibility</strong></td>
-                        <td>Could a claim be made consistent with current structure?</td>
+                        <td>Could a claim be made consistent with current structure?
+                            <span style="display:block; margin-top:0.4rem; color:#777; font-style:italic; font-size:13.5px;">The doctor's third guess still fits every symptom in front of her, so it stays on the table.</span></td>
                     </tr>
                     <tr>
                         <td><strong>Verification</strong></td>
                         <td>Is there evidence or proof for this claim against the current
-                            traces and representations?</td>
+                            traces and representations?
+                            <span style="display:block; margin-top:0.4rem; color:#777; font-style:italic; font-size:13.5px;">One test would confirm it or kill it. Until the result is back, plausible is all it is.</span></td>
                     </tr>
                     <tr>
                         <td><strong>Invariance</strong></td>
                         <td>How robust is a claim under future coherent challenges (threat
-                            sets, stress tests)?</td>
+                            sets, stress tests)?
+                            <span style="display:block; margin-top:0.4rem; color:#777; font-style:italic; font-size:13.5px;">The sensor read true all winter. The question is whether it survives the first hot, humid week, when the confounder the lab never saw arrives.</span></td>
                     </tr>
                     <tr>
                         <td><strong>Efficiency</strong></td>
                         <td>Validated novelty per unit resource: how much externally checkable
-                            knowledge obtained per budget.</td>
+                            knowledge obtained per budget.
+                            <span style="display:block; margin-top:0.4rem; color:#777; font-style:italic; font-size:13.5px;">The hunter has one attempt and one afternoon of light. Which single question buys the most certainty before the chance is gone?</span></td>
                     </tr>
                 </tbody>
             </table>
-
-            <p class="text-muted italic mt-6 text-sm">
-                The goal is not "truth." The goal is a world model with explicit ignorance
-                that tells you what to do next, what would change your mind, and which parts
-                of the model are stable under stress.
-            </p>
         </section>
 
         <hr style="border: 0; border-top: 1px solid #ddd; margin: 3rem 0;">
@@ -283,12 +304,15 @@
                 <div style="display: flex; gap: 1rem; align-items: flex-start;">
                     <span class="font-mono" style="min-width: 30px;">III.</span>
                     <p>What is <strong>implicitly present</strong> in traces and regularities but
-                        not yet structured into the current representation.</p>
+                        not yet structured into the current representation. This is the senior who
+                        just knows the machine is about to fail and cannot yet say which sensor told
+                        her. The regularity is sitting in the data; nobody has named the variable.</p>
                 </div>
                 <div style="display: flex; gap: 1rem; align-items: flex-start;">
                     <span class="font-mono" style="min-width: 30px;">IV.</span>
                     <p>What is <strong>outside the current language</strong> and measurement
-                        system.</p>
+                        system. This is the question you could not even ask before the periodic
+                        table existed: the property of an element nobody had yet discovered.</p>
                 </div>
             </div>
 
@@ -304,7 +328,7 @@
         <!-- Case Studies -->
         <section class="mb-18">
             <h2>Case Studies</h2>
-            <p class="text-muted mb-8">(rendered as diagrams, not essays)</p>
+            <p class="text-muted mb-8">(each diagram is the compressed form of a real situation)</p>
 
             <div class="flex flex-col gap-12">
                 <div class="border p-6">
@@ -322,6 +346,10 @@
 
                 <div class="border p-6">
                     <h3 class="font-mono text-lg mb-4">Case 2 &middot; A doctor with the next patient</h3>
+                    <p class="mb-4" style="line-height: 1.7;">
+                        The next patient is already in the room. The signs fit three things, one of
+                        them kills by morning, and he cannot run every test before he has to decide.
+                    </p>
                     <div class="font-mono text-xs bg-gray-50 p-4 mb-4" style="line-height: 2;">
                         sparse presentation traces &rarr; candidate explanations &rarr;
                         single discriminating test &rarr; collapse of dangerous branch &rarr;
@@ -336,6 +364,10 @@
 
                 <div class="border p-6">
                     <h3 class="font-mono text-lg mb-4">Case 3 &middot; A prehistoric hunter with one attempt</h3>
+                    <p class="mb-4" style="line-height: 1.7;">
+                        One attempt. The signs in the dirt are partial and might be lying. A wrong
+                        read means the group does not eat this week.
+                    </p>
                     <div class="font-mono text-xs bg-gray-50 p-4 mb-4" style="line-height: 2;">
                         thin traces (partial, unreliable) &rarr; possible worlds &rarr;
                         committed plan &rarr; world-shaping action (tools, coordination) &rarr;
@@ -373,7 +405,7 @@
                 <div style="display: flex; gap: 1.5rem; align-items: flex-start;">
                     <span class="font-mono font-bold" style="min-width: 30px;">1.</span>
                     <p><strong>Discovery can be engineered:</strong> it is a sequence of
-                        operators under explicit ignorance, not a vibe.</p>
+                        operators under explicit ignorance, not a hunch you cannot reproduce.</p>
                 </div>
                 <div style="display: flex; gap: 1.5rem; align-items: flex-start;">
                     <span class="font-mono font-bold" style="min-width: 30px;">2.</span>
