@@ -99,8 +99,8 @@
         .witness .cap strong { color: #1a1a1a; font-weight: 600; font-style: italic; }
         .wz-lbl { font-family: 'SF Mono', Monaco, monospace; font-size: 11px; letter-spacing: 0.03em; }
         .wz-op { font-family: Georgia, 'Times New Roman', serif; font-style: italic; font-size: 16px; fill: #1a1a1a; text-anchor: middle; }
-        .wz-arrow { stroke: #1a1a1a; stroke-width: 1.5; }
-        .wz-node { fill: #1a1a1a; }
+        .wz-arrow { stroke: #b8bcc8; stroke-width: 1.5; }
+        @media (prefers-reduced-motion: reduce) { .wz-travel { display: none; } }
     </style>
 </head>
 
@@ -137,26 +137,50 @@
         <!-- Witness: not-knowing as structured terrain, crossed by two engineered moves -->
         <section style="padding-top: 1rem; padding-bottom: 1.5rem;">
             <div class="witness">
-                <svg viewBox="0 0 680 180" xmlns="http://www.w3.org/2000/svg" role="img"
-                    aria-label="Not-knowing shown as structured terrain in three zones, from what you cannot yet ask, through the open question, to what you can act on. Two deliberate moves cross it: inquiry turns what cannot yet be asked into a question; discovery turns that question into something you can act on.">
-                    <line x1="140" y1="66" x2="140" y2="100" stroke="#ccc" stroke-width="1" stroke-dasharray="3 3"/>
-                    <line x1="340" y1="66" x2="340" y2="100" stroke="#ccc" stroke-width="1" stroke-dasharray="3 3"/>
-                    <line x1="540" y1="66" x2="540" y2="100" stroke="#ccc" stroke-width="1" stroke-dasharray="3 3"/>
+                <svg viewBox="0 0 680 182" xmlns="http://www.w3.org/2000/svg" role="img"
+                    aria-label="Not-knowing shown as a continuous field shading from deep dark, what you cannot yet ask, through to warm light, what you can act on. Two deliberate moves cross it: inquiry turns what cannot yet be asked into a question; discovery turns that question into something you can act on. A point of light is carried across the field.">
+                    <defs>
+                        <linearGradient id="wz-field" x1="0" y1="0" x2="1" y2="0">
+                            <stop offset="0%" stop-color="#0b1320"/>
+                            <stop offset="28%" stop-color="#1f3357"/>
+                            <stop offset="56%" stop-color="#575b82"/>
+                            <stop offset="80%" stop-color="#b6a78d"/>
+                            <stop offset="100%" stop-color="#efe7d6"/>
+                        </linearGradient>
+                        <radialGradient id="wz-glow">
+                            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/>
+                            <stop offset="45%" stop-color="#fdf2d4" stop-opacity="0.5"/>
+                            <stop offset="100%" stop-color="#fdf2d4" stop-opacity="0"/>
+                        </radialGradient>
+                    </defs>
+
+                    <rect x="36" y="95" width="608" height="72" rx="3" fill="url(#wz-field)"/>
+
                     <text class="wz-op" x="240" y="34">inquiry</text>
                     <text class="wz-op" x="440" y="34">discovery</text>
-                    <line class="wz-arrow" x1="150" y1="58" x2="325" y2="58"/>
-                    <polygon points="335,58 325,53.5 325,62.5" fill="#1a1a1a"/>
-                    <line class="wz-arrow" x1="352" y1="58" x2="525" y2="58"/>
-                    <polygon points="535,58 525,53.5 525,62.5" fill="#1a1a1a"/>
-                    <circle cx="140" cy="58" r="4" fill="none" stroke="#999" stroke-width="1.5"/>
-                    <circle cx="340" cy="58" r="5" class="wz-node"/>
-                    <rect x="535" y="53" width="10" height="10" class="wz-node"/>
-                    <rect x="40" y="100" width="200" height="60" fill="#2b2b2b"/>
-                    <rect x="240" y="100" width="200" height="60" fill="#8f8f8f"/>
-                    <rect x="440" y="100" width="200" height="60" fill="#ececec"/>
-                    <text class="wz-lbl" x="140" y="134" text-anchor="middle" fill="#e8e8e8">what you cannot yet ask</text>
-                    <text class="wz-lbl" x="340" y="134" text-anchor="middle" fill="#ffffff">the open question</text>
-                    <text class="wz-lbl" x="540" y="134" text-anchor="middle" fill="#333333">what you can act on</text>
+                    <line class="wz-arrow" x1="150" y1="56" x2="325" y2="56"/>
+                    <polygon points="335,56 325,51.5 325,60.5" fill="#b8bcc8"/>
+                    <line class="wz-arrow" x1="352" y1="56" x2="525" y2="56"/>
+                    <polygon points="535,56 525,51.5 525,60.5" fill="#b8bcc8"/>
+
+                    <circle cx="140" cy="56" r="4" fill="none" stroke="#aab" stroke-width="1.5"/>
+                    <rect x="535" y="51" width="10" height="10" rx="1" fill="#c7bca0"/>
+
+                    <line x1="140" y1="62" x2="140" y2="95" stroke="#dfe0e6" stroke-width="1" stroke-dasharray="3 3"/>
+                    <line x1="540" y1="62" x2="540" y2="95" stroke="#e6ddc9" stroke-width="1" stroke-dasharray="3 3"/>
+
+                    <text class="wz-lbl" x="138" y="136" text-anchor="middle" fill="#dbe3f0">what you cannot yet ask</text>
+                    <text class="wz-lbl" x="340" y="136" text-anchor="middle" fill="#f4f1ea">the open question</text>
+                    <text class="wz-lbl" x="542" y="136" text-anchor="middle" fill="#3a3424">what you can act on</text>
+
+                    <g class="wz-travel">
+                        <circle r="12" cx="0" cy="0" fill="url(#wz-glow)"/>
+                        <circle r="3.4" cx="0" cy="0" fill="#ffffff"/>
+                        <animateMotion path="M150,56 L530,56" dur="6.5s" repeatCount="indefinite"
+                            calcMode="spline" keyTimes="0;1" keySplines="0.45 0 0.55 1"/>
+                        <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.14;0.84;1"
+                            dur="6.5s" repeatCount="indefinite"/>
+                    </g>
                 </svg>
                 <p class="cap">
                     Most groups treat not-knowing as a single fog to burn off with more data. We
