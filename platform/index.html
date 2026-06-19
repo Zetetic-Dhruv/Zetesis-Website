@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zetesis Platform</title>
+    <meta name="description" content="Zetesis Labs platform previews and research instruments.">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/png" href="../public/images/logos/Zetesis_logo.png">
+    <link rel="canonical" href="https://platform.zetesislabs.com/">
+    <link rel="stylesheet" href="../output.css">
+    <style>
+        .platform-hero {
+            padding-top: 4rem;
+            padding-bottom: 2.5rem;
+        }
+        .platform-kicker {
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 12px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+        .platform-title {
+            font-size: 58px;
+            font-weight: 400;
+            letter-spacing: -0.02em;
+            line-height: 1.05;
+            margin: 0;
+        }
+        .platform-rule {
+            width: 64px;
+            height: 1.5px;
+            background: #000;
+            margin: 1.75rem 0;
+        }
+        .platform-copy {
+            max-width: 680px;
+            color: #333;
+            font-size: 19px;
+            line-height: 1.65;
+            font-style: italic;
+        }
+        .instrument-list {
+            max-width: 820px;
+            margin: 0 auto 4rem;
+            border-top: 1px solid var(--color-hairline);
+        }
+        .instrument-card {
+            display: block;
+            color: inherit;
+            text-decoration: none;
+            border-bottom: 1px solid var(--color-hairline);
+            padding: 2rem 0;
+        }
+        .instrument-card:hover {
+            text-decoration: none;
+            background: #fafafa;
+        }
+        .instrument-row {
+            display: grid;
+            grid-template-columns: 56px minmax(0, 1fr) 32px;
+            gap: 1.5rem;
+            align-items: baseline;
+        }
+        .instrument-index {
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 13px;
+            color: #888;
+            letter-spacing: 0.05em;
+        }
+        .instrument-title {
+            font-size: 30px;
+            line-height: 1.2;
+            margin-bottom: 0.45rem;
+        }
+        .instrument-desc {
+            max-width: 620px;
+            color: #555;
+            font-size: 16px;
+            line-height: 1.6;
+            font-style: italic;
+        }
+        .instrument-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.45rem;
+            margin-top: 0.9rem;
+        }
+        .instrument-meta span {
+            border: 1px solid var(--color-hairline);
+            padding: 0.25rem 0.45rem;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 11px;
+            color: #555;
+            background: #fff;
+        }
+        .arrow {
+            color: #888;
+            font-size: 24px;
+        }
+        @media (max-width: 640px) {
+            .platform-title { font-size: 42px; }
+            .instrument-row {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+            .arrow { display: none; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <nav>
+            <div class="flex items-center gap-3">
+                <a href="../index.html" class="flex items-center gap-3" style="text-decoration: none; color: inherit;">
+                    <img src="../public/images/logos/Zetesis_logo.png" alt="Zetesis" style="height: 32px; width: auto;">
+                    <div style="font-weight: bold; font-size: 20px;">Zetesis Labs</div>
+                </a>
+            </div>
+            <div class="flex gap-4">
+                <a href="../index.html">Main site</a>
+                <a href="../research.html">Research</a>
+            </div>
+        </nav>
+
+        <section class="platform-hero">
+            <div class="platform-kicker">Platform previews</div>
+            <h1 class="platform-title">Zetesis Platform</h1>
+            <div class="platform-rule"></div>
+            <p class="platform-copy">
+                Research instruments before they become infrastructure. Each preview is meant
+                to make a method inspectable, stress-testable, and easier to approve before
+                the distribution layer is built around it.
+            </p>
+        </section>
+
+        <section class="instrument-list" aria-label="Available instruments">
+            <a class="instrument-card" href="../decision-engineering/">
+                <div class="instrument-row">
+                    <span class="instrument-index">[ I ]</span>
+                    <div>
+                        <div class="instrument-title">Decision Engineering Studio</div>
+                        <p class="instrument-desc">
+                            A browser-local workflow preview for turning a consulting brief into
+                            sorted unknowns, high-value questions, gatekeeper checks, an approved
+                            problem statement, and a downloadable report.
+                        </p>
+                        <div class="instrument-meta" aria-label="Preview properties">
+                            <span>Local demo state</span>
+                            <span>Full workflow</span>
+                            <span>PDF export</span>
+                            <span>API pending</span>
+                        </div>
+                    </div>
+                    <span class="arrow">&rarr;</span>
+                </div>
+            </a>
+        </section>
+
+        <footer>
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                <div class="text-sm text-muted">Zetesis Labs platform preview</div>
+                <div class="flex gap-6 text-sm">
+                    <a href="mailto:dhruv@zetesislabs.com">Contact</a>
+                    <a href="../index.html">Zetesis Labs</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+
+</html>

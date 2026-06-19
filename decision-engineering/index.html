@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decision Engineering Studio &middot; Zetesis Platform</title>
+    <meta name="description" content="Static workflow preview for the Decision Engineering Studio.">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/png" href="../public/images/logos/Zetesis_logo.png">
+    <link rel="canonical" href="https://platform.zetesislabs.com/decision-engineering/">
+    <style>
+        :root {
+            --bg: #fff;
+            --ink: #111;
+            --muted: #555;
+            --faint: #888;
+            --hairline: #d7d7d7;
+            --soft: #f8f8f5;
+            --blue: #183e5a;
+            --red: #8e2d2d;
+            --gold: #8a641d;
+            --green: #2f6f52;
+            --serif: "Times New Roman", Times, Georgia, serif;
+            --mono: "SFMono-Regular", ui-monospace, Menlo, Monaco, "Courier New", monospace;
+            --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+        * {
+            box-sizing: border-box;
+            border-radius: 0;
+        }
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--ink);
+            font-family: var(--sans);
+            font-size: 15px;
+            line-height: 1.45;
+            -webkit-font-smoothing: antialiased;
+        }
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        button,
+        input,
+        textarea,
+        select {
+            font: inherit;
+        }
+        button {
+            border: 1px solid var(--ink);
+            background: var(--ink);
+            color: #fff;
+            min-height: 34px;
+            padding: 0.45rem 0.75rem;
+            cursor: pointer;
+        }
+        button.secondary {
+            background: #fff;
+            color: var(--ink);
+        }
+        button.ghost {
+            background: transparent;
+            color: var(--ink);
+            border-color: transparent;
+            text-decoration: underline;
+            padding-left: 0;
+            padding-right: 0;
+        }
+        button:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+        input,
+        textarea,
+        select {
+            width: 100%;
+            border: 1px solid var(--hairline);
+            background: #fff;
+            color: var(--ink);
+            padding: 0.55rem 0.65rem;
+            min-height: 36px;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 110px;
+            line-height: 1.45;
+        }
+        label,
+        th {
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            font-weight: 500;
+        }
+        label {
+            display: block;
+            margin: 0 0 0.35rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        th,
+        td {
+            border-bottom: 1px solid var(--hairline);
+            padding: 0.65rem;
+            vertical-align: top;
+            text-align: left;
+        }
+        th {
+            background: #fafafa;
+        }
+        .shell {
+            max-width: 1320px;
+            margin: 0 auto;
+            padding: 1.25rem;
+        }
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--hairline);
+            padding-bottom: 0.9rem;
+            gap: 1rem;
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .brand img {
+            width: auto;
+            height: 31px;
+        }
+        .brand-copy {
+            display: flex;
+            flex-direction: column;
+            gap: 0.15rem;
+        }
+        .brand-copy b,
+        h1,
+        h2 {
+            font-family: var(--serif);
+            font-weight: 500;
+            letter-spacing: 0;
+        }
+        .brand-copy b {
+            font-size: 23px;
+            line-height: 1.1;
+        }
+        .meta,
+        .status {
+            color: var(--muted);
+            font-size: 12.5px;
+        }
+        .layout {
+            display: grid;
+            grid-template-columns: 235px minmax(0, 1fr);
+            gap: 1.25rem;
+            margin-top: 1.25rem;
+            align-items: start;
+        }
+        .sidebar,
+        .panel,
+        .auth,
+        .report-box {
+            border: 1px solid var(--hairline);
+            background: #fff;
+        }
+        .sidebar {
+            position: sticky;
+            top: 1rem;
+        }
+        .step-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            background: #fff;
+            color: var(--ink);
+            border: 0;
+            border-bottom: 1px solid var(--hairline);
+            text-align: left;
+            padding: 0.78rem 0.85rem;
+        }
+        .step-btn.active {
+            background: var(--blue);
+            color: #fff;
+        }
+        .step-num,
+        .pill,
+        .mono {
+            font-family: var(--mono);
+        }
+        .step-num {
+            font-size: 11px;
+            opacity: 0.75;
+        }
+        .panel-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            border-bottom: 1px solid var(--hairline);
+            padding: 1rem;
+            align-items: start;
+        }
+        .panel-head h1 {
+            margin: 0;
+            font-size: 34px;
+            line-height: 1.1;
+        }
+        .panel-body {
+            padding: 1rem;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1rem;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.75rem;
+        }
+        .split {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.75rem;
+        }
+        .field {
+            margin-bottom: 1rem;
+        }
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.65rem;
+            align-items: center;
+            margin-top: 1rem;
+        }
+        .pill {
+            display: inline-block;
+            border: 1px solid var(--hairline);
+            padding: 0.14rem 0.4rem;
+            font-size: 11px;
+            background: #fff;
+            white-space: nowrap;
+        }
+        .pill.high { border-color: var(--red); color: var(--red); }
+        .pill.medium { border-color: var(--gold); color: var(--gold); }
+        .pill.low { border-color: var(--green); color: var(--green); }
+        .note {
+            border-left: 3px solid var(--blue);
+            background: var(--soft);
+            padding: 0.75rem 0.9rem;
+            color: #222;
+            margin: 0.75rem 0;
+        }
+        .item-text {
+            font-family: var(--serif);
+            font-size: 16px;
+            line-height: 1.45;
+        }
+        .compact textarea {
+            min-height: 72px;
+        }
+        .empty {
+            border: 1px dashed var(--hairline);
+            padding: 1.25rem;
+            color: var(--muted);
+            background: #fafafa;
+        }
+        .auth {
+            max-width: 720px;
+            margin: 4rem auto;
+            padding: 1.25rem;
+        }
+        .auth h1 {
+            font-size: 38px;
+            margin: 0 0 0.65rem;
+        }
+        .report-box {
+            padding: 1.25rem;
+            min-height: 420px;
+            background: #fff;
+        }
+        .report-box h2 {
+            font-size: 27px;
+            margin: 1.3rem 0 0.6rem;
+        }
+        .report-box h2:first-child {
+            margin-top: 0;
+        }
+        .report-box p,
+        .report-box li {
+            line-height: 1.65;
+        }
+        .report-table {
+            margin-top: 0.75rem;
+        }
+        .hidden {
+            display: none !important;
+        }
+        @media (max-width: 900px) {
+            .layout,
+            .grid,
+            .split,
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                position: static;
+            }
+            .topbar,
+            .panel-head {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            table {
+                min-width: 920px;
+            }
+            .table-scroll {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" class="shell"></div>
+
+    <script>
+        const STORAGE_KEY = 'zetesis.decisionEngineering.demo.v1';
+        const REG_KEY = 'zetesis.decisionEngineering.registration.v1';
+        const STEPS = [
+            ['intake', 'Intake'],
+            ['sort', 'Type Sort'],
+            ['value', 'Value Tags'],
+            ['drill', 'The Drill'],
+            ['questions', 'Questions'],
+            ['gatekeepers', 'Gatekeepers'],
+            ['sentence', 'One Sentence'],
+            ['report', 'Final Report']
+        ];
+        const SOURCE_LABELS = {
+            problemStatement: 'Problem',
+            known: 'Known',
+            assumptions: 'Assumption',
+            openQuestions: 'Question'
+        };
+        const PLACEHOLDERS = {
+            'intake.problemStatement': 'Example: Bethany House has a staffing gap that is affecting operations.',
+            'intake.known': 'Example: Bethany House serves 100+ women and children a year. The CEO holds many partner relationships personally. A past Jericho facility plan was stopped by school-district concern.',
+            'intake.assumptions': 'Example: The staffing gap is mainly a resourcing problem. A standard hire would close it. Better measurement is straightforwardly good.',
+            'intake.openQuestions': 'Example: Who must approve a staffing change? What relationship breaks if we move too fast? What question is this framing keeping us from asking?',
+            'drill.frameQuestion': 'Example: What question is this framing keeping us from asking?',
+            'oneSentence.briefText': 'Example: There is a staffing gap.',
+            'oneSentence.whatChanged': 'Example: The EA role appears to carry institutional memory and partner relationships, not just tasks.',
+            'oneSentence.reframeText': 'Example: The staffing gap is not only a resourcing problem; it is a relationship-continuity problem.',
+            'oneSentence.rulesIn': 'Example: Protect continuity, transfer relationships, hire for community standing.',
+            'oneSentence.rulesOut': 'Example: Post the job, screen only for generic skills, fill fast.',
+            'oneSentence.oneThingLeftOpen': 'Example: Which partner relationship is most fragile?',
+            'oneSentence.whyLeftOpen': 'Example: We need a channel outside the CEO before treating this as settled.'
+        };
+        const ITEM_PLACEHOLDERS = {
+            rawText: 'Example: The Executive Assistant role holds several donor and partner relationships.',
+            holder: 'Example: Bethany House CEO or public record',
+            veto: 'Example: School district, board chair, funder',
+            valueRationale: 'Example: High value because it can change the recommended action and who must be consulted.',
+            whoSaysYes: 'Example: Program director',
+            likelyToSayNo: 'Example: Board member concerned about budget',
+            reengineeredQuestion: 'Example: Which relationship must survive the staffing change?'
+        };
+
+        let registration = loadRegistration();
+        let state = loadState();
+        let currentStep = state.currentStep || 'intake';
+        let statusText = '';
+        let reportBlob = null;
+        let reportUrl = '';
+
+        function defaultState() {
+            return {
+                currentStep: 'intake',
+                intake: { problemStatement: '', known: '', assumptions: '', openQuestions: '' },
+                items: [],
+                drill: {
+                    assumptions: [emptyAssumption(), emptyAssumption(), emptyAssumption()],
+                    frameQuestion: ''
+                },
+                questionEngineering: { variants: {} },
+                oneSentence: {
+                    briefText: '',
+                    whatChanged: '',
+                    reframeText: '',
+                    rulesIn: '',
+                    rulesOut: '',
+                    status: 'draft',
+                    oneThingLeftOpen: '',
+                    whyLeftOpen: '',
+                    aiCheck: null
+                },
+                finalReport: { document: null, generatedAt: '', pdfGeneratedAt: '' },
+                updatedAt: ''
+            };
+        }
+
+        function emptyAssumption() {
+            return { selectedItemId: '', selectedText: '', givenStatement: '', wrongIf: '', whatChanges: '', scaffold: null };
+        }
+
+        function loadRegistration() {
+            try { return JSON.parse(localStorage.getItem(REG_KEY) || 'null'); } catch (_) { return null; }
+        }
+
+        function loadState() {
+            try { return normalizeState(JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null')); } catch (_) { return defaultState(); }
+        }
+
+        function normalizeState(input) {
+            const next = defaultState();
+            if (!input || typeof input !== 'object') return next;
+            merge(next, input);
+            if (!Array.isArray(next.items)) next.items = [];
+            next.items = next.items.map(normalizeItem);
+            if (!Array.isArray(next.drill.assumptions)) next.drill.assumptions = [emptyAssumption(), emptyAssumption(), emptyAssumption()];
+            while (next.drill.assumptions.length < 3) next.drill.assumptions.push(emptyAssumption());
+            next.oneSentence.status = next.oneSentence.status === 'approved' ? 'approved' : 'draft';
+            return next;
+        }
+
+        function normalizeItem(item) {
+            const normalized = {
+                id: item.id || crypto.randomUUID(),
+                sourceField: item.sourceField || 'known',
+                rawText: item.rawText || '',
+                bucket: item.bucket || '',
+                holder: item.holder || '',
+                status: item.status || 'needs_attribution',
+                valueTag: item.valueTag || '',
+                valueRationale: item.valueRationale || '',
+                aiNotes: item.aiNotes || '',
+                veto: item.veto || '',
+                whoSaysYes: item.whoSaysYes || '',
+                likelyToSayNo: item.likelyToSayNo || '',
+                reengineeredQuestion: item.reengineeredQuestion || ''
+            };
+            refreshItemStatus(normalized);
+            return normalized;
+        }
+
+        function merge(target, source) {
+            for (const [key, value] of Object.entries(source || {})) {
+                if (value && typeof value === 'object' && !Array.isArray(value) && target[key] && typeof target[key] === 'object') merge(target[key], value);
+                else if (value !== undefined) target[key] = value;
+            }
+        }
+
+        function persist() {
+            state.currentStep = currentStep;
+            state.updatedAt = new Date().toISOString();
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        }
+
+        function render() {
+            if (!registration) return renderRegistration();
+            document.getElementById('app').innerHTML = `
+                <div class="topbar">
+                    <div class="brand">
+                        <a href="../platform/" aria-label="Zetesis Platform"><img src="../public/images/logos/Zetesis_logo.png" alt="Zetesis"></a>
+                        <div class="brand-copy">
+                            <b>Decision Engineering Studio</b>
+                            <span class="meta">${escapeHtml(registration.team || 'Client preview')} · Browser-local workflow preview</span>
+                        </div>
+                    </div>
+                    <div class="actions" style="margin-top:0">
+                        <button class="secondary" id="saveBtn">Save</button>
+                        <button class="secondary" id="resetBtn">Reset Demo</button>
+                        <span class="status">${escapeHtml(statusText)}</span>
+                    </div>
+                </div>
+                <div class="layout">
+                    <aside class="sidebar">
+                        ${STEPS.map(([id, label], index) => `
+                            <button class="step-btn ${id === currentStep ? 'active' : ''}" data-step="${id}">
+                                <span>${label}</span><span class="step-num">${String(index + 1).padStart(2, '0')}</span>
+                            </button>
+                        `).join('')}
+                    </aside>
+                    <main class="panel">
+                        <div class="panel-head">
+                            <h1>${escapeHtml(STEPS.find(([id]) => id === currentStep)?.[1] || '')}</h1>
+                            <div class="meta">${summaryMeta()}</div>
+                        </div>
+                        <div class="panel-body">${renderStep()}</div>
+                    </main>
+                </div>
+            `;
+        }
+
+        function renderRegistration() {
+            document.getElementById('app').innerHTML = `
+                <div class="auth">
+                    <div class="brand" style="margin-bottom:1.25rem">
+                        <img src="../public/images/logos/Zetesis_logo.png" alt="Zetesis">
+                        <div class="brand-copy">
+                            <b>Zetesis Platform</b>
+                            <span class="meta">Decision Engineering Studio preview</span>
+                        </div>
+                    </div>
+                    <h1>Enter Studio</h1>
+                    <p class="meta" style="font-size:15px; line-height:1.65; margin-bottom:1.25rem">
+                        Dummy registration for client review. Everything in this preview is stored in this browser only.
+                    </p>
+                    <div class="field">
+                        <label>Name</label>
+                        <input id="regName" autocomplete="name" placeholder="Example: Maya Shah">
+                    </div>
+                    <div class="split">
+                        <div class="field">
+                            <label>Team or organisation</label>
+                            <input id="regTeam" placeholder="Example: Bethany House Review">
+                        </div>
+                        <div class="field">
+                            <label>Email</label>
+                            <input id="regEmail" type="email" placeholder="Example: maya@example.org">
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <button id="registerBtn">Enter Studio</button>
+                        <a class="meta" href="../platform/">Back to platform</a>
+                    </div>
+                </div>
+            `;
+        }
+
+        function summaryMeta() {
+            const settled = state.items.filter((item) => item.status === 'settled').length;
+            const high = state.items.filter((item) => item.valueTag === 'High').length;
+            return `${state.items.length} items · ${settled} settled · ${high} high-value`;
+        }
+
+        function renderStep() {
+            if (currentStep === 'intake') return renderIntake();
+            if (currentStep === 'sort') return renderSort();
+            if (currentStep === 'value') return renderValue();
+            if (currentStep === 'drill') return renderDrill();
+            if (currentStep === 'questions') return renderQuestions();
+            if (currentStep === 'gatekeepers') return renderGatekeepers();
+            if (currentStep === 'sentence') return renderSentence();
+            if (currentStep === 'report') return renderReport();
+            return '';
+        }
+
+        function renderIntake() {
+            return `
+                <div class="note"><b class="mono">Static preview</b><br>Live model calls and persistent storage will be wired next. This version lets reviewers approve the workflow and report UX.</div>
+                <div class="grid">
+                    ${textareaField('Problem statement', 'intake.problemStatement')}
+                    ${textareaField('Everything known', 'intake.known')}
+                    ${textareaField('Assumptions', 'intake.assumptions')}
+                    ${textareaField('Open questions', 'intake.openQuestions')}
+                </div>
+                <div class="actions">
+                    <button id="parseBtn">Parse into items</button>
+                    <button class="secondary" id="seedBtn">Load Bethany House Example</button>
+                    <button class="secondary" id="seedCompleteBtn">Load Complete Example</button>
+                    <button class="secondary" id="saveBtn2">Save</button>
+                </div>
+            `;
+        }
+
+        function renderSort() {
+            if (!state.items.length) return emptyState('No intake items yet.');
+            return `
+                <div class="actions" style="margin-top:0; margin-bottom:0.75rem">
+                    <button id="sortBtn">Demo Sort</button>
+                    <button class="secondary" id="addItemBtn">Add Item</button>
+                </div>
+                <div class="table-scroll"><table>
+                    <thead><tr>
+                        <th style="width:43%">Item</th><th style="width:10%">Source</th><th style="width:10%">Bucket</th>
+                        <th style="width:22%">Holder / source</th><th style="width:10%">Status</th><th style="width:5%"></th>
+                    </tr></thead>
+                    <tbody>${state.items.map(renderSortRow).join('')}</tbody>
+                </table></div>
+            `;
+        }
+
+        function renderSortRow(item) {
+            return `
+                <tr>
+                    <td><textarea class="item-input" data-item-id="${item.id}" data-field="rawText" placeholder="${escapeAttr(ITEM_PLACEHOLDERS.rawText)}">${escapeHtml(item.rawText)}</textarea><div class="meta">${escapeHtml(item.aiNotes || '')}</div></td>
+                    <td><span class="pill">${escapeHtml(SOURCE_LABELS[item.sourceField] || item.sourceField)}</span></td>
+                    <td>${selectItemField(item, 'bucket', ['', 'KK', 'KU', 'UK', 'UU'])}</td>
+                    <td><input data-item-id="${item.id}" data-field="holder" value="${escapeAttr(item.holder)}" placeholder="${escapeAttr(ITEM_PLACEHOLDERS.holder)}"></td>
+                    <td><span class="pill">${escapeHtml(item.status || 'needs_attribution')}</span></td>
+                    <td><button class="ghost" data-remove-item="${item.id}">Del</button></td>
+                </tr>
+            `;
+        }
+
+        function renderValue() {
+            const items = state.items.filter((item) => item.bucket && item.bucket !== 'KK');
+            if (!items.length) return emptyState('No KU, UK, or UU items yet.');
+            return `
+                <div class="actions" style="margin-top:0; margin-bottom:0.75rem">
+                    <button id="valueBtn">Demo Value Tags</button>
+                </div>
+                <div class="table-scroll"><table>
+                    <thead><tr><th style="width:48%">Item</th><th style="width:10%">Bucket</th><th style="width:12%">Value</th><th style="width:30%">Rationale</th></tr></thead>
+                    <tbody>${items.map(renderValueRow).join('')}</tbody>
+                </table></div>
+            `;
+        }
+
+        function renderValueRow(item) {
+            return `
+                <tr>
+                    <td class="item-text">${escapeHtml(item.rawText)}</td>
+                    <td><span class="pill">${escapeHtml(item.bucket)}</span></td>
+                    <td>${selectItemField(item, 'valueTag', ['', 'High', 'Medium', 'Low'])}</td>
+                    <td><textarea data-item-id="${item.id}" data-field="valueRationale" placeholder="${escapeAttr(ITEM_PLACEHOLDERS.valueRationale)}">${escapeHtml(item.valueRationale)}</textarea></td>
+                </tr>
+            `;
+        }
+
+        function renderDrill() {
+            const options = itemOptions(true);
+            return `
+                <div class="grid-3">
+                    ${state.drill.assumptions.map((assumption, index) => `
+                        <section class="panel compact" style="margin:0">
+                            <div class="panel-head"><h1 style="font-size:22px">Assumption ${index + 1}</h1></div>
+                            <div class="panel-body">
+                                <div class="field">
+                                    <label>Selected item</label>
+                                    <select data-assumption-index="${index}" data-assumption-field="selectedItemId">
+                                        <option value=""></option>
+                                        ${options.map((option) => `<option value="${option.id}" ${assumption.selectedItemId === option.id ? 'selected' : ''}>${escapeHtml(option.label)}</option>`).join('')}
+                                    </select>
+                                </div>
+                                ${textareaAssumption(index, 'Given statement', 'givenStatement')}
+                                ${textareaAssumption(index, 'Wrong if', 'wrongIf')}
+                                ${textareaAssumption(index, 'What changes', 'whatChanges')}
+                                <div class="actions"><button data-drill-scaffold="${index}">Scaffold</button></div>
+                                ${renderScaffold(assumption)}
+                            </div>
+                        </section>
+                    `).join('')}
+                </div>
+                <div class="field" style="margin-top:1rem">
+                    <label>Frame question</label>
+                    <input data-path="drill.frameQuestion" value="${escapeAttr(state.drill.frameQuestion)}" placeholder="${escapeAttr(PLACEHOLDERS['drill.frameQuestion'])}">
+                </div>
+            `;
+        }
+
+        function renderScaffold(assumption) {
+            if (!assumption.scaffold) return '';
+            return `
+                <div class="note">
+                    <b>Claim phrasings</b>
+                    <ol>${(assumption.scaffold.claimOptions || []).map((x) => `<li>${escapeHtml(x)}</li>`).join('')}</ol>
+                    <b>Angles</b>
+                    <ol>${(assumption.scaffold.angles || []).map((x) => `<li>${escapeHtml(x)}</li>`).join('')}</ol>
+                    <div class="meta">${escapeHtml(assumption.scaffold.frameQuestion || '')}</div>
+                </div>
+            `;
+        }
+
+        function renderQuestions() {
+            const items = state.items.filter((item) => item.sourceField === 'openQuestions' || item.bucket === 'KU' || item.rawText.includes('?'));
+            if (!items.length) return emptyState('No open questions yet.');
+            return `
+                <div class="table-scroll"><table>
+                    <thead><tr><th style="width:38%">Original</th><th style="width:32%">Selected variant</th><th style="width:20%">Variants</th><th style="width:10%"></th></tr></thead>
+                    <tbody>${items.map(renderQuestionRow).join('')}</tbody>
+                </table></div>
+            `;
+        }
+
+        function renderQuestionRow(item) {
+            const variants = state.questionEngineering.variants[item.id] || [];
+            return `
+                <tr>
+                    <td class="item-text">${escapeHtml(item.rawText)}</td>
+                    <td><textarea data-item-id="${item.id}" data-field="reengineeredQuestion" placeholder="${escapeAttr(ITEM_PLACEHOLDERS.reengineeredQuestion)}">${escapeHtml(item.reengineeredQuestion)}</textarea></td>
+                    <td>${variants.map((variant) => `<button class="secondary" style="margin:0 0 0.35rem; width:100%; text-align:left" data-use-variant="${item.id}" data-variant="${escapeAttr(variant)}">${escapeHtml(variant)}</button>`).join('')}</td>
+                    <td><button data-sharpen-question="${item.id}">Sharpen</button></td>
+                </tr>
+            `;
+        }
+
+        function renderGatekeepers() {
+            const items = highValueQuestions();
+            const risk = channelRisk();
+            return `
+                ${risk ? `<div class="note"><b>Channel risk</b><br>${escapeHtml(risk)}</div>` : ''}
+                ${items.length ? `
+                    <div class="table-scroll"><table>
+                        <thead><tr><th style="width:26%">High-value item</th><th style="width:26%">Curated question</th><th style="width:14%">Who says yes</th><th style="width:14%">Can say no</th><th style="width:14%">Likely no</th><th style="width:6%">Ready</th></tr></thead>
+                        <tbody>${items.map(renderGatekeeperRow).join('')}</tbody>
+                    </table></div>
+                ` : emptyState('Tag at least one KU, UK, or UU item High before mapping gatekeepers.')}
+            `;
+        }
+
+        function renderGatekeeperRow(item) {
+            return `
+                <tr>
+                    <td class="item-text">${escapeHtml(item.rawText)}</td>
+                    <td><textarea data-item-id="${item.id}" data-field="reengineeredQuestion" placeholder="${escapeAttr(ITEM_PLACEHOLDERS.reengineeredQuestion)}">${escapeHtml(item.reengineeredQuestion)}</textarea></td>
+                    <td><input data-item-id="${item.id}" data-field="whoSaysYes" value="${escapeAttr(item.whoSaysYes)}" placeholder="${escapeAttr(ITEM_PLACEHOLDERS.whoSaysYes)}"></td>
+                    <td><input data-item-id="${item.id}" data-field="veto" value="${escapeAttr(item.veto)}" placeholder="${escapeAttr(ITEM_PLACEHOLDERS.veto)}"></td>
+                    <td><input data-item-id="${item.id}" data-field="likelyToSayNo" value="${escapeAttr(item.likelyToSayNo)}" placeholder="${escapeAttr(ITEM_PLACEHOLDERS.likelyToSayNo)}"></td>
+                    <td><span class="pill">${isReadyHighValueQuestion(item) ? 'ready' : 'missing'}</span></td>
+                </tr>
+            `;
+        }
+
+        function renderSentence() {
+            const check = state.oneSentence.aiCheck;
+            return `
+                <div class="grid">
+                    ${textareaField('Brief as given', 'oneSentence.briefText')}
+                    ${textareaField('What changed', 'oneSentence.whatChanged')}
+                    ${textareaField('Reframed sentence', 'oneSentence.reframeText')}
+                    <div>
+                        ${textareaField('Rules in', 'oneSentence.rulesIn')}
+                        ${textareaField('Rules out', 'oneSentence.rulesOut')}
+                    </div>
+                    ${textareaField('One thing left open', 'oneSentence.oneThingLeftOpen')}
+                    ${textareaField('Why left open', 'oneSentence.whyLeftOpen')}
+                </div>
+                <div class="actions">
+                    <button id="sentenceCheckBtn">Check Sentence</button>
+                    <button class="secondary" id="approveSentenceBtn">Approve Sentence</button>
+                    <span class="pill">${escapeHtml(state.oneSentence.status || 'draft')}</span>
+                </div>
+                ${check ? `<div class="note"><b>${escapeHtml(check.verdict)}</b><br>${escapeHtml(check.reasoning)}<br><span class="meta">${escapeHtml((check.missingFields || []).join(', '))}</span></div>` : ''}
+            `;
+        }
+
+        function renderReport() {
+            return `
+                <div class="actions" style="margin-top:0; margin-bottom:0.75rem">
+                    <button id="reportBtn">Generate Report</button>
+                    <button class="secondary" id="downloadPdfBtn" ${state.finalReport.document ? '' : 'disabled'}>Download PDF</button>
+                    <button class="secondary" id="copyReportBtn">Copy Text</button>
+                </div>
+                ${state.finalReport.document ? renderReportDocument(state.finalReport.document) : emptyState('Generate report to preview the PDF content.')}
+            `;
+        }
+
+        function renderReportDocument(document) {
+            return `
+                <div class="report-box" id="reportPreview">
+                    <h2>Refined Problem Statement</h2>
+                    <p>${escapeHtml(document.refinedProblemStatement || 'Draft not yet approved.')}</p>
+                    <h2>Curated High-Value Questions</h2>
+                    ${document.highValueQuestions.length ? `<ol>${document.highValueQuestions.map((item) => `
+                        <li><b>${escapeHtml(item.question)}</b><br>
+                        <span class="meta">Who says yes: ${escapeHtml(item.whoMustSayYes)} · Veto: ${escapeHtml(item.vetoHolder)} · Likely no: ${escapeHtml(item.likelyToSayNo)}</span></li>
+                    `).join('')}</ol>` : '<p class="meta">No high-value questions ready.</p>'}
+                    <h2>Type Map</h2>
+                    <div class="table-scroll"><table class="report-table">
+                        <thead><tr><th>Bucket</th><th>Status</th><th>Value</th><th>Holder/source</th><th>Source</th><th>Item</th></tr></thead>
+                        <tbody>${document.typeMap.map((item) => `<tr><td>${escapeHtml(item.bucket)}</td><td>${escapeHtml(item.status)}</td><td>${escapeHtml(item.valueTag)}</td><td>${escapeHtml(item.holder)}</td><td>${escapeHtml(item.sourceField)}</td><td>${escapeHtml(item.item)}</td></tr>`).join('')}</tbody>
+                    </table></div>
+                    <h2>Assumption Drill Summary</h2>
+                    ${document.drillSummary.map((assumption) => `<p><b>${escapeHtml(assumption.label)}</b><br>Given: ${escapeHtml(assumption.givenStatement)}<br>Wrong if: ${escapeHtml(assumption.wrongIf)}<br>What changes: ${escapeHtml(assumption.whatChanges)}</p>`).join('') || '<p class="meta">No drill entries recorded.</p>'}
+                    <h2>One Thing Left Open</h2>
+                    <p>${escapeHtml(document.oneThingLeftOpen || '')}</p>
+                    ${document.whyLeftOpen ? `<p class="meta">${escapeHtml(document.whyLeftOpen)}</p>` : ''}
+                    ${document.guardrailNote ? `<h2>Guardrail Note</h2><p class="meta">${escapeHtml(document.guardrailNote)}</p>` : ''}
+                </div>
+            `;
+        }
+
+        function textareaField(label, path) {
+            return `<div class="field"><label>${label}</label><textarea data-path="${path}" placeholder="${escapeAttr(PLACEHOLDERS[path] || '')}">${escapeHtml(getPath(state, path) || '')}</textarea></div>`;
+        }
+
+        function textareaAssumption(index, label, field) {
+            const assumption = state.drill.assumptions[index];
+            return `<div class="field"><label>${label}</label><textarea data-assumption-index="${index}" data-assumption-field="${field}" placeholder="Example: ${escapeAttr(label)}">${escapeHtml(assumption[field] || '')}</textarea></div>`;
+        }
+
+        function selectItemField(item, field, options) {
+            return `<select data-item-id="${item.id}" data-field="${field}">${options.map((option) => `<option value="${option}" ${item[field] === option ? 'selected' : ''}>${option}</option>`).join('')}</select>`;
+        }
+
+        function emptyState(text) {
+            return `<div class="empty">${escapeHtml(text)}</div>`;
+        }
+
+        document.addEventListener('click', (event) => {
+            const target = event.target.closest('button');
+            if (!target) return;
+            if (target.dataset.step) {
+                currentStep = target.dataset.step;
+                persist();
+                render();
+                return;
+            }
+            if (target.id === 'registerBtn') register();
+            if (target.id === 'saveBtn' || target.id === 'saveBtn2') save();
+            if (target.id === 'resetBtn') resetDemo();
+            if (target.id === 'seedBtn') seedExample();
+            if (target.id === 'seedCompleteBtn') seedCompleteExample();
+            if (target.id === 'parseBtn') parseIntake();
+            if (target.id === 'sortBtn') sortItems();
+            if (target.id === 'valueBtn') valueItems();
+            if (target.id === 'addItemBtn') addItem();
+            if (target.dataset.removeItem) removeItem(target.dataset.removeItem);
+            if (target.dataset.drillScaffold) scaffoldDrill(Number(target.dataset.drillScaffold));
+            if (target.dataset.sharpenQuestion) sharpenQuestion(target.dataset.sharpenQuestion);
+            if (target.dataset.useVariant) useVariant(target.dataset.useVariant, target.dataset.variant);
+            if (target.id === 'sentenceCheckBtn') checkSentence();
+            if (target.id === 'approveSentenceBtn') approveSentence();
+            if (target.id === 'reportBtn') generateReport();
+            if (target.id === 'downloadPdfBtn') downloadPdf();
+            if (target.id === 'copyReportBtn') copyReport();
+        });
+
+        document.addEventListener('input', (event) => {
+            const target = event.target;
+            if (target.dataset.path) setPath(state, target.dataset.path, target.value);
+            if (target.dataset.itemId) {
+                const item = state.items.find((x) => x.id === target.dataset.itemId);
+                if (item) {
+                    item[target.dataset.field] = target.value;
+                    if (target.dataset.field === 'bucket' || target.dataset.field === 'holder') refreshItemStatus(item);
+                }
+            }
+            if (target.dataset.assumptionIndex) {
+                const assumption = state.drill.assumptions[Number(target.dataset.assumptionIndex)];
+                assumption[target.dataset.assumptionField] = target.value;
+                if (target.dataset.assumptionField === 'selectedItemId') {
+                    const item = state.items.find((x) => x.id === target.value);
+                    assumption.selectedText = item?.rawText || '';
+                    if (!assumption.givenStatement) assumption.givenStatement = item?.rawText || '';
+                }
+            }
+            state.oneSentence.status = state.oneSentence.status === 'approved' && target.dataset.path?.startsWith('oneSentence.') ? 'draft' : state.oneSentence.status;
+            persist();
+        });
+
+        function register() {
+            registration = {
+                name: document.getElementById('regName').value.trim() || 'Client reviewer',
+                team: document.getElementById('regTeam').value.trim() || 'Client preview',
+                email: document.getElementById('regEmail').value.trim()
+            };
+            localStorage.setItem(REG_KEY, JSON.stringify(registration));
+            statusText = 'Registered.';
+            render();
+        }
+
+        function save() {
+            persist();
+            statusText = 'Saved ' + new Date().toLocaleTimeString();
+            render();
+        }
+
+        function resetDemo() {
+            if (!confirm('Reset this browser-local demo workspace?')) return;
+            localStorage.removeItem(STORAGE_KEY);
+            state = defaultState();
+            currentStep = 'intake';
+            statusText = 'Demo reset.';
+            render();
+        }
+
+        function seedExample() {
+            state.intake.problemStatement = 'Bethany House says it has a staffing gap.';
+            state.intake.known = 'Bethany House serves more than 100 women and children a year. The CEO said the Executive Assistant seat carries partner relationship memory that is not written down. A past Jericho facility plan was stopped by school-district concern.';
+            state.intake.assumptions = 'The staffing gap is mainly a resourcing problem. A standard hire would close it. Better measurement is straightforwardly good.';
+            state.intake.openQuestions = 'Who must approve a staffing change? What relationship breaks if we move too fast? What question is this framing keeping us from asking?';
+            statusText = 'Example loaded.';
+            persist();
+            render();
+        }
+
+        function seedCompleteExample() {
+            seedExample();
+            const sampleItems = [
+                {
+                    sourceField: 'problemStatement',
+                    rawText: 'Bethany House says it has a staffing gap.',
+                    bucket: 'KU',
+                    holder: 'Bethany House CEO',
+                    valueTag: 'Medium',
+                    valueRationale: 'Medium value because it names the brief but does not yet identify the hidden constraint.'
+                },
+                {
+                    sourceField: 'known',
+                    rawText: 'Bethany House serves more than 100 women and children a year.',
+                    bucket: 'KK',
+                    holder: 'public record',
+                    valueTag: 'Low',
+                    valueRationale: 'Low value for the client conversation because it can be settled through research.'
+                },
+                {
+                    sourceField: 'known',
+                    rawText: 'The CEO said the Executive Assistant seat carries partner relationship memory that is not written down.',
+                    bucket: 'UK',
+                    holder: 'Bethany House CEO',
+                    valueTag: 'High',
+                    valueRationale: 'High value because it changes the staffing problem into a relationship-continuity problem.',
+                    reengineeredQuestion: 'Which partner relationship must survive the staffing transition?',
+                    whoSaysYes: 'Bethany House CEO',
+                    veto: 'Board chair',
+                    likelyToSayNo: 'Budget owner'
+                },
+                {
+                    sourceField: 'known',
+                    rawText: 'A past Jericho facility plan was stopped by school-district concern.',
+                    bucket: 'UK',
+                    holder: 'Bethany House CEO',
+                    valueTag: 'High',
+                    valueRationale: 'High value because it names a recoverability and veto-risk pattern.',
+                    reengineeredQuestion: 'Which outside stakeholder could quietly stop a staffing or facility change?',
+                    whoSaysYes: 'Bethany House CEO',
+                    veto: 'School district or board chair',
+                    likelyToSayNo: 'Outer-ring community stakeholder'
+                },
+                {
+                    sourceField: 'assumptions',
+                    rawText: 'The staffing gap is mainly a resourcing problem.',
+                    bucket: 'KU',
+                    holder: 'student team',
+                    valueTag: 'High',
+                    valueRationale: 'High value because the assumption determines whether the team recommends hiring or continuity protection.',
+                    reengineeredQuestion: 'What would prove the staffing gap is actually a relationship-continuity problem?',
+                    whoSaysYes: 'Bethany House CEO',
+                    veto: 'Board chair',
+                    likelyToSayNo: 'Operations lead'
+                },
+                {
+                    sourceField: 'openQuestions',
+                    rawText: 'What question is this framing keeping us from asking?',
+                    bucket: 'UU',
+                    holder: 'student team',
+                    valueTag: 'High',
+                    valueRationale: 'High value because it can reveal the decision category the team has not named.',
+                    reengineeredQuestion: 'What question about trust or continuity has the staffing frame kept outside the conversation?',
+                    whoSaysYes: 'Bethany House CEO',
+                    veto: 'Board chair',
+                    likelyToSayNo: 'Time-constrained program owner'
+                }
+            ];
+            state.items = sampleItems.map((item) => normalizeItem({ id: crypto.randomUUID(), ...item }));
+            state.drill.assumptions = [
+                {
+                    selectedItemId: state.items[4].id,
+                    selectedText: state.items[4].rawText,
+                    givenStatement: 'The staffing gap is mainly a resourcing problem.',
+                    wrongIf: 'The missing capacity is actually relationship continuity and institutional memory.',
+                    whatChanges: 'The team designs a transition and relationship-protection plan before writing a generic hiring recommendation.',
+                    scaffold: {
+                        claimOptions: ['The staffing gap is mainly a resourcing problem.'],
+                        angles: ['Relationship continuity', 'Institutional memory', 'Outside veto risk'],
+                        frameQuestion: 'What question is this framing keeping us from asking?'
+                    }
+                },
+                {
+                    selectedItemId: state.items[2].id,
+                    selectedText: state.items[2].rawText,
+                    givenStatement: 'The Executive Assistant role can be replaced by task capacity alone.',
+                    wrongIf: 'The role carries partner trust and tacit memory that cannot be transferred by task handoff.',
+                    whatChanges: 'The recommendation must protect continuity before optimizing staffing volume.',
+                    scaffold: null
+                },
+                {
+                    selectedItemId: state.items[3].id,
+                    selectedText: state.items[3].rawText,
+                    givenStatement: 'The formal decision-maker is the only actor who can stop implementation.',
+                    wrongIf: 'An outer-ring stakeholder can quietly stop implementation by damaging trust.',
+                    whatChanges: 'The team maps recoverability and veto risk before proposing implementation.',
+                    scaffold: null
+                }
+            ];
+            state.drill.frameQuestion = 'What question about trust and recoverability is the staffing frame hiding?';
+            state.oneSentence = {
+                briefText: 'Bethany House says it has a staffing gap.',
+                whatChanged: 'The EA role appears to carry institutional memory and partner relationships, not just tasks.',
+                reframeText: 'The staffing gap is not only a resourcing problem; it is a relationship-continuity problem.',
+                rulesIn: 'Protect continuity, transfer relationships, map veto risk, hire for community standing.',
+                rulesOut: 'Post the job, screen only for generic skills, fill quickly, treat the CEO as the only channel.',
+                status: 'approved',
+                oneThingLeftOpen: 'Which partner relationship is most fragile during the transition?',
+                whyLeftOpen: 'The team needs a channel outside the CEO before treating this as settled.',
+                aiCheck: {
+                    verdict: 'strong',
+                    reasoning: 'The reframe names a tension beyond the brief and has populated rules in/rules out.',
+                    missingFields: []
+                }
+            };
+            state.questionEngineering.variants = {};
+            state.finalReport = { document: null, generatedAt: '', pdfGeneratedAt: '' };
+            currentStep = 'report';
+            statusText = 'Complete example loaded.';
+            persist();
+            render();
+        }
+
+        function parseIntake() {
+            const fields = ['problemStatement', 'known', 'assumptions', 'openQuestions'];
+            state.items = [];
+            for (const field of fields) {
+                for (const rawText of splitAtomic(state.intake[field])) {
+                    state.items.push(normalizeItem({ id: crypto.randomUUID(), sourceField: field, rawText }));
+                }
+            }
+            statusText = 'Parsed into atomic items.';
+            currentStep = 'sort';
+            persist();
+            render();
+        }
+
+        function sortItems() {
+            state.items.forEach((item) => {
+                item.bucket = inferBucket(item);
+                refreshItemStatus(item);
+                item.aiNotes = item.status === 'settled'
+                    ? 'Demo classification. Review before treating as settled.'
+                    : 'Bucket proposed; add holder/source before treating as settled.';
+            });
+            statusText = 'Demo sort complete.';
+            persist();
+            render();
+        }
+
+        function valueItems() {
+            state.items.filter((item) => item.bucket && item.bucket !== 'KK').forEach((item) => {
+                const text = item.rawText.toLowerCase();
+                let tag = item.bucket === 'UK' || item.bucket === 'UU' ? 'High' : 'Medium';
+                if (/ceo|board|school|funder|trust|veto|risk|relationship|women|children|partner/.test(text)) tag = 'High';
+                item.valueTag = tag;
+                item.valueRationale = tag === 'High'
+                    ? 'High value because it can change who must be consulted or what the recommendation is allowed to assume.'
+                    : 'Medium value because it clarifies the work but is less likely to reshape the core recommendation.';
+            });
+            statusText = 'Value tags proposed.';
+            currentStep = 'drill';
+            persist();
+            render();
+        }
+
+        function scaffoldDrill(index) {
+            const assumption = state.drill.assumptions[index];
+            const item = state.items.find((x) => x.id === assumption.selectedItemId);
+            const base = assumption.selectedText || item?.rawText || assumption.givenStatement || 'This assumption';
+            assumption.scaffold = {
+                claimOptions: [
+                    base,
+                    'The current frame treats the problem as a resourcing gap.',
+                    'The missing capacity can be solved without changing relationship continuity.'
+                ],
+                angles: [
+                    'What would make this false in the Bethany House context?',
+                    'Which relationship or source of trust would break first?',
+                    'What would change if the issue were institutional memory rather than staffing volume?',
+                    'What evidence would you need from outside the CEO channel?'
+                ],
+                frameQuestion: 'What question is this framing keeping us from asking?'
+            };
+            if (!assumption.givenStatement) assumption.givenStatement = assumption.scaffold.claimOptions[0];
+            if (!state.drill.frameQuestion) state.drill.frameQuestion = assumption.scaffold.frameQuestion;
+            statusText = 'Drill scaffolded.';
+            persist();
+            render();
+        }
+
+        function sharpenQuestion(itemId) {
+            const item = state.items.find((x) => x.id === itemId);
+            if (!item) return;
+            const subject = item.rawText.replace(/\?+$/, '');
+            state.questionEngineering.variants[itemId] = [
+                `${subject}, and who specifically can answer this?`,
+                `${subject}, how much would change if the answer is wrong?`,
+                `${subject}, by when does the team need a reliable answer?`
+            ];
+            statusText = 'Question variants generated.';
+            persist();
+            render();
+        }
+
+        function useVariant(itemId, variant) {
+            const item = state.items.find((x) => x.id === itemId);
+            if (item) item.reengineeredQuestion = variant;
+            persist();
+            render();
+        }
+
+        function checkSentence() {
+            const missing = [];
+            if (!isMeaningfulField(state.oneSentence.reframeText)) missing.push('reframed sentence');
+            if (!isMeaningfulField(state.oneSentence.rulesIn)) missing.push('rules in');
+            if (!isMeaningfulField(state.oneSentence.rulesOut)) missing.push('rules out');
+            const brief = state.oneSentence.briefText.trim().toLowerCase();
+            const reframe = state.oneSentence.reframeText.trim().toLowerCase();
+            if (brief && reframe && brief === reframe) missing.push('changed frame');
+            const verdict = missing.length ? 'not_yet_doing_work' : 'strong';
+            state.oneSentence.aiCheck = {
+                verdict,
+                reasoning: missing.length
+                    ? 'The sentence is not yet doing enough work to approve.'
+                    : 'The reframe names a tension beyond the brief and has populated rules in/rules out.',
+                missingFields: missing
+            };
+            if (verdict !== 'strong') state.oneSentence.status = 'draft';
+            statusText = 'Sentence checked.';
+            persist();
+            render();
+        }
+
+        function approveSentence() {
+            const missing = [];
+            if (!isMeaningfulField(state.oneSentence.reframeText)) missing.push('reframed sentence');
+            if (!isMeaningfulField(state.oneSentence.rulesIn)) missing.push('rules in');
+            if (!isMeaningfulField(state.oneSentence.rulesOut)) missing.push('rules out');
+            if (state.oneSentence.aiCheck?.verdict !== 'strong') missing.push('strong check');
+            if (missing.length) {
+                state.oneSentence.status = 'draft';
+                statusText = 'Cannot approve yet: missing ' + missing.join(', ') + '.';
+            } else {
+                state.oneSentence.status = 'approved';
+                statusText = 'Sentence approved.';
+            }
+            persist();
+            render();
+        }
+
+        function generateReport() {
+            try {
+                validateReportReady();
+                state.finalReport.document = buildReportDocument();
+                state.finalReport.generatedAt = new Date().toISOString();
+                reportBlob = buildPdfBlob(reportLines(state.finalReport.document));
+                if (reportUrl) URL.revokeObjectURL(reportUrl);
+                reportUrl = URL.createObjectURL(reportBlob);
+                state.finalReport.pdfGeneratedAt = new Date().toISOString();
+                statusText = 'PDF ready.';
+                persist();
+                render();
+            } catch (error) {
+                statusText = error.message;
+                render();
+            }
+        }
+
+        function buildReportDocument() {
+            const high = highValueQuestions();
+            const ready = high.filter(isReadyHighValueQuestion);
+            const omitted = high.length - ready.length;
+            return {
+                title: 'Decision Engineering Studio Final Report',
+                refinedProblemStatement: state.oneSentence.status === 'approved' ? state.oneSentence.reframeText : '',
+                highValueQuestions: ready.map((item) => ({
+                    question: item.reengineeredQuestion || item.rawText,
+                    whoMustSayYes: item.whoSaysYes,
+                    vetoHolder: item.veto,
+                    likelyToSayNo: item.likelyToSayNo
+                })),
+                typeMap: state.items.map((item) => ({
+                    bucket: item.bucket,
+                    status: item.status,
+                    valueTag: item.valueTag,
+                    holder: item.holder,
+                    sourceField: SOURCE_LABELS[item.sourceField] || item.sourceField,
+                    item: item.rawText
+                })),
+                drillSummary: state.drill.assumptions.map((assumption, index) => ({
+                    label: `Assumption ${index + 1}`,
+                    givenStatement: assumption.givenStatement || '',
+                    wrongIf: assumption.wrongIf || '',
+                    whatChanges: assumption.whatChanges || ''
+                })),
+                oneThingLeftOpen: state.oneSentence.oneThingLeftOpen || '',
+                whyLeftOpen: state.oneSentence.whyLeftOpen || '',
+                guardrailNote: ['Generated only from approved workspace fields.', omitted ? `${omitted} high-value item(s) were omitted because gatekeeper fields were incomplete.` : ''].filter(Boolean).join(' ')
+            };
+        }
+
+        function validateReportReady() {
+            if (state.oneSentence.status !== 'approved') throw new Error('Approve the One Sentence before generating the final report.');
+            if (!isMeaningfulField(state.oneSentence.reframeText)) throw new Error('The approved problem statement is blank.');
+            const high = highValueQuestions();
+            if (!high.length) throw new Error('Tag at least one KU, UK, or UU item High before generating the final report.');
+            const missing = high.filter((item) => !isReadyHighValueQuestion(item));
+            if (missing.length) throw new Error('Complete Gatekeepers for every high-value question: who says yes, who can say no, and likely no.');
+        }
+
+        function downloadPdf() {
+            if (!state.finalReport.document) generateReport();
+            const blob = reportBlob || buildPdfBlob(reportLines(state.finalReport.document));
+            const url = reportUrl || URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `decision-engineering-report-${new Date().toISOString().slice(0, 10)}.pdf`;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            statusText = 'PDF downloaded.';
+            render();
+        }
+
+        async function copyReport() {
+            if (!state.finalReport.document) return;
+            await navigator.clipboard.writeText(reportLines(state.finalReport.document).join('\n'));
+            statusText = 'Report text copied.';
+            render();
+        }
+
+        function addItem() {
+            state.items.push(normalizeItem({ id: crypto.randomUUID(), sourceField: 'known', rawText: '' }));
+            persist();
+            render();
+        }
+
+        function removeItem(id) {
+            state.items = state.items.filter((item) => item.id !== id);
+            persist();
+            render();
+        }
+
+        function splitAtomic(text) {
+            return String(text || '')
+                .split(/\n+|(?<=[.?!])\s+/)
+                .map((x) => x.trim())
+                .filter(Boolean);
+        }
+
+        function inferBucket(item) {
+            const text = item.rawText.toLowerCase();
+            if (item.sourceField === 'known' && /not written|relationship memory|ceo said|heard|informal/.test(text)) return 'UK';
+            if (item.sourceField === 'known') return 'KK';
+            if (/what question|not thought|not asking|frame/.test(text)) return 'UU';
+            if (item.sourceField === 'openQuestions' || text.includes('?')) return 'KU';
+            if (item.sourceField === 'assumptions') return 'KU';
+            return 'KU';
+        }
+
+        function refreshItemStatus(item) {
+            item.status = item.bucket && isMeaningfulField(item.holder) ? 'settled' : 'needs_attribution';
+        }
+
+        function highValueQuestions() {
+            return state.items.filter((item) => item.valueTag === 'High' && item.bucket && item.bucket !== 'KK');
+        }
+
+        function isReadyHighValueQuestion(item) {
+            return item && item.valueTag === 'High' && item.bucket && item.bucket !== 'KK'
+                && isMeaningfulField(item.reengineeredQuestion || item.rawText)
+                && isMeaningfulField(item.whoSaysYes)
+                && isMeaningfulField(item.veto)
+                && isMeaningfulField(item.likelyToSayNo);
+        }
+
+        function channelRisk() {
+            const holders = state.items.filter((item) => item.status === 'settled' && isMeaningfulField(item.holder)).map((item) => item.holder.trim().toLowerCase());
+            if (holders.length < 2) return '';
+            const counts = holders.reduce((acc, holder) => { acc[holder] = (acc[holder] || 0) + 1; return acc; }, {});
+            const [holder, count] = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
+            if (count / holders.length < 0.7) return '';
+            return `${count} of ${holders.length} settled items cite "${holder}" as holder/source. Find a second channel before treating the map as fully settled.`;
+        }
+
+        function itemOptions(includeAll = false) {
+            return state.items
+                .filter((item) => includeAll || item.bucket !== 'KK')
+                .map((item) => ({ id: item.id, label: `${item.bucket || 'unsorted'} · ${item.rawText.slice(0, 72)}` }));
+        }
+
+        function getPath(obj, path) {
+            return path.split('.').reduce((acc, key) => acc?.[key], obj);
+        }
+
+        function setPath(obj, path, value) {
+            const parts = path.split('.');
+            let target = obj;
+            for (const part of parts.slice(0, -1)) target = target[part];
+            target[parts.at(-1)] = value;
+        }
+
+        function isMeaningfulField(value) {
+            const text = String(value || '').trim().toLowerCase();
+            return Boolean(text) && !/^(unknown|unk|n\/a|na|none|null|tbd|todo|to be decided|optional|placeholder|\?|not sure)$/.test(text);
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? '').replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[char]));
+        }
+
+        function escapeAttr(value) {
+            return escapeHtml(value).replace(/`/g, '&#096;');
+        }
+
+        function reportLines(document) {
+            const lines = [
+                document.title,
+                '',
+                'Refined Problem Statement',
+                document.refinedProblemStatement || 'Draft not yet approved.',
+                '',
+                'Curated High-Value Questions'
+            ];
+            if (!document.highValueQuestions.length) lines.push('No high-value questions ready.');
+            document.highValueQuestions.forEach((item, index) => {
+                lines.push(`${index + 1}. ${item.question}`);
+                lines.push(`   Who says yes: ${item.whoMustSayYes}`);
+                lines.push(`   Veto: ${item.vetoHolder}`);
+                lines.push(`   Likely no: ${item.likelyToSayNo}`);
+            });
+            lines.push('', 'Type Map');
+            document.typeMap.forEach((item) => lines.push(`${item.bucket || '-'} | ${item.status || '-'} | ${item.valueTag || '-'} | ${item.holder || '-'} | ${item.sourceField || '-'} | ${item.item || ''}`));
+            lines.push('', 'Assumption Drill Summary');
+            document.drillSummary.forEach((item) => {
+                lines.push(item.label);
+                lines.push(`Given: ${item.givenStatement}`);
+                lines.push(`Wrong if: ${item.wrongIf}`);
+                lines.push(`What changes: ${item.whatChanges}`);
+            });
+            lines.push('', 'One Thing Left Open', document.oneThingLeftOpen || '', document.whyLeftOpen || '');
+            if (document.guardrailNote) lines.push('', 'Guardrail Note', document.guardrailNote);
+            return lines;
+        }
+
+        function buildPdfBlob(lines) {
+            const wrapped = [];
+            lines.forEach((line) => {
+                const chunks = wrapPdfLine(line || ' ', 92);
+                wrapped.push(...chunks);
+            });
+            const pages = [];
+            let current = [];
+            wrapped.forEach((line) => {
+                if (current.length >= 46) {
+                    pages.push(current);
+                    current = [];
+                }
+                current.push(line);
+            });
+            pages.push(current);
+
+            const objects = [];
+            const addObject = (body) => {
+                objects.push(body);
+                return objects.length;
+            };
+            const catalogId = addObject('<< /Type /Catalog /Pages 2 0 R >>');
+            const pagesId = addObject('');
+            const fontId = addObject('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>');
+            const pageIds = [];
+            pages.forEach((pageLines) => {
+                const stream = pdfPageStream(pageLines);
+                const contentId = addObject(`<< /Length ${byteLength(stream)} >>\nstream\n${stream}\nendstream`);
+                const pageId = addObject(`<< /Type /Page /Parent ${pagesId} 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 ${fontId} 0 R >> >> /Contents ${contentId} 0 R >>`);
+                pageIds.push(pageId);
+            });
+            objects[pagesId - 1] = `<< /Type /Pages /Kids [${pageIds.map((id) => `${id} 0 R`).join(' ')}] /Count ${pageIds.length} >>`;
+            void catalogId;
+
+            let pdf = '%PDF-1.4\n';
+            const offsets = [0];
+            objects.forEach((body, index) => {
+                offsets.push(byteLength(pdf));
+                pdf += `${index + 1} 0 obj\n${body}\nendobj\n`;
+            });
+            const xref = byteLength(pdf);
+            pdf += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n`;
+            offsets.slice(1).forEach((offset) => { pdf += `${String(offset).padStart(10, '0')} 00000 n \n`; });
+            pdf += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`;
+            return new Blob([pdf], { type: 'application/pdf' });
+        }
+
+        function pdfPageStream(lines) {
+            const commands = ['BT', '/F1 11 Tf', '72 742 Td', '14 TL'];
+            lines.forEach((line, index) => {
+                if (index > 0) commands.push('T*');
+                commands.push(`(${escapePdf(line)}) Tj`);
+            });
+            commands.push('ET');
+            return commands.join('\n');
+        }
+
+        function wrapPdfLine(line, width) {
+            const words = String(line).replace(/\s+/g, ' ').trim().split(' ');
+            const chunks = [];
+            let current = '';
+            words.forEach((word) => {
+                if ((current + ' ' + word).trim().length > width) {
+                    chunks.push(current);
+                    current = word;
+                } else {
+                    current = (current + ' ' + word).trim();
+                }
+            });
+            chunks.push(current || ' ');
+            return chunks;
+        }
+
+        function escapePdf(text) {
+            return String(text).replace(/\\/g, '\\\\').replace(/\(/g, '\\(').replace(/\)/g, '\\)');
+        }
+
+        function byteLength(text) {
+            return new TextEncoder().encode(text).length;
+        }
+
+        render();
+    </script>
+</body>
+
+</html>
