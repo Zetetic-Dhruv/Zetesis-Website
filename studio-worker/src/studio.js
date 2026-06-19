@@ -157,13 +157,13 @@ async function handlePreviewSession(request, env) {
   }
   if (isMasterLoginEmail(email, env)) {
     if (!env.MASTER_LOGIN_PASSWORD) {
-      return json({ error: 'Master login password is not configured.' }, 501, request);
+      return json({ error: 'Password login is unavailable.' }, 501, request);
     }
     if (!constantTimeEqual(password, env.MASTER_LOGIN_PASSWORD)) {
-      return json({ error: 'Password is required for this master login.' }, 403, request);
+      return json({ error: 'Enter the password for this email.' }, 403, request);
     }
   } else if (!emailAllowed(email, allowedDomains)) {
-    return json({ error: `Only ${allowedDomainsLabel(allowedDomains)} accounts may register.` }, 403, request);
+    return json({ error: allowedEmailMessage(allowedDomains) }, 403, request);
   }
 
   return json({ authenticated: true, email }, 200, request, {
@@ -172,6 +172,15 @@ async function handlePreviewSession(request, env) {
 }
 
 async function handleMe(request, env, email) {
+  if (isMasterLoginEmail(email, env)) {
+    return json({
+      authenticated: true,
+      registered: true,
+      email,
+      ...(await ensureMasterWorkspaceBundle(env, email)),
+    }, 200, request);
+  }
+
   const user = await getUserByEmail(env, email);
   if (!user) {
     return json({
@@ -958,10 +967,10 @@ async function getAuthenticatedEmail(request, env) {
 
   email = cleanEmail(email);
   if (!email) {
-    return { ok: false, status: 401, error: 'Cloudflare Access email is missing.' };
+    return { ok: false, status: 401, error: 'Enter your email to open the studio.' };
   }
   if (!emailAllowed(email, allowedDomains) && !isMasterLoginEmail(email, env)) {
-    return { ok: false, status: 403, error: `Only ${allowedDomainsLabel(allowedDomains)} accounts may register.` };
+    return { ok: false, status: 403, error: allowedEmailMessage(allowedDomains) };
   }
   return { ok: true, email };
 }
@@ -976,6 +985,10 @@ function getAllowedEmailDomains(env) {
 
 function allowedDomainsLabel(allowedDomains) {
   return allowedDomains.map((domain) => `@${domain}`).join(' or ');
+}
+
+function allowedEmailMessage(allowedDomains) {
+  return `Use an ${allowedDomainsLabel(allowedDomains)} email, or Dhruv's email with its password.`;
 }
 
 function emailAllowed(email, allowedDomains) {
@@ -1078,6 +1091,10 @@ function base64UrlDecode(value) {
 }
 
 async function getRegisteredContext(env, email) {
+  if (isMasterLoginEmail(email, env)) {
+    const bundle = await ensureMasterWorkspaceBundle(env, email);
+    return { user: bundle.user };
+  }
   const user = await getUserByEmail(env, email);
   return { user };
 }
@@ -1097,6 +1114,54 @@ async function ensureEngagement(env) {
     'Columbia SPS Mastering Consulting Summer 2026',
     'active'
   ).run();
+}
+
+async function ensureMasterWorkspaceBundle(env, email) {
+  await ensureEngagement(env);
+
+  let user = await getUserByEmail(env, email);
+  const name = cleanString(env.MASTER_LOGIN_NAME || 'Dhruv Gupta', 120);
+  if (!user) {
+    user = {
+      id: crypto.randomUUID(),
+      email,
+      name,
+      role: 'admin',
+    };
+    await env.STUDIO_DB.prepare(
+      `INSERT INTO users (id, email, name, role) VALUES (?, ?, ?, ?)`
+    ).bind(user.id, user.email, user.name, user.role).run();
+  } else {
+    await env.STUDIO_DB.prepare(
+      `UPDATE users SET name = ?, role = ?, updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now') WHERE id = ?`
+    ).bind(user.name || name, 'admin', user.id).run();
+    user = { ...user, name: user.name || name, role: 'admin' };
+  }
+
+  let team = await getPrimaryTeam(env, user.id);
+  if (!team) {
+    team = {
+      id: crypto.randomUUID(),
+      engagement_id: ENGAGEMENT_ID,
+      name: cleanString(env.MASTER_TEAM_NAME || 'Zetesis Master Workspace', 120),
+      join_code: await createUniqueJoinCode(env),
+      created_by: user.id,
+    };
+    await env.STUDIO_DB.prepare(
+      `INSERT INTO teams (id, engagement_id, name, join_code, created_by) VALUES (?, ?, ?, ?, ?)`
+    ).bind(team.id, team.engagement_id, team.name, team.join_code, team.created_by).run();
+  }
+
+  await env.STUDIO_DB.prepare(
+    `INSERT OR IGNORE INTO team_members (team_id, user_id, member_role) VALUES (?, ?, ?)`
+  ).bind(team.id, user.id, 'owner').run();
+
+  const workspace = await ensureWorkspace(env, team.id, user.id);
+
+  return {
+    user,
+    ...(await loadWorkspaceBundle(env, user.id)),
+  };
 }
 
 async function getPrimaryTeam(env, userId) {

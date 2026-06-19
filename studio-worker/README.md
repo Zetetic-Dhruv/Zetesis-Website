@@ -70,8 +70,8 @@ Cloudflare-native student workspace for the Decision Manifold workflow.
    `zetesislabs.com`. The Worker reads `Cf-Access-Authenticated-User-Email`
    and rejects other domains even if Access is misconfigured. Until Access is
    configured, the session path asks users for an allowed email and stores that
-   claim in a signed HttpOnly cookie. The configured master email can also log in
-   with `MASTER_LOGIN_PASSWORD`.
+   claim in a signed HttpOnly cookie. The configured Dhruv email can also log in
+   with `MASTER_LOGIN_PASSWORD` and lands directly in its workspace.
 
 ## Local Development
 
@@ -82,7 +82,7 @@ DEV_AUTH_SECRET=local-secret
 OPENAI_API_KEY=sk-...
 OPENAI_MODEL=gpt-4.1-mini
 SESSION_SECRET=local-random-secret
-MASTER_LOGIN_EMAIL=dhruv@zetesislabs.com
+MASTER_LOGIN_EMAIL=dhruvgupta@iisc.ac.in
 MASTER_LOGIN_PASSWORD=local-master-password
 PDF_SERVICE_URL=http://127.0.0.1:8790/pdf
 ```

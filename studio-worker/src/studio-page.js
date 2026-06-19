@@ -484,14 +484,14 @@ export function renderStudioPage() {
 
     function renderEmailGate(error) {
       app.innerHTML = authShell('Enter Studio', \`
-        <p class="meta">\${escapeHtml(error.message || 'Use your Columbia or Zetesis email. The master login also needs its password.')}</p>
+        <p class="meta">\${escapeHtml(error.message || 'Columbia and Zetesis emails continue directly. Dhruv uses the password field.')}</p>
         <div class="field">
           <label>Email</label>
-          <input id="sessionEmail" type="email" autocomplete="email" placeholder="Example: maya@columbia.edu or dhruv@zetesislabs.com">
+          <input id="sessionEmail" type="email" autocomplete="email" placeholder="Example: maya@columbia.edu or dhruvgupta@iisc.ac.in">
         </div>
         <div class="field">
           <label>Password</label>
-          <input id="sessionPassword" type="password" autocomplete="current-password" placeholder="Master login only">
+          <input id="sessionPassword" type="password" autocomplete="current-password" placeholder="Only needed for Dhruv's email">
         </div>
         <div class="actions">
           <button id="startSessionBtn">Continue</button>

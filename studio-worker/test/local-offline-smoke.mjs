@@ -25,6 +25,12 @@ const otherDomainHeaders = {
   'X-Studio-Dev-Secret': DEV_SECRET,
 };
 
+const masterHeaders = {
+  'Content-Type': 'application/json',
+  'X-Studio-Dev-Email': MASTER_EMAIL,
+  'X-Studio-Dev-Secret': DEV_SECRET,
+};
+
 main().catch((error) => {
   console.error(error);
   process.exit(1);
@@ -107,6 +113,11 @@ async function runSuite() {
   assert(html.includes('Approve the problem sentence, complete the gatekeeper fields, then open the PDF report.'), 'serves PDF empty state');
   assert(!html.includes('Print'), 'omits print control from report workflow');
 
+  const unauthenticatedMe = await getJson('/api/studio/me', {}, false);
+  assert(unauthenticatedMe.status === 401, 'asks for email when no session is present');
+  assert(/Enter your email to open the studio/.test(unauthenticatedMe.data.error || ''), 'uses user-facing missing-session copy');
+  assert(!/Cloudflare|Access/i.test(unauthenticatedMe.data.error || ''), 'does not leak auth infrastructure language');
+
   const me = await getJson('/api/studio/me', authHeaders);
   assert(me.authenticated === true && me.registered === false, 'dev auth works for Columbia email');
 
@@ -128,11 +139,16 @@ async function runSuite() {
   });
   assert(masterSession.authenticated === true && masterSession.email === MASTER_EMAIL, 'allows password-protected master login');
 
+  const masterMe = await getJson('/api/studio/me', masterHeaders);
+  assert(masterMe.authenticated === true && masterMe.registered === true, 'master login bypasses registration');
+  assert(masterMe.user.email === MASTER_EMAIL && masterMe.user.role === 'admin', 'master login creates admin user');
+  assert(Boolean(masterMe.team && masterMe.workspace), 'master login creates team and workspace');
+
   const rejected = await postJson('/api/studio/register', {
     name: 'Bad Domain',
     teamName: 'Bad Domain Team',
   }, otherDomainHeaders, false);
-  assert(rejected.status === 403, 'rejects non-Columbia email');
+  assert(rejected.status === 403, 'rejects non-allowed registration email');
 
   const reg = await postJson('/api/studio/register', {
     name: 'Studio Test',
@@ -230,11 +246,11 @@ async function fetchText(path) {
   return response.text();
 }
 
-async function getJson(path, headers) {
+async function getJson(path, headers, throwOnError = true) {
   const response = await fetch(`${BASE_URL}${path}`, { headers });
   const data = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(`${path} returned ${response.status}: ${JSON.stringify(data)}`);
-  return data;
+  if (throwOnError && !response.ok) throw new Error(`${path} returned ${response.status}: ${JSON.stringify(data)}`);
+  return throwOnError ? data : { status: response.status, data };
 }
 
 async function putJson(path, body, headers) {
