@@ -451,7 +451,7 @@ export function renderStudioPage() {
       try {
       const me = await api('/api/studio/me');
       if (!me.registered) {
-        renderRegistration(me);
+        renderEmailGate();
         return;
       }
         boot = me;
@@ -483,20 +483,47 @@ export function renderStudioPage() {
     }
 
     function renderEmailGate(error) {
-      app.innerHTML = authShell('Enter Studio', \`
-        <p class="meta">\${escapeHtml(error.message || 'Columbia and Zetesis emails continue directly. Dhruv uses the password field.')}</p>
-        <div class="field">
-          <label>Email</label>
-          <input id="sessionEmail" type="email" autocomplete="email" placeholder="Example: maya@columbia.edu or dhruvgupta@iisc.ac.in">
+      app.innerHTML = authShell('Decision Manifold Studio', \`
+        <p class="meta">\${escapeHtml(error?.message || 'Use the class code from the session to create an account, then return to the same workspace as your report develops.')}</p>
+        <div class="grid">
+          <section>
+            <h2>Log in</h2>
+            <div class="field">
+              <label>Email</label>
+              <input id="loginEmail" type="email" autocomplete="email" placeholder="Example: maya@example.com">
+            </div>
+            <div class="field">
+              <label>Password</label>
+              <input id="loginPassword" type="password" autocomplete="current-password" placeholder="Your password">
+            </div>
+            <div class="actions">
+              <button id="loginBtn">Log in</button>
+            </div>
+          </section>
+          <section>
+            <h2>Register</h2>
+            <div class="field">
+              <label>Name</label>
+              <input id="regName" autocomplete="name" placeholder="Example: Maya Shah">
+            </div>
+            <div class="field">
+              <label>Email</label>
+              <input id="regEmail" type="email" autocomplete="email" placeholder="Example: maya@example.com">
+            </div>
+            <div class="field">
+              <label>Password</label>
+              <input id="regPassword" type="password" autocomplete="new-password" placeholder="At least 8 characters">
+            </div>
+            <div class="field">
+              <label>Class code</label>
+              <input id="regClassCode" autocomplete="off" placeholder="Example: shared in class">
+            </div>
+            <div class="actions">
+              <button id="registerBtn">Create account</button>
+            </div>
+          </section>
         </div>
-        <div class="field">
-          <label>Password</label>
-          <input id="sessionPassword" type="password" autocomplete="current-password" placeholder="Only needed for Dhruv's email">
-        </div>
-        <div class="actions">
-          <button id="startSessionBtn">Continue</button>
-          <span class="status">\${escapeHtml(statusText)}</span>
-        </div>
+        <p class="status">\${escapeHtml(statusText)}</p>
       \`);
     }
 
@@ -522,28 +549,7 @@ export function renderStudioPage() {
     }
 
     function renderRegistration(me) {
-      app.innerHTML = authShell('Register', \`
-        <p class="meta">Create the team that will carry this brief through to a defensible report.</p>
-        <p class="meta">\${escapeHtml(me.email || '')}</p>
-        <div class="field">
-          <label>Name</label>
-          <input id="regName" autocomplete="name" placeholder="Example: Maya Shah">
-        </div>
-        <div class="split">
-          <div class="field">
-            <label>Create team</label>
-            <input id="regTeamName" placeholder="Example: Bethany House Team A">
-          </div>
-          <div class="field">
-            <label>Join team code</label>
-            <input id="regJoinCode" placeholder="Example: X5B3NR (optional)">
-          </div>
-        </div>
-        <div class="actions">
-          <button id="registerBtn">Enter Studio</button>
-          <span class="status">\${escapeHtml(statusText)}</span>
-        </div>
-      \`);
+      renderEmailGate({ message: me?.email ? 'Finish registration for ' + me.email + '.' : '' });
     }
 
     function authShell(title, body) {
@@ -555,10 +561,12 @@ export function renderStudioPage() {
         <div class="topbar">
           <div class="brand">
             <b>Decision Manifold Studio</b>
-            <span>\${escapeHtml(boot.engagement?.cohort_name || 'Columbia SPS')} · \${escapeHtml(boot.team?.name || '')} · Join code \${escapeHtml(boot.team?.join_code || '')}</span>
+            <span>\${escapeHtml(boot.engagement?.cohort_name || 'Decision Engineering')} · \${escapeHtml(boot.team?.name || '')}</span>
           </div>
           <div class="actions" style="margin-top:0">
+            <span class="pill">\${usageLabel()}</span>
             <button class="secondary" id="saveBtn">Save</button>
+            <button class="secondary" id="logoutBtn">Log out</button>
             <span class="status" id="status">\${escapeHtml(statusText)}</span>
           </div>
         </div>
@@ -589,6 +597,15 @@ export function renderStudioPage() {
     function summaryMeta() {
       const settled = state.items.filter((item) => item.status === 'settled').length;
       return \`\${state.items.length} items · \${settled} settled · \${highValueItems().length} high-value\`;
+    }
+
+    function usageLabel() {
+      const usage = boot?.usage || {};
+      return \`\${money(usage.used_micros)} / \${money(usage.limit_micros || 10000000)} used\`;
+    }
+
+    function money(micros) {
+      return '$' + (Number(micros || 0) / 1000000).toFixed(2);
     }
 
     function renderStep() {
@@ -842,13 +859,36 @@ export function renderStudioPage() {
     function renderReport() {
       return \`
         <div class="actions" style="margin-top:0; margin-bottom:0.75rem">
-          <button id="reportBtn" \${busyAttr()}>Open PDF Report</button>
+          <button id="reportBtn" \${busyAttr()}>Generate PDF</button>
+          <button class="secondary" id="saveVersionBtn" \${busyAttr()}>Save Version</button>
           <button class="secondary" id="downloadPdfBtn" \${busyAttr()} \${pdfPreviewBlob || state.finalReport.document ? '' : 'disabled'}>Download PDF</button>
           <button class="secondary" id="copyReportBtn">Copy</button>
         </div>
+        \${renderVersions()}
         \${pdfPreviewUrl
           ? \`<div class="pdf-preview-wrap"><iframe class="pdf-preview" src="\${escapeAttr(pdfPreviewUrl)}" title="Final report PDF"></iframe></div>\`
-          : emptyState('Approve the problem sentence, complete the gatekeeper fields, then open the PDF report.')}
+          : emptyState('Approve the problem sentence, complete the gatekeeper fields, then generate the PDF report.')}
+      \`;
+    }
+
+    function renderVersions() {
+      const versions = boot?.versions || [];
+      if (!versions.length) return '<div class="meta" style="margin-bottom:0.75rem">No saved versions yet.</div>';
+      return \`
+        <div class="table-scroll" style="margin-bottom:0.75rem">
+          <table>
+            <thead><tr><th style="width:12%">Version</th><th style="width:28%">Saved</th><th>PDF</th></tr></thead>
+            <tbody>
+              \${versions.map((version) => \`
+                <tr>
+                  <td>v\${escapeHtml(version.version_number)}</td>
+                  <td>\${escapeHtml(version.created_at || '')}</td>
+                  <td><a href="\${escapeAttr(version.pdf_url)}" target="_blank" rel="noopener">Download saved PDF</a></td>
+                </tr>
+              \`).join('')}
+            </tbody>
+          </table>
+        </div>
       \`;
     }
 
@@ -912,7 +952,7 @@ export function renderStudioPage() {
         return;
       }
 
-      if (target.id === 'startSessionBtn') {
+      if (target.id === 'loginBtn') {
         await startSession();
         return;
       }
@@ -933,6 +973,12 @@ export function renderStudioPage() {
         return;
       }
 
+      if (target.id === 'logoutBtn') {
+        await api('/api/studio/auth/logout', { method: 'POST', body: '{}' });
+        location.reload();
+        return;
+      }
+
       if (target.id === 'parseBtn') await parseIntake();
       if (target.id === 'sortBtn') await sortItems();
       if (target.id === 'valueBtn') await valueItems();
@@ -944,6 +990,7 @@ export function renderStudioPage() {
       if (target.id === 'sentenceCheckBtn') await checkSentence();
       if (target.id === 'approveSentenceBtn') approveSentence();
       if (target.id === 'reportBtn') await generateReport();
+      if (target.id === 'saveVersionBtn') await saveReportVersion();
       if (target.id === 'downloadPdfBtn') await downloadPdf();
       if (target.id === 'copyReportBtn') await copyReport();
     });
@@ -972,25 +1019,29 @@ export function renderStudioPage() {
 
     async function startSession() {
       await withBusy(async () => {
-        const email = document.getElementById('sessionEmail').value.trim();
-        const password = document.getElementById('sessionPassword').value;
-        await api('/api/studio/session', {
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+        const data = await api('/api/studio/auth/login', {
           method: 'POST',
           body: JSON.stringify({ email, password }),
         });
+        boot = data;
+        state = data.state;
+        currentStep = data.workspace?.current_step || 'intake';
         statusText = '';
-        await init();
+        renderStudio();
       }, false);
     }
 
     async function register() {
       await withBusy(async () => {
-        const data = await api('/api/studio/register', {
+        const data = await api('/api/studio/auth/register', {
           method: 'POST',
           body: JSON.stringify({
             name: document.getElementById('regName').value,
-            teamName: document.getElementById('regTeamName').value,
-            joinCode: document.getElementById('regJoinCode').value,
+            email: document.getElementById('regEmail').value,
+            password: document.getElementById('regPassword').value,
+            classCode: document.getElementById('regClassCode').value,
           }),
         });
         boot = data;
@@ -1022,6 +1073,7 @@ export function renderStudioPage() {
         method: 'POST',
         body: JSON.stringify({ module, payload }),
       });
+      if (response.usage && boot) boot.usage = response.usage;
       return response.result;
     }
 
@@ -1150,11 +1202,31 @@ export function renderStudioPage() {
     }
 
     async function refreshReport() {
-      const result = await runModule('final_report', { state });
+      const result = await api('/api/studio/report/preview', {
+        method: 'POST',
+        body: JSON.stringify({ state }),
+      });
       state.finalReport.document = result.document || null;
       state.finalReport.markdown = result.markdown || '';
+      state.finalReport.pdfBase64 = result.pdfBase64 || '';
       state.finalReport.generatedAt = new Date().toISOString();
       return result;
+    }
+
+    async function saveReportVersion() {
+      await withBusy(async () => {
+        validateReportReady();
+        const data = await api('/api/studio/report/save-version', {
+          method: 'POST',
+          body: JSON.stringify({ state }),
+        });
+        state = data.state || state;
+        boot.versions = data.versions || boot.versions || [];
+        if (data.pdfBase64) {
+          setPdfPreview(base64ToPdfBlob(data.pdfBase64), data.filename || defaultPdfFilename());
+        }
+        statusText = 'Saved version ' + (data.version?.version_number || '') + '.';
+      });
     }
 
     function addItem() {
@@ -1207,32 +1279,24 @@ export function renderStudioPage() {
         throw new Error('Generate a report before requesting a PDF.');
       }
 
-      const response = await fetch(pdfEndpoint(), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          report: state.finalReport.document,
-          generatedAt: state.finalReport.generatedAt,
-          team: boot.team,
-          engagement: boot.engagement,
-        }),
-      });
-
-      if (!response.ok) {
-        if (response.status === 501 || response.status === 502 || pdfEndpoint().startsWith('http://localhost:')) {
-          return {
-            blob: buildPdfBlob(reportLines(state.finalReport.document)),
-            filename: defaultPdfFilename(),
-          };
-        }
-        const errorText = await response.text().catch(() => '');
-        throw new Error(errorText || 'PDF service did not return a file.');
+      if (state.finalReport.pdfBase64) {
+        return {
+          blob: base64ToPdfBlob(state.finalReport.pdfBase64),
+          filename: defaultPdfFilename(),
+        };
       }
 
       return {
-        blob: await response.blob(),
-        filename: downloadFilename(response),
+        blob: buildPdfBlob(reportLines(state.finalReport.document)),
+        filename: defaultPdfFilename(),
       };
+    }
+
+    function base64ToPdfBlob(base64) {
+      const binary = atob(base64);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i += 1) bytes[i] = binary.charCodeAt(i);
+      return new Blob([bytes], { type: 'application/pdf' });
     }
 
     function setPdfPreview(blob, filename) {
@@ -1240,23 +1304,6 @@ export function renderStudioPage() {
       pdfPreviewBlob = blob;
       pdfPreviewFilename = filename || defaultPdfFilename();
       pdfPreviewUrl = URL.createObjectURL(blob);
-    }
-
-    function pdfEndpoint() {
-      const configured = localStorage.getItem('studio.pdfEndpoint');
-      if (configured) return configured;
-      if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
-        return 'http://localhost:8790/pdf';
-      }
-      return '/api/studio/report/pdf';
-    }
-
-    function downloadFilename(response) {
-      const disposition = response.headers.get('Content-Disposition') || '';
-      const match = disposition.match(/filename="?([^"]+)"?/i);
-      if (match?.[1]) return match[1];
-      const stamp = new Date().toISOString().slice(0, 10);
-      return defaultPdfFilename(stamp);
     }
 
     function defaultPdfFilename(stamp = new Date().toISOString().slice(0, 10)) {
@@ -1399,9 +1446,8 @@ export function renderStudioPage() {
       if (!high.length) {
         throw new Error('Tag at least one KU, UK, or UU item High before generating the final report.');
       }
-      const missing = high.filter((item) => !isReadyHighValueQuestion(item));
-      if (missing.length) {
-        throw new Error('Complete Gatekeepers for every high-value question: who says yes, who can say no, and likely no.');
+      if (!high.some((item) => isReadyHighValueQuestion(item))) {
+        throw new Error('Complete Gatekeepers for at least one high-value question: who says yes, who can say no, and likely no.');
       }
     }
 
@@ -1449,7 +1495,7 @@ export function renderStudioPage() {
       } catch (error) {
         statusText = error.message;
         if (state) renderStudio();
-        else init();
+        else renderEmailGate({ message: statusText });
       } finally {
         busy = false;
         if (rerender && state) renderStudio();

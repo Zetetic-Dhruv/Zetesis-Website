@@ -1,4 +1,4 @@
-# Cloudflare Worker for Decision Manifold Studio.
+# Cloudflare Worker for Decision Engineering Platform.
 #
 # Deploy flow:
 #   cd studio-worker
@@ -8,9 +8,8 @@
 #   npx wrangler secret put OPENAI_API_KEY
 #   npx wrangler deploy
 #
-# Put Cloudflare Access in front of /studio* and /api/studio* with an
-# @columbia.edu / @zetesislabs.com allow policy. The Worker also validates
-# the domain and supports one password-protected master login via secrets.
+# The Worker owns account auth, class-code registration, D1 persistence,
+# OpenAI calls, and report artifacts.
 
 name = "zetesislabs-decision-manifold-studio"
 main = "src/studio.js"
@@ -19,14 +18,16 @@ account_id = "75a11ac71fbcc3ddc793675245c3d95b"
 workers_dev = false
 
 [vars]
-ALLOWED_EMAIL_DOMAINS = "columbia.edu,zetesislabs.com"
 OPENAI_MODEL = "gpt-4.1-mini"
 # Set to "fixture" for localhost/offline testing where deterministic,
 # source-grounded behavior substitutes for the external LLM API.
 AGENT_API_MODE = "openai"
-# Optional: set to a trusted Python ReportLab service or Cloudflare Container
-# endpoint. Localhost UI defaults directly to http://localhost:8790/pdf.
-PDF_SERVICE_URL = ""
+DEFAULT_CLASS_ID = "class_bethany_house_2026"
+DEFAULT_ENGAGEMENT_ID = "eng_bethany_house_2026"
+STUDENT_USAGE_LIMIT_MICROS = "10000000"
+ESTIMATED_CALL_COST_MICROS = "50000"
+MODEL_INPUT_USD_PER_MILLION_TOKENS = "0.40"
+MODEL_OUTPUT_USD_PER_MILLION_TOKENS = "1.60"
 
 [[d1_databases]]
 binding = "STUDIO_DB"
@@ -47,4 +48,8 @@ zone_id = "e18a1fe40e3f82d744a62612ebf3f0f2"
 
 [[routes]]
 pattern = "platform.zetesislabs.com/*"
+zone_id = "e18a1fe40e3f82d744a62612ebf3f0f2"
+
+[[routes]]
+pattern = "instructor.platform.zetesislabs.com/*"
 zone_id = "e18a1fe40e3f82d744a62612ebf3f0f2"

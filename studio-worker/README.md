@@ -1,138 +1,113 @@
-# Decision Manifold Studio Worker
+# Decision Engineering Platform Worker
 
-Cloudflare-native student workspace for the Decision Manifold workflow.
+Cloudflare-native class platform for the Bethany House Decision Engineering workflow.
 
 ## What It Provides
 
-- Cloudflare Access gated app at `/studio`.
-- Live app routes at `/studio`, `/decision-engineering`, and
-  `platform.zetesislabs.com/decision-engineering`.
-- Columbia-domain enforcement in the Worker as a second check.
-- Signed preview sessions for the client-approval phase when Cloudflare Access
-  is not yet configured.
-- D1-backed registration, teams, memberships, workspace state, audit events, and LLM run logs.
-- OpenAI API calls from the Worker only. The browser never receives an API key.
-- End-to-end student workflow: intake, type sort, value tags, Drill, question re-engineering, One Sentence, final report.
-- Downloadable final-report PDFs rendered from guarded structured report JSON.
-  Production currently falls back to browser-side PDF generation if no trusted
-  Python/Container renderer is configured.
+- Student app at `/studio`, `/decision-engineering`, and `platform.zetesislabs.com/decision-engineering`.
+- Hidden instructor app at `instructor.platform.zetesislabs.com` once that deep hostname has an edge certificate.
+- Temporary hidden instructor fallback at `platform.zetesislabs.com/instructor`.
+- Email-agnostic registration and login with D1-backed sessions.
+- Class-code registration:
+  - `ZetesisColumbia@2026` creates a student membership.
+  - `ZeteticAdmin@8917` creates an admin membership.
+- PBKDF2-SHA256 password hashes with per-user salt and Worker secret pepper.
+- HMAC-hashed class codes in D1; plaintext codes live only in secrets/config.
+- D1-backed workspace drafts, prompt/output traces, usage ledger, and report versions.
+- OpenAI calls from the Worker only. The browser never receives an API key.
+- `$10` lifetime model budget per student membership by default.
+- Worker-generated structured PDFs stored in Cloudflare D1 today, with an R2 path ready once R2 is enabled on the account.
+- Instructor dashboard for current drafts, raw prompts, saved versions, model-access controls, usage reset, and class PDF ZIP export.
 
-## Cloudflare Setup
+## Cloudflare Resources
 
-1. Create the D1 database:
+The Worker uses:
 
-   ```sh
-   cd studio-worker
-   npx wrangler d1 create zetesis_decision_manifold_studio
-   ```
+- D1 binding `STUDIO_DB`
+- Optional R2 binding `STUDIO_ARTIFACTS` once R2 is enabled
+- Worker secrets:
+  - `OPENAI_API_KEY`
+  - `PASSWORD_PEPPER`
+  - `SESSION_TOKEN_PEPPER`
+  - `CLASS_CODE_PEPPER`
+  - `STUDENT_CLASS_CODE`
+  - `ADMIN_CLASS_CODE`
 
-2. Copy the returned `database_id` into `wrangler.toml`.
+The current Cloudflare account returns R2 error `10042` until R2 is enabled in the dashboard. The Worker therefore deploys without the binding and stores PDF bytes in D1 through `report_artifacts`. After R2 is enabled, create the bucket and re-add this binding to `wrangler.toml`:
 
-3. Apply migrations:
+```sh
+npx wrangler r2 bucket create zetesis-decision-studio-artifacts
+```
 
-   ```sh
-   npx wrangler d1 migrations apply zetesis_decision_manifold_studio --remote
-   ```
+Apply D1 migrations:
 
-4. Store the OpenAI key as a Worker secret:
+```sh
+npx wrangler d1 migrations apply zetesis_decision_manifold_studio --remote
+```
 
-   ```sh
-   npx wrangler secret put OPENAI_API_KEY
-   ```
+Deploy:
 
-5. Store the signed preview-session secret:
-
-   ```sh
-   npx wrangler secret put SESSION_SECRET
-   ```
-
-6. Store the optional master login secrets:
-
-   ```sh
-   npx wrangler secret put MASTER_LOGIN_EMAIL
-   npx wrangler secret put MASTER_LOGIN_PASSWORD
-   ```
-
-7. Deploy:
-
-   ```sh
-   npx wrangler deploy
-   ```
-
-8. In Cloudflare Zero Trust, put an Access application in front of:
-
-   - `https://zetesislabs.com/studio*`
-   - `https://zetesislabs.com/decision-engineering*`
-   - `https://zetesislabs.com/api/studio*`
-   - `https://platform.zetesislabs.com/*`
-
-   Configure an allow policy for email domains `columbia.edu` and
-   `zetesislabs.com`. The Worker reads `Cf-Access-Authenticated-User-Email`
-   and rejects other domains even if Access is misconfigured. Until Access is
-   configured, the session path asks users for an allowed email and stores that
-   claim in a signed HttpOnly cookie. The configured Dhruv email can also log in
-   with `MASTER_LOGIN_PASSWORD` and lands directly in its workspace.
+```sh
+npx wrangler deploy
+```
 
 ## Local Development
 
-Create a local, uncommitted `studio-worker/.dev.vars`:
+Run local migrations:
 
 ```sh
-DEV_AUTH_SECRET=local-secret
-OPENAI_API_KEY=sk-...
-OPENAI_MODEL=gpt-4.1-mini
-SESSION_SECRET=local-random-secret
-MASTER_LOGIN_EMAIL=dhruvgupta@iisc.ac.in
-MASTER_LOGIN_PASSWORD=local-master-password
-PDF_SERVICE_URL=http://127.0.0.1:8790/pdf
+npm run migrate:local
 ```
 
 Run the Worker:
 
 ```sh
-npm run studio:migrate:local
-npm run studio:dev
+npx wrangler dev --local --port 8787 \
+  --var AGENT_API_MODE:fixture \
+  --var PASSWORD_PEPPER:local-password-pepper \
+  --var SESSION_TOKEN_PEPPER:local-session-pepper \
+  --var CLASS_CODE_PEPPER:local-class-code-pepper \
+  --var STUDENT_CLASS_CODE:ZetesisColumbia@2026 \
+  --var ADMIN_CLASS_CODE:ZeteticAdmin@8917 \
+  --show-interactive-dev-session=false
 ```
 
-In another terminal, run the local PDF renderer:
+Open:
+
+- Student app: `http://localhost:8787/studio`
+- Student app alternate route: `http://localhost:8787/decision-engineering`
+- Instructor API is available locally under `/api/instructor/*`; production UI is on the instructor subdomain.
+
+## Current Cloudflare Notes
+
+- R2 is not enabled on the account yet, so saved PDFs use D1 artifact storage. Enable R2 in the Cloudflare dashboard, create the bucket, and restore the `STUDIO_ARTIFACTS` binding when ready.
+- `instructor.platform.zetesislabs.com` resolves through Cloudflare DNS, but HTTPS needs an edge certificate covering `*.platform.zetesislabs.com`. Until that certificate is active, use the hidden fallback `https://platform.zetesislabs.com/instructor`.
+
+## Tests
+
+Offline source-oracle workflow:
 
 ```sh
-PYTHON_BIN=/path/to/python3 npm run studio:pdf
+npm run test:offline
 ```
 
-The Codex bundled Python runtime already includes `reportlab`, `pdfplumber`, and
-`pypdf`. With a system Python, install them first if needed:
+This covers:
+
+- account registration/login/logout
+- bad class code rejection
+- admin registration
+- prompt-source oracle behavior
+- abuse rejection with the guarded message
+- report preview and PDF bytes
+- immutable saved report versions
+- PDF artifact download through the same endpoint, backed by D1 locally/remotely and R2 when bound
+- instructor student cards, prompt history, and saved versions
+- instructor model-access block while draft/PDF access remains available
+
+Legacy ReportLab smoke test remains available for the old Python renderer:
 
 ```sh
-python3 -m pip install reportlab pdfplumber pypdf
+npm run test:pdf
 ```
 
-Open the local Worker URL, then use the dev-auth panel with:
-
-- Dev email: any `@columbia.edu` address
-- Dev secret: the value of `DEV_AUTH_SECRET`
-
-If `OPENAI_API_KEY` is not present, the Worker uses deterministic fallback
-logic so the workflow remains testable.
-
-## PDF Rendering
-
-The final report is generated in two steps:
-
-1. The LLM or offline fixture returns a strict `document` JSON object plus a
-   Markdown preview. The prompt forbids recommendations, inferred stakeholder
-   beliefs, guessed UK/UU content, arbitrary markup, and filler.
-2. `pdf_service.py` renders only that JSON object with ReportLab. It escapes
-   text, caps field lengths, ignores markup, and owns the layout in code.
-
-Localhost defaults to `http://localhost:8790/pdf`. In production, set
-`PDF_SERVICE_URL` to a trusted PDF rendering service or Cloudflare Container
-endpoint; `/api/studio/report/pdf` will proxy to it after Columbia/registration
-checks. If no renderer is configured, the browser app generates a simple PDF
-directly from the guarded report JSON.
-
-PDF smoke test:
-
-```sh
-PYTHON_BIN=/path/to/python3 npm run studio:test:pdf
-```
+The production source of record is now Worker-generated PDF bytes. Current deployment stores them in D1; new saved versions will use R2 automatically after the account enables R2 and the `STUDIO_ARTIFACTS` binding is restored.
