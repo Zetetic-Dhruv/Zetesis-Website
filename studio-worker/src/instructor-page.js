@@ -42,6 +42,10 @@ export function renderInstructorPage() {
     .layout { display: grid; grid-template-columns: 320px minmax(0, 1fr); gap: 1rem; margin-top: 1rem; align-items: start; }
     .panel { border: 1px solid var(--hairline); background: #fff; padding: 1rem; }
     .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; }
+    .card-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.75rem; align-items: start; }
+    .info-card { border: 1px solid var(--hairline); background: #fff; padding: 0.9rem; min-height: 156px; }
+    .info-card.wide { grid-column: 1 / -1; }
+    .info-card h2 { margin: 0 0 0.5rem; font-size: 18px; line-height: 1.2; }
     .actions { display: flex; flex-wrap: wrap; gap: 0.65rem; align-items: center; margin-top: 1rem; }
     .student-card { width: 100%; display: block; text-align: left; border: 0; border-bottom: 1px solid var(--hairline); background: #fff; color: var(--ink); padding: 0.75rem; }
     .student-card.active { background: var(--blue); color: #fff; }
@@ -50,7 +54,7 @@ export function renderInstructorPage() {
     .pill.green { border-color: var(--green); color: var(--green); }
     .scroll { overflow-x: auto; }
     .pre { white-space: pre-wrap; font-family: var(--mono); font-size: 12px; line-height: 1.45; background: var(--soft); border: 1px solid var(--hairline); padding: 0.75rem; max-height: 460px; overflow: auto; }
-    @media (max-width: 900px) { .layout, .grid { grid-template-columns: 1fr; } .topbar { align-items: stretch; flex-direction: column; } table { min-width: 900px; } }
+    @media (max-width: 900px) { .layout, .grid, .card-grid { grid-template-columns: 1fr; } .topbar { align-items: stretch; flex-direction: column; } table { min-width: 900px; } }
   </style>
 </head>
 <body>
@@ -69,7 +73,8 @@ export function renderInstructorPage() {
     let selectedClass = '';
     let selectedStudent = '';
     let studentDetail = null;
-    let prompts = [];
+    let prompts = null;
+    let promptsOpen = false;
     let versions = [];
     let statusText = '';
 
@@ -140,7 +145,8 @@ export function renderInstructorPage() {
 
     async function loadStudent(userId) {
       studentDetail = await api('/api/instructor/students/' + encodeURIComponent(userId));
-      prompts = (await api('/api/instructor/students/' + encodeURIComponent(userId) + '/prompts')).prompts || [];
+      prompts = null;
+      promptsOpen = false;
       versions = (await api('/api/instructor/students/' + encodeURIComponent(userId) + '/versions')).versions || [];
     }
 
@@ -197,12 +203,12 @@ export function renderInstructorPage() {
           <button class="secondary" id="resetUsageBtn">Reset usage</button>
           <button class="secondary" id="toggleAccessBtn">\${studentDetail.membership?.model_access_status === 'active' ? 'Block model access' : 'Restore model access'}</button>
         </div>
-        <div class="grid">
-          <section>
+        <div class="card-grid">
+          <section class="info-card">
             <h2>Current draft</h2>
             <div class="pre">\${escapeHtml(JSON.stringify(studentDetail.state || {}, null, 2))}</div>
           </section>
-          <section>
+          <section class="info-card">
             <h2>Saved versions</h2>
             \${versions.length ? \`
               <div class="scroll">
@@ -220,22 +226,45 @@ export function renderInstructorPage() {
               </div>
             \` : '<p class="meta">No saved versions yet.</p>'}
           </section>
+          \${renderPromptsCard()}
         </div>
-        <h2>Prompt history</h2>
-        <div class="scroll">
-          <table>
-            <thead><tr><th style="width:12%">When</th><th style="width:12%">Module</th><th style="width:16%">Provider</th><th style="width:30%">Prompt payload</th><th style="width:30%">Output</th></tr></thead>
-            <tbody>\${prompts.map((prompt) => \`
-              <tr>
-                <td>\${escapeHtml(prompt.created_at || '')}</td>
-                <td>\${escapeHtml(prompt.module || '')}</td>
-                <td>\${escapeHtml(prompt.provider || '')}<br><span class="meta">\${money(prompt.estimated_cost_micros)} · \${escapeHtml(prompt.input_tokens || 0)}/\${escapeHtml(prompt.output_tokens || 0)} tok</span></td>
-                <td><div class="pre">\${escapeHtml(prettyJson(prompt.request_json))}</div></td>
-                <td><div class="pre">\${escapeHtml(prettyJson(prompt.response_json))}</div></td>
-              </tr>
-            \`).join('')}</tbody>
-          </table>
-        </div>
+      \`;
+    }
+
+    function renderPromptsCard() {
+      const countText = prompts ? String(prompts.length) + ' prompt records loaded' : 'Prompt history stays closed until opened.';
+      if (!promptsOpen) {
+        return \`
+          <section class="info-card">
+            <h2>Prompts</h2>
+            <p class="meta">\${escapeHtml(countText)}</p>
+            <div class="actions"><button class="secondary" id="togglePromptsBtn">Open prompt history</button></div>
+          </section>
+        \`;
+      }
+
+      return \`
+        <section class="info-card wide">
+          <h2>Prompts</h2>
+          <p class="meta">\${escapeHtml(countText)}</p>
+          <div class="actions"><button class="secondary" id="togglePromptsBtn">Close prompt history</button></div>
+          \${prompts && prompts.length ? \`
+            <div class="scroll" style="margin-top:0.75rem">
+              <table>
+                <thead><tr><th style="width:12%">When</th><th style="width:12%">Module</th><th style="width:16%">Provider</th><th style="width:30%">Prompt payload</th><th style="width:30%">Output</th></tr></thead>
+                <tbody>\${prompts.map((prompt) => \`
+                  <tr>
+                    <td>\${escapeHtml(prompt.created_at || '')}</td>
+                    <td>\${escapeHtml(prompt.module || '')}</td>
+                    <td>\${escapeHtml(prompt.provider || '')}<br><span class="meta">\${money(prompt.estimated_cost_micros)} · \${escapeHtml(prompt.input_tokens || 0)}/\${escapeHtml(prompt.output_tokens || 0)} tok</span></td>
+                    <td><div class="pre">\${escapeHtml(prettyJson(prompt.request_json))}</div></td>
+                    <td><div class="pre">\${escapeHtml(prettyJson(prompt.response_json))}</div></td>
+                  </tr>
+                \`).join('')}</tbody>
+              </table>
+            </div>
+          \` : '<p class="meta">No prompt records yet.</p>'}
+        </section>
       \`;
     }
 
@@ -272,6 +301,17 @@ export function renderInstructorPage() {
         if (button.dataset.student) {
           selectedStudent = button.dataset.student;
           await loadStudent(selectedStudent);
+          renderDashboard();
+        }
+        if (button.id === 'togglePromptsBtn' && selectedStudent) {
+          if (promptsOpen) {
+            promptsOpen = false;
+          } else {
+            promptsOpen = true;
+            if (!prompts) {
+              prompts = (await api('/api/instructor/students/' + encodeURIComponent(selectedStudent) + '/prompts')).prompts || [];
+            }
+          }
           renderDashboard();
         }
         if (button.id === 'resetUsageBtn' && selectedStudent) {
