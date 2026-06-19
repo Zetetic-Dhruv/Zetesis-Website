@@ -148,14 +148,22 @@ async function handlePreviewSession(request, env) {
     return json({ error: 'SESSION_SECRET is not configured.' }, 501, request);
   }
 
-  const allowedDomain = (env.ALLOWED_EMAIL_DOMAIN || 'columbia.edu').toLowerCase();
+  const allowedDomains = getAllowedEmailDomains(env);
   const body = await readJson(request);
   const email = cleanEmail(body.email);
+  const password = String(body.password || '');
   if (!email) {
     return json({ error: 'Email is required.' }, 400, request);
   }
-  if (!emailAllowed(email, allowedDomain)) {
-    return json({ error: `Only ${allowedDomain} accounts may register.` }, 403, request);
+  if (isMasterLoginEmail(email, env)) {
+    if (!env.MASTER_LOGIN_PASSWORD) {
+      return json({ error: 'Master login password is not configured.' }, 501, request);
+    }
+    if (!constantTimeEqual(password, env.MASTER_LOGIN_PASSWORD)) {
+      return json({ error: 'Password is required for this master login.' }, 403, request);
+    }
+  } else if (!emailAllowed(email, allowedDomains)) {
+    return json({ error: `Only ${allowedDomainsLabel(allowedDomains)} accounts may register.` }, 403, request);
   }
 
   return json({ authenticated: true, email }, 200, request, {
@@ -935,7 +943,7 @@ function buildReportMarkdown(document) {
 }
 
 async function getAuthenticatedEmail(request, env) {
-  const allowedDomain = (env.ALLOWED_EMAIL_DOMAIN || 'columbia.edu').toLowerCase();
+  const allowedDomains = getAllowedEmailDomains(env);
   let email = request.headers.get('Cf-Access-Authenticated-User-Email');
 
   const devEmail = request.headers.get('X-Studio-Dev-Email');
@@ -952,15 +960,34 @@ async function getAuthenticatedEmail(request, env) {
   if (!email) {
     return { ok: false, status: 401, error: 'Cloudflare Access email is missing.' };
   }
-  if (!emailAllowed(email, allowedDomain)) {
-    return { ok: false, status: 403, error: `Only ${allowedDomain} accounts may register.` };
+  if (!emailAllowed(email, allowedDomains) && !isMasterLoginEmail(email, env)) {
+    return { ok: false, status: 403, error: `Only ${allowedDomainsLabel(allowedDomains)} accounts may register.` };
   }
   return { ok: true, email };
 }
 
-function emailAllowed(email, allowedDomain) {
+function getAllowedEmailDomains(env) {
+  const raw = env.ALLOWED_EMAIL_DOMAINS || env.ALLOWED_EMAIL_DOMAIN || 'columbia.edu';
+  return raw
+    .split(',')
+    .map((domain) => domain.trim().toLowerCase())
+    .filter(Boolean);
+}
+
+function allowedDomainsLabel(allowedDomains) {
+  return allowedDomains.map((domain) => `@${domain}`).join(' or ');
+}
+
+function emailAllowed(email, allowedDomains) {
   const domain = email.split('@')[1] || '';
-  return domain === allowedDomain || domain.endsWith(`.${allowedDomain}`);
+  return allowedDomains.some((allowedDomain) => (
+    domain === allowedDomain || domain.endsWith(`.${allowedDomain}`)
+  ));
+}
+
+function isMasterLoginEmail(email, env) {
+  const masterEmail = cleanEmail(env.MASTER_LOGIN_EMAIL || '');
+  return Boolean(masterEmail) && cleanEmail(email) === masterEmail;
 }
 
 async function signedSessionCookie(email, env, request) {

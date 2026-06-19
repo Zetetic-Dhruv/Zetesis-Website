@@ -484,10 +484,14 @@ export function renderStudioPage() {
 
     function renderEmailGate(error) {
       app.innerHTML = authShell('Enter Studio', \`
-        <p class="meta">\${escapeHtml(error.message || 'Use your Columbia email. The workspace keeps the brief, the questions, and the report together.')}</p>
+        <p class="meta">\${escapeHtml(error.message || 'Use your Columbia or Zetesis email. The master login also needs its password.')}</p>
         <div class="field">
-          <label>Columbia email</label>
-          <input id="sessionEmail" type="email" autocomplete="email" placeholder="Example: maya@columbia.edu">
+          <label>Email</label>
+          <input id="sessionEmail" type="email" autocomplete="email" placeholder="Example: maya@columbia.edu or dhruv@zetesislabs.com">
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input id="sessionPassword" type="password" autocomplete="current-password" placeholder="Master login only">
         </div>
         <div class="actions">
           <button id="startSessionBtn">Continue</button>
@@ -969,9 +973,10 @@ export function renderStudioPage() {
     async function startSession() {
       await withBusy(async () => {
         const email = document.getElementById('sessionEmail').value.trim();
+        const password = document.getElementById('sessionPassword').value;
         await api('/api/studio/session', {
           method: 'POST',
-          body: JSON.stringify({ email }),
+          body: JSON.stringify({ email, password }),
         });
         statusText = '';
         await init();

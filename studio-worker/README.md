@@ -46,24 +46,32 @@ Cloudflare-native student workspace for the Decision Manifold workflow.
    npx wrangler secret put SESSION_SECRET
    ```
 
-6. Deploy:
+6. Store the optional master login secrets:
+
+   ```sh
+   npx wrangler secret put MASTER_LOGIN_EMAIL
+   npx wrangler secret put MASTER_LOGIN_PASSWORD
+   ```
+
+7. Deploy:
 
    ```sh
    npx wrangler deploy
    ```
 
-7. In Cloudflare Zero Trust, put an Access application in front of:
+8. In Cloudflare Zero Trust, put an Access application in front of:
 
    - `https://zetesislabs.com/studio*`
    - `https://zetesislabs.com/decision-engineering*`
    - `https://zetesislabs.com/api/studio*`
    - `https://platform.zetesislabs.com/*`
 
-   Configure an allow policy for email domain `columbia.edu`. The Worker reads
-   `Cf-Access-Authenticated-User-Email` and rejects non-Columbia domains even if
-   Access is misconfigured. Until Access is configured, the preview session path
-   asks users to claim a Columbia email and stores that claim in a signed
-   HttpOnly cookie.
+   Configure an allow policy for email domains `columbia.edu` and
+   `zetesislabs.com`. The Worker reads `Cf-Access-Authenticated-User-Email`
+   and rejects other domains even if Access is misconfigured. Until Access is
+   configured, the session path asks users for an allowed email and stores that
+   claim in a signed HttpOnly cookie. The configured master email can also log in
+   with `MASTER_LOGIN_PASSWORD`.
 
 ## Local Development
 
@@ -74,6 +82,8 @@ DEV_AUTH_SECRET=local-secret
 OPENAI_API_KEY=sk-...
 OPENAI_MODEL=gpt-4.1-mini
 SESSION_SECRET=local-random-secret
+MASTER_LOGIN_EMAIL=dhruv@zetesislabs.com
+MASTER_LOGIN_PASSWORD=local-master-password
 PDF_SERVICE_URL=http://127.0.0.1:8790/pdf
 ```
 

@@ -9,6 +9,9 @@ const BASE_URL = `http://localhost:${PORT}`;
 const DEV_SECRET = 'dev-secret';
 const RUN_ID = Date.now();
 const EMAIL = `studio-test-${RUN_ID}@columbia.edu`;
+const ZETESIS_EMAIL = `studio-test-${RUN_ID}@zetesislabs.com`;
+const MASTER_EMAIL = `studio-master-${RUN_ID}@example.com`;
+const MASTER_PASSWORD = `master-password-${RUN_ID}`;
 
 const authHeaders = {
   'Content-Type': 'application/json',
@@ -64,6 +67,12 @@ async function startWorker() {
       `DEV_AUTH_SECRET:${DEV_SECRET}`,
       '--var',
       'AGENT_API_MODE:fixture',
+      '--var',
+      `SESSION_SECRET:test-session-secret-${RUN_ID}`,
+      '--var',
+      `MASTER_LOGIN_EMAIL:${MASTER_EMAIL}`,
+      '--var',
+      `MASTER_LOGIN_PASSWORD:${MASTER_PASSWORD}`,
       '--show-interactive-dev-session=false',
     ],
     { stdio: ['ignore', 'pipe', 'pipe'] }
@@ -100,6 +109,24 @@ async function runSuite() {
 
   const me = await getJson('/api/studio/me', authHeaders);
   assert(me.authenticated === true && me.registered === false, 'dev auth works for Columbia email');
+
+  const zetesisSession = await postJson('/api/studio/session', { email: ZETESIS_EMAIL });
+  assert(zetesisSession.authenticated === true && zetesisSession.email === ZETESIS_EMAIL, 'allows Zetesis domain session login');
+
+  const rejectedSession = await postJson('/api/studio/session', { email: `studio-test-${RUN_ID}@nyu.edu` }, {}, false);
+  assert(rejectedSession.status === 403, 'rejects non-allowed email session');
+
+  const badMasterSession = await postJson('/api/studio/session', {
+    email: MASTER_EMAIL,
+    password: 'wrong-password',
+  }, {}, false);
+  assert(badMasterSession.status === 403, 'rejects master email without the master password');
+
+  const masterSession = await postJson('/api/studio/session', {
+    email: MASTER_EMAIL,
+    password: MASTER_PASSWORD,
+  });
+  assert(masterSession.authenticated === true && masterSession.email === MASTER_EMAIL, 'allows password-protected master login');
 
   const rejected = await postJson('/api/studio/register', {
     name: 'Bad Domain',
