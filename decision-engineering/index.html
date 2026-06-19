@@ -5,13 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Decision Engineering Studio &middot; Zetesis Platform</title>
-    <meta name="description" content="Static workflow preview for the Decision Engineering Studio.">
+    <meta name="description" content="Decision Engineering Studio for consulting brief sorting and report generation.">
     <meta name="robots" content="noindex, nofollow">
     <link rel="icon" type="image/png" href="../public/images/logos/Zetesis_logo.png">
     <link rel="canonical" href="https://platform.zetesislabs.com/decision-engineering/">
     <style>
         :root {
-            --bg: #fff;
+            --bg: #fbfbf8;
             --ink: #111;
             --muted: #555;
             --faint: #888;
@@ -52,8 +52,8 @@
             font: inherit;
         }
         button {
-            border: 1px solid var(--ink);
-            background: var(--ink);
+            border: 1px solid var(--blue);
+            background: var(--blue);
             color: #fff;
             min-height: 34px;
             padding: 0.45rem 0.75rem;
@@ -62,6 +62,7 @@
         button.secondary {
             background: #fff;
             color: var(--ink);
+            border-color: var(--hairline);
         }
         button.ghost {
             background: transparent;
@@ -218,6 +219,13 @@
             font-size: 34px;
             line-height: 1.1;
         }
+        .panel-subhead {
+            margin: 0.45rem 0 0;
+            max-width: 760px;
+            color: #333;
+            font-size: 15px;
+            line-height: 1.5;
+        }
         .panel-body {
             padding: 1rem;
         }
@@ -276,7 +284,7 @@
             border: 1px dashed var(--hairline);
             padding: 1.25rem;
             color: var(--muted);
-            background: #fafafa;
+            background: #fffdf7;
         }
         .auth {
             max-width: 720px;
@@ -302,6 +310,18 @@
         .report-box p,
         .report-box li {
             line-height: 1.65;
+        }
+        .pdf-preview-wrap {
+            border: 1px solid var(--hairline);
+            min-height: 420px;
+            background: #fff;
+        }
+        .pdf-preview {
+            width: 100%;
+            min-height: 68vh;
+            border: 0;
+            display: block;
+            background: #fff;
         }
         .report-table {
             margin-top: 0.75rem;
@@ -350,6 +370,16 @@
             ['sentence', 'One Sentence'],
             ['report', 'Final Report']
         ];
+        const STEP_HELP = {
+            intake: 'Put the brief on the table before the system tries to sort it.',
+            sort: 'Every claim needs a place and a holder. Blank is better than fake.',
+            value: 'Mark the questions and unknowns that could change the recommendation.',
+            drill: 'Test the assumptions that are quietly carrying the answer.',
+            questions: 'Turn open questions into something a real person can answer in time.',
+            gatekeepers: 'Name who must say yes, who can say no, and where resistance is likely.',
+            sentence: 'Write the sentence that rules something in and something out.',
+            report: 'Open the PDF only after the map has earned it.'
+        };
         const SOURCE_LABELS = {
             problemStatement: 'Problem',
             known: 'Known',
@@ -364,7 +394,7 @@
             'drill.frameQuestion': 'Example: What question is this framing keeping us from asking?',
             'oneSentence.briefText': 'Example: There is a staffing gap.',
             'oneSentence.whatChanged': 'Example: The EA role appears to carry institutional memory and partner relationships, not just tasks.',
-            'oneSentence.reframeText': 'Example: The staffing gap is not only a resourcing problem; it is a relationship-continuity problem.',
+            'oneSentence.reframeText': 'Example: The staffing gap is a relationship-continuity problem showing up as staffing pressure.',
             'oneSentence.rulesIn': 'Example: Protect continuity, transfer relationships, hire for community standing.',
             'oneSentence.rulesOut': 'Example: Post the job, screen only for generic skills, fill fast.',
             'oneSentence.oneThingLeftOpen': 'Example: Which partner relationship is most fragile?',
@@ -478,12 +508,12 @@
                         <a href="../platform/" aria-label="Zetesis Platform"><img src="../public/images/logos/Zetesis_logo.png" alt="Zetesis"></a>
                         <div class="brand-copy">
                             <b>Decision Engineering Studio</b>
-                            <span class="meta">${escapeHtml(registration.team || 'Client preview')} · Browser-local workflow preview</span>
+                            <span class="meta">${escapeHtml(registration.team || 'Review team')} · Saved in this browser</span>
                         </div>
                     </div>
                     <div class="actions" style="margin-top:0">
                         <button class="secondary" id="saveBtn">Save</button>
-                        <button class="secondary" id="resetBtn">Reset Demo</button>
+                        <button class="secondary" id="resetBtn">Reset Local</button>
                         <span class="status">${escapeHtml(statusText)}</span>
                     </div>
                 </div>
@@ -497,7 +527,10 @@
                     </aside>
                     <main class="panel">
                         <div class="panel-head">
-                            <h1>${escapeHtml(STEPS.find(([id]) => id === currentStep)?.[1] || '')}</h1>
+                            <div>
+                                <h1>${escapeHtml(STEPS.find(([id]) => id === currentStep)?.[1] || '')}</h1>
+                                <p class="panel-subhead">${escapeHtml(STEP_HELP[currentStep] || '')}</p>
+                            </div>
                             <div class="meta">${summaryMeta()}</div>
                         </div>
                         <div class="panel-body">${renderStep()}</div>
@@ -513,12 +546,12 @@
                         <img src="../public/images/logos/Zetesis_logo.png" alt="Zetesis">
                         <div class="brand-copy">
                             <b>Zetesis Platform</b>
-                            <span class="meta">Decision Engineering Studio preview</span>
+                            <span class="meta">Decision Engineering Studio</span>
                         </div>
                     </div>
                     <h1>Enter Studio</h1>
                     <p class="meta" style="font-size:15px; line-height:1.65; margin-bottom:1.25rem">
-                        Dummy registration for client review. Everything in this preview is stored in this browser only.
+                        Create the team that will carry this brief through to a defensible report. This browser keeps the work until the live workspace is connected.
                     </p>
                     <div class="field">
                         <label>Name</label>
@@ -562,7 +595,7 @@
 
         function renderIntake() {
             return `
-                <div class="note"><b class="mono">Static preview</b><br>Live model calls and persistent storage will be wired next. This version lets reviewers approve the workflow and report UX.</div>
+                <div class="note"><b class="mono">Local workspace</b><br>Use this browser to walk the brief from intake to PDF without changing the live class workspace.</div>
                 <div class="grid">
                     ${textareaField('Problem statement', 'intake.problemStatement')}
                     ${textareaField('Everything known', 'intake.known')}
@@ -570,7 +603,7 @@
                     ${textareaField('Open questions', 'intake.openQuestions')}
                 </div>
                 <div class="actions">
-                    <button id="parseBtn">Parse into items</button>
+                    <button id="parseBtn">Build item map</button>
                     <button class="secondary" id="seedBtn">Load Bethany House Example</button>
                     <button class="secondary" id="seedCompleteBtn">Load Complete Example</button>
                     <button class="secondary" id="saveBtn2">Save</button>
@@ -579,10 +612,10 @@
         }
 
         function renderSort() {
-            if (!state.items.length) return emptyState('No intake items yet.');
+            if (!state.items.length) return emptyState('Start with the brief. The map appears after intake is parsed.');
             return `
                 <div class="actions" style="margin-top:0; margin-bottom:0.75rem">
-                    <button id="sortBtn">Demo Sort</button>
+                    <button id="sortBtn">Sort items</button>
                     <button class="secondary" id="addItemBtn">Add Item</button>
                 </div>
                 <div class="table-scroll"><table>
@@ -610,10 +643,10 @@
 
         function renderValue() {
             const items = state.items.filter((item) => item.bucket && item.bucket !== 'KK');
-            if (!items.length) return emptyState('No KU, UK, or UU items yet.');
+            if (!items.length) return emptyState('Nothing needs judgment yet. Sort the brief first.');
             return `
                 <div class="actions" style="margin-top:0; margin-bottom:0.75rem">
-                    <button id="valueBtn">Demo Value Tags</button>
+                    <button id="valueBtn">Mark high-value items</button>
                 </div>
                 <div class="table-scroll"><table>
                     <thead><tr><th style="width:48%">Item</th><th style="width:10%">Bucket</th><th style="width:12%">Value</th><th style="width:30%">Rationale</th></tr></thead>
@@ -651,7 +684,7 @@
                                 ${textareaAssumption(index, 'Given statement', 'givenStatement')}
                                 ${textareaAssumption(index, 'Wrong if', 'wrongIf')}
                                 ${textareaAssumption(index, 'What changes', 'whatChanges')}
-                                <div class="actions"><button data-drill-scaffold="${index}">Scaffold</button></div>
+                                <div class="actions"><button data-drill-scaffold="${index}">Build scaffold</button></div>
                                 ${renderScaffold(assumption)}
                             </div>
                         </section>
@@ -679,7 +712,7 @@
 
         function renderQuestions() {
             const items = state.items.filter((item) => item.sourceField === 'openQuestions' || item.bucket === 'KU' || item.rawText.includes('?'));
-            if (!items.length) return emptyState('No open questions yet.');
+            if (!items.length) return emptyState('No open question has reached the table yet.');
             return `
                 <div class="table-scroll"><table>
                     <thead><tr><th style="width:38%">Original</th><th style="width:32%">Selected variant</th><th style="width:20%">Variants</th><th style="width:10%"></th></tr></thead>
@@ -751,14 +784,21 @@
         }
 
         function renderReport() {
+            ensureReportUrl();
             return `
                 <div class="actions" style="margin-top:0; margin-bottom:0.75rem">
-                    <button id="reportBtn">Generate Report</button>
+                    <button id="reportBtn">Open PDF Report</button>
                     <button class="secondary" id="downloadPdfBtn" ${state.finalReport.document ? '' : 'disabled'}>Download PDF</button>
-                    <button class="secondary" id="copyReportBtn">Copy Text</button>
+                    <button class="secondary" id="copyReportBtn">Copy</button>
                 </div>
-                ${state.finalReport.document ? renderReportDocument(state.finalReport.document) : emptyState('Generate report to preview the PDF content.')}
+                ${reportUrl ? `<div class="pdf-preview-wrap"><iframe class="pdf-preview" src="${escapeAttr(reportUrl)}" title="Final report PDF"></iframe></div>` : emptyState('Approve the problem sentence, complete the gatekeeper fields, then open the PDF report.')}
             `;
+        }
+
+        function ensureReportUrl() {
+            if (!state.finalReport.document || reportUrl) return;
+            reportBlob = buildPdfBlob(reportLines(state.finalReport.document));
+            reportUrl = URL.createObjectURL(reportBlob);
         }
 
         function renderReportDocument(document) {
@@ -814,7 +854,7 @@
             }
             if (target.id === 'registerBtn') register();
             if (target.id === 'saveBtn' || target.id === 'saveBtn2') save();
-            if (target.id === 'resetBtn') resetDemo();
+            if (target.id === 'resetBtn') resetLocal();
             if (target.id === 'seedBtn') seedExample();
             if (target.id === 'seedCompleteBtn') seedCompleteExample();
             if (target.id === 'parseBtn') parseIntake();
@@ -858,7 +898,7 @@
         function register() {
             registration = {
                 name: document.getElementById('regName').value.trim() || 'Client reviewer',
-                team: document.getElementById('regTeam').value.trim() || 'Client preview',
+                team: document.getElementById('regTeam').value.trim() || 'Review team',
                 email: document.getElementById('regEmail').value.trim()
             };
             localStorage.setItem(REG_KEY, JSON.stringify(registration));
@@ -872,12 +912,12 @@
             render();
         }
 
-        function resetDemo() {
-            if (!confirm('Reset this browser-local demo workspace?')) return;
+        function resetLocal() {
+            if (!confirm('Reset this local workspace?')) return;
             localStorage.removeItem(STORAGE_KEY);
             state = defaultState();
             currentStep = 'intake';
-            statusText = 'Demo reset.';
+            statusText = 'Local workspace reset.';
             render();
         }
 
@@ -994,7 +1034,7 @@
             state.oneSentence = {
                 briefText: 'Bethany House says it has a staffing gap.',
                 whatChanged: 'The EA role appears to carry institutional memory and partner relationships, not just tasks.',
-                reframeText: 'The staffing gap is not only a resourcing problem; it is a relationship-continuity problem.',
+                reframeText: 'The staffing gap is a relationship-continuity problem showing up as staffing pressure.',
                 rulesIn: 'Protect continuity, transfer relationships, map veto risk, hire for community standing.',
                 rulesOut: 'Post the job, screen only for generic skills, fill quickly, treat the CEO as the only channel.',
                 status: 'approved',
@@ -1033,10 +1073,10 @@
                 item.bucket = inferBucket(item);
                 refreshItemStatus(item);
                 item.aiNotes = item.status === 'settled'
-                    ? 'Demo classification. Review before treating as settled.'
+                    ? 'Classification proposed. Review before treating as settled.'
                     : 'Bucket proposed; add holder/source before treating as settled.';
             });
-            statusText = 'Demo sort complete.';
+            statusText = 'Sort complete.';
             persist();
             render();
         }

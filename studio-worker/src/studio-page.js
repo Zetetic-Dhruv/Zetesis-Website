@@ -8,7 +8,7 @@ export function renderStudioPage() {
   <meta name="robots" content="noindex, nofollow">
   <style>
     :root {
-      --bg: #ffffff;
+      --bg: #fbfbf8;
       --ink: #111111;
       --muted: #555555;
       --hairline: #d7d7d7;
@@ -44,8 +44,8 @@ export function renderStudioPage() {
     }
 
     button {
-      border: 1px solid var(--ink);
-      background: var(--ink);
+      border: 1px solid var(--blue);
+      background: var(--blue);
       color: #fff;
       min-height: 34px;
       padding: 0.45rem 0.75rem;
@@ -55,6 +55,7 @@ export function renderStudioPage() {
     button.secondary {
       background: #fff;
       color: var(--ink);
+      border-color: var(--hairline);
     }
 
     button.ghost {
@@ -218,6 +219,14 @@ export function renderStudioPage() {
       letter-spacing: 0;
     }
 
+    .panel-subhead {
+      margin: 0.45rem 0 0;
+      max-width: 760px;
+      color: #333;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
     .panel-body {
       padding: 1rem;
     }
@@ -308,7 +317,7 @@ export function renderStudioPage() {
       border: 1px dashed var(--hairline);
       padding: 1.25rem;
       color: var(--muted);
-      background: #fafafa;
+      background: #fffdf7;
     }
 
     .auth {
@@ -377,6 +386,17 @@ export function renderStudioPage() {
       ['report', 'Final Report']
     ];
 
+    const STEP_HELP = {
+      intake: 'Put the brief on the table before the system tries to sort it.',
+      sort: 'Every claim needs a place and a holder. Blank is better than fake.',
+      value: 'Mark the questions and unknowns that could change the recommendation.',
+      drill: 'Test the assumptions that are quietly carrying the answer.',
+      questions: 'Turn open questions into something a real person can answer in time.',
+      gatekeepers: 'Name who must say yes, who can say no, and where resistance is likely.',
+      sentence: 'Write the sentence that rules something in and something out.',
+      report: 'Open the PDF only after the map has earned it.'
+    };
+
     const SOURCE_LABELS = {
       problemStatement: 'Problem',
       known: 'Known',
@@ -392,7 +412,7 @@ export function renderStudioPage() {
       'drill.frameQuestion': 'Example: What question is this framing keeping us from asking?',
       'oneSentence.briefText': 'Example: There is a staffing gap.',
       'oneSentence.whatChanged': 'Example: The EA role appears to carry institutional memory and partner relationships, not just tasks.',
-      'oneSentence.reframeText': 'Example: The staffing gap is not only a resourcing problem; it is a relationship-continuity problem.',
+      'oneSentence.reframeText': 'Example: The staffing gap is a relationship-continuity problem showing up as staffing pressure.',
       'oneSentence.rulesIn': 'Example: Protect continuity, transfer relationships, hire for community standing.',
       'oneSentence.rulesOut': 'Example: Post the job, screen only for generic skills, fill fast.',
       'oneSentence.oneThingLeftOpen': 'Example: Which partner relationship is most fragile?',
@@ -464,7 +484,7 @@ export function renderStudioPage() {
 
     function renderEmailGate(error) {
       app.innerHTML = authShell('Enter Studio', \`
-        <p class="meta">\${escapeHtml(error.message || 'Enter your Columbia email to open your workspace.')}</p>
+        <p class="meta">\${escapeHtml(error.message || 'Use your Columbia email. The workspace keeps the brief, the questions, and the report together.')}</p>
         <div class="field">
           <label>Columbia email</label>
           <input id="sessionEmail" type="email" autocomplete="email" placeholder="Example: maya@columbia.edu">
@@ -499,6 +519,7 @@ export function renderStudioPage() {
 
     function renderRegistration(me) {
       app.innerHTML = authShell('Register', \`
+        <p class="meta">Create the team that will carry this brief through to a defensible report.</p>
         <p class="meta">\${escapeHtml(me.email || '')}</p>
         <div class="field">
           <label>Name</label>
@@ -530,7 +551,7 @@ export function renderStudioPage() {
         <div class="topbar">
           <div class="brand">
             <b>Decision Manifold Studio</b>
-            <span>\${escapeHtml(boot.engagement?.cohort_name || 'Columbia SPS')} · \${escapeHtml(boot.team?.name || '')} · Code \${escapeHtml(boot.team?.join_code || '')}</span>
+            <span>\${escapeHtml(boot.engagement?.cohort_name || 'Columbia SPS')} · \${escapeHtml(boot.team?.name || '')} · Join code \${escapeHtml(boot.team?.join_code || '')}</span>
           </div>
           <div class="actions" style="margin-top:0">
             <button class="secondary" id="saveBtn">Save</button>
@@ -547,7 +568,10 @@ export function renderStudioPage() {
           </aside>
           <main class="panel">
             <div class="panel-head">
-              <h1>\${escapeHtml(STEPS.find(([id]) => id === currentStep)?.[1] || '')}</h1>
+              <div>
+                <h1>\${escapeHtml(STEPS.find(([id]) => id === currentStep)?.[1] || '')}</h1>
+                <p class="panel-subhead">\${escapeHtml(STEP_HELP[currentStep] || '')}</p>
+              </div>
               <div class="meta">\${summaryMeta()}</div>
             </div>
             <div class="panel-body">
@@ -584,17 +608,17 @@ export function renderStudioPage() {
           \${textareaField('Open questions', 'intake.openQuestions')}
         </div>
         <div class="actions">
-          <button id="parseBtn" \${busyAttr()}>Parse into items</button>
+          <button id="parseBtn" \${busyAttr()}>Build item map</button>
           <button class="secondary" id="saveBtn2">Save</button>
         </div>
       \`;
     }
 
     function renderSort() {
-      if (!state.items.length) return emptyState('No intake items yet.');
+      if (!state.items.length) return emptyState('Start with the brief. The map appears after intake is parsed.');
       return \`
         <div class="actions" style="margin-top:0; margin-bottom:0.75rem">
-          <button id="sortBtn" \${busyAttr()}>AI Sort</button>
+          <button id="sortBtn" \${busyAttr()}>Sort items</button>
           <button class="secondary" id="addItemBtn">Add Item</button>
         </div>
         <div class="table-scroll">
@@ -632,10 +656,10 @@ export function renderStudioPage() {
 
     function renderValue() {
       const items = state.items.filter((item) => item.bucket && item.bucket !== 'KK');
-      if (!items.length) return emptyState('No KU, UK, or UU items yet.');
+      if (!items.length) return emptyState('Nothing needs judgment yet. Sort the brief first.');
       return \`
         <div class="actions" style="margin-top:0; margin-bottom:0.75rem">
-          <button id="valueBtn" \${busyAttr()}>AI Value Tags</button>
+          <button id="valueBtn" \${busyAttr()}>Mark high-value items</button>
         </div>
         <div class="table-scroll">
           <table>
@@ -685,7 +709,7 @@ export function renderStudioPage() {
                 \${textareaAssumption(index, 'Wrong if', 'wrongIf')}
                 \${textareaAssumption(index, 'What changes', 'whatChanges')}
                 <div class="actions">
-                  <button data-drill-scaffold="\${index}" \${busyAttr()}>Scaffold</button>
+                  <button data-drill-scaffold="\${index}" \${busyAttr()}>Build scaffold</button>
                 </div>
                 \${renderScaffold(assumption)}
               </div>
@@ -714,7 +738,7 @@ export function renderStudioPage() {
 
     function renderQuestions() {
       const items = state.items.filter((item) => item.sourceField === 'openQuestions' || item.bucket === 'KU' || item.rawText.includes('?'));
-      if (!items.length) return emptyState('No open questions yet.');
+      if (!items.length) return emptyState('No open question has reached the table yet.');
       return \`
         <div class="table-scroll">
           <table>
@@ -814,13 +838,13 @@ export function renderStudioPage() {
     function renderReport() {
       return \`
         <div class="actions" style="margin-top:0; margin-bottom:0.75rem">
-          <button id="reportBtn" \${busyAttr()}>Generate Report</button>
+          <button id="reportBtn" \${busyAttr()}>Open PDF Report</button>
           <button class="secondary" id="downloadPdfBtn" \${busyAttr()} \${pdfPreviewBlob || state.finalReport.document ? '' : 'disabled'}>Download PDF</button>
           <button class="secondary" id="copyReportBtn">Copy</button>
         </div>
         \${pdfPreviewUrl
           ? \`<div class="pdf-preview-wrap"><iframe class="pdf-preview" src="\${escapeAttr(pdfPreviewUrl)}" title="Final report PDF"></iframe></div>\`
-          : emptyState('Generate report to open the PDF.')}
+          : emptyState('Approve the problem sentence, complete the gatekeeper fields, then open the PDF report.')}
       \`;
     }
 

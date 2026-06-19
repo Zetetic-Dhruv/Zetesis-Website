@@ -1270,12 +1270,12 @@ function renderPlatformPage() {
   <main class="shell">
     <nav><strong>Zetesis Labs</strong><a href="https://zetesislabs.com/">Main site</a></nav>
     <h1>Zetesis Platform</h1>
-    <p>Decision work gets messy quickly. Keep the brief, the unknowns, the questions, and the final report in one place.</p>
+    <p>For the moment when a team has notes, pressure, and a deadline, but not yet a question it can defend.</p>
     <a class="card" href="/decision-engineering/">
       <span class="idx">[ I ]</span>
       <span>
         <span class="title">Decision Engineering Studio</span>
-        <p>Sort a rough consulting brief: what is known, what is assumed, what needs a conversation, who can block a decision, and what belongs in the final report.</p>
+        <p>Sort the brief, name who knows what, test the assumptions carrying the answer, and leave with a report the team can stand behind.</p>
       </span>
       <span aria-hidden="true">→</span>
     </a>

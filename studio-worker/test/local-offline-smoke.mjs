@@ -95,7 +95,7 @@ async function runSuite() {
   assert(html.includes('Gatekeepers'), 'serves gatekeeper step');
   assert(html.includes('Approve Sentence'), 'serves sentence approval control');
   assert(html.includes('Download PDF'), 'serves PDF download control');
-  assert(html.includes('Generate report to open the PDF.'), 'serves PDF empty state');
+  assert(html.includes('Approve the problem sentence, complete the gatekeeper fields, then open the PDF report.'), 'serves PDF empty state');
   assert(!html.includes('Print'), 'omits print control from report workflow');
 
   const me = await getJson('/api/studio/me', authHeaders);
@@ -141,7 +141,7 @@ async function runSuite() {
   const valueCase = CASES['value_tag.high_for_relationship_memory'];
   const valued = await llm('value_tag', { items: valueCase.input.items.map((item) => ({ ...item, ...(sortedById[item.id] || {}) })) });
   const valuedById = indexById(valued.result.items);
-  assertValueTags(valuedById, valueCase.expected.items, 'value_tag matches oracle for high-leverage items');
+  assertValueTags(valuedById, valueCase.expected.items, 'value_tag matches oracle for high-value items');
   assert(valuedById.uk_relationship_memory_heard.valueTag === 'High', 'tags UK relationship-memory item high value');
 
   const drillCase = CASES['drill_scaffold.staffing_gap_source_example'];
