@@ -1,0 +1,49 @@
+# Cloudflare Worker for Decision Manifold Studio.
+#
+# Deploy flow:
+#   cd studio-worker
+#   npx wrangler d1 create zetesis_decision_manifold_studio
+#   # paste the returned database_id below
+#   npx wrangler d1 migrations apply zetesis_decision_manifold_studio --remote
+#   npx wrangler secret put OPENAI_API_KEY
+#   npx wrangler deploy
+#
+# Put Cloudflare Access in front of /studio* and /api/studio* with an
+# @columbia.edu allow policy. The Worker also validates the domain.
+
+name = "zetesislabs-decision-manifold-studio"
+main = "src/studio.js"
+compatibility_date = "2026-01-01"
+account_id = "75a11ac71fbcc3ddc793675245c3d95b"
+workers_dev = false
+
+[vars]
+ALLOWED_EMAIL_DOMAIN = "columbia.edu"
+OPENAI_MODEL = "gpt-4.1-mini"
+# Set to "fixture" for localhost/offline testing where deterministic,
+# source-grounded behavior substitutes for the external LLM API.
+AGENT_API_MODE = "openai"
+# Optional: set to a trusted Python ReportLab service or Cloudflare Container
+# endpoint. Localhost UI defaults directly to http://localhost:8790/pdf.
+PDF_SERVICE_URL = ""
+
+[[d1_databases]]
+binding = "STUDIO_DB"
+database_name = "zetesis_decision_manifold_studio"
+database_id = "f2a11649-1aa6-4656-81f4-bde7d1b45d91"
+
+[[routes]]
+pattern = "zetesislabs.com/studio*"
+zone_id = "e18a1fe40e3f82d744a62612ebf3f0f2"
+
+[[routes]]
+pattern = "zetesislabs.com/decision-engineering*"
+zone_id = "e18a1fe40e3f82d744a62612ebf3f0f2"
+
+[[routes]]
+pattern = "zetesislabs.com/api/studio*"
+zone_id = "e18a1fe40e3f82d744a62612ebf3f0f2"
+
+[[routes]]
+pattern = "platform.zetesislabs.com/*"
+zone_id = "e18a1fe40e3f82d744a62612ebf3f0f2"

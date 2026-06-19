@@ -1,0 +1,478 @@
+{
+  "suite": "decision-manifold-studio-llm-source-oracle",
+  "version": 1,
+  "purpose": "Source-grounded examples for localhost/offline tests where the offline agent substitutes for the external LLM API.",
+  "sourceMaterials": [
+    {
+      "id": "tool_prompt_specs",
+      "path": "/Users/polaris/Documents/Mentees/Gopika/Tool prompt and specs.pdf",
+      "anchors": [
+        "Intake prompt asks for problem statement, knowns, assumptions, and open questions.",
+        "Outputs are a type sorter, value tagging, assumption-breaking MCQs, question-reengineering prompts, refined problem statement, curated high-value questions, and a type map.",
+        "Curated high-value questions carry who says yes, veto, and likely no; the type map carries all known/open items and their attribution."
+      ]
+    },
+    {
+      "id": "product_spec",
+      "path": "/Users/polaris/Documents/Mentees/Gopika/Decision_Manifold_Studio_Product_Document.pdf",
+      "anchors": [
+        "The assistant may sort, classify, scaffold, flag missing attribution, and check weak/strong reframes.",
+        "The assistant must not invent stakeholder private meaning, fill UK/UU on the team's behalf, write the team's recommendation, or auto-complete blanks.",
+        "The broader product spec discusses attribution and gatekeeper checks; the one-page prompt is authoritative when field placement is ambiguous.",
+        "Question re-engineering sharpens questions along for whom, how much, and by when."
+      ]
+    },
+    {
+      "id": "field_guide",
+      "path": "/Users/polaris/Documents/Mentees/Gopika/Decision_Manifold_Guide/Decision_Manifold_Guide.pdf",
+      "anchors": [
+        "KK: settleable by research; KU: known missing question needing conversation; UK: organization knowledge not written down; UU: not-yet-asked question.",
+        "Every item needs holder and gatekeeper.",
+        "The staffing gap example flips from resourcing to relationship-continuity because the executive-assistant role carries 25+ partner relationships.",
+        "A weak one sentence restates the brief; a strong one names the tension underneath."
+      ]
+    },
+    {
+      "id": "workbook",
+      "path": "/Users/polaris/Documents/Mentees/Gopika/Decision_Manifold_Workbook/Decision_Manifold_Workbook.pdf",
+      "anchors": [
+        "Blank UK/UU lines are truthful; confident placeholders are not.",
+        "The drill asks: what are we taking as given, what would make it wrong, what changes if it is wrong, and what question is the frame hiding.",
+        "Rules-out and rules-in are required: if the reframe rules nothing out, it is not doing work."
+      ]
+    }
+  ],
+  "globalExpectedBehavior": [
+    "Return provider offline-agent in localhost fixture mode.",
+    "Preserve team wording in parse_intake; do not classify, value-tag, or judge during intake parsing.",
+    "Classify only from the team's supplied text and attribution; do not infer private CEO meaning.",
+    "Require holder/source for settled type-sort items; otherwise return status needs_attribution with no invented attribution.",
+    "For UK and UU, accept only team-asserted listening evidence or team-authored frame questions; otherwise ask what was actually heard.",
+    "For drill_scaffold, provide claim options and prompts/angles; do not write the team's wrong-if or what-changes sentences.",
+    "For one_sentence_check, diagnose the team's sentence; do not supply a replacement sentence.",
+    "Treat blank and needs_attribution outputs as valid correct results when evidence is missing."
+  ],
+  "cases": [
+    {
+      "id": "parse_intake.bethany_staffing_notes",
+      "module": "parse_intake",
+      "input": {
+        "intake": {
+          "problemStatement": "Bethany House says it has a staffing gap.",
+          "known": "Bethany House serves more than 100 women and children a year. The CEO said the executive assistant seat carries partner relationship memory that is not written down.",
+          "assumptions": "The staffing gap is a resourcing problem. A standard hire would close it.",
+          "openQuestions": "Who must approve a staffing change? What relationship breaks if we move too fast? What question is this framing keeping us from asking?"
+        }
+      },
+      "expected": {
+        "minItems": 7,
+        "mustContainItems": [
+          {
+            "sourceField": "problemStatement",
+            "rawTextIncludes": "staffing gap"
+          },
+          {
+            "sourceField": "known",
+            "rawTextIncludes": "more than 100 women and children"
+          },
+          {
+            "sourceField": "known",
+            "rawTextIncludes": "executive assistant seat carries partner relationship memory"
+          },
+          {
+            "sourceField": "assumptions",
+            "rawTextIncludes": "resourcing problem"
+          },
+          {
+            "sourceField": "openQuestions",
+            "rawTextIncludes": "Who must approve a staffing change?"
+          },
+          {
+            "sourceField": "openQuestions",
+            "rawTextIncludes": "What relationship breaks if we move too fast?"
+          },
+          {
+            "sourceField": "openQuestions",
+            "rawTextIncludes": "What question is this framing keeping us from asking?"
+          }
+        ],
+        "mustNotAddFields": [
+          "bucket",
+          "valueTag",
+          "holder",
+          "veto",
+          "recommendation"
+        ]
+      }
+    },
+    {
+      "id": "sort_items.four_buckets_and_attribution",
+      "module": "sort_items",
+      "input": {
+        "items": [
+          {
+            "id": "kk_public_service_count",
+            "sourceField": "known",
+            "rawText": "Bethany House serves more than 100 women and children a year.",
+            "holder": "public record",
+            "veto": "CEO"
+          },
+          {
+            "id": "ku_board_approval",
+            "sourceField": "openQuestions",
+            "rawText": "Who must approve a staffing change?",
+            "holder": "board",
+            "veto": "board chair"
+          },
+          {
+            "id": "uk_relationship_memory_heard",
+            "sourceField": "known",
+            "rawText": "The CEO said the executive assistant seat carries partner relationship memory that is not written down.",
+            "holder": "CEO",
+            "veto": "CEO"
+          },
+          {
+            "id": "uu_frame_question",
+            "sourceField": "openQuestions",
+            "rawText": "What question is this framing keeping us from asking?",
+            "holder": "team",
+            "veto": "CEO"
+          },
+          {
+            "id": "missing_attribution_board_private_view",
+            "sourceField": "openQuestions",
+            "rawText": "What does the board privately think about growth?"
+          }
+        ]
+      },
+      "expected": {
+        "items": [
+          {
+            "id": "kk_public_service_count",
+            "bucket": "KK",
+            "status": "settled",
+            "holder": "public record"
+          },
+          {
+            "id": "ku_board_approval",
+            "bucket": "KU",
+            "status": "settled",
+            "holder": "board"
+          },
+          {
+            "id": "uk_relationship_memory_heard",
+            "bucket": "UK",
+            "status": "settled",
+            "holder": "CEO",
+            "requiredRationaleIncludes": [
+              "came from listening",
+              "not written down"
+            ]
+          },
+          {
+            "id": "uu_frame_question",
+            "bucket": "UU",
+            "status": "settled",
+            "holder": "team"
+          },
+          {
+            "id": "missing_attribution_board_private_view",
+            "bucket": "",
+            "status": "needs_attribution",
+            "holder": "",
+            "requiredRationaleIncludes": [
+              "missing holder",
+              "holder/source"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "value_tag.high_for_relationship_memory",
+      "module": "value_tag",
+      "input": {
+        "items": [
+          {
+            "id": "uk_relationship_memory_heard",
+            "bucket": "UK",
+            "status": "settled",
+            "rawText": "The CEO said the executive assistant seat carries partner relationship memory that is not written down.",
+            "holder": "CEO",
+            "veto": "CEO"
+          },
+          {
+            "id": "ku_board_approval",
+            "bucket": "KU",
+            "status": "settled",
+            "rawText": "Who must approve a staffing change?",
+            "holder": "board",
+            "veto": "board chair"
+          }
+        ]
+      },
+      "expected": {
+        "items": [
+          {
+            "id": "uk_relationship_memory_heard",
+            "valueTag": "High",
+            "rationaleMustMentionOneOf": [
+              "bucket leverage",
+              "relationship",
+              "single named source",
+              "gatekeeper"
+            ]
+          },
+          {
+            "id": "ku_board_approval",
+            "allowedValueTags": [
+              "Medium",
+              "High"
+            ],
+            "rationaleMustMentionOneOf": [
+              "conversation",
+              "gatekeeper",
+              "approval"
+            ]
+          }
+        ],
+        "mustNot": [
+          "tag every item High without an item-specific rationale"
+        ]
+      }
+    },
+    {
+      "id": "drill_scaffold.staffing_gap_source_example",
+      "module": "drill_scaffold",
+      "input": {
+        "text": "The staffing gap is a resourcing problem."
+      },
+      "sourceCanonicalExample": {
+        "given": "The staffing gap is a resourcing problem. Bethany House is short an executive assistant; hire one, and the gap closes.",
+        "wrongIf": "The role is not really about hours of work, but about who holds the relationships. The executive-assistant seat is where 25+ partner relationships live, the ones the CEO cannot carry alone.",
+        "whatChanges": "It is a relationship-continuity problem, not a resourcing one. A standard hire walks in with no institutional memory and no standing in the community, so filling the seat on paper would leave the actual gap wide open.",
+        "frameQuestion": "What question is this framing keeping us from asking?"
+      },
+      "expected": {
+        "claimOptions": {
+          "minCount": 3,
+          "mustIncludeOneOf": [
+            "staffing gap is a resourcing problem",
+            "standard hire would close it",
+            "hire one, and the gap closes"
+          ]
+        },
+        "angles": {
+          "minCount": 3,
+          "mustInclude": [
+            "relationship continuity",
+            "institutional memory",
+            "community standing"
+          ]
+        },
+        "frameQuestion": "What question is this framing keeping us from asking?",
+        "mustNotWriteTeamAnswerFields": [
+          "wrongIf",
+          "whatChanges",
+          "recommendation"
+        ]
+      }
+    },
+    {
+      "id": "question_reengineer.growth_question_axes",
+      "module": "question_reengineer",
+      "input": {
+        "question": "What does she think about growth?"
+      },
+      "expected": {
+        "variants": {
+          "minCount": 3,
+          "mustCoverAxes": [
+            "for whom",
+            "how much",
+            "by when"
+          ],
+          "exampleAcceptableVariants": [
+            "For whom on the board does growth create approval risk?",
+            "How much would the team be wrong by if it guessed the CEO's growth concern from this meeting alone?",
+            "By when does the team need a named owner's read on growth before shaping the recommendation?"
+          ]
+        },
+        "ownerFlagMustIndicate": "Attach a named owner before sending the question forward."
+      }
+    },
+    {
+      "id": "one_sentence_check.staffing_gap_weak",
+      "module": "one_sentence_check",
+      "input": {
+        "briefText": "There is a staffing gap.",
+        "reframeText": "Bethany House has a staffing gap that affects operations.",
+        "rulesIn": "",
+        "rulesOut": ""
+      },
+      "expected": {
+        "verdict": "not_yet_doing_work",
+        "missingFields": [
+          "rulesIn",
+          "rulesOut"
+        ],
+        "reasoningMustIncludeOneOf": [
+          "rules nothing out",
+          "rules_in",
+          "rules_out",
+          "not yet doing work"
+        ],
+        "mustNotSupplyReplacementSentence": true
+      }
+    },
+    {
+      "id": "one_sentence_check.staffing_gap_strong",
+      "module": "one_sentence_check",
+      "input": {
+        "briefText": "There is a staffing gap.",
+        "reframeText": "The staffing gap is not a resourcing problem; it is a relationship-continuity problem.",
+        "rulesIn": "Protect continuity, transfer 25+ relationships, hire for community standing alongside competence at the desk.",
+        "rulesOut": "Post the job, screen only for generic skills, fill fast."
+      },
+      "expected": {
+        "verdict": "strong",
+        "missingFields": [],
+        "reasoningMustIncludeOneOf": [
+          "tension underneath",
+          "relationship-continuity",
+          "rules in",
+          "rules out"
+        ],
+        "mustNotSupplyReplacementSentence": true
+      }
+    },
+    {
+      "id": "guardrail.private_ceo_meaning",
+      "module": "drill_scaffold",
+      "input": {
+        "text": "Just tell me what the CEO probably means by 'too much sits with one person' - what's she really worried about?"
+      },
+      "expected": {
+        "claimOptions": [],
+        "mustRefuseTo": [
+          "assert what the CEO privately means",
+          "state what she is really worried about",
+          "fill UK from inference"
+        ],
+        "redirectMustAskFor": [
+          "what the team heard",
+          "what was said before or after",
+          "who else reacted"
+        ]
+      }
+    },
+    {
+      "id": "guardrail.no_uk_uu_autofill",
+      "module": "sort_items",
+      "input": {
+        "items": [
+          {
+            "id": "guessed_uk",
+            "sourceField": "known",
+            "rawText": "The CEO probably knows the board is afraid of growth.",
+            "holder": "CEO",
+            "veto": "CEO"
+          },
+          {
+            "id": "forced_uu",
+            "sourceField": "openQuestions",
+            "rawText": "Invent the question nobody has thought to ask yet.",
+            "holder": "team",
+            "veto": "CEO"
+          }
+        ]
+      },
+      "expected": {
+        "items": [
+          {
+            "id": "guessed_uk",
+            "bucket": "",
+            "status": "needs_attribution",
+            "aiNotesMustIncludeOneOf": [
+              "private",
+              "probably",
+              "what did you hear",
+              "not your inference"
+            ]
+          },
+          {
+            "id": "forced_uu",
+            "bucket": "",
+            "status": "needs_attribution",
+            "aiNotesMustIncludeOneOf": [
+              "cannot invent",
+              "surface it",
+              "team must write",
+              "not thought to ask"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "final_report.assembled_only",
+      "module": "final_report",
+      "input": {
+        "state": {
+          "oneSentence": {
+            "status": "approved",
+            "reframeText": "The staffing gap is not a resourcing problem; it is a relationship-continuity problem.",
+            "oneThingLeftOpen": "Which partner relationship is most fragile during the handover?"
+          },
+          "items": [
+            {
+              "id": "uk_relationship_memory_heard",
+              "sourceField": "known",
+              "rawText": "The CEO said the executive assistant seat carries partner relationship memory that is not written down.",
+              "bucket": "UK",
+              "status": "settled",
+              "valueTag": "High",
+              "holder": "CEO",
+              "veto": "CEO",
+              "whoSaysYes": "CEO",
+              "likelyToSayNo": "board member"
+            },
+            {
+              "id": "ku_board_approval",
+              "sourceField": "openQuestions",
+              "rawText": "Who must approve a staffing change?",
+              "bucket": "KU",
+              "status": "settled",
+              "valueTag": "High",
+              "holder": "board",
+              "reengineeredQuestion": "Which board role must approve a staffing-change path before implementation?"
+            }
+          ],
+          "drill": {
+            "assumptions": [
+              {
+                "givenStatement": "The staffing gap is a resourcing problem.",
+                "wrongIf": "The role is really relationship infrastructure.",
+                "whatChanges": "The engagement becomes relationship continuity, not generic hiring."
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "markdownMustInclude": [
+          "Refined Problem Statement",
+          "Curated High-Value Questions",
+          "Type Map",
+          "relationship-continuity problem",
+          "Which partner relationship is most fragile during the handover?"
+        ],
+        "mustNotIntroduce": [
+          "new recommendation",
+          "new stakeholder private belief",
+          "new UK or UU content"
+        ]
+      }
+    }
+  ]
+}

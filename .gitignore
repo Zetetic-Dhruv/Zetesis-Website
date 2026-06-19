@@ -19,6 +19,10 @@ dist-ssr
 .dev.vars
 .dev.vars.*
 .wrangler
+.secrets/
+__pycache__/
+*.pyc
+studio-worker/tmp/
 
 # Editor directories and files
 .vscode/*
