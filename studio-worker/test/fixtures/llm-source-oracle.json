@@ -217,7 +217,7 @@
             "id": "uk_relationship_memory_heard",
             "valueTag": "High",
             "rationaleMustMentionOneOf": [
-              "bucket leverage",
+              "bucket importance",
               "relationship",
               "single named source",
               "gatekeeper"

@@ -464,7 +464,7 @@ export function renderStudioPage() {
 
     function renderEmailGate(error) {
       app.innerHTML = authShell('Enter Studio', \`
-        <p class="meta">\${escapeHtml(error.message || 'Use a Columbia email to start this preview workspace.')}</p>
+        <p class="meta">\${escapeHtml(error.message || 'Enter your Columbia email to open your workspace.')}</p>
         <div class="field">
           <label>Columbia email</label>
           <input id="sessionEmail" type="email" autocomplete="email" placeholder="Example: maya@columbia.edu">
@@ -819,8 +819,8 @@ export function renderStudioPage() {
           <button class="secondary" id="copyReportBtn">Copy</button>
         </div>
         \${pdfPreviewUrl
-          ? \`<div class="pdf-preview-wrap"><iframe class="pdf-preview" src="\${escapeAttr(pdfPreviewUrl)}" title="Final report PDF preview"></iframe></div>\`
-          : emptyState('Generate report to preview the PDF.')}
+          ? \`<div class="pdf-preview-wrap"><iframe class="pdf-preview" src="\${escapeAttr(pdfPreviewUrl)}" title="Final report PDF"></iframe></div>\`
+          : emptyState('Generate report to open the PDF.')}
       \`;
     }
 

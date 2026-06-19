@@ -593,7 +593,7 @@ ${JSON.stringify(payload.items || [], null, 2)}`,
     },
     prompt: (payload) => `For each KU, UK, or UU item, propose High, Medium, or Low value.
 
-Use these factors: bucket leverage, stakes for people affected if wrong, whether a gatekeeper's decision depends on it, and whether it depends on a single named source. Return a one-sentence rationale. Do not tag everything High.
+Use these factors: bucket importance, stakes for people affected if wrong, whether a gatekeeper's decision depends on it, and whether it depends on a single named source. Return a one-sentence rationale. Do not tag everything High.
 
 Items:
 ${JSON.stringify(payload.items || [], null, 2)}`,
@@ -631,7 +631,7 @@ Step (d): Return only the frame question, not candidate answers.`,
 
 Question: ${JSON.stringify(payload.question || '')}
 
-Return 3-4 variants that are answerable in principle by a specifically named person. If no variant can be tied to a named owner, say so in ownerFlag rather than forcing an unanswerable question.`,
+Return 3-4 variants that are answerable in principle by a specifically named person. If no variant can be tied to a named owner, say so in ownerFlag instead of forcing an unanswerable question.`,
   },
   one_sentence_check: {
     schemaName: 'one_sentence_check_result',
@@ -681,7 +681,7 @@ Hard guardrails:
 - typeMap must include every item, including unsettled and blank-attribution items.
 - drillSummary must use only the team's givenStatement, wrongIf, and whatChanges fields.
 - The document object must contain plain text only. No Markdown, HTML, LaTeX, tables, or bullets inside document fields.
-- The markdown field is only a preview of the same document object.
+- The markdown field must contain the same document content.
 
 Required report sections:
 1. Refined problem statement.
@@ -759,7 +759,7 @@ function fallbackRaw(moduleName, payload) {
         if (/ceo|board|client|resident|school|funder|trust|veto|risk|hurt|women|children/.test(text)) valueTag = 'High';
         const rationale = item.bucket === 'KU'
           ? 'Fallback tag based on the need for a real conversation and gatekeeper approval relevance.'
-          : 'Fallback tag based on bucket leverage and visible stakeholder/stakes language.';
+          : 'Fallback tag based on bucket importance and visible stakeholder/stakes language.';
         return {
           id: item.id,
           valueTag,
@@ -1263,8 +1263,6 @@ function renderPlatformPage() {
     .card { display:grid; grid-template-columns:64px minmax(0,1fr) 32px; gap:1.25rem; border-top:1px solid var(--hairline); border-bottom:1px solid var(--hairline); padding:2rem 0; margin-top:3rem; }
     .idx,.meta { font-family:var(--mono); color:#666; font-size:12px; }
     .title { font-size:30px; margin-bottom:.35rem; }
-    .tags { display:flex; flex-wrap:wrap; gap:.45rem; margin-top:.9rem; }
-    .tags span { border:1px solid var(--hairline); padding:.2rem .45rem; font-family:var(--mono); font-size:11px; color:#555; }
     @media (max-width: 640px) { h1 { font-size:42px; } .card { grid-template-columns:1fr; } }
   </style>
 </head>
@@ -1272,13 +1270,12 @@ function renderPlatformPage() {
   <main class="shell">
     <nav><strong>Zetesis Labs</strong><a href="https://zetesislabs.com/">Main site</a></nav>
     <h1>Zetesis Platform</h1>
-    <p>Research instruments before they become infrastructure. Each preview is meant to make a method inspectable, stress-testable, and easier to approve before the distribution layer is built around it.</p>
+    <p>Decision work gets messy quickly. Keep the brief, the unknowns, the questions, and the final report in one place.</p>
     <a class="card" href="/decision-engineering/">
       <span class="idx">[ I ]</span>
       <span>
         <span class="title">Decision Engineering Studio</span>
-        <p>A live workflow for turning a consulting brief into sorted unknowns, high-value questions, gatekeeper checks, an approved problem statement, and a downloadable report.</p>
-        <span class="tags"><span>Columbia gated</span><span>D1 storage</span><span>OpenAI API</span><span>PDF export</span></span>
+        <p>Sort a rough consulting brief: what is known, what is assumed, what needs a conversation, who can block a decision, and what belongs in the final report.</p>
       </span>
       <span aria-hidden="true">→</span>
     </a>

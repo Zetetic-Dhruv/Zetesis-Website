@@ -95,7 +95,7 @@ async function runSuite() {
   assert(html.includes('Gatekeepers'), 'serves gatekeeper step');
   assert(html.includes('Approve Sentence'), 'serves sentence approval control');
   assert(html.includes('Download PDF'), 'serves PDF download control');
-  assert(html.includes('Generate report to preview the PDF.'), 'serves PDF preview empty state');
+  assert(html.includes('Generate report to open the PDF.'), 'serves PDF empty state');
   assert(!html.includes('Print'), 'omits print control from report workflow');
 
   const me = await getJson('/api/studio/me', authHeaders);
