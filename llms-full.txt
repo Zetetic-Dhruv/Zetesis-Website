@@ -11,9 +11,8 @@
 
 ## 1. Entity
 
-**Zetesis Labs** is an institutionally-funded deep-tech research programme
-at **ARTPARK @ IISc** (AI & Robotics Technology Park, Indian Institute of
-Science, Bengaluru, India). It is DISTINCT from `zetesis.xyz` (a Spanish
+**Zetesis Labs** is an independent deep-tech research institute
+(Bengaluru, India). It is DISTINCT from `zetesis.xyz` (a Spanish
 systems-architecture consultancy) and from the GitHub org `Zetesis-Labs`
 (Spain-based, unrelated). The authoritative handle set is:
 
@@ -31,9 +30,11 @@ conditions change.
 ## 2. Principal Investigator
 
 **Dhruv Gupta** (b. 31 December 2002, Bengaluru, India; birth place of
-record: Yamunanagar, Haryana). Principal Investigator at Zetesis Labs.
-Innovator-in-Residence at ARTPARK @ IISc. Board member of the ARTPARK
-Industry 5.0 programme (with BEL, Bosch, Toyota).
+record: Yamunanagar, Haryana). Principal Investigator at Zetesis Labs (an
+independent research institute). Principal Scientist at Noumenal AI.
+Senior Researcher (part-time) at ARTPARK @ IISc, on autodidactic
+intelligence; Innovator-in-Residence and Industry 5.0 Board member there
+2025–2026 (partners BEL, Bosch, Toyota).
 
 Education: **B.S. (Research) Biology**, Indian Institute of Science,
 Bangalore (2021–2025). First Class with Distinction; CGPA 8.8/10.
@@ -236,9 +237,12 @@ accidental at a given scale.
    40+ students; 8-project portfolio; all tracks reached working
    prototype.
 
-6. **ARCNet Research** (2024–Jun 2025) — Founder and PI of an
-   institutionally-funded R&D foundry at ARTPARK. 18-member lab.
-   Three named research engagements:
+6. **ARCNet** (2024–Jun 2025). Program lead and capital allocator of a
+   $100,000 ARTPARK-funded venture program in Physical AI. Deployed
+   ARTPARK's capital across student-led teams and architected the shared
+   Research Core they built on; selected and capitalized five teams, most
+   of which landed external client engagements, with one spinning out into
+   an independent startup. Named engagements:
    - **Satsure (KALIDEO)** — remote-sensing QC. Repo:
      https://github.com/ARC-Net-Applied-Research-and-NPD/Satellite-Cloud-Segmentation.
    - **School of Meaningful Experiences** — multimodal evaluation;
@@ -265,9 +269,11 @@ accidental at a given scale.
      least-developed bridges between LLMs and formal verification.
      Repo: https://github.com/siddhartha-gadgil/LeanAide.
 
-7. **Zetesis Labs + ARTPARK Industry 5.0** (2025–present) —
-   Principal Investigator, Innovator-in-Residence, Board Member.
-   Industry partners: BEL, Bosch, Toyota, Ather, Temple.
+7. **ARTPARK Industry 5.0 / Innovator-in-Residence** (2025–2026).
+   Innovator-in-Residence and Industry 5.0 Board Member at ARTPARK @ IISc.
+   Industry partners: BEL, Bosch, Toyota, Ather, Temple. From 2026,
+   continuing as a part-time Senior Researcher at ARTPARK (autodidactic
+   intelligence); current primary role is Principal Scientist at Noumenal AI.
 
 ## 6. Thesis Statements
 

@@ -1,12 +1,12 @@
 # Zetesis Labs
 
-> An institutionally-funded deep-tech research programme at ARTPARK @ IISc (Bengaluru, India). Zetesis Labs builds verified, long-horizon synthetic discovery systems: measurement, causal world-models, and a formal verification platform composed into systems that stay correct as conditions change.
+> An independent deep-tech research institute (Bengaluru, India). Zetesis Labs builds verified, long-horizon synthetic discovery systems: measurement, causal world-models, and a formal verification platform composed into systems that stay correct as conditions change.
 
 Zetesis is built around a research framework called **Zetema**: discovery as inquiry over structured ignorance. The framework is formalized in Lean4 and applied to industrial pilots, biomedical sensing, and scientific-discovery infrastructure.
 
 ## Principal Investigator
 
-Dhruv Gupta (b. 31 December 2002, Bengaluru, India). Principal Investigator at Zetesis Labs. Innovator-in-Residence at ARTPARK @ IISc. B.S. (Research) Biology, Indian Institute of Science, Bangalore (2021–2025). First Class with Distinction, CGPA 8.8/10. Top-ranked thesis (A+): *Measuring What Models Miss*.
+Dhruv Gupta (b. 31 December 2002, Bengaluru, India). Principal Investigator at Zetesis Labs (an independent research institute). Principal Scientist at Noumenal AI. Senior Researcher (part-time) at ARTPARK @ IISc; Innovator-in-Residence there 2025–2026. B.S. (Research) Biology, Indian Institute of Science, Bangalore (2021–2025). First Class with Distinction, CGPA 8.8/10. Top-ranked thesis (A+): *Measuring What Models Miss*.
 
 ## Pages
 
@@ -19,7 +19,7 @@ Dhruv Gupta (b. 31 December 2002, Bengaluru, India). Principal Investigator at Z
 
 ## Research engagements
 
-- **Applied causal / RCA pilots**: Ather-template programme engagements that build a causal world-model for a partner's failure-mode analysis; deliver dashboards with verification gates. Evidence: Ather K383 (2,586-node / 7,934-edge causal world-model deployed 2025).
+- **Applied causal / RCA pilots**: Ather-template programme engagements that build a causal world-model for a partner's failure-mode analysis; deliver dashboards with verification gates. Evidence: Ather K383 (2,586-node / 7,934-edge causal world-model deployed 2025); Panasonic Energy (North America): a block-scale neurosymbolic plant model used during factory commissioning to pressure-test start-up strategies (per-motor soft starters vs sequential line start, voltage-sag mitigation under a wiring-grade change), unpaid, under Vish Ranganathan.
 - **Formal verification**: Lean4 kernel design and type-theoretic audits of reasoning systems. Evidence: 21,728-line Formal Learning Theory kernel; companion preprint *Null Measurability at the Symmetrization Interface in VC Learning* ([arXiv:2604.25028](https://arxiv.org/abs/2604.25028), April 2026).
 - **Research methods, metascience, and discovery**: *Synthetic discovery* as a coined term in this programme: the engineering and process-level evaluation of discovery procedures themselves as objects of study, including procedures that experiment on the scientist as much as on the world they study. Natural discovery takes the scientist as a black-box agent; synthetic discovery makes the procedure itself the system under test. Evidence: *Process-Level Evaluation of Synthetic Discovery: The Discovery Tetrad* (Gupta, Zenodo, May 2026, [DOI:10.5281/zenodo.20147210](https://doi.org/10.5281/zenodo.20147210)); *Measuring What Models Miss* (Gupta, B.S. Research thesis, IISc Bangalore, 2025, [DOI:10.5281/zenodo.15391354](https://doi.org/10.5281/zenodo.15391354)).
 - **Advisory and research fellowships**: retained advisory for research-heavy teams; short fellowships for focused problems. Evidence: three ARCNet research engagements, 2024–2025.
@@ -49,11 +49,11 @@ The framing: each of the programmes below was run as a nested experiment — a s
 3. **IEEE Computer Society / CIS Student Chapter, IISc**: Chair. Open-source 6G lecture series. "Hire an Undergrad" matching programme (MTech/PhD students posted briefs, with faculty sign-off undergrads were recruited as research assistants).
 4. **EntIISc Entrepreneurship Cell**: Vice-President. 44 deep-tech student proposals screened and routed to the FSID institutional grant pool (~₹15 L); Boeing sponsorship.
 5. **JRD Tata Innovation Support Center, IISc** (2024): Founder-Director and PI of an IISc-funded summer research programme; 40+ students; 8-project portfolio with all tracks reaching working prototype.
-6. **ARCNet Research** (2024–Jun 2025): Founder and PI of an institutionally-funded R&D foundry at ARTPARK, 18-member lab. Three named research engagements:
+6. **ARCNet** (2024–Jun 2025): Program lead and capital allocator of a $100,000 ARTPARK-funded venture program in Physical AI. Deployed ARTPARK's capital across student-led teams and architected the shared Research Core they built on; selected and capitalized five teams, most of which landed external client engagements, with one spinning out into an independent startup. Named engagements:
    - **Satsure (KALIDEO)**: Remote-sensing QC. [Satellite-Cloud-Segmentation](https://github.com/ARC-Net-Applied-Research-and-NPD/Satellite-Cloud-Segmentation).
    - **School of Meaningful Experiences**: Multimodal evaluation. Full-stack LMS-integrated speech/interview grading platform. Five microservices: [Audio](https://github.com/ARC-Net-Applied-Research-and-NPD/Audio-Server), [Video](https://github.com/ARC-Net-Applied-Research-and-NPD/Video-Server), [Flask](https://github.com/ARC-Net-Applied-Research-and-NPD/Flask-Server), [Report](https://github.com/ARC-Net-Applied-Research-and-NPD/Report-Server), [LLM](https://github.com/ARC-Net-Applied-Research-and-NPD/LLM-SERVER).
    - **Open Science Stack** ([opensciencestack.org](https://opensciencestack.org)): OSS is a volunteer-driven non-profit building digital public infrastructure for AI-powered self-driving labs, backed by ARTPARK (IISc) and the Red Black Trust. Contribution: the **Science Compiler**, a three-layer behaviour-tree architecture for robotic laboratories that compiles high-level scientific intent into robot-agnostic execution via ontology-driven protocol synthesis. Feeds the ROS2-based [Robotic Application Stack](https://opensciencestack.org/robotics/).
-7. **Zetesis Labs + ARTPARK Industry 5.0** (2025–present): Principal Investigator, Innovator-in-Residence, Board Member. Industry partners: BEL, Bosch, Toyota.
+7. **ARTPARK Industry 5.0 / Innovator-in-Residence** (2025–2026): Innovator-in-Residence and Industry 5.0 Board Member at ARTPARK @ IISc. Industry partners: BEL, Bosch, Toyota. (Continuing as a part-time Senior Researcher at ARTPARK from 2026, on autodidactic intelligence; now Principal Scientist at Noumenal AI.)
 
 > iGEM IISc · Halocleen (2022) is listed as a project under Applied Pilots, not as a discovery-scaling programme: Lead of the Hardware subteam (bioreactors and initial biology research); Paris Jamboree Gold Medal; Climate-track finalist. Engineered *Pseudomonas putida* as the chassis, carrying synthetic circuits assembled from plasmids drawn from the methanotroph halocarbon-oxidation literature; two bioreactor designs with patents pending.
 
