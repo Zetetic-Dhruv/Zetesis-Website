@@ -24,6 +24,14 @@ import {
   rankLiveBets,
 } from './module2-engine.js';
 import {
+  compileModule2Document,
+  fallbackModule2Package,
+  module2DocumentText,
+  module2PackageInput,
+  module2PackageReadinessError,
+} from './module2-package.js';
+import { buildRecommendationPdfBytes } from './module2-pdf.js';
+import {
   CONFIDENCE_CONFIG_CANDIDATE,
   confidenceConfigIsAudited,
 } from './confidence-config.js';
@@ -31,6 +39,7 @@ import {
   module2ArtifactMayRelease,
   sanitizeUnauditedDocumentJson,
   sanitizeUnauditedDocumentText,
+  stripUnauditedConfidence,
 } from './confidence-containment.js';
 
 const ENGAGEMENT_ID = 'eng_bethany_house_2026';
@@ -311,6 +320,18 @@ async function handleApi(request, env, pathname) {
       return json({
         versions: await listDeliverableVersions(env, auth.user.id, MODULE2_KEY, ctx.membership.class_id),
       }, 200, request);
+    }
+
+    if (request.method === 'POST' && pathname === '/api/studio/modules/module-2/report/preview') {
+      const ctx = await getStudentContext(env, auth.user.id);
+      if (!ctx.ok) return json({ error: ctx.error }, ctx.status, request);
+      return await handleModule2ReportPreview(request, env, auth.user, ctx.membership);
+    }
+
+    if (request.method === 'POST' && pathname === '/api/studio/modules/module-2/report/save-version') {
+      const ctx = await getStudentContext(env, auth.user.id);
+      if (!ctx.ok) return json({ error: ctx.error }, ctx.status, request);
+      return await handleSaveModule2ReportVersion(request, env, auth.user, ctx.membership);
     }
 
     const module2PdfMatch = pathname.match(/^\/api\/studio\/modules\/module-2\/report\/versions\/([^/]+)\/pdf$/);
@@ -926,6 +947,12 @@ async function hmacHex(message, secret) {
   return [...new Uint8Array(signature)].map((byte) => byte.toString(16).padStart(2, '0')).join('');
 }
 
+async function module2SourceHash(state) {
+  const value = JSON.stringify(module2PackageInput(state || {}));
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value));
+  return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, '0')).join('');
+}
+
 function randomBytes(length) {
   const bytes = new Uint8Array(length);
   crypto.getRandomValues(bytes);
@@ -1058,9 +1085,17 @@ async function handleLlm(request, env, user, membership = null) {
     if (moduleName === 'm2_evaluate_bets') {
       updatedState = applyBetEvaluations(module2Bundle.state, result, promptPayload._context?.facts || []);
     }
+    if (moduleName === 'm2_package') {
+      updatedState = normalizeModule2State(module2Bundle.state);
+      updatedState.package.currentPreview = result.document;
+      updatedState.package.generatedAt = new Date().toISOString();
+      updatedState.package.sourceHash = await module2SourceHash(updatedState);
+    }
     if (updatedState) {
       updatedState.updatedAt = new Date().toISOString();
-      await persistModule2State(env, bundle.workspace.id, user.id, updatedState, 'board', 'draft');
+      const nextStep = moduleName === 'm2_package' ? 'lock' : 'board';
+      const nextStatus = moduleName === 'm2_package' ? 'locked' : 'draft';
+      await persistModule2State(env, bundle.workspace.id, user.id, updatedState, nextStep, nextStatus);
     }
   }
 
@@ -1111,6 +1146,10 @@ async function handleLlm(request, env, user, membership = null) {
 function normalizeModuleResult(moduleName, result, payload) {
   if (moduleName === 'sort_board') return normalizeSortBoardResult(result, payload);
   if (moduleName === 'final_report') return normalizeFinalReportResult(result);
+  if (moduleName === 'm2_package') {
+    const document = stripUnauditedConfidence(compileModule2Document(payload.state || {}, result || {}), false);
+    return { ...result, document, documentText: module2DocumentText(document) };
+  }
   return result;
 }
 
@@ -2006,6 +2045,39 @@ const M2_EVALUATE_SCHEMA = {
   required: ['evaluations', 'coverage'],
 };
 
+const M2_PACKAGE_SCHEMA = {
+  type: 'object',
+  additionalProperties: false,
+  properties: {
+    executiveFraming: { type: 'string' },
+    recommendationSummary: { type: 'string' },
+    recommendationRationale: { type: 'string' },
+    currentPositionStatement: { type: 'string' },
+    candidateCommentary: {
+      type: 'array',
+      items: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          betId: { type: 'string' },
+          rationale: { type: 'string' },
+          comparisonReason: { type: 'string' },
+        },
+        required: ['betId', 'rationale', 'comparisonReason'],
+      },
+    },
+    closingNote: { type: 'string' },
+  },
+  required: [
+    'executiveFraming',
+    'recommendationSummary',
+    'recommendationRationale',
+    'currentPositionStatement',
+    'candidateCommentary',
+    'closingNote',
+  ],
+};
+
 const MODULES = {
   parse_intake: {
     schemaName: 'parse_intake_result',
@@ -2259,6 +2331,15 @@ Check whether the working read merely restates the brief or names a tension unde
       }, null, 2),
     ].join('\n\n'),
   },
+  m2_package: {
+    schemaName: 'm2_package_result',
+    schema: M2_PACKAGE_SCHEMA,
+    prompt: (payload) => [
+      'Write the connective prose for a Bethany House recommendation brief from the locked decision object below.',
+      'Be direct, specific, and respectful. Explain why the selected bet currently leads without claiming certainty, predicting success, diagnosing Bethany House, or hiding contrary evidence. Treat tripwires as conditions for reopening the decision. Keep every candidate genuinely live in the prose. Never change the selected bet or invent a client preference.',
+      JSON.stringify(module2PackageInput(payload.state || {}), null, 2),
+    ].join('\n\n'),
+  },
   final_report: {
     schemaName: 'final_report_result',
     schema: {
@@ -2298,6 +2379,7 @@ function fallbackRaw(moduleName, payload) {
   if (moduleName === 'm2_reconcile') return fallbackReconcile(payload);
   if (moduleName === 'm2_suggest_options') return fallbackSuggestOptions(payload);
   if (moduleName === 'm2_evaluate_bets') return fallbackEvaluateBets(payload);
+  if (moduleName === 'm2_package') return fallbackModule2Package(payload.state || {});
 
   if (moduleName === 'parse_intake') {
     const intake = payload.intake || {};
@@ -2982,6 +3064,122 @@ async function listDeliverableVersions(env, userId, moduleKey, classId) {
     .map(sanitizeDeliverableVersion);
 }
 
+async function handleModule2ReportPreview(request, env, user, membership) {
+  const bundle = await loadModule2WorkspaceBundle(env, user.id, membership);
+  if (!bundle.workspace) return json({ error: 'Workspace not found.' }, 404, request);
+  const prepared = await preparedModule2Document(bundle.state);
+  if (!prepared.ok) return json({ error: prepared.error }, 409, request);
+  const pdfBytes = buildRecommendationPdfBytes(prepared.document);
+  const filename = recommendationPdfFilename();
+  await audit(env, bundle.workspace.id, user.id, 'module2_report_preview', {
+    workflowKey: MODULE2_KEY,
+    artifactReleaseClass: 'client_no_confidence',
+  });
+  return json({
+    ok: true,
+    document: prepared.document,
+    documentText: module2DocumentText(prepared.document),
+    pdfBase64: bytesToBase64(pdfBytes),
+    filename,
+    versions: await listDeliverableVersions(env, user.id, MODULE2_KEY, membership.class_id),
+  }, 200, request);
+}
+
+async function handleSaveModule2ReportVersion(request, env, user, membership) {
+  const bundle = await loadModule2WorkspaceBundle(env, user.id, membership);
+  if (!bundle.workspace) return json({ error: 'Workspace not found.' }, 404, request);
+  const prepared = await preparedModule2Document(bundle.state);
+  if (!prepared.ok) return json({ error: prepared.error }, 409, request);
+
+  const latest = await env.STUDIO_DB.prepare(
+    `SELECT COALESCE(MAX(version_number), 0) AS version_number
+     FROM deliverable_versions WHERE workspace_id = ? AND module_key = ?`
+  ).bind(bundle.workspace.id, MODULE2_KEY).first();
+  const versionNumber = Number(latest?.version_number || 0) + 1;
+  const versionId = crypto.randomUUID();
+  const pdfBytes = buildRecommendationPdfBytes(prepared.document);
+  const documentJson = sanitizeUnauditedDocumentJson(JSON.stringify(prepared.document), false);
+  const documentText = sanitizeUnauditedDocumentText(module2DocumentText(prepared.document), false);
+  let pdfKey = `classes/${membership.class_id}/users/${user.id}/workspaces/${bundle.workspace.id}/module-2/versions/${versionId}.pdf`;
+  let storeInD1 = true;
+  if (env.STUDIO_ARTIFACTS) {
+    try {
+      await env.STUDIO_ARTIFACTS.put(pdfKey, pdfBytes, {
+        httpMetadata: { contentType: 'application/pdf' },
+        customMetadata: { module: MODULE2_KEY, versionId, artifactReleaseClass: 'client_no_confidence' },
+      });
+      storeInD1 = false;
+    } catch (_) {
+      pdfKey = `d1:${versionId}`;
+    }
+  } else {
+    pdfKey = `d1:${versionId}`;
+  }
+
+  const statements = [env.STUDIO_DB.prepare(
+    `INSERT INTO deliverable_versions (
+      id, workspace_id, user_id, class_id, module_key, version_number, title,
+      state_json, document_json, document_text, pdf_r2_key,
+      confidence_config_version, confidence_input_hash, artifact_release_class
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, '', '', 'client_no_confidence')`
+  ).bind(
+    versionId,
+    bundle.workspace.id,
+    user.id,
+    membership.class_id,
+    MODULE2_KEY,
+    versionNumber,
+    `Bethany House Recommendation Brief v${versionNumber}`,
+    JSON.stringify(bundle.state),
+    documentJson,
+    documentText,
+    pdfKey
+  )];
+  if (storeInD1) {
+    statements.push(env.STUDIO_DB.prepare(
+      `INSERT INTO deliverable_artifacts (id, deliverable_version_id, content_type, content_base64)
+       VALUES (?, ?, 'application/pdf', ?)`
+    ).bind(crypto.randomUUID(), versionId, bytesToBase64(pdfBytes)));
+  }
+  await env.STUDIO_DB.batch(statements);
+
+  const state = normalizeModule2State(bundle.state);
+  state.package.savedVersionIds = [...new Set([...(state.package.savedVersionIds || []), versionId])];
+  state.updatedAt = new Date().toISOString();
+  await persistModule2State(env, bundle.workspace.id, user.id, state, 'lock', 'complete');
+  await audit(env, bundle.workspace.id, user.id, 'module2_report_version_saved', {
+    workflowKey: MODULE2_KEY,
+    versionId,
+    versionNumber,
+    artifactReleaseClass: 'client_no_confidence',
+    storage: storeInD1 ? 'd1' : 'r2',
+  });
+  const versions = await listDeliverableVersions(env, user.id, MODULE2_KEY, membership.class_id);
+  return json({
+    ok: true,
+    version: versions.find((version) => version.id === versionId),
+    versions,
+    state,
+    document: prepared.document,
+    pdfBase64: bytesToBase64(pdfBytes),
+    filename: recommendationPdfFilename(`v${versionNumber}`),
+  }, 200, request);
+}
+
+async function preparedModule2Document(state) {
+  const readiness = module2PackageReadinessError(state);
+  if (readiness) return { ok: false, error: readiness };
+  const expectedHash = await module2SourceHash(state);
+  if (!state.package?.currentPreview || state.package?.sourceHash !== expectedHash) {
+    return { ok: false, error: 'Generate the recommendation again after the latest decision edit.' };
+  }
+  return {
+    ok: true,
+    document: stripUnauditedConfidence(state.package.currentPreview, false),
+    sourceHash: expectedHash,
+  };
+}
+
 function sanitizeDeliverableVersion(version) {
   return {
     id: version.id,
@@ -3025,6 +3223,8 @@ async function serveDeliverablePdf(request, env, version, filename) {
 }
 
 async function readDeliverablePdfBytes(env, version) {
+  const rerendered = renderDeliverablePdfBytes(version);
+  if (rerendered) return rerendered;
   if (env.STUDIO_ARTIFACTS && version.pdf_r2_key && !version.pdf_r2_key.startsWith('d1:')) {
     const object = await env.STUDIO_ARTIFACTS.get(version.pdf_r2_key);
     if (object) return new Uint8Array(await object.arrayBuffer());
@@ -3033,6 +3233,17 @@ async function readDeliverablePdfBytes(env, version) {
     `SELECT content_base64 FROM deliverable_artifacts WHERE deliverable_version_id = ?`
   ).bind(version.id).first();
   return artifact?.content_base64 ? base64ToBytes(artifact.content_base64) : null;
+}
+
+function renderDeliverablePdfBytes(version) {
+  if (!version?.document_json) return null;
+  try {
+    const document = JSON.parse(sanitizeUnauditedDocumentJson(version.document_json, false));
+    if (!document || typeof document !== 'object') return null;
+    return buildRecommendationPdfBytes(document);
+  } catch (_) {
+    return null;
+  }
 }
 
 async function serveVersionPdf(request, env, version, filename) {
@@ -4020,7 +4231,15 @@ async function handleSaveModule2Workspace(request, env, user, membership) {
   ).bind(module1.workspace.id, MODULE2_KEY).first();
   if (stored?.state_json) {
     try {
-      state.inheritance = parseStoredModule2State(stored.state_json).inheritance;
+      const storedState = parseStoredModule2State(stored.state_json);
+      state.inheritance = storedState.inheritance;
+      state.package = {
+        ...state.package,
+        currentPreview: storedState.package.currentPreview,
+        savedVersionIds: storedState.package.savedVersionIds,
+        generatedAt: storedState.package.generatedAt,
+        sourceHash: storedState.package.sourceHash,
+      };
     } catch (_) {
       return json({
         error: 'Stored Module 2 state is unreadable. Contact the instructor before saving again.',

@@ -311,8 +311,65 @@ async function runSuite() {
   assert(reranked.state.ranking.orderedBetIds.length >= 2, 'student reweighting reranks without a model call');
   assert(!('confidence' in reranked.state.ranking), 'deterministic reranking cannot expose candidate confidence');
 
+  const lockedModule2State = structuredClone(reranked.state);
+  lockedModule2State.locks = {
+    ...lockedModule2State.locks,
+    frameConfirmation: 'confirmed',
+    setCompletenessConfirmation: 'confirmed',
+    selectedBetId: lockedModule2State.ranking.orderedBetIds[0],
+    lossBearer: 'Program staff',
+    accountabilityLocation: 'Program leadership owns the recommendation and response to failed handoffs.',
+    reversibility: 'costly_to_reverse',
+    reversibilityNote: 'A failed relationship transfer would require deliberate repair.',
+    heldConstant: [
+      'The consolidated reply is the current client record.',
+      'New Bethany House evidence can reopen the comparison field.',
+    ],
+  };
+  const forgedPackageState = structuredClone(lockedModule2State);
+  forgedPackageState.package = {
+    ...forgedPackageState.package,
+    currentPreview: {
+      title: 'Forged recommendation',
+      confidenceScore: 99,
+    },
+    sourceHash: 'browser-controlled-hash',
+    generatedAt: new Date().toISOString(),
+  };
+  const lockedModule2 = await putJson('/api/studio/modules/module-2/workspace', {
+    state: forgedPackageState,
+    currentStep: 'lock',
+    status: 'locked',
+  }, authHeaders);
+  assert(lockedModule2.state.package.currentPreview === null, 'workspace save cannot inject a server-owned Module 2 package');
+  assert(lockedModule2.state.package.sourceHash === '', 'workspace save cannot inject a server-owned package hash');
+  const module2Package = await llm('m2_package', {});
+  assert(module2Package.result.document.title === 'Bethany House Recommendation Brief', 'Module 2 compiler returns a client recommendation document');
+  assert(module2Package.result.document.recommendation.name === lockedModule2State.bets.find((bet) => bet.id === lockedModule2State.locks.selectedBetId).name, 'Module 2 compiler preserves the student-selected bet');
+  assert(module2Package.result.document.candidates.length >= 2, 'Module 2 compiler retains the full candidate field');
+  assert(!/confidence/i.test(JSON.stringify(module2Package.result.document)), 'unaudited Module 2 package contains no confidence claim');
+  assert(Boolean(module2Package.state?.package?.sourceHash), 'Module 2 package records a locked-source hash');
+  const packagedModule2Workspace = await getJson('/api/studio/modules/module-2/workspace', authHeaders);
+  assert(packagedModule2Workspace.state.package.sourceHash === module2Package.state.package.sourceHash, 'Module 2 package source hash survives D1 persistence');
+  assert(packagedModule2Workspace.state.package.currentPreview?.title === 'Bethany House Recommendation Brief', 'Module 2 package preview survives D1 persistence');
+  const module2Preview = await postJson('/api/studio/modules/module-2/report/preview', {}, authHeaders);
+  assert(/^JVBER/.test(module2Preview.pdfBase64 || ''), 'Module 2 preview returns Worker-rendered PDF bytes');
+  const module2Version = await postJson('/api/studio/modules/module-2/report/save-version', {}, authHeaders);
+  assert(module2Version.version.version_number === 1, 'Module 2 saves an immutable recommendation version');
+  const module2Versions = await getJson('/api/studio/modules/module-2/report/versions', authHeaders);
+  assert(module2Versions.versions.length === 1, 'student can list saved Module 2 versions');
+  const module2PdfResponse = await fetch(`${BASE_URL}${module2Version.version.pdf_url}`, { headers: authHeaders });
+  assert(module2PdfResponse.ok && module2PdfResponse.headers.get('content-type')?.includes('application/pdf'), 'student can download the saved recommendation PDF');
+  const editedAfterVersion = structuredClone(module2Version.state);
+  editedAfterVersion.locks.heldConstant.push('A later edit must make the current preview stale.');
+  await putJson('/api/studio/modules/module-2/workspace', { state: editedAfterVersion, currentStep: 'lock', status: 'locked' }, authHeaders);
+  const stalePreview = await postJson('/api/studio/modules/module-2/report/preview', {}, authHeaders, false);
+  assert(stalePreview.status === 409, 'editing a locked judgment invalidates the current recommendation preview');
+  const immutableModule2Pdf = await fetch(`${BASE_URL}${module2Version.version.pdf_url}`, { headers: authHeaders });
+  assert(immutableModule2Pdf.ok, 'a stale current draft does not invalidate a saved recommendation version');
+
   const module2PromptTrace = await getJson(`/api/instructor/students/${reg.user.id}/prompts?workflow=module_2`, adminHeaders);
-  assert(module2PromptTrace.prompts.length === 3, 'instructor Module 2 prompt filter shows only the three Module 2 runs');
+  assert(module2PromptTrace.prompts.length === 4, 'instructor Module 2 prompt filter shows only the four Module 2 runs');
   assert(
     module2PromptTrace.prompts.every((prompt) => prompt.system_prompt && prompt.module_prompt),
     'instructor Module 2 prompt trace includes system and module prompts'
@@ -433,6 +490,8 @@ async function runSuite() {
   assert((instructorPrompts.prompts || []).some((prompt) => prompt.system_prompt && prompt.module_prompt), 'instructor sees system and module prompts');
   const instructorVersions = await getJson(`/api/instructor/students/${reg.user.id}/versions`, adminHeaders);
   assert((instructorVersions.versions || []).length === 1, 'instructor sees saved report versions');
+  const instructorModule2Versions = await getJson(`/api/instructor/students/${reg.user.id}/versions?workflow=module_2`, adminHeaders);
+  assert((instructorModule2Versions.versions || []).length === 1, 'instructor sees saved Module 2 recommendation versions');
 
   await postJson(`/api/instructor/students/${reg.user.id}/model-access`, { status: 'blocked' }, adminHeaders);
   const blockedRun = await postJson('/api/studio/llm', {

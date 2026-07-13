@@ -1,3 +1,5 @@
+import { stripUnauditedConfidence } from './confidence-containment.js';
+
 export const MODULE2_KEY = 'module_2';
 
 export const DEFAULT_MODULE2_STATE = Object.freeze({
@@ -62,6 +64,7 @@ export const DEFAULT_MODULE2_STATE = Object.freeze({
     currentPreview: null,
     savedVersionIds: [],
     generatedAt: '',
+    sourceHash: '',
   },
   updatedAt: '',
 });
@@ -69,6 +72,7 @@ export const DEFAULT_MODULE2_STATE = Object.freeze({
 export function normalizeModule2State(input) {
   const state = structuredClone(DEFAULT_MODULE2_STATE);
   mergeKnown(state, input && typeof input === 'object' ? input : {});
+  const incomingPreview = input?.package?.currentPreview;
 
   state.version = 1;
   state.inheritance.sourceType = oneOf(state.inheritance.sourceType, ['saved_version', 'current_draft', 'absent'], 'absent');
@@ -125,6 +129,11 @@ export function normalizeModule2State(input) {
   state.ranking.evaluationIncomplete = Boolean(state.ranking.evaluationIncomplete);
   state.locks.heldConstant = cleanStringArray(state.locks.heldConstant, 50);
   state.package.savedVersionIds = cleanStringArray(state.package.savedVersionIds, 100);
+  state.package.currentPreview = incomingPreview && typeof incomingPreview === 'object' && !Array.isArray(incomingPreview)
+    ? stripUnauditedConfidence(incomingPreview, false)
+    : null;
+  state.package.sourceHash = cleanText(state.package.sourceHash, 80);
+  state.package.generatedAt = cleanText(state.package.generatedAt, 80);
   state.updatedAt = cleanText(state.updatedAt, 80);
   return state;
 }

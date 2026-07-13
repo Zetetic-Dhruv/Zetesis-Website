@@ -23,6 +23,12 @@ import {
   rankLiveBets,
 } from '../src/module2-engine.js';
 import { renderModule2Page } from '../src/module2-page.js';
+import {
+  compileModule2Document,
+  fallbackModule2Package,
+  module2DocumentText,
+  module2PackageReadinessError,
+} from '../src/module2-package.js';
 
 const root = new URL('..', import.meta.url);
 const source = readFileSync(new URL('../src/studio.js', import.meta.url), 'utf8');
@@ -119,6 +125,32 @@ assert(
 assert(!('confidence' in evaluated.ranking), 'evidence engine cannot emit confidence');
 assert(evaluated.ranking.comparisonScores.basis === 'weighted_criterion_comparison', 'ordinary ranking values have an explicit non-confidence basis');
 assert(evaluated.locks.selectedBetId === '', 'evidence engine cannot choose the final bet');
+const packageState = structuredClone(evaluated);
+packageState.locks = {
+  ...packageState.locks,
+  frameConfirmation: 'confirmed',
+  setCompletenessConfirmation: 'confirmed',
+  selectedBetId: packageState.ranking.orderedBetIds[0],
+  lossBearer: 'Program staff',
+  accountabilityLocation: 'Program leadership owns the decision and response.',
+  reversibility: 'costly_to_reverse',
+  reversibilityNote: 'Relationship transfers would require a deliberate recovery path.',
+  heldConstant: ['The supplied reply is the current client record.', 'The decision frame remains open to new client evidence.'],
+};
+assert(module2PackageReadinessError(packageState) === '', 'locked evidence state is ready for a client package');
+const packageDraft = fallbackModule2Package(packageState);
+const recommendationDocument = compileModule2Document(packageState, {
+  ...packageDraft,
+  selectedBetId: 'forged-selection',
+  confidenceScore: 99,
+});
+const lockedSelection = packageState.bets.find((bet) => bet.id === packageState.locks.selectedBetId);
+assert(recommendationDocument.title === 'Bethany House Recommendation Brief', 'package has the client deliverable title');
+assert(recommendationDocument.recommendation.name === lockedSelection.name, 'package compiler preserves the human-selected bet');
+assert(recommendationDocument.candidates.length === packageState.ranking.orderedBetIds.length, 'package contains the full live candidate field');
+assert(recommendationDocument.candidates.every((candidate) => candidate.evidenceAgainst.length && candidate.tripwires.length), 'package retains contrary evidence and tripwires for every candidate');
+assert(!JSON.stringify(recommendationDocument).includes('confidenceScore'), 'package compiler ignores unaudited confidence injection');
+assert(module2DocumentText(recommendationDocument).includes('Who absorbs the loss') === false, 'plain text uses client-facing decision commitment labels');
 const incompleteEvaluation = applyBetEvaluations(engineState, {
   evaluations: fallbackEvaluateBets({ state: engineState }).evaluations.slice(0, 1),
 });
