@@ -155,6 +155,26 @@ export function renderStudioPage() {
       font-size: 12.5px;
     }
 
+    .module-switch {
+      display: flex;
+      gap: 0.2rem;
+      border: 1px solid var(--hairline);
+      background: #fff;
+      padding: 0.2rem;
+    }
+
+    .module-switch a {
+      padding: 0.38rem 0.65rem;
+      text-decoration: none;
+      font-size: 13px;
+      color: var(--ink);
+    }
+
+    .module-switch a.active {
+      background: var(--ink);
+      color: #fff;
+    }
+
     .layout {
       display: grid;
       grid-template-columns: 235px minmax(0, 1fr);
@@ -563,6 +583,10 @@ export function renderStudioPage() {
             <b>Decision Manifold Studio</b>
             <span>\${escapeHtml(boot.engagement?.cohort_name || 'Decision Engineering')} · \${escapeHtml(boot.team?.name || '')}</span>
           </div>
+          <nav class="module-switch" aria-label="Assignment modules">
+            <a class="active" href="/decision-engineering">Inquiry</a>
+            <a href="/decision-engineering/module-2">Bet Selection</a>
+          </nav>
           <div class="actions" style="margin-top:0">
             <span class="pill">\${usageLabel()}</span>
             <button class="secondary" id="saveBtn">Save</button>

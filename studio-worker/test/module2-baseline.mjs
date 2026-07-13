@@ -22,6 +22,7 @@ import {
   fallbackSuggestOptions,
   rankLiveBets,
 } from '../src/module2-engine.js';
+import { renderModule2Page } from '../src/module2-page.js';
 
 const root = new URL('..', import.meta.url);
 const source = readFileSync(new URL('../src/studio.js', import.meta.url), 'utf8');
@@ -30,6 +31,10 @@ const migration = new URL('../migrations/0004_module2.sql', import.meta.url).pat
 const classWorkspaceMigration = new URL('../migrations/0005_class_workspaces.sql', import.meta.url).pathname;
 const artifactReleaseMigration = new URL('../migrations/0006_module2_artifact_release.sql', import.meta.url).pathname;
 const productionExport = process.env.MODULE2_PRODUCTION_EXPORT || '';
+
+const renderedModule2Script = renderModule2Page().match(/<script>([\s\S]*)<\/script>/)?.[1] || '';
+assert(renderedModule2Script.length > 0, 'Module 2 page renders an executable client script');
+assertDoesNotThrow(() => new Function(renderedModule2Script), 'rendered Module 2 client script parses');
 
 assert(contract.cases.length === 3, 'inheritance contract freezes full, partial, and absent cases');
 for (const testCase of contract.cases) {
@@ -47,6 +52,10 @@ const malformed = normalizeModule2State({ ground: null, inheritance: 'bad', lock
 assert(malformed.ground.relevance.status === 'unresolved', 'normalizer rejects malformed ground object');
 assert(malformed.inheritance.entryState === 'fresh', 'normalizer rejects malformed inheritance object');
 assert(Array.isArray(malformed.locks.heldConstant), 'normalizer rejects malformed locks object');
+const admittedGeneratedBet = normalizeModule2State({
+  bets: [{ id: 'generated-admitted', name: 'Generated then chosen', origin: 'generated', provisional: false }],
+});
+assert(admittedGeneratedBet.bets[0].provisional === false, 'an explicit student action can admit a generated option');
 assertThrows(
   () => parseStoredModule2State('{not-json'),
   'persisted malformed state is rejected instead of rebuilding inheritance'
@@ -102,6 +111,11 @@ assert(rejectedSuggestion.bets.length === reconciled.bets.length, 'invalid gener
 assert(rejectedSuggestion.ground.optionGenerationIssues.length === 1, 'invalid generated options leave a visible issue record');
 const evaluated = applyBetEvaluations(suggested, fallbackEvaluateBets({ state: suggested }));
 assert(evaluated.ranking.orderedBetIds.length >= 2, 'deterministic ranking orders the live field');
+assert(evaluated.bets.every((bet) => bet.description), 'evaluation scaffolds a working description when the student supplied only a name');
+assert(
+  evaluated.ranking.pairwiseLines.every((line) => !line.includes('bet-a') && !line.includes('bet-b')),
+  'client-facing ranking explanations use option names rather than internal IDs'
+);
 assert(!('confidence' in evaluated.ranking), 'evidence engine cannot emit confidence');
 assert(evaluated.ranking.comparisonScores.basis === 'weighted_criterion_comparison', 'ordinary ranking values have an explicit non-confidence basis');
 assert(evaluated.locks.selectedBetId === '', 'evidence engine cannot choose the final bet');
@@ -366,4 +380,13 @@ function assertThrows(fn, message) {
     threw = true;
   }
   assert(threw, message);
+}
+
+function assertDoesNotThrow(fn, message) {
+  try {
+    fn();
+  } catch (error) {
+    throw new Error(`Assertion failed: ${message}: ${error.message}`);
+  }
+  console.log(`ok - ${message}`);
 }

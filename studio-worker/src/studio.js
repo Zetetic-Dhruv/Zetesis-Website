@@ -1,4 +1,5 @@
 import { renderStudioPage } from './studio-page.js';
+import { renderModule2Page } from './module2-page.js';
 import { renderInstructorPage } from './instructor-page.js';
 import {
   INSTRUCTOR_PROMPTS_SQL,
@@ -20,6 +21,7 @@ import {
   fallbackEvaluateBets,
   fallbackReconcile,
   fallbackSuggestOptions,
+  rankLiveBets,
 } from './module2-engine.js';
 import {
   CONFIDENCE_CONFIG_CANDIDATE,
@@ -186,6 +188,10 @@ export default {
       return html(renderInstructorPage());
     }
 
+    if (pathname === '/decision-engineering/module-2') {
+      return html(renderModule2Page());
+    }
+
     if (pathname === '/studio' || pathname === '/decision-engineering') {
       return html(renderStudioPage());
     }
@@ -259,6 +265,12 @@ async function handleApi(request, env, pathname) {
       const ctx = await getStudentContext(env, auth.user.id);
       if (!ctx.ok) return json({ error: ctx.error }, ctx.status, request);
       return handleApplyModule2Ground(request, env, auth.user, ctx.membership);
+    }
+
+    if (request.method === 'POST' && pathname === '/api/studio/modules/module-2/rank') {
+      const ctx = await getStudentContext(env, auth.user.id);
+      if (!ctx.ok) return json({ error: ctx.error }, ctx.status, request);
+      return handleRerankModule2(request, env, auth.user, ctx.membership);
     }
 
     if (request.method === 'PUT' && pathname === '/api/studio/workspace') {
@@ -1919,6 +1931,7 @@ const M2_EVALUATE_SCHEMA = {
         additionalProperties: false,
         properties: {
           betId: { type: 'string' },
+          workingDescription: { type: 'string' },
           evidenceFor: {
             type: 'array',
             items: {
@@ -1977,7 +1990,7 @@ const M2_EVALUATE_SCHEMA = {
             },
           },
         },
-        required: ['betId', 'evidenceFor', 'evidenceAgainst', 'failureModes', 'criteria'],
+        required: ['betId', 'workingDescription', 'evidenceFor', 'evidenceAgainst', 'failureModes', 'criteria'],
       },
     },
     coverage: {
@@ -2234,7 +2247,7 @@ Check whether the working read merely restates the brief or names a tension unde
     schemaName: 'm2_evaluate_bets_result',
     schema: M2_EVALUATE_SCHEMA,
     prompt: (payload) => [
-      'Evaluate every supplied live bet against the same decision criteria. Surface sourced evidence for, strongest evidence against per criterion, and named failure modes. Do not choose the winner and do not manufacture Bethany preferences.',
+      'Evaluate every supplied live bet against the same decision criteria. Surface sourced evidence for, strongest evidence against per criterion, and named failure modes. If an option lacks a description, supply one concise working description tied to the frame. Do not choose the winner and do not manufacture Bethany preferences.',
       'Use direct_client_reply only for verbatim client lines. Use public_fact or module_1_trace only with a supplied fact/trace ID. Use student_observation only with a supplied student trace ID. Otherwise use generated_hypothesis.',
       JSON.stringify({
         groundedFrame: payload.state?.ground?.frameComparison?.groundedFrame || payload.state?.inheritance?.frame || '',
@@ -4107,6 +4120,28 @@ async function handleApplyModule2Ground(request, env, user, membership) {
     hasReply: Boolean(state.ground.rawReply),
   });
   return json({ ok: true, state, currentStep: 'ground' }, 200, request);
+}
+
+async function handleRerankModule2(request, env, user, membership) {
+  const body = await readJson(request);
+  const bundle = await loadModule2WorkspaceBundle(env, user.id, membership);
+  if (!bundle.workspace) return json({ error: 'Workspace not found.' }, 404, request);
+  const state = normalizeModule2State({
+    ...bundle.state,
+    weights: Array.isArray(body.weights) ? body.weights : bundle.state.weights,
+  });
+  state.ranking = {
+    ...state.ranking,
+    ...rankLiveBets(state.bets, state.weights, state.ground.possibleDuplicates, state.ranking.coverage),
+  };
+  state.updatedAt = new Date().toISOString();
+  await persistModule2State(env, bundle.workspace.id, user.id, state, 'board', 'draft');
+  await audit(env, bundle.workspace.id, user.id, 'module2_reranked', {
+    workflowKey: MODULE2_KEY,
+    criterionCount: state.weights.length,
+    liveBetCount: state.bets.filter((bet) => bet.liveStatus === 'live' && bet.provisional !== true).length,
+  });
+  return json({ ok: true, state, currentStep: 'board' }, 200, request);
 }
 
 async function persistModule2State(env, workspaceId, userId, state, currentStep, status) {

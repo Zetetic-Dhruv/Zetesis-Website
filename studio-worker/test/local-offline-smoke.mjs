@@ -108,6 +108,15 @@ async function runSuite() {
   assert(html.includes('Generate Brief PDF'), 'serves PDF generation control');
   assert(html.includes('Save Version'), 'serves report version control');
   assert(!html.includes('Print'), 'omits print control from report workflow');
+  const module2Html = await fetchText('/decision-engineering/module-2');
+  assert(module2Html.includes('Bet Selection'), 'serves dedicated Module 2 student page');
+  assert(module2Html.includes('Ground') && module2Html.includes('Board') && module2Html.includes('Lock'), 'Module 2 page exposes the three-screen workflow');
+  assert(module2Html.includes('Use revised frame'), 'Module 2 page provides an in-place frame revision recovery');
+  assert(module2Html.includes('I reviewed the gap; carry this set'), 'Module 2 page provides an explicit comparison-set judgment');
+  assert(module2Html.includes('Add and evaluate'), 'Module 2 Board supports adding an option without leaving the Board');
+  assert(module2Html.includes('Correct the extracted reply') && module2Html.includes('Use corrected reply'), 'Module 2 Board supports local extraction recovery');
+  assert(module2Html.includes('The leading bets are effectively tied.') && module2Html.includes('Carry ${escapeHtml(bet.name)}'), 'near-tie hard stop exposes explicit carry actions');
+  assert(!/confidence score|confidence band/i.test(module2Html), 'candidate confidence is absent from the student UI');
 
   const unauthenticatedMe = await getJson('/api/studio/me', {}, false);
   assert(unauthenticatedMe.status === 401, 'asks for login when no session is present');
@@ -296,6 +305,11 @@ async function runSuite() {
     'bet evaluation labels ordinary comparison values explicitly'
   );
   assert(evaluations.state.locks.selectedBetId === '', 'bet evaluation cannot choose the final bet');
+  const reranked = await postJson('/api/studio/modules/module-2/rank', {
+    weights: evaluations.state.weights,
+  }, authHeaders);
+  assert(reranked.state.ranking.orderedBetIds.length >= 2, 'student reweighting reranks without a model call');
+  assert(!('confidence' in reranked.state.ranking), 'deterministic reranking cannot expose candidate confidence');
 
   const module2PromptTrace = await getJson(`/api/instructor/students/${reg.user.id}/prompts?workflow=module_2`, adminHeaders);
   assert(module2PromptTrace.prompts.length === 3, 'instructor Module 2 prompt filter shows only the three Module 2 runs');

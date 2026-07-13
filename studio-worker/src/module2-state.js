@@ -90,7 +90,7 @@ export function normalizeModule2State(input) {
     name: cleanText(bet.name, 200),
     description: cleanText(bet.description, 3000),
     origin: oneOf(bet.origin, ['inherited', 'student', 'generated'], 'student'),
-    provisional: Boolean(bet.provisional || bet.origin === 'generated'),
+    provisional: bet.provisional === true,
     liveStatus: oneOf(bet.liveStatus, ['live', 'rejected', 'dominated', 'duplicate', 'strawman'], 'live'),
     evidenceFor: cleanObjectArray(bet.evidenceFor, 50),
     evidenceAgainst: cleanObjectArray(bet.evidenceAgainst, 50),

@@ -92,6 +92,7 @@ export function fallbackEvaluateBets(payload = {}) {
       const failures = array(bet.failureModes).length ? array(bet.failureModes) : [fallbackFailure];
       return {
       betId: bet.id,
+      workingDescription: bet.description || `${bet.name || 'This option'} as a concrete response to the current decision frame.`,
       evidenceFor: sourceEvidence,
       evidenceAgainst: failures.map((failure, index) => ({
         id: `${bet.id}-against-${index + 1}`,
@@ -234,6 +235,7 @@ export function applyBetEvaluations(state, result = {}, contextFacts = []) {
       : 'incomplete';
     return {
       ...bet,
+      description: bet.description || String(evaluation.workingDescription || '').trim(),
       evidenceFor,
       evidenceAgainst,
       failureModes,
@@ -298,6 +300,7 @@ export function rankLiveBets(bets = [], weights = [], duplicateSignals = [], cov
     }
   }
   const dominatedIds = new Set(dominanceRelations.map((item) => item.dominatedBetId));
+  const nameById = new Map(live.map((bet) => [bet.id, bet.name || 'Untitled option']));
   const scored = initiallyScored
     .filter((item) => !dominatedIds.has(item.id))
     .sort((a, b) => b.score - a.score || a.id.localeCompare(b.id));
@@ -309,12 +312,14 @@ export function rankLiveBets(bets = [], weights = [], duplicateSignals = [], cov
   }
   const pairwiseLines = scored.slice(0, 3).map((item, index) => {
     const next = scored[index + 1];
-    if (!next) return `${item.id} remains live under the current evidence.`;
+    const itemName = nameById.get(item.id);
+    if (!next) return `${itemName} remains live under the current evidence.`;
+    const nextName = nameById.get(next.id);
     const resistanceEffect = 0.8 * (item.resistance - next.resistance);
     const supportEffect = 0.2 * (item.support - next.support);
     return Math.abs(resistanceEffect) >= Math.abs(supportEffect)
-      ? `${item.id} ranks above ${next.id} because its weighted counterevidence burden is lower in the current field.`
-      : `${item.id} ranks above ${next.id} because its admitted criterion support is stronger in the current field.`;
+      ? `${itemName} ranks above ${nextName} because its weighted counterevidence burden is lower in the current field.`
+      : `${itemName} ranks above ${nextName} because its admitted criterion support is stronger in the current field.`;
   });
   return {
     orderedBetIds: scored.map((item) => item.id),
