@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "accepted": false,
+  "metrics": {
+    "pairwiseAgreement": 0.873015873015873,
+    "weightedKappa": 0.6744186046511629,
+    "severeDisagreements": 1,
+    "pairwiseTotal": 63,
+    "bandCases": 21
+  },
+  "gates": {
+    "pairwiseAgreement": true,
+    "weightedKappa": false,
+    "severeDisagreements": false,
+    "humanLabelsComplete": false,
+    "humanAgreementResolved": true
+  },
+  "humanStatus": {
+    "required": 18,
+    "completed": 0,
+    "agreements": 0,
+    "unresolvedDisagreements": 0,
+    "complete": false,
+    "error": "Independent reviewer identities are not recorded."
+  },
+  "finalConfig": null,
+  "auditedAt": "2026-07-13T22:14:28.354Z"
+}

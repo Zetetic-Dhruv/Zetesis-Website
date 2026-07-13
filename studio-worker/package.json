@@ -7,6 +7,10 @@
     "migrate:local": "wrangler d1 migrations apply zetesis_decision_manifold_studio --local",
     "migrate:remote": "wrangler d1 migrations apply zetesis_decision_manifold_studio --remote",
     "test:module2-baseline": "node test/module2-baseline.mjs",
+    "test:module2-containment": "node test/module2-containment.mjs",
+    "test:module2": "npm run test:module2-baseline && npm run test:confidence && npm run test:confidence-audit && npm run test:module2-containment",
+    "test:confidence": "node test/module2-confidence.mjs",
+    "test:confidence-audit": "node test/confidence-audit.mjs",
     "test:offline": "node test/local-offline-smoke.mjs",
     "test:pdf": "python3 test/pdf_smoke.py"
   },

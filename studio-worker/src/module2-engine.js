@@ -253,7 +253,6 @@ export function applyBetEvaluations(state, result = {}, contextFacts = []) {
   next.ranking = {
     ...next.ranking,
     ...rankLiveBets(next.bets, next.weights, next.ground.possibleDuplicates, next.ranking.coverage),
-    confidence: null,
   };
   return next;
 }
@@ -325,7 +324,15 @@ export function rankLiveBets(bets = [], weights = [], duplicateSignals = [], cov
     weakField: false,
     evaluationIncomplete: false,
     incompleteReason: '',
-    scoreTable: scored,
+    comparisonScores: {
+      basis: 'weighted_criterion_comparison',
+      entries: scored.map((item) => ({
+        betId: item.id,
+        weightedResistance: item.resistance,
+        weightedSupport: item.support,
+        comparisonValue: item.score,
+      })),
+    },
   };
 }
 
@@ -338,7 +345,7 @@ function incompleteRanking(reason, weakField) {
     weakField,
     evaluationIncomplete: true,
     incompleteReason: reason,
-    scoreTable: [],
+    comparisonScores: { basis: 'weighted_criterion_comparison', entries: [] },
   };
 }
 

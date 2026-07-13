@@ -28,6 +28,7 @@ const source = readFileSync(new URL('../src/studio.js', import.meta.url), 'utf8'
 const contract = JSON.parse(readFileSync(new URL('./fixtures/module1-inheritance-contract.json', import.meta.url), 'utf8'));
 const migration = new URL('../migrations/0004_module2.sql', import.meta.url).pathname;
 const classWorkspaceMigration = new URL('../migrations/0005_class_workspaces.sql', import.meta.url).pathname;
+const artifactReleaseMigration = new URL('../migrations/0006_module2_artifact_release.sql', import.meta.url).pathname;
 const productionExport = process.env.MODULE2_PRODUCTION_EXPORT || '';
 
 assert(contract.cases.length === 3, 'inheritance contract freezes full, partial, and absent cases');
@@ -101,7 +102,8 @@ assert(rejectedSuggestion.bets.length === reconciled.bets.length, 'invalid gener
 assert(rejectedSuggestion.ground.optionGenerationIssues.length === 1, 'invalid generated options leave a visible issue record');
 const evaluated = applyBetEvaluations(suggested, fallbackEvaluateBets({ state: suggested }));
 assert(evaluated.ranking.orderedBetIds.length >= 2, 'deterministic ranking orders the live field');
-assert(evaluated.ranking.confidence === null, 'evidence engine cannot emit confidence');
+assert(!('confidence' in evaluated.ranking), 'evidence engine cannot emit confidence');
+assert(evaluated.ranking.comparisonScores.basis === 'weighted_criterion_comparison', 'ordinary ranking values have an explicit non-confidence basis');
 assert(evaluated.locks.selectedBetId === '', 'evidence engine cannot choose the final bet');
 const incompleteEvaluation = applyBetEvaluations(engineState, {
   evaluations: fallbackEvaluateBets({ state: engineState }).evaluations.slice(0, 1),
@@ -242,7 +244,7 @@ assert(source.includes("const SESSION_COOKIE = 'studio_session'"), 'session cook
 assert(source.includes("const CLASS_ID = 'class_bethany_house_2026'"), 'v1 has one fixed Bethany House student class');
 assert(source.includes("const STUDENT_CODE_ID = 'code_bethany_house_student_2026'"), 'v1 has one fixed student class code');
 
-if (productionExport) rehearseMigration(productionExport, [migration, classWorkspaceMigration]);
+if (productionExport) rehearseMigration(productionExport, [migration, classWorkspaceMigration, artifactReleaseMigration]);
 else console.log('skip - production migration rehearsal requires MODULE2_PRODUCTION_EXPORT');
 
 function rehearseMigration(sqlExport, migrationFiles) {
@@ -261,6 +263,7 @@ function rehearseMigration(sqlExport, migrationFiles) {
     assert(before.reportVersions === after.reportVersions, 'migration preserves Module 1 report versions');
     assert(after.newTables === '4', 'migration creates Module 2 tables and class-workspace ownership');
     assert(after.workflowColumn === '1', 'migration adds llm_runs.workflow_key');
+    assert(after.artifactReleaseColumn === '1', 'migration makes Module 2 artifact release classification explicit');
     assert(after.legacyWorkflowRows === after.llmRuns, 'existing LLM runs default to module_1');
     console.log('ok - additive migration rehearsed against frozen production export');
   } finally {
@@ -334,6 +337,7 @@ function bindSql(sql, values) {
 function snapshot(db) {
   const scalar = (sql) => execFileSync('sqlite3', [db, sql], { encoding: 'utf8' }).trim();
   const workflowColumn = scalar("SELECT COUNT(*) FROM pragma_table_info('llm_runs') WHERE name='workflow_key';");
+  const artifactReleaseColumn = scalar("SELECT COUNT(*) FROM pragma_table_info('deliverable_versions') WHERE name='artifact_release_class';");
   return {
     users: scalar('SELECT COUNT(*) FROM users;'),
     workspaces: scalar('SELECT COUNT(*) FROM workspaces;'),
@@ -342,6 +346,7 @@ function snapshot(db) {
     llmRuns: scalar('SELECT COUNT(*) FROM llm_runs;'),
     newTables: scalar("SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name IN ('workspace_module_states','deliverable_versions','deliverable_artifacts','class_workspaces');"),
     workflowColumn,
+    artifactReleaseColumn,
     legacyWorkflowRows: workflowColumn === '1'
       ? scalar("SELECT COUNT(*) FROM llm_runs WHERE workflow_key='module_1';")
       : '',

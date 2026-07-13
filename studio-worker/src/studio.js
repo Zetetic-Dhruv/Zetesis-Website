@@ -21,6 +21,15 @@ import {
   fallbackReconcile,
   fallbackSuggestOptions,
 } from './module2-engine.js';
+import {
+  CONFIDENCE_CONFIG_CANDIDATE,
+  confidenceConfigIsAudited,
+} from './confidence-config.js';
+import {
+  module2ArtifactMayRelease,
+  sanitizeUnauditedDocumentJson,
+  sanitizeUnauditedDocumentText,
+} from './confidence-containment.js';
 
 const ENGAGEMENT_ID = 'eng_bethany_house_2026';
 const CLASS_ID = 'class_bethany_house_2026';
@@ -419,6 +428,10 @@ async function handleInstructorApi(request, env, pathname) {
         `SELECT * FROM deliverable_versions WHERE id = ? AND class_id = ? AND module_key = ?`
       ).bind(instructorDeliverablePdfMatch[1], admin.membership.class_id, MODULE2_KEY).first();
       if (!version) return json({ error: 'Deliverable version not found.' }, 404, request);
+      const confidenceAudited = await confidenceConfigIsAudited(CONFIDENCE_CONFIG_CANDIDATE);
+      if (!module2ArtifactMayRelease(version, confidenceAudited)) {
+        return json({ error: 'This saved artifact has not passed the Module 2 release classification.' }, 409, request);
+      }
       return await serveDeliverablePdf(request, env, version, recommendationPdfFilename(`v${version.version_number}`));
     }
 
@@ -2945,12 +2958,15 @@ function sanitizeReportVersion(version) {
 async function listDeliverableVersions(env, userId, moduleKey, classId) {
   const result = await env.STUDIO_DB.prepare(
     `SELECT id, workspace_id, user_id, class_id, module_key, version_number, title,
-      pdf_r2_key, confidence_config_version, confidence_input_hash, created_at
+      pdf_r2_key, confidence_config_version, confidence_input_hash, artifact_release_class, created_at
      FROM deliverable_versions
      WHERE user_id = ? AND module_key = ? AND class_id = ?
      ORDER BY version_number DESC`
   ).bind(userId, moduleKey, classId).all();
-  return (result.results || []).map(sanitizeDeliverableVersion);
+  const confidenceAudited = await confidenceConfigIsAudited(CONFIDENCE_CONFIG_CANDIDATE);
+  return (result.results || [])
+    .filter((version) => module2ArtifactMayRelease(version, confidenceAudited))
+    .map(sanitizeDeliverableVersion);
 }
 
 function sanitizeDeliverableVersion(version) {
@@ -2963,8 +2979,6 @@ function sanitizeDeliverableVersion(version) {
     version_number: Number(version.version_number || 0),
     title: version.title || `Bethany House Recommendation Brief v${version.version_number || ''}`,
     pdf_url: `/api/studio/modules/module-2/report/versions/${version.id}/pdf`,
-    confidence_config_version: version.confidence_config_version || '',
-    confidence_input_hash: version.confidence_input_hash || '',
     created_at: version.created_at,
   };
 }
@@ -2975,6 +2989,10 @@ async function handleDownloadDeliverablePdf(request, env, user, membership, vers
      WHERE id = ? AND user_id = ? AND class_id = ? AND module_key = ?`
   ).bind(versionId, user.id, membership.class_id, MODULE2_KEY).first();
   if (!version) return json({ error: 'Deliverable version not found.' }, 404, request);
+  const confidenceAudited = await confidenceConfigIsAudited(CONFIDENCE_CONFIG_CANDIDATE);
+  if (!module2ArtifactMayRelease(version, confidenceAudited)) {
+    return json({ error: 'This saved artifact has not passed the Module 2 release classification.' }, 409, request);
+  }
   return serveDeliverablePdf(request, env, version, recommendationPdfFilename(`v${version.version_number}`));
 }
 
@@ -3619,15 +3637,16 @@ async function getInstructorVersions(env, userId, classId, workflowKey = 'module
     const result = await env.STUDIO_DB.prepare(
       `SELECT id, workspace_id, user_id, class_id, module_key, version_number, title,
         document_json, document_text, pdf_r2_key, confidence_config_version,
-        confidence_input_hash, created_at
+        confidence_input_hash, artifact_release_class, created_at
        FROM deliverable_versions
        WHERE user_id = ? AND class_id = ? AND module_key = ?
        ORDER BY version_number DESC`
     ).bind(userId, classId, MODULE2_KEY).all();
-    return (result.results || []).map((version) => ({
+    const confidenceAudited = await confidenceConfigIsAudited(CONFIDENCE_CONFIG_CANDIDATE);
+    return (result.results || []).filter((version) => module2ArtifactMayRelease(version, confidenceAudited)).map((version) => ({
       ...sanitizeDeliverableVersion(version),
-      document_json: version.document_json,
-      document_text: version.document_text,
+      document_json: sanitizeUnauditedDocumentJson(version.document_json, confidenceAudited),
+      document_text: sanitizeUnauditedDocumentText(version.document_text, confidenceAudited),
       pdf_url: `/api/instructor/deliverable/versions/${version.id}/pdf`,
     }));
   }
@@ -3654,7 +3673,9 @@ async function handleClassPdfZip(request, env, classId, workflowKey = 'module_1'
        ORDER BY u.email, dv.version_number`
     ).bind(classId, MODULE2_KEY).all();
     const files = [];
+    const confidenceAudited = await confidenceConfigIsAudited(CONFIDENCE_CONFIG_CANDIDATE);
     for (const version of result.results || []) {
+      if (!module2ArtifactMayRelease(version, confidenceAudited)) continue;
       const bytes = await readDeliverablePdfBytes(env, version);
       if (!bytes) continue;
       const cleanEmailPart = cleanString(version.email || version.user_id, 120).replace(/[^a-z0-9@._-]+/gi, '-');

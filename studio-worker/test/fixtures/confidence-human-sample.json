@@ -1,0 +1,298 @@
+{
+  "version": 1,
+  "instructions": "Dhruv and Gopika independently assign robustnessOrder and band without inspecting formula outputs.",
+  "reviewers": {
+    "dhruv": null,
+    "gopika": null
+  },
+  "cases": [
+    {
+      "caseId": "canonical-01",
+      "partition": "calibration",
+      "dhruv": {
+        "band": null,
+        "notes": ""
+      },
+      "gopika": {
+        "band": null,
+        "notes": ""
+      },
+      "adjudication": {
+        "band": null,
+        "notes": ""
+      }
+    },
+    {
+      "caseId": "canonical-02",
+      "partition": "calibration",
+      "dhruv": {
+        "band": null,
+        "notes": ""
+      },
+      "gopika": {
+        "band": null,
+        "notes": ""
+      },
+      "adjudication": {
+        "band": null,
+        "notes": ""
+      }
+    },
+    {
+      "caseId": "canonical-03",
+      "partition": "calibration",
+      "dhruv": {
+        "band": null,
+        "notes": ""
+      },
+      "gopika": {
+        "band": null,
+        "notes": ""
+      },
+      "adjudication": {
+        "band": null,
+        "notes": ""
+      }
+    },
+    {
+      "caseId": "trace-01",
+      "partition": "calibration",
+      "dhruv": {
+        "band": null,
+        "notes": ""
+      },
+      "gopika": {
+        "band": null,
+        "notes": ""
+      },
+      "adjudication": {
+        "band": null,
+        "notes": ""
+      }
+    },
+    {
+      "caseId": "trace-02",
+      "partition": "calibration",
+      "dhruv": {
+        "band": null,
+        "notes": ""
+      },
+      "gopika": {
+        "band": null,
+        "notes": ""
+      },
+      "adjudication": {
+        "band": null,
+        "notes": ""
+      }
+    },
+    {
+      "caseId": "trace-03",
+      "partition": "calibration",
+      "dhruv": {
+        "band": null,
+        "notes": ""
+      },
+      "gopika": {
+        "band": null,
+        "notes": ""
+      },
+      "adjudication": {
+        "band": null,
+        "notes": ""
+      }
+    },
+    {
+      "caseId": "meta-01",
+      "partition": "calibration",
+      "dhruv": {
+        "band": null,
+        "notes": ""
+      },
+      "gopika": {
+        "band": null,
+        "notes": ""
+      },
+      "adjudication": {
+        "band": null,
+        "notes": ""
+      }
+    },
+    {
+      "caseId": "meta-02",
+      "partition": "calibration",
+      "dhruv": {
+        "band": null,
+        "notes": ""
+      },
+      "gopika": {
+        "band": null,
+        "notes": ""
+      },
+      "adjudication": {
+        "band": null,
+        "notes": ""
+      }
+    },
+    {
+      "caseId": "meta-03",
+      "partition": "calibration",
+      "dhruv": {
+        "band": null,
+        "notes": ""
+      },
+      "gopika": {
+        "band": null,
+        "notes": ""
+      },
+      "adjudication": {
+        "band": null,
+        "notes": ""
+      }
+    },
+    {
+      "caseId": "audit3-canonical-01",
+      "partition": "sealed_holdout",
+      "dhruv": {
+        "band": null,
+        "notes": ""
+      },
+      "gopika": {
+        "band": null,
+        "notes": ""
+      },
+      "adjudication": {
+        "band": null,
+        "notes": ""
+      }
+    },
+    {
+      "caseId": "audit3-canonical-02",
+      "partition": "sealed_holdout",
+      "dhruv": {
+        "band": null,
+        "notes": ""
+      },
+      "gopika": {
+        "band": null,
+        "notes": ""
+      },
+      "adjudication": {
+        "band": null,
+        "notes": ""
+      }
+    },
+    {
+      "caseId": "audit3-canonical-03",
+      "partition": "sealed_holdout",
+      "dhruv": {
+        "band": null,
+        "notes": ""
+      },
+      "gopika": {
+        "band": null,
+        "notes": ""
+      },
+      "adjudication": {
+        "band": null,
+        "notes": ""
+      }
+    },
+    {
+      "caseId": "audit3-trace-01",
+      "partition": "sealed_holdout",
+      "dhruv": {
+        "band": null,
+        "notes": ""
+      },
+      "gopika": {
+        "band": null,
+        "notes": ""
+      },
+      "adjudication": {
+        "band": null,
+        "notes": ""
+      }
+    },
+    {
+      "caseId": "audit3-trace-02",
+      "partition": "sealed_holdout",
+      "dhruv": {
+        "band": null,
+        "notes": ""
+      },
+      "gopika": {
+        "band": null,
+        "notes": ""
+      },
+      "adjudication": {
+        "band": null,
+        "notes": ""
+      }
+    },
+    {
+      "caseId": "audit3-trace-03",
+      "partition": "sealed_holdout",
+      "dhruv": {
+        "band": null,
+        "notes": ""
+      },
+      "gopika": {
+        "band": null,
+        "notes": ""
+      },
+      "adjudication": {
+        "band": null,
+        "notes": ""
+      }
+    },
+    {
+      "caseId": "audit3-meta-01",
+      "partition": "sealed_holdout",
+      "dhruv": {
+        "band": null,
+        "notes": ""
+      },
+      "gopika": {
+        "band": null,
+        "notes": ""
+      },
+      "adjudication": {
+        "band": null,
+        "notes": ""
+      }
+    },
+    {
+      "caseId": "audit3-meta-02",
+      "partition": "sealed_holdout",
+      "dhruv": {
+        "band": null,
+        "notes": ""
+      },
+      "gopika": {
+        "band": null,
+        "notes": ""
+      },
+      "adjudication": {
+        "band": null,
+        "notes": ""
+      }
+    },
+    {
+      "caseId": "audit3-meta-03",
+      "partition": "sealed_holdout",
+      "dhruv": {
+        "band": null,
+        "notes": ""
+      },
+      "gopika": {
+        "band": null,
+        "notes": ""
+      },
+      "adjudication": {
+        "band": null,
+        "notes": ""
+      }
+    }
+  ]
+}

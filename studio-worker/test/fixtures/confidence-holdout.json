@@ -1,0 +1,5830 @@
+{
+  "version": 3,
+  "partition": "sealed_holdout",
+  "sealId": "confidence-holdout-v3-policy-v2-frozen",
+  "source": {
+    "canonical": 4,
+    "anonymizedTraceDerived": 8,
+    "metamorphic": 12
+  },
+  "cases": [
+    {
+      "id": "audit3-canonical-01",
+      "kind": "canonical",
+      "scenario": "Grounded selection facing a material direct-client objection.",
+      "matrix": {
+        "selectedBetId": "bet-b",
+        "criteria": [
+          {
+            "id": "continuity",
+            "weight": 0.45,
+            "min": 0.15,
+            "max": 0.7,
+            "basisType": "traced"
+          },
+          {
+            "id": "implementation",
+            "weight": 0.3,
+            "min": 0.1,
+            "max": 0.65,
+            "basisType": "neutral"
+          },
+          {
+            "id": "accountability",
+            "weight": 0.25,
+            "min": 0.1,
+            "max": 0.6,
+            "basisType": "neutral"
+          }
+        ],
+        "alternatives": [
+          {
+            "id": "bet-a",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-a-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.75
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.695
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.69
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-b",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-b-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.77
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.715
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.71
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              },
+              {
+                "criterion": "accountability",
+                "severity": "material",
+                "sourceType": "direct_client_reply",
+                "traceIds": [
+                  "direct_client_reply-trace"
+                ]
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-c",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-c-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.48
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.57
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.72
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          }
+        ],
+        "hardStops": {
+          "relevanceResolved": true,
+          "frameResolved": true,
+          "coverageResolved": true,
+          "setComplete": true
+        },
+        "flags": {
+          "nearTie": false,
+          "weakField": false
+        }
+      }
+    },
+    {
+      "id": "audit3-canonical-02",
+      "kind": "canonical",
+      "scenario": "Selected bet depends on fully unresolved consequential fog.",
+      "matrix": {
+        "selectedBetId": "bet-c",
+        "criteria": [
+          {
+            "id": "continuity",
+            "weight": 0.45,
+            "min": 0.15,
+            "max": 0.7,
+            "basisType": "traced"
+          },
+          {
+            "id": "implementation",
+            "weight": 0.3,
+            "min": 0.1,
+            "max": 0.65,
+            "basisType": "neutral"
+          },
+          {
+            "id": "accountability",
+            "weight": 0.25,
+            "min": 0.1,
+            "max": 0.6,
+            "basisType": "neutral"
+          }
+        ],
+        "alternatives": [
+          {
+            "id": "bet-a",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-a-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.74
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.69
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.69
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-b",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-b-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.61
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.7200000000000001
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.62
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-c",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-c-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.755
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.705
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.705
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [
+              {
+                "id": "fog-unaddressed",
+                "status": "unaddressed",
+                "influence": 0.9,
+                "critical": true,
+                "contradictionConfirmed": false
+              }
+            ],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          }
+        ],
+        "hardStops": {
+          "relevanceResolved": true,
+          "frameResolved": true,
+          "coverageResolved": true,
+          "setComplete": true
+        },
+        "flags": {
+          "nearTie": false,
+          "weakField": false
+        }
+      }
+    },
+    {
+      "id": "audit3-canonical-03",
+      "kind": "canonical",
+      "scenario": "Selected bet retains a catastrophic untested failure mode.",
+      "matrix": {
+        "selectedBetId": "bet-a",
+        "criteria": [
+          {
+            "id": "continuity",
+            "weight": 0.45,
+            "min": 0.15,
+            "max": 0.7,
+            "basisType": "traced"
+          },
+          {
+            "id": "implementation",
+            "weight": 0.3,
+            "min": 0.1,
+            "max": 0.65,
+            "basisType": "neutral"
+          },
+          {
+            "id": "accountability",
+            "weight": 0.25,
+            "min": 0.1,
+            "max": 0.6,
+            "basisType": "neutral"
+          }
+        ],
+        "alternatives": [
+          {
+            "id": "bet-a",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-a-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.73
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.6849999999999999
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.69
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              },
+              {
+                "id": "failure-catastrophic-untested",
+                "severity": "catastrophic",
+                "testStatus": "untested"
+              }
+            ]
+          },
+          {
+            "id": "bet-b",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-b-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.61
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.7250000000000001
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.62
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-c",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-c-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.48
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.57
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.7000000000000001
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          }
+        ],
+        "hardStops": {
+          "relevanceResolved": true,
+          "frameResolved": true,
+          "coverageResolved": true,
+          "setComplete": true
+        },
+        "flags": {
+          "nearTie": false,
+          "weakField": false
+        }
+      }
+    },
+    {
+      "id": "audit3-canonical-04",
+      "kind": "canonical",
+      "scenario": "Unresolved relevance hard stop in an otherwise complete comparison.",
+      "matrix": {
+        "selectedBetId": "bet-a",
+        "criteria": [
+          {
+            "id": "continuity",
+            "weight": 0.45,
+            "min": 0.15,
+            "max": 0.7,
+            "basisType": "traced"
+          },
+          {
+            "id": "implementation",
+            "weight": 0.3,
+            "min": 0.1,
+            "max": 0.65,
+            "basisType": "neutral"
+          },
+          {
+            "id": "accountability",
+            "weight": 0.25,
+            "min": 0.1,
+            "max": 0.6,
+            "basisType": "neutral"
+          }
+        ],
+        "alternatives": [
+          {
+            "id": "bet-a",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-a-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.72
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.6799999999999999
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.69
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-b",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-b-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.61
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.7300000000000001
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.62
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-c",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-c-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.48
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.57
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.6900000000000001
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          }
+        ],
+        "hardStops": {
+          "relevanceResolved": false,
+          "frameResolved": true,
+          "coverageResolved": true,
+          "setComplete": true
+        },
+        "flags": {
+          "nearTie": false,
+          "weakField": false
+        }
+      }
+    },
+    {
+      "id": "audit3-trace-01",
+      "kind": "trace_derived",
+      "scenario": "Blinded composite of two anonymized workspace structures under a rotated selected bet.",
+      "traceFeatures": {
+        "itemCount": 23,
+        "highValueCount": 7,
+        "hypothesisCount": 5,
+        "selectedCount": 0,
+        "elaboratedCount": 2
+      },
+      "matrix": {
+        "selectedBetId": "bet-a",
+        "criteria": [
+          {
+            "id": "continuity",
+            "weight": 0.45,
+            "min": 0.15,
+            "max": 0.7,
+            "basisType": "traced"
+          },
+          {
+            "id": "implementation",
+            "weight": 0.3,
+            "min": 0.1,
+            "max": 0.65,
+            "basisType": "neutral"
+          },
+          {
+            "id": "accountability",
+            "weight": 0.25,
+            "min": 0.1,
+            "max": 0.6,
+            "basisType": "neutral"
+          }
+        ],
+        "alternatives": [
+          {
+            "id": "bet-a",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-a-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.654
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.636
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.618
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              },
+              {
+                "criterion": "accountability",
+                "severity": "material",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [
+              {
+                "id": "fog-unaddressed",
+                "status": "unaddressed",
+                "influence": 0.85,
+                "critical": true,
+                "contradictionConfirmed": false
+              }
+            ],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-b",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-b-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.61
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.7200000000000001
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.62
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-c",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-c-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.48
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.57
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.7100000000000001
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          }
+        ],
+        "hardStops": {
+          "relevanceResolved": true,
+          "frameResolved": true,
+          "coverageResolved": true,
+          "setComplete": true
+        },
+        "flags": {
+          "nearTie": false,
+          "weakField": false
+        }
+      }
+    },
+    {
+      "id": "audit3-trace-02",
+      "kind": "trace_derived",
+      "scenario": "Blinded composite of two anonymized workspace structures under a rotated selected bet.",
+      "traceFeatures": {
+        "itemCount": 32,
+        "highValueCount": 7,
+        "hypothesisCount": 0,
+        "selectedCount": 0,
+        "elaboratedCount": 0
+      },
+      "matrix": {
+        "selectedBetId": "bet-b",
+        "criteria": [
+          {
+            "id": "continuity",
+            "weight": 0.45,
+            "min": 0.15,
+            "max": 0.7,
+            "basisType": "traced"
+          },
+          {
+            "id": "implementation",
+            "weight": 0.3,
+            "min": 0.1,
+            "max": 0.65,
+            "basisType": "neutral"
+          },
+          {
+            "id": "accountability",
+            "weight": 0.25,
+            "min": 0.1,
+            "max": 0.6,
+            "basisType": "neutral"
+          }
+        ],
+        "alternatives": [
+          {
+            "id": "bet-a",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-a-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.82
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.73
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.69
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-b",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-b-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.63
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.612
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.594
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [
+              {
+                "id": "fog-unaddressed",
+                "status": "unaddressed",
+                "influence": 0.85,
+                "critical": true,
+                "contradictionConfirmed": false
+              }
+            ],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              },
+              {
+                "id": "failure-material-untested",
+                "severity": "material",
+                "testStatus": "untested"
+              }
+            ]
+          },
+          {
+            "id": "bet-c",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-c-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.48
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.57
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.79
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          }
+        ],
+        "hardStops": {
+          "relevanceResolved": true,
+          "frameResolved": true,
+          "coverageResolved": true,
+          "setComplete": true
+        },
+        "flags": {
+          "nearTie": false,
+          "weakField": false
+        }
+      }
+    },
+    {
+      "id": "audit3-trace-03",
+      "kind": "trace_derived",
+      "scenario": "Blinded composite of two anonymized workspace structures under a rotated selected bet.",
+      "traceFeatures": {
+        "itemCount": 24,
+        "highValueCount": 4,
+        "hypothesisCount": 4,
+        "selectedCount": 2,
+        "elaboratedCount": 1
+      },
+      "matrix": {
+        "selectedBetId": "bet-c",
+        "criteria": [
+          {
+            "id": "continuity",
+            "weight": 0.45,
+            "min": 0.15,
+            "max": 0.7,
+            "basisType": "traced"
+          },
+          {
+            "id": "implementation",
+            "weight": 0.3,
+            "min": 0.1,
+            "max": 0.65,
+            "basisType": "neutral"
+          },
+          {
+            "id": "accountability",
+            "weight": 0.25,
+            "min": 0.1,
+            "max": 0.6,
+            "basisType": "neutral"
+          }
+        ],
+        "alternatives": [
+          {
+            "id": "bet-a",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-a-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.7899999999999999
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.715
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.69
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-b",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-b-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.61
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.6950000000000001
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.62
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-c",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-c-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.5760000000000001
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.558
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.54
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              },
+              {
+                "criterion": "accountability",
+                "severity": "material",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [
+              {
+                "id": "fog-partial",
+                "status": "partial",
+                "influence": 0.55,
+                "critical": false,
+                "contradictionConfirmed": false
+              }
+            ],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              },
+              {
+                "id": "failure-material-untested",
+                "severity": "material",
+                "testStatus": "untested"
+              }
+            ]
+          }
+        ],
+        "hardStops": {
+          "relevanceResolved": true,
+          "frameResolved": true,
+          "coverageResolved": true,
+          "setComplete": true
+        },
+        "flags": {
+          "nearTie": false,
+          "weakField": false
+        }
+      }
+    },
+    {
+      "id": "audit3-trace-04",
+      "kind": "trace_derived",
+      "scenario": "Blinded composite of two anonymized workspace structures under a rotated selected bet.",
+      "traceFeatures": {
+        "itemCount": 31,
+        "highValueCount": 6,
+        "hypothesisCount": 2,
+        "selectedCount": 0,
+        "elaboratedCount": 7
+      },
+      "matrix": {
+        "selectedBetId": "bet-a",
+        "criteria": [
+          {
+            "id": "continuity",
+            "weight": 0.45,
+            "min": 0.15,
+            "max": 0.7,
+            "basisType": "traced"
+          },
+          {
+            "id": "implementation",
+            "weight": 0.3,
+            "min": 0.1,
+            "max": 0.65,
+            "basisType": "neutral"
+          },
+          {
+            "id": "accountability",
+            "weight": 0.25,
+            "min": 0.1,
+            "max": 0.6,
+            "basisType": "neutral"
+          }
+        ],
+        "alternatives": [
+          {
+            "id": "bet-a",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-a-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.6920000000000001
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.674
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.656
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              },
+              {
+                "criterion": "accountability",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [
+              {
+                "id": "fog-unaddressed",
+                "status": "unaddressed",
+                "influence": 0.85,
+                "critical": true,
+                "contradictionConfirmed": false
+              }
+            ],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-b",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-b-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.61
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.7100000000000001
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.62
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-c",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-c-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.48
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.57
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.73
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          }
+        ],
+        "hardStops": {
+          "relevanceResolved": true,
+          "frameResolved": true,
+          "coverageResolved": true,
+          "setComplete": true
+        },
+        "flags": {
+          "nearTie": false,
+          "weakField": false
+        }
+      }
+    },
+    {
+      "id": "audit3-trace-05",
+      "kind": "trace_derived",
+      "scenario": "Blinded composite of two anonymized workspace structures under a rotated selected bet.",
+      "traceFeatures": {
+        "itemCount": 45,
+        "highValueCount": 6,
+        "hypothesisCount": 1,
+        "selectedCount": 0,
+        "elaboratedCount": 3
+      },
+      "matrix": {
+        "selectedBetId": "bet-b",
+        "criteria": [
+          {
+            "id": "continuity",
+            "weight": 0.45,
+            "min": 0.15,
+            "max": 0.7,
+            "basisType": "traced"
+          },
+          {
+            "id": "implementation",
+            "weight": 0.3,
+            "min": 0.1,
+            "max": 0.65,
+            "basisType": "neutral"
+          },
+          {
+            "id": "accountability",
+            "weight": 0.25,
+            "min": 0.1,
+            "max": 0.6,
+            "basisType": "neutral"
+          }
+        ],
+        "alternatives": [
+          {
+            "id": "bet-a",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-a-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.73
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.6849999999999999
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.69
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-b",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-b-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.6440000000000001
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.6260000000000001
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.6080000000000001
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              },
+              {
+                "criterion": "accountability",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [
+              {
+                "id": "fog-unaddressed",
+                "status": "unaddressed",
+                "influence": 0.85,
+                "critical": true,
+                "contradictionConfirmed": false
+              }
+            ],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-c",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-c-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.48
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.57
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.7000000000000001
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          }
+        ],
+        "hardStops": {
+          "relevanceResolved": true,
+          "frameResolved": true,
+          "coverageResolved": true,
+          "setComplete": true
+        },
+        "flags": {
+          "nearTie": false,
+          "weakField": false
+        }
+      }
+    },
+    {
+      "id": "audit3-trace-06",
+      "kind": "trace_derived",
+      "scenario": "Blinded composite of two anonymized workspace structures under a rotated selected bet.",
+      "traceFeatures": {
+        "itemCount": 77,
+        "highValueCount": 10,
+        "hypothesisCount": 5,
+        "selectedCount": 0,
+        "elaboratedCount": 5
+      },
+      "matrix": {
+        "selectedBetId": "bet-c",
+        "criteria": [
+          {
+            "id": "continuity",
+            "weight": 0.45,
+            "min": 0.15,
+            "max": 0.7,
+            "basisType": "traced"
+          },
+          {
+            "id": "implementation",
+            "weight": 0.3,
+            "min": 0.1,
+            "max": 0.65,
+            "basisType": "neutral"
+          },
+          {
+            "id": "accountability",
+            "weight": 0.25,
+            "min": 0.1,
+            "max": 0.6,
+            "basisType": "neutral"
+          }
+        ],
+        "alternatives": [
+          {
+            "id": "bet-a",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-a-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.8099999999999999
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.725
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.69
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-b",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-b-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.61
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.685
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.62
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-c",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-c-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.736
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.718
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.7
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              },
+              {
+                "criterion": "accountability",
+                "severity": "material",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [
+              {
+                "id": "fog-unaddressed",
+                "status": "unaddressed",
+                "influence": 0.85,
+                "critical": true,
+                "contradictionConfirmed": false
+              }
+            ],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          }
+        ],
+        "hardStops": {
+          "relevanceResolved": true,
+          "frameResolved": true,
+          "coverageResolved": true,
+          "setComplete": true
+        },
+        "flags": {
+          "nearTie": false,
+          "weakField": false
+        }
+      }
+    },
+    {
+      "id": "audit3-trace-07",
+      "kind": "trace_derived",
+      "scenario": "Blinded composite of two anonymized workspace structures under a rotated selected bet.",
+      "traceFeatures": {
+        "itemCount": 0,
+        "highValueCount": 0,
+        "hypothesisCount": 0,
+        "selectedCount": 0,
+        "elaboratedCount": 0
+      },
+      "matrix": {
+        "selectedBetId": "bet-a",
+        "criteria": [
+          {
+            "id": "continuity",
+            "weight": 0.45,
+            "min": 0.15,
+            "max": 0.7,
+            "basisType": "traced"
+          },
+          {
+            "id": "implementation",
+            "weight": 0.3,
+            "min": 0.1,
+            "max": 0.65,
+            "basisType": "neutral"
+          },
+          {
+            "id": "accountability",
+            "weight": 0.25,
+            "min": 0.1,
+            "max": 0.6,
+            "basisType": "neutral"
+          }
+        ],
+        "alternatives": [
+          {
+            "id": "bet-a",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-a-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.476
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.458
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.44
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [
+              {
+                "id": "fog-unaddressed",
+                "status": "unaddressed",
+                "influence": 0.85,
+                "critical": true,
+                "contradictionConfirmed": false
+              }
+            ],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              },
+              {
+                "id": "failure-material-untested",
+                "severity": "material",
+                "testStatus": "untested"
+              }
+            ]
+          },
+          {
+            "id": "bet-b",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-b-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.61
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.7000000000000001
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.62
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-c",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-c-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.48
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.57
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.75
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          }
+        ],
+        "hardStops": {
+          "relevanceResolved": true,
+          "frameResolved": true,
+          "coverageResolved": true,
+          "setComplete": true
+        },
+        "flags": {
+          "nearTie": false,
+          "weakField": false
+        }
+      }
+    },
+    {
+      "id": "audit3-trace-08",
+      "kind": "trace_derived",
+      "scenario": "Blinded composite of two anonymized workspace structures under a rotated selected bet.",
+      "traceFeatures": {
+        "itemCount": 2,
+        "highValueCount": 0,
+        "hypothesisCount": 0,
+        "selectedCount": 0,
+        "elaboratedCount": 0
+      },
+      "matrix": {
+        "selectedBetId": "bet-b",
+        "criteria": [
+          {
+            "id": "continuity",
+            "weight": 0.45,
+            "min": 0.15,
+            "max": 0.7,
+            "basisType": "traced"
+          },
+          {
+            "id": "implementation",
+            "weight": 0.3,
+            "min": 0.1,
+            "max": 0.65,
+            "basisType": "neutral"
+          },
+          {
+            "id": "accountability",
+            "weight": 0.25,
+            "min": 0.1,
+            "max": 0.6,
+            "basisType": "neutral"
+          }
+        ],
+        "alternatives": [
+          {
+            "id": "bet-a",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-a-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.75
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.695
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.69
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-b",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-b-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.476
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.458
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.44
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [
+              {
+                "id": "fog-unaddressed",
+                "status": "unaddressed",
+                "influence": 0.85,
+                "critical": true,
+                "contradictionConfirmed": false
+              }
+            ],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              },
+              {
+                "id": "failure-material-untested",
+                "severity": "material",
+                "testStatus": "untested"
+              }
+            ]
+          },
+          {
+            "id": "bet-c",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-c-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.48
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.57
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.72
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          }
+        ],
+        "hardStops": {
+          "relevanceResolved": true,
+          "frameResolved": true,
+          "coverageResolved": true,
+          "setComplete": true
+        },
+        "flags": {
+          "nearTie": false,
+          "weakField": false
+        }
+      }
+    },
+    {
+      "id": "audit3-meta-01",
+      "kind": "metamorphic",
+      "scenario": "Fresh adversarial contradiction probe derived from audit3-canonical-01.",
+      "baseCaseId": "audit3-canonical-01",
+      "baselineMatrix": {
+        "selectedBetId": "bet-a",
+        "criteria": [
+          {
+            "id": "continuity",
+            "weight": 0.45,
+            "min": 0.15,
+            "max": 0.7,
+            "basisType": "traced"
+          },
+          {
+            "id": "implementation",
+            "weight": 0.3,
+            "min": 0.1,
+            "max": 0.65,
+            "basisType": "neutral"
+          },
+          {
+            "id": "accountability",
+            "weight": 0.25,
+            "min": 0.1,
+            "max": 0.6,
+            "basisType": "neutral"
+          }
+        ],
+        "alternatives": [
+          {
+            "id": "bet-a",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-a-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.7999999999999999
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.72
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.69
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-b",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-b-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.61
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.6900000000000001
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.62
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-c",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-c-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.48
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.57
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.77
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          }
+        ],
+        "hardStops": {
+          "relevanceResolved": true,
+          "frameResolved": true,
+          "coverageResolved": true,
+          "setComplete": true
+        },
+        "flags": {
+          "nearTie": false,
+          "weakField": false
+        }
+      },
+      "transformation": "contradiction",
+      "expectedRelation": "not_higher",
+      "matrix": {
+        "selectedBetId": "bet-a",
+        "criteria": [
+          {
+            "id": "continuity",
+            "weight": 0.45,
+            "min": 0.15,
+            "max": 0.7,
+            "basisType": "traced"
+          },
+          {
+            "id": "implementation",
+            "weight": 0.3,
+            "min": 0.1,
+            "max": 0.65,
+            "basisType": "neutral"
+          },
+          {
+            "id": "accountability",
+            "weight": 0.25,
+            "min": 0.1,
+            "max": 0.6,
+            "basisType": "neutral"
+          }
+        ],
+        "alternatives": [
+          {
+            "id": "bet-a",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-a-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.7999999999999999
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.72
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.69
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              },
+              {
+                "criterion": "implementation",
+                "severity": "decisive",
+                "sourceType": "module_1_trace",
+                "traceIds": [
+                  "module_1_trace-trace"
+                ]
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-b",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-b-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.61
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.6900000000000001
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.62
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-c",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-c-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.48
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.57
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.77
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          }
+        ],
+        "hardStops": {
+          "relevanceResolved": true,
+          "frameResolved": true,
+          "coverageResolved": true,
+          "setComplete": true
+        },
+        "flags": {
+          "nearTie": false,
+          "weakField": false
+        }
+      }
+    },
+    {
+      "id": "audit3-meta-02",
+      "kind": "metamorphic",
+      "scenario": "Fresh adversarial fog_worsening probe derived from audit3-canonical-02.",
+      "baseCaseId": "audit3-canonical-02",
+      "baselineMatrix": {
+        "selectedBetId": "bet-a",
+        "criteria": [
+          {
+            "id": "continuity",
+            "weight": 0.45,
+            "min": 0.15,
+            "max": 0.7,
+            "basisType": "traced"
+          },
+          {
+            "id": "implementation",
+            "weight": 0.3,
+            "min": 0.1,
+            "max": 0.65,
+            "basisType": "neutral"
+          },
+          {
+            "id": "accountability",
+            "weight": 0.25,
+            "min": 0.1,
+            "max": 0.6,
+            "basisType": "neutral"
+          }
+        ],
+        "alternatives": [
+          {
+            "id": "bet-a",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-a-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.75
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.695
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.69
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-b",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-b-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.61
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.7150000000000001
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.62
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-c",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-c-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.48
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.57
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.72
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          }
+        ],
+        "hardStops": {
+          "relevanceResolved": true,
+          "frameResolved": true,
+          "coverageResolved": true,
+          "setComplete": true
+        },
+        "flags": {
+          "nearTie": false,
+          "weakField": false
+        }
+      },
+      "transformation": "fog_worsening",
+      "expectedRelation": "not_higher",
+      "matrix": {
+        "selectedBetId": "bet-a",
+        "criteria": [
+          {
+            "id": "continuity",
+            "weight": 0.45,
+            "min": 0.15,
+            "max": 0.7,
+            "basisType": "traced"
+          },
+          {
+            "id": "implementation",
+            "weight": 0.3,
+            "min": 0.1,
+            "max": 0.65,
+            "basisType": "neutral"
+          },
+          {
+            "id": "accountability",
+            "weight": 0.25,
+            "min": 0.1,
+            "max": 0.6,
+            "basisType": "neutral"
+          }
+        ],
+        "alternatives": [
+          {
+            "id": "bet-a",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-a-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.75
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.695
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.69
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [
+              {
+                "id": "fog-unaddressed",
+                "status": "unaddressed",
+                "influence": 0.8,
+                "critical": false,
+                "contradictionConfirmed": false
+              }
+            ],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-b",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-b-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.61
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.7150000000000001
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.62
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-c",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-c-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.48
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.57
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.72
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          }
+        ],
+        "hardStops": {
+          "relevanceResolved": true,
+          "frameResolved": true,
+          "coverageResolved": true,
+          "setComplete": true
+        },
+        "flags": {
+          "nearTie": false,
+          "weakField": false
+        }
+      }
+    },
+    {
+      "id": "audit3-meta-03",
+      "kind": "metamorphic",
+      "scenario": "Fresh adversarial near_tie probe derived from audit3-canonical-03.",
+      "baseCaseId": "audit3-canonical-03",
+      "baselineMatrix": {
+        "selectedBetId": "bet-a",
+        "criteria": [
+          {
+            "id": "continuity",
+            "weight": 0.45,
+            "min": 0.15,
+            "max": 0.7,
+            "basisType": "traced"
+          },
+          {
+            "id": "implementation",
+            "weight": 0.3,
+            "min": 0.1,
+            "max": 0.65,
+            "basisType": "neutral"
+          },
+          {
+            "id": "accountability",
+            "weight": 0.25,
+            "min": 0.1,
+            "max": 0.6,
+            "basisType": "neutral"
+          }
+        ],
+        "alternatives": [
+          {
+            "id": "bet-a",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-a-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.8099999999999999
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.725
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.69
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-b",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-b-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.61
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.685
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.62
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-c",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-c-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.48
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.57
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.78
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          }
+        ],
+        "hardStops": {
+          "relevanceResolved": true,
+          "frameResolved": true,
+          "coverageResolved": true,
+          "setComplete": true
+        },
+        "flags": {
+          "nearTie": false,
+          "weakField": false
+        }
+      },
+      "transformation": "near_tie",
+      "expectedRelation": "not_high",
+      "matrix": {
+        "selectedBetId": "bet-a",
+        "criteria": [
+          {
+            "id": "continuity",
+            "weight": 0.45,
+            "min": 0.15,
+            "max": 0.7,
+            "basisType": "traced"
+          },
+          {
+            "id": "implementation",
+            "weight": 0.3,
+            "min": 0.1,
+            "max": 0.65,
+            "basisType": "neutral"
+          },
+          {
+            "id": "accountability",
+            "weight": 0.25,
+            "min": 0.1,
+            "max": 0.6,
+            "basisType": "neutral"
+          }
+        ],
+        "alternatives": [
+          {
+            "id": "bet-a",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-a-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.8099999999999999
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.725
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.69
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-b",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-b-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.8039999999999999
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.719
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.6839999999999999
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-c",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-c-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.48
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.57
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.78
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          }
+        ],
+        "hardStops": {
+          "relevanceResolved": true,
+          "frameResolved": true,
+          "coverageResolved": true,
+          "setComplete": true
+        },
+        "flags": {
+          "nearTie": true,
+          "weakField": false
+        }
+      }
+    },
+    {
+      "id": "audit3-meta-04",
+      "kind": "metamorphic",
+      "scenario": "Fresh adversarial weak_field probe derived from audit3-canonical-04.",
+      "baseCaseId": "audit3-canonical-04",
+      "baselineMatrix": {
+        "selectedBetId": "bet-a",
+        "criteria": [
+          {
+            "id": "continuity",
+            "weight": 0.45,
+            "min": 0.15,
+            "max": 0.7,
+            "basisType": "traced"
+          },
+          {
+            "id": "implementation",
+            "weight": 0.3,
+            "min": 0.1,
+            "max": 0.65,
+            "basisType": "neutral"
+          },
+          {
+            "id": "accountability",
+            "weight": 0.25,
+            "min": 0.1,
+            "max": 0.6,
+            "basisType": "neutral"
+          }
+        ],
+        "alternatives": [
+          {
+            "id": "bet-a",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-a-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.76
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.7
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.69
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-b",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-b-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.61
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.7100000000000001
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.62
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-c",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-c-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.48
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.57
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.73
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          }
+        ],
+        "hardStops": {
+          "relevanceResolved": true,
+          "frameResolved": true,
+          "coverageResolved": true,
+          "setComplete": true
+        },
+        "flags": {
+          "nearTie": false,
+          "weakField": false
+        }
+      },
+      "transformation": "weak_field",
+      "expectedRelation": "not_high",
+      "matrix": {
+        "selectedBetId": "bet-a",
+        "criteria": [
+          {
+            "id": "continuity",
+            "weight": 0.45,
+            "min": 0.15,
+            "max": 0.7,
+            "basisType": "traced"
+          },
+          {
+            "id": "implementation",
+            "weight": 0.3,
+            "min": 0.1,
+            "max": 0.65,
+            "basisType": "neutral"
+          },
+          {
+            "id": "accountability",
+            "weight": 0.25,
+            "min": 0.1,
+            "max": 0.6,
+            "basisType": "neutral"
+          }
+        ],
+        "alternatives": [
+          {
+            "id": "bet-a",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-a-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.76
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.7
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.69
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-b",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-b-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.61
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.7100000000000001
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.62
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-c",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-c-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.48
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.57
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.73
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          }
+        ],
+        "hardStops": {
+          "relevanceResolved": true,
+          "frameResolved": true,
+          "coverageResolved": true,
+          "setComplete": true
+        },
+        "flags": {
+          "nearTie": false,
+          "weakField": true
+        }
+      }
+    },
+    {
+      "id": "audit3-meta-05",
+      "kind": "metamorphic",
+      "scenario": "Fresh adversarial duplicate_evidence probe derived from audit3-canonical-01.",
+      "baseCaseId": "audit3-canonical-01",
+      "baselineMatrix": {
+        "selectedBetId": "bet-a",
+        "criteria": [
+          {
+            "id": "continuity",
+            "weight": 0.45,
+            "min": 0.15,
+            "max": 0.7,
+            "basisType": "traced"
+          },
+          {
+            "id": "implementation",
+            "weight": 0.3,
+            "min": 0.1,
+            "max": 0.65,
+            "basisType": "neutral"
+          },
+          {
+            "id": "accountability",
+            "weight": 0.25,
+            "min": 0.1,
+            "max": 0.6,
+            "basisType": "neutral"
+          }
+        ],
+        "alternatives": [
+          {
+            "id": "bet-a",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-a-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.82
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.73
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.69
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              },
+              {
+                "criterion": "accountability",
+                "severity": "material",
+                "sourceType": "student_observation",
+                "traceIds": [
+                  "student_observation-trace"
+                ]
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-b",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-b-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.61
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.68
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.62
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-c",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-c-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.48
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.57
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.79
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          }
+        ],
+        "hardStops": {
+          "relevanceResolved": true,
+          "frameResolved": true,
+          "coverageResolved": true,
+          "setComplete": true
+        },
+        "flags": {
+          "nearTie": false,
+          "weakField": false
+        }
+      },
+      "transformation": "duplicate_evidence",
+      "expectedRelation": "equal",
+      "matrix": {
+        "selectedBetId": "bet-a",
+        "criteria": [
+          {
+            "id": "continuity",
+            "weight": 0.45,
+            "min": 0.15,
+            "max": 0.7,
+            "basisType": "traced"
+          },
+          {
+            "id": "implementation",
+            "weight": 0.3,
+            "min": 0.1,
+            "max": 0.65,
+            "basisType": "neutral"
+          },
+          {
+            "id": "accountability",
+            "weight": 0.25,
+            "min": 0.1,
+            "max": 0.6,
+            "basisType": "neutral"
+          }
+        ],
+        "alternatives": [
+          {
+            "id": "bet-a",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-a-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.82
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.73
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.69
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              },
+              {
+                "criterion": "accountability",
+                "severity": "material",
+                "sourceType": "student_observation",
+                "traceIds": [
+                  "student_observation-trace"
+                ]
+              },
+              {
+                "criterion": "accountability",
+                "severity": "material",
+                "sourceType": "student_observation",
+                "traceIds": [
+                  "student_observation-trace"
+                ]
+              },
+              {
+                "criterion": "accountability",
+                "severity": "material",
+                "sourceType": "student_observation",
+                "traceIds": [
+                  "student_observation-trace"
+                ]
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-b",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-b-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.61
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.68
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.62
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-c",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-c-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.48
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.57
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.79
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          }
+        ],
+        "hardStops": {
+          "relevanceResolved": true,
+          "frameResolved": true,
+          "coverageResolved": true,
+          "setComplete": true
+        },
+        "flags": {
+          "nearTie": false,
+          "weakField": false
+        }
+      }
+    },
+    {
+      "id": "audit3-meta-06",
+      "kind": "metamorphic",
+      "scenario": "Fresh adversarial strawman_padding probe derived from audit3-canonical-02.",
+      "baseCaseId": "audit3-canonical-02",
+      "baselineMatrix": {
+        "selectedBetId": "bet-a",
+        "criteria": [
+          {
+            "id": "continuity",
+            "weight": 0.45,
+            "min": 0.15,
+            "max": 0.7,
+            "basisType": "traced"
+          },
+          {
+            "id": "implementation",
+            "weight": 0.3,
+            "min": 0.1,
+            "max": 0.65,
+            "basisType": "neutral"
+          },
+          {
+            "id": "accountability",
+            "weight": 0.25,
+            "min": 0.1,
+            "max": 0.6,
+            "basisType": "neutral"
+          }
+        ],
+        "alternatives": [
+          {
+            "id": "bet-a",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-a-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.7699999999999999
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.705
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.69
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-b",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-b-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.61
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.7050000000000001
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.62
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-c",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-c-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.48
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.57
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.74
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          }
+        ],
+        "hardStops": {
+          "relevanceResolved": true,
+          "frameResolved": true,
+          "coverageResolved": true,
+          "setComplete": true
+        },
+        "flags": {
+          "nearTie": false,
+          "weakField": false
+        }
+      },
+      "transformation": "strawman_padding",
+      "expectedRelation": "equal",
+      "matrix": {
+        "selectedBetId": "bet-a",
+        "criteria": [
+          {
+            "id": "continuity",
+            "weight": 0.45,
+            "min": 0.15,
+            "max": 0.7,
+            "basisType": "traced"
+          },
+          {
+            "id": "implementation",
+            "weight": 0.3,
+            "min": 0.1,
+            "max": 0.65,
+            "basisType": "neutral"
+          },
+          {
+            "id": "accountability",
+            "weight": 0.25,
+            "min": 0.1,
+            "max": 0.6,
+            "basisType": "neutral"
+          }
+        ],
+        "alternatives": [
+          {
+            "id": "bet-a",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-a-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.7699999999999999
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.705
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.69
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-b",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-b-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.61
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.7050000000000001
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.62
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-c",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-c-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.48
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.57
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.74
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "strawman",
+            "origin": "generated",
+            "liveStatus": "strawman",
+            "groundedSupportTraceIds": [],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.05
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.05
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.05
+              }
+            ],
+            "evidenceAgainst": [],
+            "fogDependencies": [],
+            "failureModes": []
+          }
+        ],
+        "hardStops": {
+          "relevanceResolved": true,
+          "frameResolved": true,
+          "coverageResolved": true,
+          "setComplete": true
+        },
+        "flags": {
+          "nearTie": false,
+          "weakField": false
+        }
+      }
+    },
+    {
+      "id": "audit3-meta-07",
+      "kind": "metamorphic",
+      "scenario": "Fresh adversarial weight_shift probe derived from audit3-canonical-03.",
+      "baseCaseId": "audit3-canonical-03",
+      "baselineMatrix": {
+        "selectedBetId": "bet-a",
+        "criteria": [
+          {
+            "id": "continuity",
+            "weight": 0.45,
+            "min": 0.15,
+            "max": 0.7,
+            "basisType": "traced"
+          },
+          {
+            "id": "implementation",
+            "weight": 0.3,
+            "min": 0.1,
+            "max": 0.65,
+            "basisType": "neutral"
+          },
+          {
+            "id": "accountability",
+            "weight": 0.25,
+            "min": 0.1,
+            "max": 0.6,
+            "basisType": "neutral"
+          }
+        ],
+        "alternatives": [
+          {
+            "id": "bet-a",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-a-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.72
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.6799999999999999
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.69
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-b",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-b-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.61
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.7300000000000001
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.62
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-c",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-c-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.48
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.57
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.6900000000000001
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          }
+        ],
+        "hardStops": {
+          "relevanceResolved": true,
+          "frameResolved": true,
+          "coverageResolved": true,
+          "setComplete": true
+        },
+        "flags": {
+          "nearTie": false,
+          "weakField": false
+        }
+      },
+      "transformation": "weight_shift",
+      "expectedRelation": "recompute",
+      "matrix": {
+        "selectedBetId": "bet-a",
+        "criteria": [
+          {
+            "id": "continuity",
+            "weight": 0.38,
+            "min": 0.15,
+            "max": 0.7,
+            "basisType": "traced"
+          },
+          {
+            "id": "implementation",
+            "weight": 0.27,
+            "min": 0.1,
+            "max": 0.65,
+            "basisType": "neutral"
+          },
+          {
+            "id": "accountability",
+            "weight": 0.35,
+            "min": 0.1,
+            "max": 0.6,
+            "basisType": "neutral"
+          }
+        ],
+        "alternatives": [
+          {
+            "id": "bet-a",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-a-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.72
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.6799999999999999
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.69
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-b",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-b-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.61
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.7300000000000001
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.62
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-c",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-c-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.48
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.57
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.6900000000000001
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          }
+        ],
+        "hardStops": {
+          "relevanceResolved": true,
+          "frameResolved": true,
+          "coverageResolved": true,
+          "setComplete": true
+        },
+        "flags": {
+          "nearTie": false,
+          "weakField": false
+        }
+      }
+    },
+    {
+      "id": "audit3-meta-08",
+      "kind": "metamorphic",
+      "scenario": "Fresh adversarial irrelevant_paraphrase probe derived from audit3-canonical-04.",
+      "baseCaseId": "audit3-canonical-04",
+      "baselineMatrix": {
+        "selectedBetId": "bet-a",
+        "criteria": [
+          {
+            "id": "continuity",
+            "weight": 0.45,
+            "min": 0.15,
+            "max": 0.7,
+            "basisType": "traced"
+          },
+          {
+            "id": "implementation",
+            "weight": 0.3,
+            "min": 0.1,
+            "max": 0.65,
+            "basisType": "neutral"
+          },
+          {
+            "id": "accountability",
+            "weight": 0.25,
+            "min": 0.1,
+            "max": 0.6,
+            "basisType": "neutral"
+          }
+        ],
+        "alternatives": [
+          {
+            "id": "bet-a",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-a-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.7799999999999999
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.71
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.69
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-b",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-b-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.61
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.7000000000000001
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.62
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-c",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-c-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.48
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.57
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.75
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          }
+        ],
+        "hardStops": {
+          "relevanceResolved": true,
+          "frameResolved": true,
+          "coverageResolved": true,
+          "setComplete": true
+        },
+        "flags": {
+          "nearTie": false,
+          "weakField": false
+        }
+      },
+      "transformation": "irrelevant_paraphrase",
+      "expectedRelation": "equal",
+      "matrix": {
+        "selectedBetId": "bet-a",
+        "criteria": [
+          {
+            "id": "continuity",
+            "weight": 0.45,
+            "min": 0.15,
+            "max": 0.7,
+            "basisType": "traced"
+          },
+          {
+            "id": "implementation",
+            "weight": 0.3,
+            "min": 0.1,
+            "max": 0.65,
+            "basisType": "neutral"
+          },
+          {
+            "id": "accountability",
+            "weight": 0.25,
+            "min": 0.1,
+            "max": 0.6,
+            "basisType": "neutral"
+          }
+        ],
+        "alternatives": [
+          {
+            "id": "bet-a",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-a-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.7799999999999999
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.71
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.69
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-b",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-b-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.61
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.7000000000000001
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.62
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-c",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-c-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.48
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.57
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.75
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          }
+        ],
+        "hardStops": {
+          "relevanceResolved": true,
+          "frameResolved": true,
+          "coverageResolved": true,
+          "setComplete": true
+        },
+        "flags": {
+          "nearTie": false,
+          "weakField": false
+        },
+        "ignoredNarrative": "A third wording-only field outside the measurement contract."
+      }
+    },
+    {
+      "id": "audit3-meta-09",
+      "kind": "metamorphic",
+      "scenario": "Fresh adversarial generated_selected probe derived from audit3-canonical-01.",
+      "baseCaseId": "audit3-canonical-01",
+      "baselineMatrix": {
+        "selectedBetId": "bet-a",
+        "criteria": [
+          {
+            "id": "continuity",
+            "weight": 0.45,
+            "min": 0.15,
+            "max": 0.7,
+            "basisType": "traced"
+          },
+          {
+            "id": "implementation",
+            "weight": 0.3,
+            "min": 0.1,
+            "max": 0.65,
+            "basisType": "neutral"
+          },
+          {
+            "id": "accountability",
+            "weight": 0.25,
+            "min": 0.1,
+            "max": 0.6,
+            "basisType": "neutral"
+          }
+        ],
+        "alternatives": [
+          {
+            "id": "bet-a",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-a-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.73
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.6849999999999999
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.69
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-b",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-b-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.61
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.7250000000000001
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.62
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-c",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-c-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.48
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.57
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.7000000000000001
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          }
+        ],
+        "hardStops": {
+          "relevanceResolved": true,
+          "frameResolved": true,
+          "coverageResolved": true,
+          "setComplete": true
+        },
+        "flags": {
+          "nearTie": false,
+          "weakField": false
+        }
+      },
+      "transformation": "generated_selected",
+      "expectedRelation": "not_high",
+      "matrix": {
+        "selectedBetId": "bet-a",
+        "criteria": [
+          {
+            "id": "continuity",
+            "weight": 0.45,
+            "min": 0.15,
+            "max": 0.7,
+            "basisType": "traced"
+          },
+          {
+            "id": "implementation",
+            "weight": 0.3,
+            "min": 0.1,
+            "max": 0.65,
+            "basisType": "neutral"
+          },
+          {
+            "id": "accountability",
+            "weight": 0.25,
+            "min": 0.1,
+            "max": 0.6,
+            "basisType": "neutral"
+          }
+        ],
+        "alternatives": [
+          {
+            "id": "bet-a",
+            "origin": "generated",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.73
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.6849999999999999
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.69
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-b",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-b-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.61
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.7250000000000001
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.62
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-c",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-c-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.48
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.57
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.7000000000000001
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          }
+        ],
+        "hardStops": {
+          "relevanceResolved": true,
+          "frameResolved": true,
+          "coverageResolved": true,
+          "setComplete": true
+        },
+        "flags": {
+          "nearTie": false,
+          "weakField": false
+        }
+      }
+    },
+    {
+      "id": "audit3-meta-10",
+      "kind": "metamorphic",
+      "scenario": "Fresh adversarial failure_mode probe derived from audit3-canonical-02.",
+      "baseCaseId": "audit3-canonical-02",
+      "baselineMatrix": {
+        "selectedBetId": "bet-a",
+        "criteria": [
+          {
+            "id": "continuity",
+            "weight": 0.45,
+            "min": 0.15,
+            "max": 0.7,
+            "basisType": "traced"
+          },
+          {
+            "id": "implementation",
+            "weight": 0.3,
+            "min": 0.1,
+            "max": 0.65,
+            "basisType": "neutral"
+          },
+          {
+            "id": "accountability",
+            "weight": 0.25,
+            "min": 0.1,
+            "max": 0.6,
+            "basisType": "neutral"
+          }
+        ],
+        "alternatives": [
+          {
+            "id": "bet-a",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-a-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.7899999999999999
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.715
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.69
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-b",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-b-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.61
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.6950000000000001
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.62
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-c",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-c-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.48
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.57
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.76
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          }
+        ],
+        "hardStops": {
+          "relevanceResolved": true,
+          "frameResolved": true,
+          "coverageResolved": true,
+          "setComplete": true
+        },
+        "flags": {
+          "nearTie": false,
+          "weakField": false
+        }
+      },
+      "transformation": "failure_mode",
+      "expectedRelation": "not_higher",
+      "matrix": {
+        "selectedBetId": "bet-a",
+        "criteria": [
+          {
+            "id": "continuity",
+            "weight": 0.45,
+            "min": 0.15,
+            "max": 0.7,
+            "basisType": "traced"
+          },
+          {
+            "id": "implementation",
+            "weight": 0.3,
+            "min": 0.1,
+            "max": 0.65,
+            "basisType": "neutral"
+          },
+          {
+            "id": "accountability",
+            "weight": 0.25,
+            "min": 0.1,
+            "max": 0.6,
+            "basisType": "neutral"
+          }
+        ],
+        "alternatives": [
+          {
+            "id": "bet-a",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-a-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.7899999999999999
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.715
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.69
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              },
+              {
+                "id": "failure-catastrophic-partially_tested",
+                "severity": "catastrophic",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-b",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-b-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.61
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.6950000000000001
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.62
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-c",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-c-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.48
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.57
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.76
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          }
+        ],
+        "hardStops": {
+          "relevanceResolved": true,
+          "frameResolved": true,
+          "coverageResolved": true,
+          "setComplete": true
+        },
+        "flags": {
+          "nearTie": false,
+          "weakField": false
+        }
+      }
+    },
+    {
+      "id": "audit3-meta-11",
+      "kind": "metamorphic",
+      "scenario": "Fresh adversarial coverage_gap probe derived from audit3-canonical-03.",
+      "baseCaseId": "audit3-canonical-03",
+      "baselineMatrix": {
+        "selectedBetId": "bet-a",
+        "criteria": [
+          {
+            "id": "continuity",
+            "weight": 0.45,
+            "min": 0.15,
+            "max": 0.7,
+            "basisType": "traced"
+          },
+          {
+            "id": "implementation",
+            "weight": 0.3,
+            "min": 0.1,
+            "max": 0.65,
+            "basisType": "neutral"
+          },
+          {
+            "id": "accountability",
+            "weight": 0.25,
+            "min": 0.1,
+            "max": 0.6,
+            "basisType": "neutral"
+          }
+        ],
+        "alternatives": [
+          {
+            "id": "bet-a",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-a-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.74
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.69
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.69
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-b",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-b-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.61
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.7200000000000001
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.62
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-c",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-c-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.48
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.57
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.7100000000000001
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          }
+        ],
+        "hardStops": {
+          "relevanceResolved": true,
+          "frameResolved": true,
+          "coverageResolved": true,
+          "setComplete": true
+        },
+        "flags": {
+          "nearTie": false,
+          "weakField": false
+        }
+      },
+      "transformation": "coverage_gap",
+      "expectedRelation": "no_score",
+      "matrix": {
+        "selectedBetId": "bet-a",
+        "criteria": [
+          {
+            "id": "continuity",
+            "weight": 0.45,
+            "min": 0.15,
+            "max": 0.7,
+            "basisType": "traced"
+          },
+          {
+            "id": "implementation",
+            "weight": 0.3,
+            "min": 0.1,
+            "max": 0.65,
+            "basisType": "neutral"
+          },
+          {
+            "id": "accountability",
+            "weight": 0.25,
+            "min": 0.1,
+            "max": 0.6,
+            "basisType": "neutral"
+          }
+        ],
+        "alternatives": [
+          {
+            "id": "bet-a",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-a-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.74
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.69
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.69
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-b",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-b-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.61
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.7200000000000001
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.62
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-c",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-c-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.48
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.57
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.7100000000000001
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          }
+        ],
+        "hardStops": {
+          "relevanceResolved": true,
+          "frameResolved": true,
+          "coverageResolved": false,
+          "setComplete": true
+        },
+        "flags": {
+          "nearTie": false,
+          "weakField": false
+        }
+      }
+    },
+    {
+      "id": "audit3-meta-12",
+      "kind": "metamorphic",
+      "scenario": "Fresh adversarial single_bet probe derived from audit3-canonical-04.",
+      "baseCaseId": "audit3-canonical-04",
+      "baselineMatrix": {
+        "selectedBetId": "bet-a",
+        "criteria": [
+          {
+            "id": "continuity",
+            "weight": 0.45,
+            "min": 0.15,
+            "max": 0.7,
+            "basisType": "traced"
+          },
+          {
+            "id": "implementation",
+            "weight": 0.3,
+            "min": 0.1,
+            "max": 0.65,
+            "basisType": "neutral"
+          },
+          {
+            "id": "accountability",
+            "weight": 0.25,
+            "min": 0.1,
+            "max": 0.6,
+            "basisType": "neutral"
+          }
+        ],
+        "alternatives": [
+          {
+            "id": "bet-a",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-a-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.7999999999999999
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.72
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.69
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-b",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-b-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.61
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.6900000000000001
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.62
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          },
+          {
+            "id": "bet-c",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-c-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.48
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.57
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.77
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          }
+        ],
+        "hardStops": {
+          "relevanceResolved": true,
+          "frameResolved": true,
+          "coverageResolved": true,
+          "setComplete": true
+        },
+        "flags": {
+          "nearTie": false,
+          "weakField": false
+        }
+      },
+      "transformation": "single_bet",
+      "expectedRelation": "no_score",
+      "matrix": {
+        "selectedBetId": "bet-a",
+        "criteria": [
+          {
+            "id": "continuity",
+            "weight": 0.45,
+            "min": 0.15,
+            "max": 0.7,
+            "basisType": "traced"
+          },
+          {
+            "id": "implementation",
+            "weight": 0.3,
+            "min": 0.1,
+            "max": 0.65,
+            "basisType": "neutral"
+          },
+          {
+            "id": "accountability",
+            "weight": 0.25,
+            "min": 0.1,
+            "max": 0.6,
+            "basisType": "neutral"
+          }
+        ],
+        "alternatives": [
+          {
+            "id": "bet-a",
+            "origin": "student",
+            "liveStatus": "live",
+            "groundedSupportTraceIds": [
+              "bet-a-trace"
+            ],
+            "criterionScores": [
+              {
+                "criterion": "continuity",
+                "score": 0.7999999999999999
+              },
+              {
+                "criterion": "implementation",
+                "score": 0.72
+              },
+              {
+                "criterion": "accountability",
+                "score": 0.69
+              }
+            ],
+            "evidenceAgainst": [
+              {
+                "criterion": "implementation",
+                "severity": "weak",
+                "sourceType": "generated_hypothesis",
+                "traceIds": []
+              }
+            ],
+            "fogDependencies": [],
+            "failureModes": [
+              {
+                "id": "failure-limited-partially_tested",
+                "severity": "limited",
+                "testStatus": "partially_tested"
+              }
+            ]
+          }
+        ],
+        "hardStops": {
+          "relevanceResolved": true,
+          "frameResolved": true,
+          "coverageResolved": true,
+          "setComplete": true
+        },
+        "flags": {
+          "nearTie": false,
+          "weakField": false
+        }
+      }
+    }
+  ]
+}

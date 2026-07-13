@@ -1,0 +1,1669 @@
+{
+  "version": 1,
+  "partition": "sealed_holdout",
+  "model": "gpt-5.6-terra",
+  "cases": [
+    {
+      "caseId": "audit3-canonical-01",
+      "judgments": [
+        {
+          "noScore": false,
+          "selectedBand": "Low",
+          "robustnessOrder": [
+            "bet-a",
+            "bet-c",
+            "bet-b"
+          ],
+          "rationale": "All three alternatives are live and have a complete common comparison field, so scoring is possible. Bet-b, the selected bet, has materially adverse evidence from a direct client reply on accountability; this outweighs its modest score lead and places it behind alternatives with only weak generated-hypothesis evidence against them. Bet-a is strongest because it has high comparative scores without material sourced contradiction. Bet-c ranks above bet-b because it lacks the material direct-client evidence against the selected option, despite weaker continuity and implementation scores. The selected position cannot be High and is Low due to the material sourced evidence against it.",
+          "panelIndex": 0,
+          "orderSeed": "4d7fcfa7969f50fdccc44375473d0fff",
+          "candidateOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 788,
+            "outputTokens": 678
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "Low",
+          "robustnessOrder": [
+            "bet-a",
+            "bet-c",
+            "bet-b"
+          ],
+          "rationale": "bet-b has a material, directly sourced client-reply objection on accountability. That adverse evidence dominates its small nominal score advantages over bet-a and makes the selected position less robust than the alternatives. bet-a has strong comparative scores with only weak generated-hypothesis evidence against; bet-c has lower continuity and implementation scores but likewise no material sourced contradiction. All three are live and have complete comparison fields, so no hard stop applies.",
+          "panelIndex": 1,
+          "orderSeed": "df770f9265a7cad98134f18828f34cb2",
+          "candidateOrder": [
+            "bet-a",
+            "bet-c",
+            "bet-b"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 788,
+            "outputTokens": 544
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "Low",
+          "robustnessOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "rationale": "Selected bet: bet-b. bet-b has the strongest stated criterion scores, but its position is not robust because it alone carries material evidence against from a direct client reply, while bet-a is a close live alternative with only weak generated-hypothesis evidence against. That sourced material concern outweighs bet-b’s small score advantage. bet-c ranks last on the stated scores, despite no additional fog exposure.",
+          "panelIndex": 2,
+          "orderSeed": "1284b12feadea99fb7389b947cd2f6f1",
+          "candidateOrder": [
+            "bet-c",
+            "bet-a",
+            "bet-b"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 788,
+            "outputTokens": 639
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "audit3-canonical-02",
+      "judgments": [
+        {
+          "noScore": false,
+          "selectedBand": "Low",
+          "robustnessOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "rationale": "Selected bet: bet-c. Although bet-c has the highest nominal weighted criterion score, it carries a critical, unaddressed fog dependency with very high influence (0.9). This materially unresolved critical exposure caps the selected position at Low and makes it less robust than the otherwise similarly evidenced live alternatives. Bet-a ranks first on the supplied score profile without fog exposure; bet-b ranks next, with stronger implementation but lower continuity and accountability than bet-a. All alternatives share only weak generated-hypothesis evidence against and partially tested limited failure modes.",
+          "panelIndex": 0,
+          "orderSeed": "5fe0c31135d254bddd3986c558e7cd5c",
+          "candidateOrder": [
+            "bet-c",
+            "bet-b",
+            "bet-a"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 799,
+            "outputTokens": 260
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "Low",
+          "robustnessOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "rationale": "Selected bet bet-c has the strongest scored comparison profile, but it carries a critical, unaddressed fog dependency with 0.9 influence. This materially destabilizes its position and prevents a rating above Low. Bet-a is most robust because it has no fog dependency and exceeds bet-b on the more heavily weighted continuity criterion; both otherwise share only weak generated evidence against and a limited partially tested failure mode. Bet-b is next. The common comparison field is complete and there are three credible live alternatives, so no hard-stop NoScore applies.",
+          "panelIndex": 1,
+          "orderSeed": "e988916f53026b6af06032b6b059f925",
+          "candidateOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 799,
+            "outputTokens": 422
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "Moderate",
+          "robustnessOrder": [
+            "bet-c",
+            "bet-a",
+            "bet-b"
+          ],
+          "rationale": "Selected bet: bet-c. It has the strongest stated criterion scores, followed closely by bet-a and then bet-b. All three are live, grounded, and comparably exposed to only weak generated-hypothesis evidence against plus partially tested limited failures. However, bet-c carries a critical, high-influence (0.9) unaddressed fog dependency, so its lead is not robust enough for High despite its score advantage. No hard stop applies and there are three credible live alternatives.",
+          "panelIndex": 2,
+          "orderSeed": "9c75820ead7bf954be1662dd5860a0bb",
+          "candidateOrder": [
+            "bet-b",
+            "bet-a",
+            "bet-c"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 799,
+            "outputTokens": 272
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "audit3-canonical-03",
+      "judgments": [
+        {
+          "noScore": false,
+          "selectedBand": "Low",
+          "robustnessOrder": [
+            "bet-b",
+            "bet-c",
+            "bet-a"
+          ],
+          "rationale": "Selected bet-a has the strongest criterion scores, but its catastrophic failure mode is untested, creating critical unresolved failure exposure and capping confidence at Low. bet-b is most robust: it has no fog exposure, only the shared weak generated evidence against, and no catastrophic untested failure; it also outperforms bet-c on the more heavily weighted continuity and implementation criteria. bet-c ranks second, with weaker continuity and implementation despite slightly stronger accountability. The selected bet is bet-a.",
+          "panelIndex": 0,
+          "orderSeed": "a7ddbe72b4e495ef3683118d1d49ddf4",
+          "candidateOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 799,
+            "outputTokens": 325
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "Low",
+          "robustnessOrder": [
+            "bet-b",
+            "bet-c",
+            "bet-a"
+          ],
+          "rationale": "bet-a is the selected bet but carries a catastrophic, untested failure mode. This is a critical unresolved failure exposure, so the selected position cannot exceed Low despite its stronger criterion scores. bet-b is most robust among the live alternatives because it has stronger continuity and implementation scores than bet-c, with the same weak generated evidence against and the same limited partially tested failure exposure. bet-c ranks next. All three alternatives are live, grounded, and have complete criterion fields; no hard stop applies.",
+          "panelIndex": 1,
+          "orderSeed": "83bc641a14b9cc91d9f3fc7c1b55b335",
+          "candidateOrder": [
+            "bet-c",
+            "bet-b",
+            "bet-a"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 799,
+            "outputTokens": 326
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "Low",
+          "robustnessOrder": [
+            "bet-b",
+            "bet-c",
+            "bet-a"
+          ],
+          "rationale": "Selected bet: bet-a. No hard stop applies and all three alternatives are live with populated common comparison fields. bet-b is most robust: it has the strongest implementation and materially stronger continuity than bet-c, without an untested catastrophic failure mode. bet-c is second: lower continuity and implementation than bet-b, but no critical untested failure is recorded. bet-a has the highest nominal criterion scores overall, but its catastrophic failure mode is untested; this critical unresolved failure exposure caps the selected position at Low and places it behind the alternatives without that exposure.",
+          "panelIndex": 2,
+          "orderSeed": "dbc9809491588a72529810290f82aec3",
+          "candidateOrder": [
+            "bet-a",
+            "bet-c",
+            "bet-b"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 799,
+            "outputTokens": 290
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "audit3-canonical-04",
+      "judgments": [
+        {
+          "noScore": true,
+          "selectedBand": "NoScore",
+          "robustnessOrder": [],
+          "rationale": "Hard stop applies: relevanceResolved is false. Under the instruction, scoring and ranking cannot proceed until relevance is resolved.",
+          "panelIndex": 0,
+          "orderSeed": "5870afcaedbee7250a79916337c070d2",
+          "candidateOrder": [
+            "bet-b",
+            "bet-c",
+            "bet-a"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 777,
+            "outputTokens": 76
+          }
+        },
+        {
+          "noScore": true,
+          "selectedBand": "NoScore",
+          "robustnessOrder": [],
+          "rationale": "Hard stop applies: relevanceResolved is false. Under the instruction, no robustness ranking or selected-bet assessment can be issued.",
+          "panelIndex": 1,
+          "orderSeed": "ed6bff175d747096c2545b3a2ec9f0ad",
+          "candidateOrder": [
+            "bet-a",
+            "bet-c",
+            "bet-b"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 777,
+            "outputTokens": 74
+          }
+        },
+        {
+          "noScore": true,
+          "selectedBand": "NoScore",
+          "robustnessOrder": [],
+          "rationale": "Hard stop applies: relevanceResolved=false. Under the stated rule, robustness cannot be scored or ranked.",
+          "panelIndex": 2,
+          "orderSeed": "3e97f8beae447a768f3f8d7ddc774ce4",
+          "candidateOrder": [
+            "bet-c",
+            "bet-a",
+            "bet-b"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 777,
+            "outputTokens": 75
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "audit3-trace-01",
+      "judgments": [
+        {
+          "noScore": false,
+          "selectedBand": "Moderate",
+          "robustnessOrder": [
+            "bet-b",
+            "bet-c",
+            "bet-a"
+          ],
+          "rationale": "bet-b is most robust: it has the strongest criterion profile and only weak generated evidence against, with no fog dependencies. bet-c ranks second: its scores are lower than bet-b's, but it has no fog exposure and only weak generated evidence against. Selected bet-a ranks last despite strong continuity because it carries material evidence against on accountability and a critical, high-influence unaddressed fog dependency; these unresolved liabilities outweigh its narrow score advantages. The selected bet cannot be High because of material evidence against and materially unresolved critical fog, but no stated hard stop, decisive sourced contradiction, collapsed fog independence, or critical unresolved failure mode requires a Low cap.",
+          "panelIndex": 0,
+          "orderSeed": "8eeaf034f2ffe74dd263578943fd04bd",
+          "candidateOrder": [
+            "bet-c",
+            "bet-b",
+            "bet-a"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 825,
+            "outputTokens": 494
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "Moderate",
+          "robustnessOrder": [
+            "bet-b",
+            "bet-c",
+            "bet-a"
+          ],
+          "rationale": "Selected bet bet-a is least robust among the three live alternatives: it carries material evidence against on accountability and a critical, high-influence unaddressed fog dependency. Those factors prevent a High rating, despite its support trace and partially tested limited failure mode. Bet-b ranks first on the weighted continuity and implementation criteria with no fog dependency; bet-c ranks second, benefiting from stronger accountability but trailing bet-b on the more heavily weighted continuity and implementation dimensions.",
+          "panelIndex": 1,
+          "orderSeed": "b7c58101538eba31a0b1580e5b5bdfdd",
+          "candidateOrder": [
+            "bet-a",
+            "bet-c",
+            "bet-b"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 825,
+            "outputTokens": 529
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "Low",
+          "robustnessOrder": [
+            "bet-b",
+            "bet-c",
+            "bet-a"
+          ],
+          "rationale": "All three alternatives are live and the common comparison field is complete, so no hard stop applies. bet-b is most robust: it has strong implementation and accountability scores, no fog dependencies, and only weak generated-hypothesis evidence against it. bet-c is next: it is also fog-free, though its continuity score is materially lower. The selected bet, bet-a, ranks last despite its high nominal criterion scores because it carries material evidence against accountability and a critical, high-influence unaddressed fog dependency. That unresolved fog prevents a higher confidence band and leaves the selected position less robust than both live alternatives.",
+          "panelIndex": 2,
+          "orderSeed": "e33ce896314744731fe38cf934547fac",
+          "candidateOrder": [
+            "bet-c",
+            "bet-a",
+            "bet-b"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 825,
+            "outputTokens": 324
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "audit3-trace-02",
+      "judgments": [
+        {
+          "noScore": false,
+          "selectedBand": "Low",
+          "robustnessOrder": [
+            "bet-a",
+            "bet-c",
+            "bet-b"
+          ],
+          "rationale": "Selected bet-b is least robust because it carries a critical, unaddressed fog dependency with high influence (0.85) and a material untested failure mode. Those unresolved exposures cap the selected position at Low despite its relatively strong continuity and implementation scores. Bet-a is most robust: it dominates bet-c on all supplied criterion scores and has no listed fog dependency beyond the shared weak generated implementation hypothesis. Bet-c is second, with no fog dependency or material untested failure, but lower continuity and implementation scores than bet-a. There are three credible live alternatives and all common criteria are populated.",
+          "panelIndex": 0,
+          "orderSeed": "d5ebb8b3f1e2797bdeb0202b15a72bf7",
+          "candidateOrder": [
+            "bet-b",
+            "bet-c",
+            "bet-a"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 812,
+            "outputTokens": 362
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "Low",
+          "robustnessOrder": [
+            "bet-a",
+            "bet-c",
+            "bet-b"
+          ],
+          "rationale": "No hard stop applies and all three alternatives are live with grounded support. bet-a is most robust: it leads on continuity and implementation and has no fog dependency or material untested failure listed. bet-c is next: its stronger accountability and implementation do not fully offset its materially lower continuity, but it likewise has no fog exposure. The selected bet-b ranks last despite competitive criterion scores because it depends on an unaddressed critical, high-influence fog item and carries a material untested failure mode. Those unresolved exposures prevent the selected position from exceeding Low.",
+          "panelIndex": 1,
+          "orderSeed": "4793a1bdf57508a1b88fc1b44377d7cf",
+          "candidateOrder": [
+            "bet-c",
+            "bet-a",
+            "bet-b"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 812,
+            "outputTokens": 660
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "Low",
+          "robustnessOrder": [
+            "bet-a",
+            "bet-c",
+            "bet-b"
+          ],
+          "rationale": "Selected bet bet-b is least robust: it has a critical, unaddressed fog dependency with high influence (0.85) and a material untested failure mode. These unresolved exposures cap the selected position at Low despite grounded support and midrange criterion scores. Bet-a is most robust because it has the strongest scores across continuity and implementation with no fog dependencies and only limited partially tested failure exposure. Bet-c ranks second: it avoids fog and material untested failures but has materially lower continuity than bet-a.",
+          "panelIndex": 2,
+          "orderSeed": "a9b855f832d1a68e6feecc15702c0572",
+          "candidateOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 812,
+            "outputTokens": 208
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "audit3-trace-03",
+      "judgments": [
+        {
+          "noScore": false,
+          "selectedBand": "Low",
+          "robustnessOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "rationale": "Selected bet bet-c is least robust among all three live alternatives: it trails bet-a and bet-b across the scored comparison field, carries material evidence against on accountability, has a partial fog dependency with substantial influence, and retains a material untested failure mode. Bet-a is most robust, with the strongest criterion scores and no fog dependencies; bet-b is second, also exceeding bet-c on every criterion with only weak generated evidence against and a limited partially tested failure mode.",
+          "panelIndex": 0,
+          "orderSeed": "16c889fa2d3963c5c28cd533f3f4626b",
+          "candidateOrder": [
+            "bet-a",
+            "bet-c",
+            "bet-b"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 845,
+            "outputTokens": 258
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "Low",
+          "robustnessOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "rationale": "bet-c is the selected bet but ranks last on every stated criterion, behind both credible live alternatives. It also uniquely carries material generated evidence against on accountability, a partial fog dependency with substantial influence, and a material untested failure mode. bet-a is most robust because it leads bet-b and bet-c across all comparison criteria; bet-b is second. No hard stop applies and all three live alternatives have complete criterion fields.",
+          "panelIndex": 1,
+          "orderSeed": "40860b4f8f0e1d6e8aba3e1bcf9e87dc",
+          "candidateOrder": [
+            "bet-b",
+            "bet-a",
+            "bet-c"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 845,
+            "outputTokens": 306
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "Low",
+          "robustnessOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "rationale": "Selected bet: bet-c. bet-a is most robust because it exceeds both bet-b and bet-c on continuity, implementation, and accountability, with only weak generated evidence against, no fog dependencies, and only a limited partially tested failure mode. bet-b is second for the same clean fog and failure profile, but is lower than bet-a on every criterion. bet-c is least robust: it is dominated by both alternatives across all three criteria and additionally carries material generated evidence against accountability, a partial fog dependency with substantial influence (0.55), and a material untested failure mode. These unresolved exposures and the selected bet's clear inferiority prevent a higher band.",
+          "panelIndex": 2,
+          "orderSeed": "a153728f7a1fff8da6bc604dedf947cb",
+          "candidateOrder": [
+            "bet-b",
+            "bet-c",
+            "bet-a"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 845,
+            "outputTokens": 341
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "audit3-trace-04",
+      "judgments": [
+        {
+          "noScore": false,
+          "selectedBand": "Moderate",
+          "robustnessOrder": [
+            "bet-b",
+            "bet-c",
+            "bet-a"
+          ],
+          "rationale": "Selected bet: bet-a. All three alternatives are live and grounded, with the common comparison criteria populated. Bet-b is most robust: it has the strongest weighted criterion profile among options without material fog exposure, and only weak generated evidence against it. Bet-c is next, with a weaker continuity/implementation profile than bet-b but no fog dependency. Bet-a has strong nominal scores, but its critical, unaddressed fog dependency has high influence (0.85), materially weakening robustness despite no confirmed contradiction. Its additional weak generated accountability concern also leaves more adverse exposure than the other live alternatives. The unresolved critical fog prevents a High band.",
+          "panelIndex": 0,
+          "orderSeed": "694752b159f44e5c0c23d58227337ceb",
+          "candidateOrder": [
+            "bet-b",
+            "bet-c",
+            "bet-a"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 825,
+            "outputTokens": 536
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "Low",
+          "robustnessOrder": [
+            "bet-b",
+            "bet-c",
+            "bet-a"
+          ],
+          "rationale": "Selected bet bet-a is Low robustness: it depends on an unaddressed, critical fog item with high influence (0.85). Its nominal criterion advantage does not offset that unresolved exposure. Bet-b is most robust because it has grounded support, no fog dependencies, and only weak generated evidence against. Bet-c is next: it likewise has no fog dependencies, though its continuity and implementation scores are weaker than bet-b's. All three live alternatives share the common comparison criteria; no stated hard stop applies.",
+          "panelIndex": 1,
+          "orderSeed": "233c07cafbc565c11f900d39f2474b9b",
+          "candidateOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 825,
+            "outputTokens": 585
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "Low",
+          "robustnessOrder": [
+            "bet-b",
+            "bet-c",
+            "bet-a"
+          ],
+          "rationale": "Selected bet: bet-a. It has the strongest nominal criterion profile, but its unaddressed critical fog dependency has very high influence (0.85), materially weakening decision robustness. bet-b has no recorded fog dependencies and only weak generated evidence against, making it most robust. bet-c likewise has no fog exposure but has a weaker overall criterion profile than bet-b. The selected position cannot exceed Low given the material unresolved critical fog exposure.",
+          "panelIndex": 2,
+          "orderSeed": "d5880193b0a2b99f82043b6b8ae9e101",
+          "candidateOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 825,
+            "outputTokens": 434
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "audit3-trace-05",
+      "judgments": [
+        {
+          "noScore": false,
+          "selectedBand": "Low",
+          "robustnessOrder": [
+            "bet-a",
+            "bet-c",
+            "bet-b"
+          ],
+          "rationale": "bet-a is most robust: it has the strongest criterion scores, only weak generated evidence against, and no fog dependency. bet-c ranks next: its scores are lower, but it has only one weak generated concern and no fog exposure. The selected bet-b ranks last despite comparatively strong scores because it carries two weak concerns plus an unaddressed, critical, high-influence fog dependency (0.85). That material unresolved fog prevents a stronger robustness judgment for the selected bet.",
+          "panelIndex": 0,
+          "orderSeed": "9f8f260f80621f6f08fed1de56813026",
+          "candidateOrder": [
+            "bet-c",
+            "bet-b",
+            "bet-a"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 840,
+            "outputTokens": 478
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "Low",
+          "robustnessOrder": [
+            "bet-a",
+            "bet-c",
+            "bet-b"
+          ],
+          "rationale": "bet-b is least robust: it alone carries an unaddressed, critical, high-influence fog dependency (0.85) and has two evidence-against entries. bet-a has the strongest stated criterion scores with only weak generated counterevidence and a limited partially tested failure mode. bet-c has lower continuity than bet-a but stronger implementation/accountability than bet-b, no fog dependency, and only weak generated counterevidence. The selected bet therefore faces a critical unresolved exposure and cannot exceed Low.",
+          "panelIndex": 1,
+          "orderSeed": "af45e0b68e95e9c6b02d5d30404b527b",
+          "candidateOrder": [
+            "bet-c",
+            "bet-a",
+            "bet-b"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 840,
+            "outputTokens": 539
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "Moderate",
+          "robustnessOrder": [
+            "bet-a",
+            "bet-c",
+            "bet-b"
+          ],
+          "rationale": "Selected bet-b is the least robust live option: bet-a exceeds it on every scored criterion with no fog dependency and less adverse evidence. Bet-b also carries a critical, high-influence unaddressed fog dependency plus two adverse hypotheses. Bet-c has lower scored continuity and implementation than bet-b but avoids the critical fog exposure and has less adverse evidence. The selected position cannot be High; its unresolved critical fog materially weakens robustness.",
+          "panelIndex": 2,
+          "orderSeed": "c899e430da25bf30f5a22852b72092d4",
+          "candidateOrder": [
+            "bet-c",
+            "bet-b",
+            "bet-a"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 840,
+            "outputTokens": 714
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "audit3-trace-06",
+      "judgments": [
+        {
+          "noScore": false,
+          "selectedBand": "Low",
+          "robustnessOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "rationale": "Selected bet bet-c is least robust. It has material evidence against on accountability plus an unaddressed, critical fog dependency with high influence (0.85), while both bet-a and bet-b have no fog dependencies and only weak generated evidence against. Bet-a ranks above bet-b because it is stronger on continuity and implementation, outweighing its slightly lower accountability score. The selected position cannot exceed Low given its materially unresolved critical fog exposure and material adverse evidence.",
+          "panelIndex": 0,
+          "orderSeed": "cc6ecc2142f3a9739a2310e14283264c",
+          "candidateOrder": [
+            "bet-b",
+            "bet-c",
+            "bet-a"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 820,
+            "outputTokens": 431
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "Low",
+          "robustnessOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "rationale": "bet-c is the selected bet but ranks least robust. It alone carries a critical, high-influence (0.85) unaddressed fog dependency, materially weakening confidence in its apparent score advantage; it also has material evidence against accountability, albeit generated rather than sourced. bet-a is most robust because it has the strongest comparison-field scores overall and no listed fog dependency, while bet-b is second with lower scores but likewise no fog exposure. All three are live, grounded, and comparably scored, so no hard stop applies. The critical unresolved fog prevents a rating above Low.",
+          "panelIndex": 1,
+          "orderSeed": "518f83492b95b48fd985063471b1968c",
+          "candidateOrder": [
+            "bet-c",
+            "bet-b",
+            "bet-a"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 820,
+            "outputTokens": 280
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "Low",
+          "robustnessOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "rationale": "bet-a is most robust: it leads bet-b on every common criterion and carries the same weak generated implementation concern and limited, partially tested failure mode. bet-b is next, with lower criterion scores but no additional fog or material evidence against. Selected bet-c ranks last despite competitive scores because it has material evidence against accountability plus a critical, high-influence unaddressed fog dependency; this materially weakens the selected position and prevents a higher band. All three alternatives are live and have a complete common criterion field.",
+          "panelIndex": 2,
+          "orderSeed": "edf89014348adec9b203f962d9a14067",
+          "candidateOrder": [
+            "bet-b",
+            "bet-a",
+            "bet-c"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 820,
+            "outputTokens": 342
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "audit3-trace-07",
+      "judgments": [
+        {
+          "noScore": false,
+          "selectedBand": "Low",
+          "robustnessOrder": [
+            "bet-b",
+            "bet-c",
+            "bet-a"
+          ],
+          "rationale": "All three alternatives are live and have populated scores for the common criteria, so no hard stop applies. bet-b is most robust because it leads bet-c and bet-a on every listed criterion and has no fog dependencies; its only evidence against is weak and generated. bet-c is next, with similarly weak generated evidence against and no fog, but lower continuity and implementation scores than bet-b. Selected bet-a is least robust: it trails both alternatives on the listed scores, depends on an unaddressed critical fog item with high influence (0.85), and retains a material untested failure mode. Those unresolved exposures limit the selected position to Low.",
+          "panelIndex": 0,
+          "orderSeed": "5198236a286c17978f18f04ae70e2c23",
+          "candidateOrder": [
+            "bet-c",
+            "bet-a",
+            "bet-b"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 817,
+            "outputTokens": 348
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "Low",
+          "robustnessOrder": [
+            "bet-b",
+            "bet-c",
+            "bet-a"
+          ],
+          "rationale": "bet-b is most robust in the supplied comparison: it has the strongest continuity and implementation scores, with only weak generated-hypothesis evidence against and a limited, partially tested failure mode. bet-c is next: it has stronger accountability than bet-b but lower continuity and implementation, with the same limited adverse evidence and failure exposure. The selected bet-a ranks last because it carries a critical, unaddressed fog dependency with high influence (0.85) plus a material untested failure mode. That unresolved critical exposure prevents the selected position from exceeding Low.",
+          "panelIndex": 1,
+          "orderSeed": "67642136d26c29f9b60a8185eb133440",
+          "candidateOrder": [
+            "bet-b",
+            "bet-c",
+            "bet-a"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 817,
+            "outputTokens": 418
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "Low",
+          "robustnessOrder": [
+            "bet-b",
+            "bet-c",
+            "bet-a"
+          ],
+          "rationale": "Selected bet: bet-a. bet-b is most robust on the weighted comparison field, leading bet-c on continuity and implementation while sharing the same limited, partially tested failure exposure and only weak generated-hypothesis evidence against. bet-c is next: it has stronger accountability but lower weighted continuity and implementation than bet-b, with otherwise similar exposure. bet-a ranks last and the selected position is Low: it is materially weaker on all scored criteria than bet-b, faces a critical unaddressed fog dependency with high influence, and retains a material untested failure mode. These unresolved exposures and the selected bet's clear comparative disadvantage prevent a higher band.",
+          "panelIndex": 2,
+          "orderSeed": "7c546134995830880687a0612572c961",
+          "candidateOrder": [
+            "bet-b",
+            "bet-a",
+            "bet-c"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 817,
+            "outputTokens": 378
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "audit3-trace-08",
+      "judgments": [
+        {
+          "noScore": false,
+          "selectedBand": "Low",
+          "robustnessOrder": [
+            "bet-a",
+            "bet-c",
+            "bet-b"
+          ],
+          "rationale": "Selected bet: bet-b. bet-a is most robust because it materially exceeds bet-c and bet-b across the supplied continuity, implementation, and accountability scores, with no fog dependency and only a limited partially tested failure mode. bet-c is next: it has no fog dependency and the same limited partially tested failure exposure, but is weaker than bet-a on the scored comparison. bet-b is least robust because its critical, unaddressed fog dependency has high influence (0.85) and it retains a material untested failure mode. That critical unresolved failure exposure limits the selected position to Low despite the absence of a formal hard stop.",
+          "panelIndex": 0,
+          "orderSeed": "cd757c56ae42fc6173c2011ccd89becb",
+          "candidateOrder": [
+            "bet-b",
+            "bet-a",
+            "bet-c"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 812,
+            "outputTokens": 342
+          }
+        },
+        {
+          "noScore": true,
+          "selectedBand": "NoScore",
+          "robustnessOrder": [],
+          "rationale": "The common comparison field is not validly complete: several criterion scores exceed their declared criterion maxima (bet-a on all three criteria; bet-c on accountability). Therefore the alternatives cannot be robustly compared on the supplied shared scale.",
+          "panelIndex": 1,
+          "orderSeed": "de28e72290869bc4f98bb6037d3d12e2",
+          "candidateOrder": [
+            "bet-c",
+            "bet-b",
+            "bet-a"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 812,
+            "outputTokens": 193
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "Low",
+          "robustnessOrder": [
+            "bet-a",
+            "bet-c",
+            "bet-b"
+          ],
+          "rationale": "bet-b is least robust: it has a critical, high-influence unaddressed fog dependency and a material untested failure mode, creating critical unresolved exposure. Its comparative criterion scores are also below bet-a and generally below bet-c. The selected bet therefore cannot exceed Low. bet-a is most robust on the supplied scores with no fog dependency and only a limited partially tested failure mode; bet-c is next, with similarly contained failure exposure but a less consistently strong score profile than bet-a.",
+          "panelIndex": 2,
+          "orderSeed": "59e822c29d934d4e4b5c9ce16372134a",
+          "candidateOrder": [
+            "bet-b",
+            "bet-a",
+            "bet-c"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 812,
+            "outputTokens": 319
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "audit3-meta-01",
+      "judgments": [
+        {
+          "noScore": false,
+          "selectedBand": "Low",
+          "robustnessOrder": [
+            "bet-b",
+            "bet-c",
+            "bet-a"
+          ],
+          "rationale": "All three alternatives are live and have populated common comparison criteria, so no hard stop is indicated. bet-b is most robust on the weighted continuity and implementation profile, with only weak generated evidence against and the same limited, partially tested failure exposure as the field. bet-c ranks next: stronger accountability does not offset its lower continuity and implementation scores. Selected bet-a ranks last despite its stronger stated criterion scores because it carries decisive evidence against implementation sourced to module_1_trace; this decisive sourced contradiction caps the selected position at Low. There are no fog dependencies, but the shared partially tested failure mode remains unresolved.",
+          "panelIndex": 0,
+          "orderSeed": "e2734ed01cf108894252b576c1d97b07",
+          "candidateOrder": [
+            "bet-b",
+            "bet-c",
+            "bet-a"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 801,
+            "outputTokens": 462
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "Low",
+          "robustnessOrder": [
+            "bet-b",
+            "bet-c",
+            "bet-a"
+          ],
+          "rationale": "Selected bet: bet-a. All three alternatives are live and the comparison field is complete. Bet-a has the strongest nominal criterion scores, but it carries decisive sourced evidence against implementation, a material contradiction that caps its robustness at Low and places it below the alternatives without decisive contrary evidence. Bet-b is the most robust live option on the available record because it is comparatively balanced across all criteria and has only weak generated-hypothesis evidence against it. Bet-c ranks second: its implementation and accountability scores are strong, but its lower continuity score makes it less robust than bet-b. Fog exposure and failure-mode testing do not distinguish the options.",
+          "panelIndex": 1,
+          "orderSeed": "8d50db74215c3021e45e03bc8a767037",
+          "candidateOrder": [
+            "bet-c",
+            "bet-a",
+            "bet-b"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 801,
+            "outputTokens": 362
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "Low",
+          "robustnessOrder": [
+            "bet-b",
+            "bet-c",
+            "bet-a"
+          ],
+          "rationale": "bet-a is the selected bet but ranks least robust because it carries decisive, sourced evidence against its implementation criterion. Under the decision rule, that contradiction caps the selected position at Low despite bet-a's higher listed criterion scores. bet-b ranks first: it has the strongest remaining weighted score profile without material sourced adverse evidence. bet-c ranks second, with weaker continuity than bet-b but no material adverse evidence beyond a weak generated hypothesis. There are three credible live alternatives and the common comparison field is complete, so NoScore does not apply.",
+          "panelIndex": 2,
+          "orderSeed": "5e3bd0a7a9d45edd019d621d138e8be8",
+          "candidateOrder": [
+            "bet-c",
+            "bet-a",
+            "bet-b"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 801,
+            "outputTokens": 267
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "audit3-meta-02",
+      "judgments": [
+        {
+          "noScore": false,
+          "selectedBand": "Moderate",
+          "robustnessOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "rationale": "Selected bet: bet-a. It has the strongest weighted criterion profile, ahead of bet-b and bet-c, with no near-tie or weak-field flag. However, bet-a carries a high-influence (0.8) unaddressed fog dependency, so its robustness cannot be High. All three live alternatives have comparable weak generated-hypothesis evidence against and limited, partially tested failure modes; these do not reverse the ranking.",
+          "panelIndex": 0,
+          "orderSeed": "d6c8d1f9b6c10515df1d0b65447353f8",
+          "candidateOrder": [
+            "bet-a",
+            "bet-c",
+            "bet-b"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 799,
+            "outputTokens": 237
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "Moderate",
+          "robustnessOrder": [
+            "bet-b",
+            "bet-a",
+            "bet-c"
+          ],
+          "rationale": "All three alternatives are live and comparably supported, with no hard stop. bet-a has the strongest stated criterion scores but carries a high-influence unaddressed fog dependency, reducing its decision robustness relative to fog-free bet-b. bet-b retains strong implementation and has no additional fog exposure. bet-c is fog-free but has materially weaker continuity and implementation scores. The selected bet cannot be High because its material unresolved fog remains unaddressed.",
+          "panelIndex": 1,
+          "orderSeed": "f0805b75d55482cd03f3155943ac42d8",
+          "candidateOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 799,
+            "outputTokens": 422
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "Moderate",
+          "robustnessOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "rationale": "All three alternatives are live and comparably scored, with no hard stop. bet-a has the strongest weighted criterion position, led by continuity and accountability, ahead of bet-b and bet-c. However, bet-a carries a materially influential unaddressed fog dependency (0.8), so the selected position cannot be High. The weak generated implementation concern and limited partially tested failure mode apply across the field and do not reverse the ordering.",
+          "panelIndex": 2,
+          "orderSeed": "04217a2e03c32ba740a60f4526a82cd5",
+          "candidateOrder": [
+            "bet-b",
+            "bet-a",
+            "bet-c"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 799,
+            "outputTokens": 327
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "audit3-meta-03",
+      "judgments": [
+        {
+          "noScore": false,
+          "selectedBand": "Moderate",
+          "robustnessOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "rationale": "All three alternatives are live, grounded, and assessed on the same complete comparison fields; no supplied hard stop applies. bet-a is the selected bet and is marginally more robust than bet-b because it scores slightly higher on continuity, implementation, and accountability, while their evidence-against and limited partially tested failure exposure are otherwise the same. bet-c is third because its accountability advantage does not offset materially lower continuity and implementation. The flagged near tie between bet-a and bet-b prevents a High rating. Weak generated-hypothesis evidence against and limited partially tested failure modes also remain unresolved, though there is no fog exposure or decisive contradiction supplied.",
+          "panelIndex": 0,
+          "orderSeed": "1d5174f99473d4e691a837ef97cf7d21",
+          "candidateOrder": [
+            "bet-b",
+            "bet-a",
+            "bet-c"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 777,
+            "outputTokens": 259
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "Moderate",
+          "robustnessOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "rationale": "Selected bet: bet-a. It is marginally most robust on all three scored criteria relative to bet-b and materially stronger than bet-c on the heavily weighted continuity criterion. However, bet-a and bet-b are a flagged near tie and share the same weak generated counterevidence plus partially tested limited failure mode, so the selection cannot be High.",
+          "panelIndex": 1,
+          "orderSeed": "9b5d5ebb63ed5b44c767cff2a67e9c5a",
+          "candidateOrder": [
+            "bet-b",
+            "bet-c",
+            "bet-a"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 777,
+            "outputTokens": 227
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "Moderate",
+          "robustnessOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "rationale": "Selected bet: bet-a. It narrowly leads bet-b on all three criterion scores, while both share the same weak generated-hypothesis evidence against and limited, partially tested failure mode. The flagged near tie between bet-a and bet-b prevents a High rating. Bet-c is less robust overall because its substantially lower continuity score outweighs its stronger implementation and accountability scores under the stated weights.",
+          "panelIndex": 2,
+          "orderSeed": "56c25ea5a5ceaeac608083464e90c47f",
+          "candidateOrder": [
+            "bet-c",
+            "bet-b",
+            "bet-a"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 777,
+            "outputTokens": 323
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "audit3-meta-04",
+      "judgments": [
+        {
+          "noScore": false,
+          "selectedBand": "Moderate",
+          "robustnessOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "rationale": "bet-a is the most robust live alternative: it leads bet-b on continuity and accountability, with only a negligible implementation difference, and it exceeds bet-c on continuity and implementation. All three have the same weak generated implementation concern, no fog dependencies, and the same limited partially tested failure mode, so these do not differentiate the ranking. The field is explicitly flagged weak, which prevents a High rating despite the stable ordering.",
+          "panelIndex": 0,
+          "orderSeed": "ce5863f0edbdee9a5bef61e4cfed66cd",
+          "candidateOrder": [
+            "bet-b",
+            "bet-a",
+            "bet-c"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 767,
+            "outputTokens": 317
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "Moderate",
+          "robustnessOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "rationale": "bet-a is the most robust live alternative: it leads on continuity and accountability and is effectively tied with bet-b on implementation. All three have comparable weak generated-hypothesis evidence against and the same limited, partially tested failure mode, so these do not distinguish the ranking. The weak field prevents a High rating; no supplied hard stop or critical unresolved failure requires NoScore.",
+          "panelIndex": 1,
+          "orderSeed": "7d25408c8875cbf6fee0b030414de0be",
+          "candidateOrder": [
+            "bet-b",
+            "bet-c",
+            "bet-a"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 767,
+            "outputTokens": 296
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "Moderate",
+          "robustnessOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "rationale": "bet-a is the most robust live alternative on the supplied comparison field, led by materially stronger continuity and accountability despite bet-b's marginal implementation advantage. All alternatives share the same weak generated evidence against and partially tested limited failure mode, with no fog dependencies. The weak-field flag prevents a High rating.",
+          "panelIndex": 2,
+          "orderSeed": "f88d7f657fa517e33f5399e4a537e824",
+          "candidateOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 767,
+            "outputTokens": 168
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "audit3-meta-05",
+      "judgments": [
+        {
+          "noScore": false,
+          "selectedBand": "Moderate",
+          "robustnessOrder": [
+            "bet-b",
+            "bet-c",
+            "bet-a"
+          ],
+          "rationale": "Selected bet: bet-a. The comparison field is complete and has three credible live alternatives, so no hard stop applies. bet-b is most robust because it has strong continuity and implementation without material contrary evidence. bet-c follows, trading lower continuity and implementation for the strongest accountability score and only weak generated evidence against. bet-a ranks last despite its high nominal scores because it carries repeated material, traced student-observation evidence against accountability; the partially tested failure mode also remains unresolved across all options. No fog exposure is recorded, but the material evidence against the selected bet prevents a High band.",
+          "panelIndex": 0,
+          "orderSeed": "1010ef3ae2ee17f3c6fb062f3090ec6b",
+          "candidateOrder": [
+            "bet-c",
+            "bet-b",
+            "bet-a"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 840,
+            "outputTokens": 617
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "Low",
+          "robustnessOrder": [
+            "bet-b",
+            "bet-c",
+            "bet-a"
+          ],
+          "rationale": "Selected bet: bet-a. Its otherwise strong scored profile is materially weakened by sourced student-observation evidence against accountability (repeated entries share the same trace and are treated as one underlying concern, not independent corroboration). Bet-b has no comparable material counterevidence and a stable, balanced profile, making it most robust. Bet-c ranks next: its accountability strength offsets lower continuity and implementation, while carrying only weak generated counterevidence. No hard stop applies, and all three alternatives are live with common criterion coverage.",
+          "panelIndex": 1,
+          "orderSeed": "f9747bdaadf7d49126dd944da9267af6",
+          "candidateOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 840,
+            "outputTokens": 408
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "Low",
+          "robustnessOrder": [
+            "bet-b",
+            "bet-c",
+            "bet-a"
+          ],
+          "rationale": "bet-a is least robust because it alone carries material, sourced evidence against accountability (repeated entries share the same trace and do not create independent corroboration). Its higher criterion scores do not outweigh that adverse evidence under the stated evidence-dominant rule. bet-b and bet-c have the same weak generated concern and the same limited partially tested failure mode with no fog dependencies; bet-b ranks above bet-c because it is stronger on the more heavily weighted continuity and implementation criteria, while bet-c's accountability advantage does not close that gap. The selected bet therefore cannot exceed Low.",
+          "panelIndex": 2,
+          "orderSeed": "0d11287489dbdb22755873300286e948",
+          "candidateOrder": [
+            "bet-b",
+            "bet-c",
+            "bet-a"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 840,
+            "outputTokens": 446
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "audit3-meta-06",
+      "judgments": [
+        {
+          "noScore": false,
+          "selectedBand": "High",
+          "robustnessOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "rationale": "bet-a is the selected bet and is the most robust live alternative on the common weighted criteria, with a clear lead driven primarily by continuity and also leading implementation. bet-b is second: it matches bet-a on implementation but is lower on continuity and accountability. bet-c is third: its accountability advantage does not offset materially lower continuity and implementation. All three have equivalent weak generated-hypothesis evidence against and the same limited, partially tested failure mode; none has fog dependencies, and no hard stop applies. The field has three credible live alternatives and no indicated near tie or weak-field condition.",
+          "panelIndex": 0,
+          "orderSeed": "0aec968fe2916d8a1bb0f33391335b9f",
+          "candidateOrder": [
+            "bet-a",
+            "bet-c",
+            "bet-b"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 772,
+            "outputTokens": 284
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "High",
+          "robustnessOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "rationale": "bet-a is the most robust live alternative on the supplied common criteria, leading bet-b and bet-c on continuity and accountability while tying bet-b on implementation. All three alternatives have the same weak, generated-hypothesis evidence against implementation and the same limited, partially tested failure mode, so these do not differentiate the ranking. There is no stated fog exposure, no hard stop, no near-tie or weak-field flag, and the selected bet is grounded by a support trace.",
+          "panelIndex": 1,
+          "orderSeed": "52a740ec9d7b7a4375801e92834f4baa",
+          "candidateOrder": [
+            "bet-c",
+            "bet-b",
+            "bet-a"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 772,
+            "outputTokens": 269
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "High",
+          "robustnessOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "rationale": "bet-a is the most robust live alternative: it leads on the heavily weighted traced continuity criterion and is tied for strongest implementation, producing a clear overall advantage over bet-b and bet-c. All three alternatives have the same weak generated evidence against implementation, no fog dependencies, and the same limited partially tested failure mode, so these factors do not destabilize the ordering. The comparison field is complete, there are three credible live alternatives, and no hard stop applies.",
+          "panelIndex": 2,
+          "orderSeed": "e57d77dc1685ef614b0fd112b6e2aa0e",
+          "candidateOrder": [
+            "bet-a",
+            "bet-c",
+            "bet-b"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 772,
+            "outputTokens": 268
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "audit3-meta-07",
+      "judgments": [
+        {
+          "noScore": false,
+          "selectedBand": "High",
+          "robustnessOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "rationale": "bet-a is the most robust live alternative on the supplied weighted comparison, leading bet-b and bet-c overall, with especially stronger continuity and accountability. All live alternatives have the same weak generated evidence against, no fog dependencies, and the same limited partially tested failure mode, so these factors do not change the ranking. The selected bet is grounded and no hard stop is indicated.",
+          "panelIndex": 0,
+          "orderSeed": "ee630f7855d79bdd70d3851ac72d74c1",
+          "candidateOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 777,
+            "outputTokens": 297
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "High",
+          "robustnessOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "rationale": "bet-a is the selected bet and ranks most robust on the supplied common criteria, with the strongest continuity and accountability scores and no material fog exposure. bet-b ranks second through stronger implementation but lower continuity and accountability; bet-c is third. All three have the same weak generated implementation concern and the same limited, partially tested failure mode, so these do not destabilize the ordering. No hard stop is indicated, and there are three credible live alternatives with complete criterion coverage.",
+          "panelIndex": 1,
+          "orderSeed": "0955cc289669e814093dc0056c197bb2",
+          "candidateOrder": [
+            "bet-c",
+            "bet-b",
+            "bet-a"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 777,
+            "outputTokens": 456
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "Moderate",
+          "robustnessOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "rationale": "bet-a is the selected and most robust live alternative on the supplied weighted criterion scores, leading bet-b through stronger continuity and accountability despite weaker implementation. All three live alternatives have grounded support traces, identical weak generated-hypothesis evidence against, no fog dependencies, and the same limited partially tested failure mode. The selection is not High because the bet-a versus bet-b advantage is modest and the shared partially tested failure exposure remains unresolved.",
+          "panelIndex": 2,
+          "orderSeed": "e47dccad58f9317d9e742f05e790c501",
+          "candidateOrder": [
+            "bet-a",
+            "bet-c",
+            "bet-b"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 777,
+            "outputTokens": 636
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "audit3-meta-08",
+      "judgments": [
+        {
+          "noScore": false,
+          "selectedBand": "High",
+          "robustnessOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "rationale": "bet-a is the selected bet and is most robust on the complete common field: it leads on continuity and implementation and has the highest weighted overall score (0.737 versus 0.640 for bet-b and 0.575 for bet-c). All three live alternatives have the same weak generated-hypothesis evidence against, no fog dependencies, and the same limited partially tested failure mode, so these factors do not destabilize the ranking. No hard stop applies, and the field contains three credible live alternatives.",
+          "panelIndex": 0,
+          "orderSeed": "189cbbf599ced0dde9240c6e74218988",
+          "candidateOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 787,
+            "outputTokens": 302
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "High",
+          "robustnessOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "rationale": "All three alternatives are live and share complete scores for every common criterion; no hard stop is indicated. bet-a is the selected bet and is most robust because it leads bet-b on all three criteria and exceeds bet-c on the more heavily weighted continuity and implementation criteria, while sharing the same limited, partially tested failure mode and weak generated-hypothesis evidence against. bet-b ranks second on stronger continuity and implementation than bet-c, despite bet-c's accountability advantage. There is no fog exposure, near-tie, weak-field flag, decisive contradiction, or critical unresolved failure shown in the matrix.",
+          "panelIndex": 1,
+          "orderSeed": "c0336c790fbede813102633e761c1151",
+          "candidateOrder": [
+            "bet-b",
+            "bet-a",
+            "bet-c"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 787,
+            "outputTokens": 452
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "High",
+          "robustnessOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "rationale": "Three credible live alternatives share complete comparison fields. bet-a is the selected bet and is robustly ahead of both alternatives: it exceeds bet-b on every criterion, and its continuity and implementation advantages over bet-c outweigh bet-c’s accountability advantage across the stated weight bounds. The only adverse evidence is uniformly weak and generated, with no fog dependencies or critical untested failure mode. bet-b and bet-c are less stably separated, but that does not undermine bet-a’s leading position.",
+          "panelIndex": 2,
+          "orderSeed": "4be5ece88f18b53172d9fb8979544bea",
+          "candidateOrder": [
+            "bet-c",
+            "bet-b",
+            "bet-a"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 787,
+            "outputTokens": 590
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "audit3-meta-09",
+      "judgments": [
+        {
+          "noScore": false,
+          "selectedBand": "Low",
+          "robustnessOrder": [
+            "bet-b",
+            "bet-c",
+            "bet-a"
+          ],
+          "rationale": "bet-a is an ungrounded generated selection, which caps its robustness at Low. All live options have equivalent weak generated evidence against, no fog dependencies, and equivalent partially tested limited failure exposure. bet-b and bet-c have support traces; bet-b ranks above bet-c on the supplied comparative scores, while bet-a ranks last due to its lack of grounded support.",
+          "panelIndex": 0,
+          "orderSeed": "577ee40bcdb87f6b66fdee21ba62a255",
+          "candidateOrder": [
+            "bet-a",
+            "bet-c",
+            "bet-b"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 772,
+            "outputTokens": 585
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "Low",
+          "robustnessOrder": [
+            "bet-b",
+            "bet-c",
+            "bet-a"
+          ],
+          "rationale": "All three alternatives are live and share complete criterion fields; no stated hard stop applies. bet-b is most robust on the weighted comparison, with stronger continuity and implementation than bet-c, while bet-c ranks next on its supported but lower overall profile. bet-a has the highest modeled scores but is a generated selection with no grounded support traces; this is an ungrounded generated selection and therefore cannot exceed Low robustness. Shared weak generated-hypothesis evidence against and partially tested limited failure modes do not distinguish the alternatives.",
+          "panelIndex": 1,
+          "orderSeed": "a1eff99f2c88ef94339d4e913f0748b6",
+          "candidateOrder": [
+            "bet-a",
+            "bet-c",
+            "bet-b"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 772,
+            "outputTokens": 348
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "Low",
+          "robustnessOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "rationale": "All three alternatives are live and share a complete comparison field, with no stated hard stop. On the supplied criterion scores and weights, bet-a ranks ahead of bet-b, then bet-c. However, the selected bet is generated and has no grounded support traces, while its apparent advantage is not independently substantiated. Under the rule for an ungrounded generated selection, the recommendation cannot exceed Low.",
+          "panelIndex": 2,
+          "orderSeed": "e29f248b302dbb3f5aa8b4abc0653e47",
+          "candidateOrder": [
+            "bet-b",
+            "bet-c",
+            "bet-a"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 772,
+            "outputTokens": 310
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "audit3-meta-10",
+      "judgments": [
+        {
+          "noScore": false,
+          "selectedBand": "Low",
+          "robustnessOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "rationale": "Selected bet bet-a ranks first on the supplied criterion scores, ahead of bet-b and bet-c, with no near-tie or fog dependency shown. However, bet-a retains a catastrophic failure mode that is only partially tested. This critical unresolved failure exposure caps robustness at Low despite its score lead. All three alternatives are live and grounded; no hard stop applies.",
+          "panelIndex": 0,
+          "orderSeed": "ed50fd3c673ab27eca5e370d00c7b198",
+          "candidateOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 797,
+            "outputTokens": 256
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "Low",
+          "robustnessOrder": [
+            "bet-b",
+            "bet-a",
+            "bet-c"
+          ],
+          "rationale": "Selected bet: bet-a. All three alternatives are live and the comparison field is complete. Bet-a leads on criterion scores, but its catastrophic failure mode is only partially tested, a critical unresolved exposure that caps the selected position at Low. Bet-b has lower scored upside but avoids that catastrophic partially tested failure mode, making it more robust. Bet-c trails on the weighted continuity and implementation profile despite stronger accountability.",
+          "panelIndex": 1,
+          "orderSeed": "c2aac4602281070250aede379cc610ca",
+          "candidateOrder": [
+            "bet-a",
+            "bet-b",
+            "bet-c"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 797,
+            "outputTokens": 461
+          }
+        },
+        {
+          "noScore": false,
+          "selectedBand": "Low",
+          "robustnessOrder": [
+            "bet-b",
+            "bet-a",
+            "bet-c"
+          ],
+          "rationale": "All three alternatives are live and share complete criterion coverage, so no hard stop applies. bet-b is the most robust live option because it has strong continuity and implementation without bet-a’s catastrophic partially tested failure mode. bet-a’s higher scored profile is materially constrained by that catastrophic unresolved exposure, so the selected bet cannot exceed Low. bet-c ranks last on the weighted scored field despite stronger accountability.",
+          "panelIndex": 2,
+          "orderSeed": "9bc1c47d90a03731ba109c77af54d1e2",
+          "candidateOrder": [
+            "bet-a",
+            "bet-c",
+            "bet-b"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 797,
+            "outputTokens": 418
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "audit3-meta-11",
+      "judgments": [
+        {
+          "noScore": true,
+          "selectedBand": "NoScore",
+          "robustnessOrder": [],
+          "rationale": "NoScore: the common comparison field is incomplete because hardStops.coverageResolved is false. Under the stated rule, this is a hard stop regardless of the otherwise live alternatives.",
+          "panelIndex": 0,
+          "orderSeed": "f6e823b507f9671907350411d021186c",
+          "candidateOrder": [
+            "bet-a",
+            "bet-c",
+            "bet-b"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 772,
+            "outputTokens": 88
+          }
+        },
+        {
+          "noScore": true,
+          "selectedBand": "NoScore",
+          "robustnessOrder": [],
+          "rationale": "NoScore: coverageResolved is false, leaving the common comparison field incomplete. Under the stated rule, this is a hard stop regardless of the candidate scores or live-alternative count.",
+          "panelIndex": 1,
+          "orderSeed": "2b3c066a5dcd661c17795783db9aeba5",
+          "candidateOrder": [
+            "bet-a",
+            "bet-c",
+            "bet-b"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 772,
+            "outputTokens": 103
+          }
+        },
+        {
+          "noScore": true,
+          "selectedBand": "NoScore",
+          "robustnessOrder": [],
+          "rationale": "Hard stop: coverageResolved is false. The common comparison field is incomplete, so the live alternatives cannot be robustly ranked.",
+          "panelIndex": 2,
+          "orderSeed": "2470de5ea73e2dd04d66d09f07197f7b",
+          "candidateOrder": [
+            "bet-b",
+            "bet-a",
+            "bet-c"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 772,
+            "outputTokens": 78
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "audit3-meta-12",
+      "judgments": [
+        {
+          "noScore": true,
+          "selectedBand": "NoScore",
+          "robustnessOrder": [],
+          "rationale": "NoScore: the matrix contains only one live alternative (bet-a). Fewer than two credible live alternatives prevents a robustness ranking, regardless of the selected bet’s individual support.",
+          "panelIndex": 0,
+          "orderSeed": "289a056c3ee2b4cf00afa695df53b65e",
+          "candidateOrder": [
+            "bet-a"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 525,
+            "outputTokens": 103
+          }
+        },
+        {
+          "noScore": true,
+          "selectedBand": "NoScore",
+          "robustnessOrder": [],
+          "rationale": "NoScore: the matrix contains only one live alternative. Fewer than two credible live alternatives prevents a robustness comparison.",
+          "panelIndex": 1,
+          "orderSeed": "e63e9fd10c22fc157dc6c91767e4d2b6",
+          "candidateOrder": [
+            "bet-a"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 525,
+            "outputTokens": 91
+          }
+        },
+        {
+          "noScore": true,
+          "selectedBand": "NoScore",
+          "robustnessOrder": [],
+          "rationale": "Hard stop: the matrix contains only one credible live alternative (bet-a). With fewer than two live alternatives, decision robustness cannot be ranked or scored.",
+          "panelIndex": 2,
+          "orderSeed": "91d82da28ed6f3e5a39eef442da7c151",
+          "candidateOrder": [
+            "bet-a"
+          ],
+          "model": "gpt-5.6-terra",
+          "usage": {
+            "inputTokens": 525,
+            "outputTokens": 101
+          }
+        }
+      ]
+    }
+  ],
+  "usage": {
+    "inputTokens": 56835,
+    "outputTokens": 25434
+  }
+}

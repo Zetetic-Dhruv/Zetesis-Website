@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "studentUsageCharged": false,
+  "model": "gpt-5.6-terra",
+  "acceptedJudgmentCallsAcrossAllPanels": 720,
+  "rejectedSchemaCalls": 1,
+  "inputTokensAcrossAcceptedCalls": 532320,
+  "outputTokensAcrossAcceptedCalls": 243498,
+  "currentFrozenPanelCalls": 216,
+  "currentFrozenPanelInputTokens": 169749,
+  "currentFrozenPanelOutputTokens": 75098,
+  "estimatedCostUsd": null,
+  "note": "Exact usage is retained in the accepted panel artifacts. One rejected schema call returned no retained usage object. No pricing assumption is embedded in the calibration artifact."
+}

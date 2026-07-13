@@ -43,8 +43,10 @@ export const DEFAULT_MODULE2_STATE = Object.freeze({
     evaluationIncomplete: false,
     incompleteReason: '',
     coverage: { status: 'unresolved', gap: '', resolution: '' },
-    confidence: null,
-    scoreTable: [],
+    comparisonScores: {
+      basis: 'weighted_criterion_comparison',
+      entries: [],
+    },
   },
   locks: {
     frameConfirmation: '',
@@ -59,7 +61,6 @@ export const DEFAULT_MODULE2_STATE = Object.freeze({
   package: {
     currentPreview: null,
     savedVersionIds: [],
-    confidenceConfigVersion: '',
     generatedAt: '',
   },
   updatedAt: '',
@@ -112,7 +113,13 @@ export function normalizeModule2State(input) {
   state.ranking.orderedBetIds = cleanStringArray(state.ranking.orderedBetIds, 50);
   state.ranking.dominanceRelations = cleanObjectArray(state.ranking.dominanceRelations, 100);
   state.ranking.pairwiseLines = cleanStringArray(state.ranking.pairwiseLines, 100);
-  state.ranking.scoreTable = cleanObjectArray(state.ranking.scoreTable, 50);
+  state.ranking.comparisonScores.basis = 'weighted_criterion_comparison';
+  state.ranking.comparisonScores.entries = cleanObjectArray(state.ranking.comparisonScores.entries, 50).map((entry) => ({
+    betId: cleanText(entry.betId || entry.id, 120),
+    weightedResistance: finiteNumber(entry.weightedResistance ?? entry.resistance, 0),
+    weightedSupport: finiteNumber(entry.weightedSupport ?? entry.support, 0),
+    comparisonValue: finiteNumber(entry.comparisonValue ?? entry.score, 0),
+  })).filter((entry) => entry.betId);
   state.ranking.nearTie = Boolean(state.ranking.nearTie);
   state.ranking.weakField = Boolean(state.ranking.weakField);
   state.ranking.evaluationIncomplete = Boolean(state.ranking.evaluationIncomplete);

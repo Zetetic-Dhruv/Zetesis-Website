@@ -290,7 +290,11 @@ async function runSuite() {
   const evaluations = await llm('m2_evaluate_bets', {});
   assert(evaluations.workflowKey === 'module_2', 'bet evaluation is recorded under Module 2');
   assert(evaluations.state.ranking.orderedBetIds.length >= 2, 'bet evaluation persists a deterministic live ranking');
-  assert(evaluations.state.ranking.confidence === null, 'bet evaluation cannot emit confidence');
+  assert(!('confidence' in evaluations.state.ranking), 'bet evaluation cannot emit confidence');
+  assert(
+    evaluations.state.ranking.comparisonScores?.basis === 'weighted_criterion_comparison',
+    'bet evaluation labels ordinary comparison values explicitly'
+  );
   assert(evaluations.state.locks.selectedBetId === '', 'bet evaluation cannot choose the final bet');
 
   const module2PromptTrace = await getJson(`/api/instructor/students/${reg.user.id}/prompts?workflow=module_2`, adminHeaders);

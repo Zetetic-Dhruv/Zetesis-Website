@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "status": "candidate_pending_holdout_and_human_audit",
+  "selected": {
+    "config": {
+      "version": "confidence-config-v1-candidate",
+      "status": "candidate",
+      "policyVersion": "confidence-policy-v2",
+      "exponents": {
+        "evidenceResistance": 4,
+        "rankingStability": 2,
+        "fogIndependence": 1.5,
+        "failureCoverage": 0.5
+      },
+      "thresholds": {
+        "moderate": 30,
+        "high": 75
+      },
+      "perturbations": 1024,
+      "nearTieMargin": 0.05,
+      "tieTolerance": 1e-9,
+      "floor": 0.01,
+      "checksum": "aabb90dbfd9b795dcf1648537ce669077d1a21b7af648224cb22e5101e2f961f"
+    },
+    "metrics": {
+      "pairwiseAgreement": 0.8863636363636364,
+      "weightedKappa": 0.8112324492979719,
+      "severeDisagreements": 0,
+      "pairwiseTotal": 132
+    },
+    "complexity": 8
+  },
+  "searchedAt": "2026-07-13T22:06:51.655Z"
+}
