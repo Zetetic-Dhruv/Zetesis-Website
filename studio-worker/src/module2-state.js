@@ -27,6 +27,8 @@ export const DEFAULT_MODULE2_STATE = Object.freeze({
       evidenceLines: [],
       humanConfirmed: false,
     },
+    possibleDuplicates: [],
+    optionGenerationIssues: [],
     mergeChoice: 'merge',
     corrections: [],
   },
@@ -38,8 +40,11 @@ export const DEFAULT_MODULE2_STATE = Object.freeze({
     pairwiseLines: [],
     nearTie: false,
     weakField: false,
+    evaluationIncomplete: false,
+    incompleteReason: '',
     coverage: { status: 'unresolved', gap: '', resolution: '' },
     confidence: null,
+    scoreTable: [],
   },
   locks: {
     frameConfirmation: '',
@@ -75,6 +80,8 @@ export function normalizeModule2State(input) {
   state.ground.corrections = cleanObjectArray(state.ground.corrections, 50);
   state.ground.fogMap = cleanObjectArray(state.ground.fogMap, 100);
   state.ground.voiceDisagreement.evidenceLines = cleanStringArray(state.ground.voiceDisagreement.evidenceLines, 30);
+  state.ground.possibleDuplicates = cleanObjectArray(state.ground.possibleDuplicates, 20);
+  state.ground.optionGenerationIssues = cleanObjectArray(state.ground.optionGenerationIssues, 30);
   state.ground.mergeChoice = oneOf(state.ground.mergeChoice, ['merge', 'replace', 'pick'], 'merge');
 
   state.bets = cleanObjectArray(state.bets, 50).map((bet, index) => ({
@@ -88,6 +95,9 @@ export function normalizeModule2State(input) {
     evidenceAgainst: cleanObjectArray(bet.evidenceAgainst, 50),
     failureModes: cleanObjectArray(bet.failureModes || bet.untestedFailureModes, 50),
     criteria: cleanObjectArray(bet.criteria || bet.criterionEvaluations, 50),
+    frameBasisTraceIds: cleanStringArray(bet.frameBasisTraceIds, 30),
+    whyDistinct: cleanText(bet.whyDistinct, 1000),
+    evaluationStatus: oneOf(bet.evaluationStatus, ['complete', 'incomplete', 'not_evaluated'], 'not_evaluated'),
   }));
 
   state.weights = cleanObjectArray(state.weights, 30).map((weight) => ({
@@ -102,8 +112,10 @@ export function normalizeModule2State(input) {
   state.ranking.orderedBetIds = cleanStringArray(state.ranking.orderedBetIds, 50);
   state.ranking.dominanceRelations = cleanObjectArray(state.ranking.dominanceRelations, 100);
   state.ranking.pairwiseLines = cleanStringArray(state.ranking.pairwiseLines, 100);
+  state.ranking.scoreTable = cleanObjectArray(state.ranking.scoreTable, 50);
   state.ranking.nearTie = Boolean(state.ranking.nearTie);
   state.ranking.weakField = Boolean(state.ranking.weakField);
+  state.ranking.evaluationIncomplete = Boolean(state.ranking.evaluationIncomplete);
   state.locks.heldConstant = cleanStringArray(state.locks.heldConstant, 50);
   state.package.savedVersionIds = cleanStringArray(state.package.savedVersionIds, 100);
   state.updatedAt = cleanText(state.updatedAt, 80);
