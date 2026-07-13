@@ -4,6 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import {
   buildModule1InheritanceSnapshot,
+  combineGroundSolutions,
   normalizeModule2State,
   parseStoredModule2State,
 } from '../src/module2-state.js';
@@ -39,6 +40,60 @@ assert(Array.isArray(malformed.locks.heldConstant), 'normalizer rejects malforme
 assertThrows(
   () => parseStoredModule2State('{not-json'),
   'persisted malformed state is rejected instead of rebuilding inheritance'
+);
+const mergedSolutions = combineGroundSolutions({
+  inheritedSolutions: [{ id: 'inherited-a', name: 'Preserve partner continuity' }],
+  incomingSolutions: [
+    { id: 'duplicate-a', name: 'Preserve partner continuity' },
+    { id: 'student-b', name: 'Add a shared operations role' },
+  ],
+  choice: 'merge',
+});
+assert(mergedSolutions.length === 2, 'merge keeps inherited and new solutions without exact duplicates');
+assert(
+  combineGroundSolutions({
+    incomingSolutions: [
+      { id: 'case-a', name: 'Preserve partner continuity' },
+      { id: 'case-b', name: 'Preserve Partner Continuity.' },
+    ],
+  }).length === 2,
+  'punctuation and case variants remain live for near-duplicate review'
+);
+const updatedIdentity = combineGroundSolutions({
+  inheritedSolutions: [{ id: 'same-id', name: 'Original wording' }],
+  incomingSolutions: [{ id: 'same-id', name: 'Student update' }],
+});
+assert(
+  updatedIdentity.length === 1 && updatedIdentity[0].name === 'Student update',
+  'a repeated explicit ID updates one stable solution identity'
+);
+const identityIntoDuplicate = combineGroundSolutions({
+  inheritedSolutions: [
+    { id: 'option-a', name: 'Alpha' },
+    { id: 'option-b', name: 'Beta' },
+  ],
+  incomingSolutions: [{ id: 'option-a', name: 'Beta' }],
+});
+assert(
+  identityIntoDuplicate.length === 1 && identityIntoDuplicate[0].id === 'option-a',
+  'an explicit-ID update into existing content collapses the other exact duplicate'
+);
+assert(
+  combineGroundSolutions({
+    inheritedSolutions: mergedSolutions,
+    incomingSolutions: [{ id: 'replacement', name: 'Use an external service' }],
+    choice: 'replace',
+  }).map((item) => item.id).join(',') === 'replacement',
+  'replace deliberately removes inherited solutions from the Module 2 set'
+);
+assert(
+  combineGroundSolutions({
+    inheritedSolutions: mergedSolutions,
+    incomingSolutions: [{ id: 'student-c', name: 'Sequence the work' }],
+    choice: 'pick',
+    pickedIds: ['student-c'],
+  }).map((item) => item.id).join(',') === 'student-c',
+  'pick retains only explicitly selected solutions'
 );
 assert(isActiveAdminMembership({
   role: 'admin',

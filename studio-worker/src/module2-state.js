@@ -13,7 +13,9 @@ export const DEFAULT_MODULE2_STATE = Object.freeze({
     inheritedSolutions: [],
   },
   ground: {
+    problemSeed: '',
     rawReply: '',
+    solutionPaste: '',
     substantiveLines: [],
     relevance: { status: 'unresolved', reason: '', matchedTraceIds: [] },
     frameComparison: { status: 'unresolved', inheritedFrame: '', groundedFrame: '', reason: '' },
@@ -174,6 +176,24 @@ export function buildModule1InheritanceSnapshot(module1State, source = {}) {
   };
 }
 
+export function combineGroundSolutions({
+  inheritedSolutions = [],
+  currentBets = [],
+  incomingSolutions = [],
+  choice = 'merge',
+  pickedIds = [],
+} = {}) {
+  const inherited = normalizeSolutions(inheritedSolutions, 'inherited');
+  const current = normalizeSolutions(currentBets, 'student');
+  const incoming = normalizeSolutions(incomingSolutions, 'student');
+  const mode = oneOf(choice, ['merge', 'replace', 'pick'], 'merge');
+  const pool = mode === 'replace'
+    ? incoming
+    : uniqueSolutions([...inherited, ...current, ...incoming]);
+  const picked = new Set(cleanStringArray(pickedIds, 100));
+  return mode === 'pick' ? pool.filter((solution) => picked.has(solution.id)) : pool;
+}
+
 function mergeKnown(target, source) {
   if (!source || typeof source !== 'object' || Array.isArray(source)) return;
   for (const key of Object.keys(target)) {
@@ -194,6 +214,68 @@ function cleanObjectArray(value, limit) {
   return Array.isArray(value)
     ? value.filter((item) => item && typeof item === 'object' && !Array.isArray(item)).slice(0, limit)
     : [];
+}
+
+function normalizeSolutions(solutions, fallbackOrigin) {
+  return (Array.isArray(solutions) ? solutions : [])
+    .slice(0, 50)
+    .map((solution) => {
+      const object = typeof solution === 'string' ? { name: solution } : solution || {};
+      const name = cleanText(object.name || object.title || object.text, 200);
+      const description = cleanText(object.description || object.detail, 3000);
+      const identityText = `${name}\u0000${description}`;
+      const id = cleanText(object.id, 120)
+        || `bet-${slug(name || description) || 'option'}-${fingerprint(identityText)}`;
+      return {
+        id,
+        name,
+        description,
+        origin: oneOf(object.origin, ['inherited', 'student', 'generated'], fallbackOrigin),
+        provisional: Boolean(object.provisional || object.origin === 'generated'),
+        liveStatus: oneOf(object.liveStatus, ['live', 'rejected', 'dominated', 'duplicate', 'strawman'], 'live'),
+        evidenceFor: cleanObjectArray(object.evidenceFor, 50),
+        evidenceAgainst: cleanObjectArray(object.evidenceAgainst, 50),
+        failureModes: cleanObjectArray(object.failureModes || object.untestedFailureModes, 50),
+        criteria: cleanObjectArray(object.criteria || object.criterionEvaluations, 50),
+      };
+    })
+    .filter((solution) => solution.name || solution.description);
+}
+
+function uniqueSolutions(solutions) {
+  const latestById = new Map();
+  solutions.forEach((solution, sequence) => {
+    latestById.set(solution.id, { solution, sequence });
+  });
+  const latestByContent = new Map();
+  for (const record of latestById.values()) {
+    const signature = exactSolutionSignature(record.solution);
+    const previous = latestByContent.get(signature);
+    if (!previous || record.sequence > previous.sequence) latestByContent.set(signature, record);
+  }
+  return [...latestByContent.values()]
+    .sort((a, b) => a.sequence - b.sequence)
+    .map((record) => record.solution);
+}
+
+function exactSolutionSignature(solution) {
+  return JSON.stringify([
+    solution.name.trim().replace(/\s+/g, ' '),
+    solution.description.trim().replace(/\s+/g, ' '),
+  ]);
+}
+
+function slug(value) {
+  return cleanText(value, 80).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
+function fingerprint(value) {
+  let hash = 2166136261;
+  for (const character of value) {
+    hash ^= character.charCodeAt(0);
+    hash = Math.imul(hash, 16777619);
+  }
+  return (hash >>> 0).toString(36);
 }
 
 function cleanStringArray(value, limit) {

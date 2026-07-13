@@ -204,6 +204,15 @@ async function runSuite() {
   const loadedModule2 = await getJson('/api/studio/modules/module-2/workspace', authHeaders);
   assert(loadedModule2.state.bets[0].id === 'bet-continuity', 'loads persisted Module 2 bet');
   assert(loadedModule2.workspace.current_step === 'board', 'loads persisted Module 2 step');
+  const groundedModule2 = await postJson('/api/studio/modules/module-2/ground', {
+    rawReply: 'Bethany confirmed that continuity and implementation capacity both matter.',
+    solutionPaste: 'Create a shared operations role',
+    mergeChoice: 'merge',
+  }, authHeaders);
+  assert(/continuity and implementation capacity/i.test(groundedModule2.state.ground.rawReply), 'GROUND stores the pasted reply');
+  assert(groundedModule2.state.bets.length === 2, 'GROUND merges a new solution without replacing the current set');
+  const nullGround = await postJson('/api/studio/modules/module-2/ground', null, authHeaders);
+  assert(nullGround.ok === true, 'GROUND normalizes a null JSON body without throwing');
   const tamperedModule2 = await putJson('/api/studio/modules/module-2/workspace', {
     currentStep: 'board',
     state: {
@@ -336,6 +345,13 @@ async function runSuite() {
   assert(versions.versions.length === 1, 'student can list saved versions');
   const pdfResponse = await fetch(`${BASE_URL}/api/studio/report/versions/${version.version.id}/pdf`, { headers: authHeaders });
   assert(pdfResponse.ok && pdfResponse.headers.get('content-type')?.includes('application/pdf'), 'student can download saved PDF');
+
+  const refreshedInheritance = await postJson('/api/studio/modules/module-2/inheritance/refresh', {}, authHeaders);
+  assert(refreshedInheritance.inheritance.sourceType === 'saved_version', 'explicit refresh prefers the latest saved Module 1 version');
+  assert(refreshedInheritance.inheritance.sourceVersionId === version.version.id, 'explicit refresh records the inherited Module 1 version');
+  assert(/relationship-continuity problem/i.test(refreshedInheritance.inheritance.frame), 'explicit refresh carries the approved Module 1 frame');
+  const module1AfterRefresh = await getJson('/api/studio/workspace', authHeaders);
+  assert(module1AfterRefresh.state.finalReport.document?.title === 'Bethany House Question Brief', 'inheritance refresh does not mutate Module 1');
 
   const instructorStudents = await getJson('/api/instructor/classes/class_bethany_house_2026/students', adminHeaders);
   assert((instructorStudents.students || []).some((student) => student.email === EMAIL), 'instructor sees registered student card');

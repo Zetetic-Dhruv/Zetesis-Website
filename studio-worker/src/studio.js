@@ -9,6 +9,7 @@ import {
   DEFAULT_MODULE2_STATE,
   MODULE2_KEY,
   buildModule1InheritanceSnapshot,
+  combineGroundSolutions,
   normalizeModule2State,
   parseStoredModule2State,
 } from './module2-state.js';
@@ -221,6 +222,18 @@ async function handleApi(request, env, pathname) {
       const ctx = await getStudentContext(env, auth.user.id);
       if (!ctx.ok) return json({ error: ctx.error }, ctx.status, request);
       return await handleSaveModule2Workspace(request, env, auth.user, ctx.membership);
+    }
+
+    if (request.method === 'POST' && pathname === '/api/studio/modules/module-2/inheritance/refresh') {
+      const ctx = await getStudentContext(env, auth.user.id);
+      if (!ctx.ok) return json({ error: ctx.error }, ctx.status, request);
+      return handleRefreshModule2Inheritance(request, env, auth.user, ctx.membership);
+    }
+
+    if (request.method === 'POST' && pathname === '/api/studio/modules/module-2/ground') {
+      const ctx = await getStudentContext(env, auth.user.id);
+      if (!ctx.ok) return json({ error: ctx.error }, ctx.status, request);
+      return handleApplyModule2Ground(request, env, auth.user, ctx.membership);
     }
 
     if (request.method === 'PUT' && pathname === '/api/studio/workspace') {
@@ -3717,6 +3730,71 @@ async function handleSaveModule2Workspace(request, env, user, membership) {
   }, 200, request);
 }
 
+async function handleRefreshModule2Inheritance(request, env, user, membership) {
+  const module1 = await loadWorkspaceBundle(env, user.id, membership);
+  if (!module1.workspace) return json({ error: 'Workspace not found.' }, 404, request);
+  const module2 = await loadModule2WorkspaceBundle(env, user.id, membership);
+  const state = normalizeModule2State(module2.state);
+  state.inheritance = await resolveModule1Inheritance(env, module1, user.id, membership);
+  state.updatedAt = new Date().toISOString();
+  await persistModule2State(env, module1.workspace.id, user.id, state, module2.workspace.current_step, module2.workspace.module_status);
+  await audit(env, module1.workspace.id, user.id, 'module2_inheritance_refreshed', {
+    workflowKey: MODULE2_KEY,
+    sourceType: state.inheritance.sourceType,
+    sourceVersionId: state.inheritance.sourceVersionId,
+  });
+  return json({ ok: true, inheritance: state.inheritance, state }, 200, request);
+}
+
+async function handleApplyModule2Ground(request, env, user, membership) {
+  const body = await readJson(request);
+  const bundle = await loadModule2WorkspaceBundle(env, user.id, membership);
+  if (!bundle.workspace) return json({ error: 'Workspace not found.' }, 404, request);
+  const state = normalizeModule2State(bundle.state);
+  const solutionPaste = cleanString(body.solutionPaste, 12000);
+  const incomingSolutions = Array.isArray(body.solutions) && body.solutions.length
+    ? body.solutions
+    : splitAtomic(solutionPaste).map((name) => ({ name, description: '' }));
+
+  state.ground.problemSeed = cleanString(body.problemSeed ?? state.ground.problemSeed, 4000);
+  state.ground.rawReply = cleanString(body.rawReply ?? state.ground.rawReply, 30000);
+  state.ground.solutionPaste = solutionPaste || state.ground.solutionPaste;
+  state.ground.mergeChoice = ['merge', 'replace', 'pick'].includes(body.mergeChoice)
+    ? body.mergeChoice
+    : state.ground.mergeChoice;
+  state.bets = combineGroundSolutions({
+    inheritedSolutions: state.inheritance.inheritedSolutions,
+    currentBets: state.bets,
+    incomingSolutions,
+    choice: state.ground.mergeChoice,
+    pickedIds: body.pickedIds,
+  });
+  state.updatedAt = new Date().toISOString();
+
+  await persistModule2State(env, bundle.workspace.id, user.id, state, 'ground', 'draft');
+  await audit(env, bundle.workspace.id, user.id, 'module2_ground_applied', {
+    workflowKey: MODULE2_KEY,
+    mergeChoice: state.ground.mergeChoice,
+    betCount: state.bets.length,
+    hasReply: Boolean(state.ground.rawReply),
+  });
+  return json({ ok: true, state, currentStep: 'ground' }, 200, request);
+}
+
+async function persistModule2State(env, workspaceId, userId, state, currentStep, status) {
+  await env.STUDIO_DB.prepare(
+    `INSERT INTO workspace_module_states (
+      workspace_id, module_key, state_json, current_step, status, updated_by, updated_at
+    ) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
+    ON CONFLICT(workspace_id, module_key) DO UPDATE SET
+      state_json = excluded.state_json,
+      current_step = excluded.current_step,
+      status = excluded.status,
+      updated_by = excluded.updated_by,
+      updated_at = excluded.updated_at`
+  ).bind(workspaceId, MODULE2_KEY, JSON.stringify(state), currentStep, status, userId).run();
+}
+
 async function resolveModule1Inheritance(env, module1, userId, membership) {
   const saved = await env.STUDIO_DB.prepare(
     `SELECT id, state_json, created_at
@@ -3816,7 +3894,8 @@ function deepMerge(target, source) {
 
 async function readJson(request) {
   try {
-    return await request.json();
+    const value = await request.json();
+    return value && typeof value === 'object' && !Array.isArray(value) ? value : {};
   } catch (_) {
     return {};
   }
