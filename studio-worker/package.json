@@ -6,6 +6,7 @@
     "deploy": "wrangler deploy",
     "migrate:local": "wrangler d1 migrations apply zetesis_decision_manifold_studio --local",
     "migrate:remote": "wrangler d1 migrations apply zetesis_decision_manifold_studio --remote",
+    "test:module2-baseline": "node test/module2-baseline.mjs",
     "test:offline": "node test/local-offline-smoke.mjs",
     "test:pdf": "python3 test/pdf_smoke.py"
   },

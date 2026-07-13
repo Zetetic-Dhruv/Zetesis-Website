@@ -1,0 +1,82 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "id": "full_saved_version",
+      "sourceType": "saved_version",
+      "sourceVersionId": "report-version-7",
+      "state": {
+        "oneSentence": {
+          "reframeText": "The visible staffing gap may also be a relationship-continuity risk.",
+          "status": "approved"
+        },
+        "items": [
+          {
+            "id": "trace-relationship-memory",
+            "rawText": "The Executive Assistant seat may carry relationship memory across partner contacts.",
+            "bucket": "UK",
+            "valueTag": "High",
+            "selectedForBrief": true,
+            "sourceType": "course_trace",
+            "evidenceIds": ["course_ea_25_relationships"]
+          },
+          {
+            "id": "trace-public-count",
+            "rawText": "Bethany House serves more than 100 women and children each year.",
+            "bucket": "KK",
+            "valueTag": "High",
+            "selectedForBrief": true,
+            "sourceType": "course_trace",
+            "evidenceIds": ["course_100_people"]
+          }
+        ]
+      },
+      "expected": {
+        "entryState": "full",
+        "frame": "The visible staffing gap may also be a relationship-continuity risk.",
+        "traceIds": ["trace-relationship-memory"],
+        "solutionCount": 0
+      }
+    },
+    {
+      "id": "partial_current_draft",
+      "sourceType": "current_draft",
+      "sourceVersionId": "",
+      "state": {
+        "oneSentence": {
+          "reframeText": "",
+          "status": "draft"
+        },
+        "items": [
+          {
+            "id": "trace-board-question",
+            "rawText": "Who must approve a staffing change?",
+            "bucket": "KU",
+            "valueTag": "High",
+            "selectedForBrief": true,
+            "sourceType": "question_for_bethany",
+            "evidenceIds": []
+          }
+        ]
+      },
+      "expected": {
+        "entryState": "partial",
+        "frame": "",
+        "traceIds": ["trace-board-question"],
+        "solutionCount": 0
+      }
+    },
+    {
+      "id": "absent",
+      "sourceType": "absent",
+      "sourceVersionId": "",
+      "state": {},
+      "expected": {
+        "entryState": "fresh",
+        "frame": "",
+        "traceIds": [],
+        "solutionCount": 0
+      }
+    }
+  ]
+}
