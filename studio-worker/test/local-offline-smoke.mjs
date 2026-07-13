@@ -102,10 +102,10 @@ async function startWorker() {
 async function runSuite() {
   const html = await fetchText('/studio');
   assert(html.includes('Decision Manifold Studio'), 'serves studio HTML');
-  assert(html.includes('Gatekeepers'), 'serves gatekeeper step');
-  assert(html.includes('Approve Sentence'), 'serves sentence approval control');
+  assert(html.includes('Consequence Check'), 'serves consequence-check step');
+  assert(html.includes('Approve working read'), 'serves working-read approval control');
   assert(html.includes('Download PDF'), 'serves PDF download control');
-  assert(html.includes('Generate PDF'), 'serves PDF generation control');
+  assert(html.includes('Generate Brief PDF'), 'serves PDF generation control');
   assert(html.includes('Save Version'), 'serves report version control');
   assert(!html.includes('Print'), 'omits print control from report workflow');
 
@@ -157,6 +157,89 @@ async function runSuite() {
   assert(adminReg.membership.role === 'admin', 'admin code creates admin membership');
   const classes = await getJson('/api/instructor/classes', adminHeaders);
   assert((classes.classes || []).some((item) => item.id === 'class_bethany_house_2026'), 'instructor can list class dashboard');
+  const foreignClass = await getJson('/api/instructor/classes/not-the-admin-class/students', adminHeaders, false);
+  assert(foreignClass.status === 404, 'instructor cannot enumerate a class outside their membership');
+  const nonStudentDetail = await getJson(`/api/instructor/students/${adminReg.user.id}`, adminHeaders, false);
+  assert(nonStudentDetail.status === 404, 'instructor student detail requires a student in the authorized class');
+  const nonStudentModule2 = await getJson(`/api/instructor/students/${adminReg.user.id}/module-2`, adminHeaders, false);
+  assert(nonStudentModule2.status === 404, 'instructor Module 2 detail requires a student in the authorized class');
+  const nonStudentPrompts = await getJson(`/api/instructor/students/${adminReg.user.id}/prompts?workflow=module_2`, adminHeaders, false);
+  assert(nonStudentPrompts.status === 404, 'instructor prompts require a student in the authorized class');
+  const nonStudentVersions = await getJson(`/api/instructor/students/${adminReg.user.id}/versions?workflow=module_2`, adminHeaders, false);
+  assert(nonStudentVersions.status === 404, 'instructor versions require a student in the authorized class');
+  const nonStudentReset = await postJson(
+    `/api/instructor/students/${adminReg.user.id}/reset-usage`,
+    {},
+    adminHeaders,
+    false
+  );
+  assert(nonStudentReset.status === 404, 'usage reset requires a student in the authorized class');
+
+  const initialModule2 = await getJson('/api/studio/modules/module-2/workspace', authHeaders);
+  assert(initialModule2.state.version === 1, 'loads normalized Module 2 workspace');
+  assert(initialModule2.state.inheritance.entryState === 'fresh', 'new Module 2 workspace starts fresh');
+  assert(initialModule2.versions.length === 0, 'new Module 2 workspace has independent version sequence');
+
+  const savedModule2 = await putJson('/api/studio/modules/module-2/workspace', {
+    currentStep: 'board',
+    status: 'draft',
+    state: {
+      ground: {
+        rawReply: 'Bethany confirmed that partner continuity matters during the staffing transition.',
+        substantiveLines: ['Partner continuity matters during the staffing transition.'],
+      },
+      bets: [{
+        id: 'bet-continuity',
+        name: 'Relationship continuity role',
+        description: 'Protect partner handoffs while adding capacity.',
+        origin: 'student',
+        liveStatus: 'live',
+      }],
+      unknownTopLevelField: 'must not persist',
+    },
+  }, authHeaders);
+  assert(savedModule2.ok === true && savedModule2.currentStep === 'board', 'saves Module 2 state and step');
+  assert(!('unknownTopLevelField' in savedModule2.state), 'Module 2 normalizer drops unknown state fields');
+
+  const loadedModule2 = await getJson('/api/studio/modules/module-2/workspace', authHeaders);
+  assert(loadedModule2.state.bets[0].id === 'bet-continuity', 'loads persisted Module 2 bet');
+  assert(loadedModule2.workspace.current_step === 'board', 'loads persisted Module 2 step');
+  const tamperedModule2 = await putJson('/api/studio/modules/module-2/workspace', {
+    currentStep: 'board',
+    state: {
+      ...loadedModule2.state,
+      inheritance: {
+        sourceType: 'saved_version',
+        sourceVersionId: 'forged-version',
+        frame: 'Forged inherited frame',
+        highValueTraces: [{ id: 'forged-trace', text: 'Forged trace' }],
+        inheritedSolutions: [{ id: 'forged-solution', name: 'Forged solution' }],
+      },
+    },
+  }, authHeaders);
+  assert(tamperedModule2.state.inheritance.sourceType === 'absent', 'ordinary save cannot rewrite inheritance source');
+  assert(tamperedModule2.state.inheritance.sourceVersionId === '', 'ordinary save cannot forge inheritance version');
+  assert(tamperedModule2.state.inheritance.frame === '', 'ordinary save cannot forge inherited frame');
+  assert(tamperedModule2.state.inheritance.highValueTraces.length === 0, 'ordinary save cannot forge inherited traces');
+  assert(tamperedModule2.state.inheritance.inheritedSolutions.length === 0, 'ordinary save cannot forge inherited solutions');
+  const untouchedModule1 = await getJson('/api/studio/workspace', authHeaders);
+  assert(untouchedModule1.state.intake.problemStatement === '', 'Module 2 save does not mutate Module 1 state');
+
+  const instructorModule2 = await getJson(`/api/instructor/students/${reg.user.id}/module-2`, adminHeaders);
+  assert(instructorModule2.user.id === reg.user.id, 'instructor loads selected student Module 2 state');
+  assert(instructorModule2.state.bets[0].id === 'bet-continuity', 'instructor sees selected student Module 2 draft');
+  const emptyModule2Prompts = await getJson(`/api/instructor/students/${reg.user.id}/prompts?workflow=module_2`, adminHeaders);
+  assert(emptyModule2Prompts.prompts.length === 0, 'instructor Module 2 prompt filter excludes Module 1 traces');
+  const emptyModule2Versions = await getJson(`/api/instructor/students/${reg.user.id}/versions?workflow=module_2`, adminHeaders);
+  assert(emptyModule2Versions.versions.length === 0, 'instructor Module 2 version filter is independent');
+
+  const malformedModule2 = await putJson('/api/studio/modules/module-2/workspace', {
+    currentStep: 'ground',
+    state: { ground: null, inheritance: 'bad', locks: 3 },
+  }, authHeaders);
+  assert(malformedModule2.state.ground.relevance.status === 'unresolved', 'malformed nested Module 2 state preserves ground defaults');
+  assert(malformedModule2.state.inheritance.entryState === 'fresh', 'malformed inheritance value preserves defaults');
+  assert(Array.isArray(malformedModule2.state.locks.heldConstant), 'malformed lock value preserves defaults');
 
   const abuse = await postJson('/api/studio/llm', {
     module: 'question_reengineer',
@@ -226,10 +309,12 @@ async function runSuite() {
   };
 
   const report = await llm('final_report', { state: finalState });
-  assert(report.result.document?.title === 'Decision Manifold Studio Final Report', 'final report returns PDF-ready document JSON');
-  assert(report.result.document?.highValueQuestions?.length === 1, 'final report includes only complete high-value gatekeeper questions');
-  assert(report.result.document?.typeMap?.length >= 2, 'final report document includes complete and incomplete items in type map');
-  assert(/omitted/i.test(report.result.document?.guardrailNote || ''), 'final report notes omitted incomplete high-value items');
+  assert(report.result.document?.title === 'Bethany House Question Brief', 'brief compiler returns PDF-ready document JSON');
+  assert(report.result.document?.priorityQuestions?.length >= 1, 'brief includes selected high-value questions');
+  assert(report.result.document?.briefItems?.some((item) => item.itemType === 'observation'), 'brief preserves high-value observations');
+  assert(report.result.document?.lockedA?.claims?.length >= 2, 'brief carries locked-A claims for provenance');
+  assert(!JSON.stringify(report.result.document).includes('Type Map'), 'brief omits internal type-map surface');
+  assert(!JSON.stringify(report.result.document).includes('guardrail'), 'brief omits guardrail meta-commentary');
   assertIncludesAll(report.result.markdown, reportCase.expected.markdownMustInclude, 'final report includes oracle sections and strong reframe');
 
   finalState.finalReport.document = report.result.document;
@@ -238,10 +323,10 @@ async function runSuite() {
   assert(saved.ok === true, 'saves workflow state');
   const loaded = await getJson('/api/studio/workspace', authHeaders);
   assert(/relationship-continuity problem/i.test(loaded.state.finalReport.markdown), 'loads saved offline D1 state');
-  assert(loaded.state.finalReport.document?.typeMap?.length >= 1, 'loads saved PDF-ready document state');
+  assert(loaded.state.finalReport.document?.priorityQuestions?.length >= 1, 'loads saved PDF-ready document state');
 
   const preview = await postJson('/api/studio/report/preview', { state: loaded.state }, authHeaders);
-  assert(preview.document?.title === 'Decision Manifold Studio Final Report', 'report preview returns structured document');
+  assert(preview.document?.title === 'Bethany House Question Brief', 'report preview returns structured document');
   assert(/^JVBER/.test(preview.pdfBase64 || ''), 'report preview returns PDF bytes as base64');
 
   const version = await postJson('/api/studio/report/save-version', { state: loaded.state }, authHeaders);
@@ -256,6 +341,7 @@ async function runSuite() {
   assert((instructorStudents.students || []).some((student) => student.email === EMAIL), 'instructor sees registered student card');
   const instructorPrompts = await getJson(`/api/instructor/students/${reg.user.id}/prompts`, adminHeaders);
   assert((instructorPrompts.prompts || []).some((prompt) => prompt.module === 'parse_intake'), 'instructor sees prompt history');
+  assert((instructorPrompts.prompts || []).some((prompt) => prompt.system_prompt && prompt.module_prompt), 'instructor sees system and module prompts');
   const instructorVersions = await getJson(`/api/instructor/students/${reg.user.id}/versions`, adminHeaders);
   assert((instructorVersions.versions || []).length === 1, 'instructor sees saved report versions');
 

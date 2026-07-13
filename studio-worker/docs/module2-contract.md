@@ -5,6 +5,9 @@ This contract resolves dependencies left provisional in the v0.95 design. The ap
 ## Module 1 Inheritance
 
 Module 2 reads Module 1 from an immutable snapshot. It never mutates `workspace_states` or a saved Module 1 report.
+Each workspace is owned through `class_workspaces(class_id, user_id, workspace_id)`; a user enrolled in two classes receives two distinct workspaces even when both classes use the same engagement.
+
+v1 exposes one student class, Bethany House 2026, through one active student code. Student class selection is therefore not a v1 interface. Student routes resolve the only active student membership; the permanent admin membership is never selected as a student context. The ownership relation prevents accidental workspace reuse and is the prerequisite for a future class selector, but that selector is post-v1 product work.
 
 Source precedence:
 

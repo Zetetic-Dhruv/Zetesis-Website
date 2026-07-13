@@ -1,5 +1,17 @@
 import { renderStudioPage } from './studio-page.js';
 import { renderInstructorPage } from './instructor-page.js';
+import {
+  INSTRUCTOR_PROMPTS_SQL,
+  LIST_CLASS_STUDENTS_SQL,
+  isActiveAdminMembership,
+} from './instructor-queries.js';
+import {
+  DEFAULT_MODULE2_STATE,
+  MODULE2_KEY,
+  buildModule1InheritanceSnapshot,
+  normalizeModule2State,
+  parseStoredModule2State,
+} from './module2-state.js';
 
 const ENGAGEMENT_ID = 'eng_bethany_house_2026';
 const CLASS_ID = 'class_bethany_house_2026';
@@ -11,13 +23,64 @@ const PASSWORD_ITERATIONS = 100000;
 const DEFAULT_SESSION_SECONDS = 60 * 60 * 24 * 14;
 const DEFAULT_USAGE_LIMIT_MICROS = 10000000;
 
-const SHARED_SYSTEM_PROMPT = `You are the sorting and scaffolding engine inside the Decision Manifold Studio, built for a graduate consulting team working a live nonprofit engagement.
+const ZETESIS_KERNEL_VERSION = 'zetesis-kernel-2026-06-20';
+const DECISION_ENGINEERING_CAPSULE_VERSION = 'bethany-house-capsule-2026-06-20';
 
-You may classify, summarize, draft multiple-choice scaffolds, flag missing attribution, flag contradictions, and check stated reframes against a weak/strong test.
+const ZETESIS_KERNEL_PROMPT = `You operate as a Zetesis inquiry agent for a live consulting assignment.
 
-You may never invent what a stakeholder privately thinks or knows, assert content for Unknown Knowns or Unknown Unknowns on the team's behalf, write the team's recommendation, or auto-complete a blank field to make output look finished. A blank or needs_attribution result is a valid, correct output.
+Knowledge and ignorance are not complements. Treat ignorance as structured terrain: facts can be stabilized, questions can be made askable, and imagination can extend the question-space.
 
-If a request asks you to do work that depends on a real conversation the team had or has not had yet, decline to fabricate and instead return the question that would surface it from that conversation.`;
+Separate inquiry from discovery. You may imagine tensions, hypotheses, alternate frames, and candidate questions. Mark imagined structure as hypothesis_to_test unless the supplied traces ground it. Do not launder a hypothesis into a Bethany fact.
+
+Preserve provenance. Distinguish public facts, course traces, student traces, hypotheses to test, and questions for Bethany. The student is the accountable chooser.
+
+For client-facing output, transmit the locked measurement to Bethany House. Do not expose the internal machinery, model behavior, classroom categories, or student performance trail.`;
+
+const DECISION_ENGINEERING_CAPSULE = `Decision Engineering capsule:
+- This round produces questions for Bethany House, not recommendations.
+- Start from messy notes, then sort what can be verified, what needs a real conversation, what Bethany may know tacitly, and what question may be missing.
+- A strong working read names the tension underneath the brief; a weak one restates the brief.
+- The assumption challenge asks: what are we taking as given, what would make it wrong, what changes if wrong, and what question is this frame keeping us from asking.
+- The consequence check asks who can answer, who needs to be comfortable, and who feels the cost if the team is wrong.
+- The final artifact is a polished consultant question brief for Bethany House.`;
+
+const ZETESIS_OPERATOR_POLICY = `Operator policy:
+- describe stabilizes supplied traces; do not invent.
+- imagine expands what is askable; label it as hypothesis_to_test or question_for_bethany until Bethany confirms it.
+- value asks whether an item changes the next conversation.
+- final prose transmits the locked measurement to Bethany, not the internal method.`;
+
+const BETHANY_CLIENT_LANGUAGE_POLICY = `Bethany-facing language policy:
+- Write as a respectful outside consultant helping Bethany House clarify the next conversation.
+- Do not diagnose Bethany House, blame Bethany House, or imply failure, negligence, incompetence, or incapacity.
+- Phrase uncertainty as what the team needs to clarify before recommending: "clarify whether", "understand which", "test where", "ask who".
+- Do not write "we are not assuming" or "the team is not assuming" in client-facing output; translate those into "Still to clarify" questions.
+- Keep pressure visible without sounding accusatory.`;
+
+const SHARED_SYSTEM_PROMPT = `${ZETESIS_KERNEL_PROMPT}\n\n${DECISION_ENGINEERING_CAPSULE}\n\n${ZETESIS_OPERATOR_POLICY}\n\n${BETHANY_CLIENT_LANGUAGE_POLICY}`;
+
+const BETHANY_FACTS = [
+  { id: 'public_founded_1978', sourceType: 'public_fact', text: 'Bethany House of Nassau County was founded in 1978.' },
+  { id: 'public_serves_women_children', sourceType: 'public_fact', text: 'Bethany House serves women, and women with children, experiencing homelessness.' },
+  { id: 'public_three_shelters', sourceType: 'public_fact', text: 'Bethany House operates three emergency shelters in Baldwin and Roosevelt.' },
+  { id: 'public_dss_access', sourceType: 'public_fact', text: 'Emergency shelter placement runs through the Nassau County Department of Social Services.' },
+  { id: 'public_transitional_housing', sourceType: 'public_fact', text: 'Bethany House transitional housing is privately funded and supports longer stays for education, work, savings, and movement toward independent living.' },
+  { id: 'public_safe_ground_2023', sourceType: 'public_fact', text: 'Safe Ground for Families opened in 2023 as a three-tier model from emergency shelter through transitional and independent living support.' },
+  { id: 'public_swanson_ed_2023', sourceType: 'public_fact', text: 'Katie Swanson became Executive Director in 2023.' },
+  { id: 'public_growth_plan', sourceType: 'public_fact', text: 'Bethany House has a five-year strategic plan with priorities including workplace quality, footprint expansion, and capital growth.' },
+  { id: 'public_hr_payroll_2024', sourceType: 'public_fact', text: 'In 2024, Bethany House completed compensation analysis, updated salaries where needed, and hired an HR firm for payroll and compliance.' },
+  { id: 'public_single_women_shelter', sourceType: 'public_fact', text: 'In 2024, the Board committed to purchasing and developing another emergency shelter for single women in 2025/2026.' },
+  { id: 'public_2024_financials', sourceType: 'public_fact', text: 'FY2024 public figures report total support and revenue of $2,892,207, total expenses of $2,413,556, and ending net assets of $4,293,666.' },
+  { id: 'course_100_people', sourceType: 'course_trace', text: 'Course materials say more than 100 women and children a year depend on Bethany House getting this right.' },
+  { id: 'course_ea_hr_brief', sourceType: 'course_trace', text: 'The CEO brief included the need for an Executive Assistant and an HR function because too much sits with one person.' },
+  { id: 'course_ea_25_relationships', sourceType: 'course_trace', text: 'Course materials describe the Executive Assistant role as carrying 25+ partner relationships the CEO cannot hold alone.' },
+  { id: 'course_relationship_continuity', sourceType: 'course_trace', text: 'The staffing gap may be a relationship-continuity problem showing up as staffing pressure, not only a resourcing problem.' },
+  { id: 'course_hr_trust', sourceType: 'course_trace', text: 'Course materials frame HR as possibly being about staff trust and tacit knowledge, not only a platform or compliance function.' },
+  { id: 'course_jericho', sourceType: 'course_trace', text: 'Jericho is the cautionary witness: a school-district concern once sank a 150-person facility plan.' },
+  { id: 'course_stakeholder_rings', sourceType: 'course_trace', text: 'Bethany stakeholder rings are inner ring CEO/staff/board/clients, operational ring county/certifiers/funders/partners, and outer ring town government/residents/schools/media.' },
+  { id: 'course_ceo_channel_risk', sourceType: 'course_trace', text: 'Course materials warn that almost everything students know routes through the CEO, who is also the first gate.' },
+  { id: 'course_questions_not_answers', sourceType: 'course_trace', text: 'For this round students need to send Bethany House high-value questions, not answers or recommendations.' },
+];
 
 const DEFAULT_STATE = {
   version: 1,
@@ -38,6 +101,7 @@ const DEFAULT_STATE = {
   },
   questionEngineering: {
     variants: {},
+    candidates: [],
   },
   oneSentence: {
     briefText: '',
@@ -53,6 +117,7 @@ const DEFAULT_STATE = {
   finalReport: {
     document: null,
     markdown: '',
+    lockedA: null,
     generatedAt: '',
     pdfGeneratedAt: '',
   },
@@ -146,6 +211,18 @@ async function handleApi(request, env, pathname) {
       return json(await loadWorkspaceBundle(env, auth.user.id, ctx.membership), 200, request);
     }
 
+    if (request.method === 'GET' && pathname === '/api/studio/modules/module-2/workspace') {
+      const ctx = await getStudentContext(env, auth.user.id);
+      if (!ctx.ok) return json({ error: ctx.error }, ctx.status, request);
+      return json(await loadModule2WorkspaceBundle(env, auth.user.id, ctx.membership), 200, request);
+    }
+
+    if (request.method === 'PUT' && pathname === '/api/studio/modules/module-2/workspace') {
+      const ctx = await getStudentContext(env, auth.user.id);
+      if (!ctx.ok) return json({ error: ctx.error }, ctx.status, request);
+      return await handleSaveModule2Workspace(request, env, auth.user, ctx.membership);
+    }
+
     if (request.method === 'PUT' && pathname === '/api/studio/workspace') {
       const ctx = await getStudentContext(env, auth.user.id);
       if (!ctx.ok) return json({ error: ctx.error }, ctx.status, request);
@@ -173,7 +250,24 @@ async function handleApi(request, env, pathname) {
     if (request.method === 'GET' && pathname === '/api/studio/report/versions') {
       const ctx = await getStudentContext(env, auth.user.id);
       if (!ctx.ok) return json({ error: ctx.error }, ctx.status, request);
-      return json({ versions: await listReportVersions(env, auth.user.id) }, 200, request);
+      return json({
+        versions: await listReportVersions(env, auth.user.id, ctx.membership.class_id),
+      }, 200, request);
+    }
+
+    if (request.method === 'GET' && pathname === '/api/studio/modules/module-2/report/versions') {
+      const ctx = await getStudentContext(env, auth.user.id);
+      if (!ctx.ok) return json({ error: ctx.error }, ctx.status, request);
+      return json({
+        versions: await listDeliverableVersions(env, auth.user.id, MODULE2_KEY, ctx.membership.class_id),
+      }, 200, request);
+    }
+
+    const module2PdfMatch = pathname.match(/^\/api\/studio\/modules\/module-2\/report\/versions\/([^/]+)\/pdf$/);
+    if (request.method === 'GET' && module2PdfMatch) {
+      const ctx = await getStudentContext(env, auth.user.id);
+      if (!ctx.ok) return json({ error: ctx.error }, ctx.status, request);
+      return await handleDownloadDeliverablePdf(request, env, auth.user, ctx.membership, module2PdfMatch[1]);
     }
 
     const pdfMatch = pathname.match(/^\/api\/studio\/report\/versions\/([^/]+)\/pdf$/);
@@ -224,50 +318,89 @@ async function handleInstructorApi(request, env, pathname) {
     }
 
     if (request.method === 'GET' && pathname === '/api/instructor/classes') {
-      return json({ classes: await listInstructorClasses(env) }, 200, request);
+      return json({ classes: await listInstructorClasses(env, admin.membership.class_id) }, 200, request);
     }
 
     const studentsMatch = pathname.match(/^\/api\/instructor\/classes\/([^/]+)\/students$/);
     if (request.method === 'GET' && studentsMatch) {
+      if (studentsMatch[1] !== admin.membership.class_id) return json({ error: 'Class not found.' }, 404, request);
       return json({ students: await listClassStudents(env, studentsMatch[1]) }, 200, request);
     }
 
     const zipMatch = pathname.match(/^\/api\/instructor\/classes\/([^/]+)\/pdf-zip$/);
     if (request.method === 'GET' && zipMatch) {
-      return await handleClassPdfZip(request, env, zipMatch[1]);
+      if (zipMatch[1] !== admin.membership.class_id) return json({ error: 'Class not found.' }, 404, request);
+      return await handleClassPdfZip(request, env, zipMatch[1], workflowFromRequest(request));
     }
 
     const studentMatch = pathname.match(/^\/api\/instructor\/students\/([^/]+)$/);
     if (request.method === 'GET' && studentMatch) {
-      return json(await getInstructorStudent(env, studentMatch[1]), 200, request);
+      const student = await getInstructorStudent(env, studentMatch[1], admin.membership.class_id);
+      return json(student, student.error ? 404 : 200, request);
+    }
+
+    const module2StudentMatch = pathname.match(/^\/api\/instructor\/students\/([^/]+)\/module-2$/);
+    if (request.method === 'GET' && module2StudentMatch) {
+      const student = await getInstructorModule2Student(env, module2StudentMatch[1], admin.membership.class_id);
+      return json(student, student.error ? 404 : 200, request);
     }
 
     const promptsMatch = pathname.match(/^\/api\/instructor\/students\/([^/]+)\/prompts$/);
     if (request.method === 'GET' && promptsMatch) {
-      return json({ prompts: await getInstructorPrompts(env, promptsMatch[1]) }, 200, request);
+      if (!await isStudentInClass(env, promptsMatch[1], admin.membership.class_id)) {
+        return json({ error: 'Student not found.' }, 404, request);
+      }
+      return json({
+        prompts: await getInstructorPrompts(
+          env,
+          promptsMatch[1],
+          admin.membership.class_id,
+          workflowFromRequest(request)
+        ),
+      }, 200, request);
     }
 
     const versionsMatch = pathname.match(/^\/api\/instructor\/students\/([^/]+)\/versions$/);
     if (request.method === 'GET' && versionsMatch) {
-      return json({ versions: await getInstructorVersions(env, versionsMatch[1]) }, 200, request);
+      if (!await isStudentInClass(env, versionsMatch[1], admin.membership.class_id)) {
+        return json({ error: 'Student not found.' }, 404, request);
+      }
+      return json({
+        versions: await getInstructorVersions(
+          env,
+          versionsMatch[1],
+          admin.membership.class_id,
+          workflowFromRequest(request)
+        ),
+      }, 200, request);
     }
 
     const instructorPdfMatch = pathname.match(/^\/api\/instructor\/report\/versions\/([^/]+)\/pdf$/);
     if (request.method === 'GET' && instructorPdfMatch) {
       const version = await env.STUDIO_DB.prepare(
-        `SELECT * FROM report_versions WHERE id = ?`
-      ).bind(instructorPdfMatch[1]).first();
+        `SELECT * FROM report_versions WHERE id = ? AND class_id = ?`
+      ).bind(instructorPdfMatch[1], admin.membership.class_id).first();
       if (!version) return json({ error: 'Report version not found.' }, 404, request);
       return await serveVersionPdf(request, env, version, defaultPdfFilename(`v${version.version_number}`));
     }
 
+    const instructorDeliverablePdfMatch = pathname.match(/^\/api\/instructor\/deliverable\/versions\/([^/]+)\/pdf$/);
+    if (request.method === 'GET' && instructorDeliverablePdfMatch) {
+      const version = await env.STUDIO_DB.prepare(
+        `SELECT * FROM deliverable_versions WHERE id = ? AND class_id = ? AND module_key = ?`
+      ).bind(instructorDeliverablePdfMatch[1], admin.membership.class_id, MODULE2_KEY).first();
+      if (!version) return json({ error: 'Deliverable version not found.' }, 404, request);
+      return await serveDeliverablePdf(request, env, version, recommendationPdfFilename(`v${version.version_number}`));
+    }
+
     const resetMatch = pathname.match(/^\/api\/instructor\/students\/([^/]+)\/reset-usage$/);
     if (request.method === 'POST' && resetMatch) {
-      await env.STUDIO_DB.prepare(
+      const result = await env.STUDIO_DB.prepare(
         `UPDATE class_memberships
          SET usage_used_micros = 0, model_access_status = 'active', updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
-         WHERE user_id = ? AND class_id = ?`
-      ).bind(resetMatch[1], CLASS_ID).run();
+         WHERE user_id = ? AND class_id = ? AND role = 'student'`
+      ).bind(resetMatch[1], admin.membership.class_id).run();
+      if (!Number(result.meta?.changes || 0)) return json({ error: 'Student not found.' }, 404, request);
       return json({ ok: true }, 200, request);
     }
 
@@ -275,11 +408,12 @@ async function handleInstructorApi(request, env, pathname) {
     if (request.method === 'POST' && accessMatch) {
       const body = await readJson(request);
       const status = body.status === 'blocked' ? 'blocked' : 'active';
-      await env.STUDIO_DB.prepare(
+      const result = await env.STUDIO_DB.prepare(
         `UPDATE class_memberships
          SET model_access_status = ?, updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
          WHERE user_id = ? AND class_id = ? AND role = 'student'`
-      ).bind(status, accessMatch[1], CLASS_ID).run();
+      ).bind(status, accessMatch[1], admin.membership.class_id).run();
+      if (!Number(result.meta?.changes || 0)) return json({ error: 'Student not found.' }, 404, request);
       return json({ ok: true, status }, 200, request);
     }
 
@@ -287,6 +421,7 @@ async function handleInstructorApi(request, env, pathname) {
     if (request.method === 'POST' && retireMatch) {
       const code = await env.STUDIO_DB.prepare(`SELECT * FROM class_codes WHERE id = ?`).bind(retireMatch[1]).first();
       if (!code) return json({ error: 'Class code not found.' }, 404, request);
+      if (code.class_id !== admin.membership.class_id) return json({ error: 'Class code not found.' }, 404, request);
       if (code.permanent || code.role === 'admin') return json({ error: 'The admin class code cannot be retired.' }, 400, request);
       await env.STUDIO_DB.batch([
         env.STUDIO_DB.prepare(
@@ -450,7 +585,7 @@ async function handlePlatformMe(request, env, auth) {
     user: publicUser(auth.user),
     membership: publicMembership(membership),
     usage: await getUsageSummary(env, membership),
-    versions: await listReportVersions(env, auth.user.id),
+    versions: await listReportVersions(env, auth.user.id, membership.class_id),
     ...bundle,
   }, 200, request);
 }
@@ -503,7 +638,8 @@ async function getStudentContext(env, userId) {
 
 async function getAdminContext(env, userId) {
   const membership = await env.STUDIO_DB.prepare(
-    `SELECT cm.*, c.name AS class_name, c.slug AS class_slug, cc.status AS class_code_status
+    `SELECT cm.*, c.name AS class_name, c.slug AS class_slug, c.status AS class_status,
+      cc.status AS class_code_status
      FROM class_memberships cm
      JOIN classes c ON c.id = cm.class_id
      JOIN class_codes cc ON cc.id = cm.class_code_id
@@ -511,7 +647,9 @@ async function getAdminContext(env, userId) {
      ORDER BY cm.created_at ASC
      LIMIT 1`
   ).bind(userId).first();
-  if (!membership) return { ok: false, status: 403, error: 'Instructor access is invite only.' };
+  if (!isActiveAdminMembership(membership)) {
+    return { ok: false, status: 403, error: 'Instructor access is invite only.' };
+  }
   return { ok: true, membership };
 }
 
@@ -565,7 +703,19 @@ async function ensureClassMembership(env, user, classCode) {
     membership.usage_limit_micros,
     membership.usage_used_micros
   ).run();
-  return getPrimaryMembership(env, user.id);
+  return getMembershipForClass(env, user.id, classCode.class_id);
+}
+
+async function getMembershipForClass(env, userId, classId) {
+  return env.STUDIO_DB.prepare(
+    `SELECT cm.*, c.name AS class_name, c.slug AS class_slug, c.status AS class_status,
+      cc.status AS class_code_status
+     FROM class_memberships cm
+     JOIN classes c ON c.id = cm.class_id
+     JOIN class_codes cc ON cc.id = cm.class_code_id
+     WHERE cm.user_id = ? AND cm.class_id = ?
+     LIMIT 1`
+  ).bind(userId, classId).first();
 }
 
 async function ensurePlatformSeedData(env) {
@@ -625,24 +775,28 @@ async function findClassCode(env, codeText) {
 }
 
 async function ensurePersonalWorkspace(env, user, membership) {
-  let team = await getPrimaryTeam(env, user.id);
-  if (!team) {
-    team = {
-      id: crypto.randomUUID(),
-      engagement_id: ENGAGEMENT_ID,
-      name: cleanString(`${user.name || user.email} Workspace`, 120),
-      join_code: await createUniqueJoinCode(env),
-      created_by: user.id,
-    };
-    await env.STUDIO_DB.prepare(
-      `INSERT INTO teams (id, engagement_id, name, join_code, created_by) VALUES (?, ?, ?, ?, ?)`
-    ).bind(team.id, team.engagement_id, team.name, team.join_code, team.created_by).run();
-  }
+  const existing = await getClassWorkspace(env, user.id, membership.class_id);
+  if (existing?.workspace) return existing.workspace;
+
+  const team = {
+    id: crypto.randomUUID(),
+    engagement_id: ENGAGEMENT_ID,
+    name: cleanString(`${user.name || user.email} Workspace`, 120),
+    join_code: await createUniqueJoinCode(env),
+    created_by: user.id,
+  };
+  await env.STUDIO_DB.prepare(
+    `INSERT INTO teams (id, engagement_id, name, join_code, created_by) VALUES (?, ?, ?, ?, ?)`
+  ).bind(team.id, team.engagement_id, team.name, team.join_code, team.created_by).run();
 
   await env.STUDIO_DB.prepare(
     `INSERT OR IGNORE INTO team_members (team_id, user_id, member_role) VALUES (?, ?, ?)`
   ).bind(team.id, user.id, membership?.role === 'admin' ? 'owner' : 'member').run();
-  return ensureWorkspace(env, team.id, user.id);
+  const workspace = await ensureWorkspace(env, team.id, user.id);
+  await env.STUDIO_DB.prepare(
+    `INSERT INTO class_workspaces (class_id, user_id, workspace_id) VALUES (?, ?, ?)`
+  ).bind(membership.class_id, user.id, workspace.id).run();
+  return workspace;
 }
 
 async function createSession(env, userId, request) {
@@ -784,12 +938,14 @@ async function handleSaveWorkspace(request, env, user, membership = null) {
 
 async function handleLlm(request, env, user, membership = null) {
   const body = await readJson(request);
-  const moduleName = cleanString(body.module, 80);
+  const requestedModule = cleanString(body.module, 80);
+  const moduleName = canonicalModuleName(requestedModule);
   const payload = body.payload || {};
 
   if (!moduleName || !MODULES[moduleName]) {
     return json({ error: 'Unknown LLM module.' }, 400, request);
   }
+  const promptPayload = withModuleContext(moduleName, payload);
 
   const bundle = await loadWorkspaceBundle(env, user.id, membership);
   if (!bundle.workspace) {
@@ -813,29 +969,27 @@ async function handleLlm(request, env, user, membership = null) {
     inputTokens: 0,
     outputTokens: 0,
     systemPrompt: SHARED_SYSTEM_PROMPT,
-    modulePrompt: MODULES[moduleName].prompt(payload),
+    modulePrompt: MODULES[moduleName].prompt(promptPayload),
   };
   const mode = cleanString(env.AGENT_API_MODE || 'openai', 40).toLowerCase();
-  if (moduleName === 'final_report') {
-    result = fallbackRaw(moduleName, payload);
-    provider = 'guarded-local';
-  } else if (mode === 'fixture' || mode === 'offline') {
-    result = fallbackModule(moduleName, payload, 'Offline agent fixture mode; no external LLM call made.');
+  if (mode === 'fixture' || mode === 'offline') {
+    result = fallbackModule(moduleName, promptPayload, 'Offline agent fixture mode; no external LLM call made.');
     provider = 'offline-agent';
   } else if (env.OPENAI_API_KEY) {
     try {
-      const openAi = await runOpenAi(env, moduleName, payload);
+      const openAi = await runOpenAi(env, moduleName, promptPayload);
       result = openAi.result;
       responseMeta = { ...responseMeta, ...openAi.meta };
       provider = 'openai';
     } catch (error) {
-      result = fallbackModule(moduleName, payload, `OpenAI call failed: ${error.message}`);
+      result = fallbackModule(moduleName, promptPayload, `OpenAI call failed: ${error.message}`);
     }
   } else {
-    result = fallbackModule(moduleName, payload, 'OPENAI_API_KEY is not configured; used local fallback.');
+    result = fallbackModule(moduleName, promptPayload, 'OPENAI_API_KEY is not configured; used local fallback.');
   }
+  result = normalizeModuleResult(moduleName, result, promptPayload);
 
-  const estimatedCostMicros = estimateCostMicros(env, responseMeta.inputTokens, responseMeta.outputTokens, provider);
+  const estimatedCostMicros = estimateCostMicros(env, responseMeta.inputTokens, responseMeta.outputTokens, provider, responseMeta.model, moduleName);
   const runId = crypto.randomUUID();
   await env.STUDIO_DB.prepare(
     `INSERT INTO llm_runs (
@@ -848,8 +1002,8 @@ async function handleLlm(request, env, user, membership = null) {
     runId,
     bundle.workspace.id,
     user.id,
-    moduleName,
-    JSON.stringify(payload),
+    requestedModule || moduleName,
+    JSON.stringify(promptPayload),
     JSON.stringify(result),
     provider,
     membership?.id || null,
@@ -867,14 +1021,303 @@ async function handleLlm(request, env, user, membership = null) {
   }
 
   await audit(env, bundle.workspace.id, user.id, 'llm_run', { module: moduleName, provider });
-  return json({ module: moduleName, provider, result, usage: await getUsageSummary(env, membership) }, 200, request);
+  return json({ module: moduleName, requestedModule, provider, result, usage: await getUsageSummary(env, membership) }, 200, request);
+}
+
+function normalizeModuleResult(moduleName, result, payload) {
+  if (moduleName === 'sort_board') return normalizeSortBoardResult(result, payload);
+  if (moduleName === 'final_report') return normalizeFinalReportResult(result);
+  return result;
+}
+
+function normalizeFinalReportResult(result = {}) {
+  const document = normalizeBriefDocument(result.document || {});
+  document.notAssumingYet = (document.notAssumingYet || [])
+    .filter(isMeaningfulField)
+    .map(clientClarificationPoint);
+  document.closingNote = clientClosingNote(document.closingNote || '');
+  if (document.lockedA) {
+    document.lockedA = {
+      ...document.lockedA,
+      notAssumingYet: (document.lockedA.notAssumingYet || document.notAssumingYet || [])
+        .filter(isMeaningfulField)
+        .map(clientClarificationPoint),
+    };
+  }
+  return {
+    ...result,
+    document,
+    markdown: buildReportMarkdown(document),
+  };
+}
+
+function normalizeSortBoardResult(result = {}, payload = {}) {
+  const inputs = Array.isArray(payload.items) ? payload.items : [];
+  const returned = Array.isArray(result.items) ? result.items : [];
+  const byId = new Map(returned.filter((item) => item && item.id).map((item) => [item.id, item]));
+  const sourceItems = inputs.length ? inputs : returned;
+  return {
+    ...result,
+    items: sourceItems.map((item, index) => normalizeSortBoardItem(
+      item || {},
+      byId.get(item?.id) || returned[index] || {},
+      payload._context || {},
+    )),
+  };
+}
+
+function normalizeSortBoardItem(inputItem = {}, modelItem = {}, context = {}) {
+  const rawText = cleanString(inputItem.rawText || inputItem.text || modelItem.rawText || modelItem.text || '', 2000);
+  const sourceField = cleanString(inputItem.sourceField || modelItem.sourceField || '', 80);
+  const id = cleanString(modelItem.id || inputItem.id || crypto.randomUUID(), 100);
+  const suppliedHolder = cleanString(modelItem.holder || inputItem.holder || '', 160);
+  const modelEvidence = Array.isArray(modelItem.evidenceIds) ? modelItem.evidenceIds : [];
+  const inputEvidence = Array.isArray(inputItem.evidenceIds) ? inputItem.evidenceIds : [];
+  const evidenceIds = normalizedEvidenceIds([...modelEvidence, ...inputEvidence, ...evidenceIdsForText(rawText, context)]);
+  const sourceTypeFromFacts = sourceTypeForEvidence(evidenceIds, suppliedHolder);
+  const modelSourceType = cleanString(modelItem.sourceType || inputItem.sourceType || '', 80);
+  const modelBoard = cleanString(modelItem.board || '', 80);
+  const modelBucket = cleanString(modelItem.bucket || '', 10);
+  const modelNotes = cleanString(modelItem.aiNotes || '', 700);
+
+  const sortGuardrail = isSortGuardrailItem(rawText) || isPrivateStakeholderClaim(rawText, suppliedHolder);
+  if (!rawText || sortGuardrail) {
+    const inventUnknown = isInventUnknownRequest(rawText);
+    return buildSortBoardItem({
+      id,
+      bucket: '',
+      board: 'needs_attribution',
+      holder: '',
+      sourceType: modelSourceType || inferSourceType(rawText, sourceField),
+      evidenceIds: [],
+      aiNotes: rawText
+        ? inventUnknown
+          ? 'Cannot invent an unknown unknown for the team; the team must write the missing question from real traces.'
+          : 'Private or probable stakeholder knowledge needs a named source or real conversation evidence; do not treat this as the team\'s inference.'
+        : 'Blank item; add a source trace before sorting.',
+    });
+  }
+
+  if (isFrameChallengeQuestion(rawText)) {
+    return buildSortBoardItem({
+      id,
+      bucket: 'UU',
+      board: 'missing_real_question',
+      holder: suppliedHolder || 'Team',
+      sourceType: 'question_for_bethany',
+      evidenceIds,
+      aiNotes: modelNotes || 'This is a frame challenge: keep it visible as the question the team may be missing.',
+    });
+  }
+
+  if (isTacitKnowledgeTrace(rawText)) {
+    return buildSortBoardItem({
+      id,
+      bucket: 'UK',
+      board: 'bethany_tacit',
+      holder: suppliedHolder || inferTacitHolder(rawText),
+      sourceType: modelSourceType === 'public_fact' ? 'student_trace' : (modelSourceType || 'student_trace'),
+      evidenceIds,
+      aiNotes: modelNotes || 'This points to tacit or relationship knowledge that should be checked with the named holder.',
+    });
+  }
+
+  if (isDirectQuestion(rawText, sourceField)) {
+    return buildSortBoardItem({
+      id,
+      bucket: 'KU',
+      board: 'ask_someone',
+      holder: suppliedHolder || inferQuestionHolder(rawText),
+      sourceType: 'question_for_bethany',
+      evidenceIds,
+      aiNotes: modelNotes || 'This is an answerable question for a Bethany stakeholder.',
+    });
+  }
+
+  if (isFactTrace(rawText, sourceField, evidenceIds)) {
+    return buildSortBoardItem({
+      id,
+      bucket: 'KK',
+      board: 'verify',
+      holder: suppliedHolder || holderForEvidence(evidenceIds) || 'Team note',
+      sourceType: sourceTypeFromFacts || modelSourceType || inferSourceType(rawText, sourceField),
+      evidenceIds,
+      aiNotes: modelNotes || 'This is a supplied or externally checkable trace. Verify wording before using it as a Bethany-facing fact.',
+    });
+  }
+
+  if (isHypothesisTrace(rawText, sourceField, modelSourceType)) {
+    return buildSortBoardItem({
+      id,
+      bucket: 'UU',
+      board: 'missing_real_question',
+      holder: suppliedHolder || 'Team hypothesis',
+      sourceType: 'hypothesis_to_test',
+      evidenceIds,
+      aiNotes: modelNotes || 'This is a hypothesis or assumption to test, not a settled Bethany fact.',
+    });
+  }
+
+  const modelCanonical = canonicalBoardBucket(modelBoard, modelBucket);
+  if (modelCanonical.bucket) {
+    return buildSortBoardItem({
+      id,
+      bucket: modelCanonical.bucket,
+      board: modelCanonical.board,
+      holder: suppliedHolder || defaultHolderForBoard(modelCanonical.board, modelSourceType),
+      sourceType: coherentSourceTypeForBucket(modelCanonical.bucket, modelSourceType, evidenceIds),
+      evidenceIds,
+      aiNotes: modelNotes || 'Sorted from the model response and checked for metadata consistency.',
+    });
+  }
+
+  return buildSortBoardItem({
+    id,
+    bucket: 'KK',
+    board: 'verify',
+    holder: suppliedHolder || 'Team note',
+    sourceType: modelSourceType || inferSourceType(rawText, sourceField),
+    evidenceIds,
+    aiNotes: modelNotes || 'This is a team-supplied trace to verify before it becomes client-facing.',
+  });
+}
+
+function buildSortBoardItem({ id, bucket, board, holder, sourceType, evidenceIds, aiNotes }) {
+  const canonical = canonicalBoardBucket(board, bucket);
+  const finalBucket = canonical.bucket;
+  const finalBoard = canonical.board;
+  const finalHolder = finalBoard === 'needs_attribution' ? '' : cleanString(holder || defaultHolderForBoard(finalBoard, sourceType), 160);
+  const finalSourceType = coherentSourceTypeForBucket(finalBucket, sourceType, evidenceIds);
+  return {
+    id,
+    bucket: finalBucket,
+    board: finalBoard,
+    holder: finalHolder,
+    sourceType: finalSourceType,
+    evidenceIds: normalizedEvidenceIds(evidenceIds),
+    status: finalBucket && isMeaningfulField(finalHolder) ? 'settled' : 'needs_attribution',
+    aiNotes: cleanString(aiNotes, 900),
+  };
+}
+
+function canonicalBoardBucket(board, bucket) {
+  const cleanBoard = cleanString(board || '', 80);
+  const cleanBucket = cleanString(bucket || '', 10);
+  const boardToBucket = {
+    verify: 'KK',
+    ask_someone: 'KU',
+    bethany_tacit: 'UK',
+    missing_real_question: 'UU',
+    needs_attribution: '',
+  };
+  if (cleanBoard in boardToBucket) return { board: cleanBoard, bucket: boardToBucket[cleanBoard] };
+  if (['KK', 'KU', 'UK', 'UU'].includes(cleanBucket)) return { bucket: cleanBucket, board: boardForBucket(cleanBucket) };
+  return { bucket: '', board: 'needs_attribution' };
+}
+
+function normalizedEvidenceIds(values = []) {
+  const valid = new Set(BETHANY_FACTS.map((fact) => fact.id));
+  return Array.from(new Set(values.filter((id) => valid.has(id)))).slice(0, 8);
+}
+
+function sourceTypeForEvidence(evidenceIds = [], holder = '') {
+  const holderText = cleanString(holder, 160).toLowerCase();
+  if (/public|website|annual|record/.test(holderText)) return 'public_fact';
+  const facts = evidenceIds.map((id) => BETHANY_FACTS.find((fact) => fact.id === id)).filter(Boolean);
+  if (facts.some((fact) => fact.sourceType === 'course_trace')) return 'course_trace';
+  if (facts.some((fact) => fact.sourceType === 'public_fact')) return 'public_fact';
+  return '';
+}
+
+function holderForEvidence(evidenceIds = []) {
+  const facts = evidenceIds.map((id) => BETHANY_FACTS.find((fact) => fact.id === id)).filter(Boolean);
+  if (facts.some((fact) => fact.sourceType === 'course_trace')) return 'Course material';
+  if (facts.some((fact) => fact.sourceType === 'public_fact')) return 'Public record';
+  return '';
+}
+
+function coherentSourceTypeForBucket(bucket, sourceType, evidenceIds = []) {
+  const clean = cleanString(sourceType || '', 80);
+  if (bucket === 'KK') return sourceTypeForEvidence(evidenceIds) || (clean === 'hypothesis_to_test' || clean === 'question_for_bethany' ? 'student_trace' : clean || 'student_trace');
+  if (bucket === 'KU') return clean === 'public_fact' || clean === 'course_trace' ? 'question_for_bethany' : clean || 'question_for_bethany';
+  if (bucket === 'UK') return clean === 'public_fact' ? 'student_trace' : clean || 'student_trace';
+  if (bucket === 'UU') return clean === 'public_fact' || clean === 'course_trace' ? 'hypothesis_to_test' : clean || 'hypothesis_to_test';
+  return clean || 'student_trace';
+}
+
+function defaultHolderForBoard(board, sourceType) {
+  if (board === 'verify') return sourceType === 'public_fact' ? 'Public record' : sourceType === 'course_trace' ? 'Course material' : 'Team note';
+  if (board === 'ask_someone') return 'Bethany House';
+  if (board === 'bethany_tacit') return 'Bethany House';
+  if (board === 'missing_real_question') return 'Team hypothesis';
+  return '';
+}
+
+function isDirectQuestion(text, sourceField = '') {
+  const clean = cleanString(text, 1000);
+  return sourceField === 'openQuestions' || /\?\s*$/.test(clean) || /^(who|what|which|how|when|where|why)\b/i.test(clean);
+}
+
+function isFrameChallengeQuestion(text) {
+  const lower = cleanString(text, 1000).toLowerCase();
+  return /what question.*framing.*keeping|question.*not asking|missing.*real question|nobody.*thought|not thought.*ask|unasked/.test(lower);
+}
+
+function isTacitKnowledgeTrace(text) {
+  const lower = cleanString(text, 1000).toLowerCase();
+  return /not written down|tacit|unstated|informal|relationship memory|in its bones|ceo said|staff said|bethany told|heard from/.test(lower)
+    && !/probably|maybe|might|could|may be/.test(lower);
+}
+
+function isHypothesisTrace(text, sourceField = '', sourceType = '') {
+  const lower = cleanString(text, 1000).toLowerCase();
+  return sourceType === 'hypothesis_to_test'
+    || sourceField === 'assumptions'
+    || /assum|maybe|might|could be|may be|hypothesis|rather than|deeper issue|generic hire|if .* wrong|what if/.test(lower);
+}
+
+function isFactTrace(text, sourceField = '', evidenceIds = []) {
+  const lower = cleanString(text, 1000).toLowerCase();
+  if (isHypothesisTrace(text, sourceField, '')) return false;
+  if (isDirectQuestion(text, sourceField)) return false;
+  if (isPrivateStakeholderClaim(text, '')) return false;
+  return evidenceIds.length > 0 || sourceField === 'known';
+}
+
+function isPrivateStakeholderClaim(text, holder = '') {
+  if (isMeaningfulField(holder)) return false;
+  const lower = cleanString(text, 1000).toLowerCase();
+  return /(privately|probably|secretly|really thinks|really wants|afraid of|opposed to|private meaning|what.*means)/.test(lower)
+    && /(ceo|board|staff|funder|resident|community|bethany)/.test(lower);
+}
+
+function isInventUnknownRequest(text) {
+  const lower = cleanString(text, 1000).toLowerCase();
+  return /invent the question|invent.*unknown|fill.*unknown|nobody has thought|not thought to ask/.test(lower);
+}
+
+function inferQuestionHolder(text) {
+  const lower = cleanString(text, 1000).toLowerCase();
+  if (/board/.test(lower)) return 'Board';
+  if (/staff|hr|trust/.test(lower)) return 'Bethany staff';
+  if (/ceo|executive director/.test(lower)) return 'CEO';
+  if (/partner|relationship|funder|community|resident/.test(lower)) return 'Bethany House';
+  return 'Bethany House';
+}
+
+function inferTacitHolder(text) {
+  const lower = cleanString(text, 1000).toLowerCase();
+  if (/ceo|executive director/.test(lower)) return 'CEO';
+  if (/staff|hr/.test(lower)) return 'Bethany staff';
+  if (/board/.test(lower)) return 'Board';
+  return 'Bethany House';
 }
 
 async function handleReportPreview(request, env, user, membership) {
   const body = await readJson(request);
   const state = normalizeState(body.state || (await loadWorkspaceBundle(env, user.id, membership)).state);
   const report = fallbackRaw('final_report', { state });
-  const pdfBytes = buildPdfBytes(reportLines(report.document));
+  const pdfBytes = buildReportPdfBytes(report.document);
   return json({
     document: report.document,
     markdown: report.markdown,
@@ -903,7 +1346,7 @@ async function handleSaveReportVersion(request, env, user, membership) {
   ).bind(bundle.workspace.id).first();
   const versionNumber = Number(previous?.max_version || 0) + 1;
   const versionId = crypto.randomUUID();
-  const pdfBytes = buildPdfBytes(reportLines(report.document));
+  const pdfBytes = buildReportPdfBytes(report.document);
   let key = `classes/${membership.class_id}/users/${user.id}/workspaces/${bundle.workspace.id}/versions/${versionId}.pdf`;
   let d1ArtifactBase64 = '';
 
@@ -940,7 +1383,7 @@ async function handleSaveReportVersion(request, env, user, membership) {
       user.id,
       membership.class_id,
       versionNumber,
-      `Decision Engineering Report v${versionNumber}`,
+      `Bethany House Question Brief v${versionNumber}`,
       JSON.stringify(state),
       JSON.stringify(report.document),
       report.markdown,
@@ -982,7 +1425,7 @@ async function handleSaveReportVersion(request, env, user, membership) {
       user_id: user.id,
       class_id: membership.class_id,
       version_number: versionNumber,
-      title: `Decision Engineering Report v${versionNumber}`,
+      title: `Bethany House Question Brief v${versionNumber}`,
       pdf_r2_key: key,
       created_at: new Date().toISOString(),
     }),
@@ -990,7 +1433,7 @@ async function handleSaveReportVersion(request, env, user, membership) {
     markdown: report.markdown,
     filename: defaultPdfFilename(`v${versionNumber}`),
     pdfBase64: bytesToBase64(pdfBytes),
-    versions: await listReportVersions(env, user.id),
+    versions: await listReportVersions(env, user.id, membership.class_id),
     state,
   }, 200, request);
 }
@@ -1006,7 +1449,7 @@ async function handleDownloadVersionPdf(request, env, user, membership, versionI
 async function handleInlineReportPdf(request, env, user, membership) {
   const body = await readJson(request);
   const report = body.report || {};
-  const pdfBytes = buildPdfBytes(reportLines(report));
+  const pdfBytes = buildReportPdfBytes(report);
   await audit(env, null, user.id, 'pdf_render', { provider: 'worker', classMembershipId: membership?.id || '' });
   return new Response(pdfBytes, {
     status: 200,
@@ -1023,33 +1466,37 @@ async function handleInlineReportPdf(request, env, user, membership) {
 async function runOpenAi(env, moduleName, payload) {
   const mod = MODULES[moduleName];
   const modulePrompt = mod.prompt(payload);
+  const model = openAiModelForModule(env, moduleName);
+  const requestBody = {
+    model,
+    input: [
+      {
+        role: 'system',
+        content: [{ type: 'input_text', text: SHARED_SYSTEM_PROMPT }],
+      },
+      {
+        role: 'user',
+        content: [{ type: 'input_text', text: modulePrompt }],
+      },
+    ],
+    text: {
+      format: {
+        type: 'json_schema',
+        name: mod.schemaName,
+        schema: mod.schema,
+        strict: true,
+      },
+    },
+  };
+  const reasoning = openAiReasoningForModule(env, moduleName);
+  if (reasoning) requestBody.reasoning = reasoning;
   const response = await fetch('https://api.openai.com/v1/responses', {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${env.OPENAI_API_KEY}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      model: env.OPENAI_MODEL || 'gpt-4.1-mini',
-      input: [
-        {
-          role: 'system',
-          content: [{ type: 'input_text', text: SHARED_SYSTEM_PROMPT }],
-        },
-        {
-          role: 'user',
-          content: [{ type: 'input_text', text: modulePrompt }],
-        },
-      ],
-      text: {
-        format: {
-          type: 'json_schema',
-          name: mod.schemaName,
-          schema: mod.schema,
-          strict: true,
-        },
-      },
-    }),
+    body: JSON.stringify(requestBody),
   });
 
   const data = await response.json().catch(() => ({}));
@@ -1066,7 +1513,7 @@ async function runOpenAi(env, moduleName, payload) {
     return {
       result: JSON.parse(text),
       meta: {
-        model: data.model || env.OPENAI_MODEL || 'gpt-4.1-mini',
+        model: data.model || model,
         inputTokens: Number(data.usage?.input_tokens || data.usage?.prompt_tokens || 0),
         outputTokens: Number(data.usage?.output_tokens || data.usage?.completion_tokens || 0),
         systemPrompt: SHARED_SYSTEM_PROMPT,
@@ -1076,6 +1523,21 @@ async function runOpenAi(env, moduleName, payload) {
   } catch (error) {
     throw new Error(`OpenAI response was not valid JSON: ${text.slice(0, 200)}`);
   }
+}
+
+function openAiModelForModule(env, moduleName) {
+  if (isHighQualityModule(moduleName)) return cleanString(env.OPENAI_HIGH_QUALITY_MODEL || 'gpt-5.5', 80);
+  return cleanString(env.OPENAI_MODEL || 'gpt-5.4-mini', 80);
+}
+
+function openAiReasoningForModule(env, moduleName) {
+  if (!isHighQualityModule(moduleName)) return null;
+  const effort = cleanString(env.OPENAI_HIGH_QUALITY_REASONING_EFFORT || 'low', 20).toLowerCase();
+  return ['minimal', 'low', 'medium', 'high'].includes(effort) ? { effort } : { effort: 'low' };
+}
+
+function isHighQualityModule(moduleName) {
+  return moduleName === 'question_forge' || moduleName === 'final_report';
 }
 
 function extractResponseText(data) {
@@ -1090,44 +1552,133 @@ function extractResponseText(data) {
   return text;
 }
 
+const MODULE_ALIASES = {
+  sort_items: 'sort_board',
+  value_tag: 'value_review',
+  drill_scaffold: 'assumption_challenge',
+  question_reengineer: 'question_forge',
+  one_sentence_check: 'working_read_check',
+  brief_compiler: 'final_report',
+};
+
+function canonicalModuleName(moduleName) {
+  const clean = cleanString(moduleName, 80);
+  return MODULE_ALIASES[clean] || clean;
+}
+
+function withModuleContext(moduleName, payload) {
+  const factIds = factIdsForModule(moduleName, payload);
+  const facts = factIds
+    .map((id) => BETHANY_FACTS.find((fact) => fact.id === id))
+    .filter(Boolean);
+  return {
+    ...payload,
+    _context: {
+      kernelVersion: ZETESIS_KERNEL_VERSION,
+      capsuleVersion: DECISION_ENGINEERING_CAPSULE_VERSION,
+      factIds,
+      facts,
+    },
+  };
+}
+
+function factIdsForModule(moduleName, payload = {}) {
+  const text = JSON.stringify(payload || {}).toLowerCase();
+  const ids = new Set();
+  const add = (...values) => values.forEach((value) => ids.add(value));
+
+  if (moduleName === 'parse_intake') {
+    add('course_questions_not_answers', 'course_ea_hr_brief', 'course_100_people');
+  }
+  if (moduleName === 'sort_board' || moduleName === 'value_review') {
+    add('course_questions_not_answers', 'course_stakeholder_rings', 'course_ceo_channel_risk');
+  }
+  if (moduleName === 'assumption_challenge' || moduleName === 'working_read_check') {
+    add('course_ea_hr_brief', 'course_ea_25_relationships', 'course_relationship_continuity', 'course_hr_trust', 'course_jericho');
+  }
+  if (moduleName === 'question_forge' || moduleName === 'final_report') {
+    add(
+      'course_questions_not_answers',
+      'course_100_people',
+      'course_ea_25_relationships',
+      'course_relationship_continuity',
+      'course_jericho',
+      'course_stakeholder_rings',
+      'course_ceo_channel_risk',
+      'public_growth_plan',
+      'public_hr_payroll_2024',
+      'public_single_women_shelter',
+    );
+  }
+  if (/safe ground|transitional|housing|growth|footprint|shelter/.test(text)) {
+    add('public_transitional_housing', 'public_safe_ground_2023', 'public_growth_plan', 'public_single_women_shelter');
+  }
+  if (/financial|funding|budget|revenue|expense|net assets|funder/.test(text)) {
+    add('public_2024_financials', 'course_stakeholder_rings');
+  }
+  if (/executive assistant|\bea\b|staffing|relationship|partner/.test(text)) {
+    add('course_ea_hr_brief', 'course_ea_25_relationships', 'course_relationship_continuity');
+  }
+  if (/hr|trust|staff/.test(text)) {
+    add('public_hr_payroll_2024', 'course_hr_trust');
+  }
+  if (/jericho|school|community|resident|town/.test(text)) {
+    add('course_jericho', 'course_stakeholder_rings');
+  }
+  if (/100|women and children|women|children|depend/.test(text)) {
+    add('course_100_people', 'public_serves_women_children');
+  }
+
+  return Array.from(ids).slice(0, 14);
+}
+
 const REPORT_QUESTION_SCHEMA = {
   type: 'object',
   additionalProperties: false,
   properties: {
     sourceItemId: { type: 'string' },
     question: { type: 'string' },
-    whoMustSayYes: { type: 'string' },
-    vetoHolder: { type: 'string' },
-    likelyToSayNo: { type: 'string' },
+    whyItMatters: { type: 'string' },
+    whatAnswerClarifies: { type: 'string' },
+    whoCanAnswer: { type: 'string' },
+    whoNeedsComfort: { type: 'string' },
+    whoFeelsCost: { type: 'string' },
+    sourceType: { type: 'string' },
+    evidenceNotes: { type: 'array', items: { type: 'string' } },
   },
-  required: ['sourceItemId', 'question', 'whoMustSayYes', 'vetoHolder', 'likelyToSayNo'],
+  required: ['sourceItemId', 'question', 'whyItMatters', 'whatAnswerClarifies', 'whoCanAnswer', 'whoNeedsComfort', 'whoFeelsCost', 'sourceType', 'evidenceNotes'],
 };
 
-const REPORT_TYPE_MAP_SCHEMA = {
+const REPORT_BRIEF_ITEM_SCHEMA = {
   type: 'object',
   additionalProperties: false,
   properties: {
     sourceItemId: { type: 'string' },
-    bucket: { type: 'string' },
-    status: { type: 'string' },
-    valueTag: { type: 'string' },
-    holder: { type: 'string' },
-    sourceField: { type: 'string' },
-    item: { type: 'string' },
+    itemType: { type: 'string', enum: ['question', 'observation', 'hypothesis'] },
+    headline: { type: 'string' },
+    text: { type: 'string' },
+    whyItMatters: { type: 'string' },
+    whatBethanyCouldClarify: { type: 'string' },
+    whoCanAnswer: { type: 'string' },
+    whoNeedsComfort: { type: 'string' },
+    whoFeelsCost: { type: 'string' },
+    sourceType: { type: 'string' },
+    evidenceNotes: { type: 'array', items: { type: 'string' } },
   },
-  required: ['sourceItemId', 'bucket', 'status', 'valueTag', 'holder', 'sourceField', 'item'],
+  required: ['sourceItemId', 'itemType', 'headline', 'text', 'whyItMatters', 'whatBethanyCouldClarify', 'whoCanAnswer', 'whoNeedsComfort', 'whoFeelsCost', 'sourceType', 'evidenceNotes'],
 };
 
-const REPORT_DRILL_SCHEMA = {
+const REPORT_LOCKED_A_SCHEMA = {
   type: 'object',
   additionalProperties: false,
   properties: {
-    label: { type: 'string' },
-    givenStatement: { type: 'string' },
-    wrongIf: { type: 'string' },
-    whatChanges: { type: 'string' },
+    purpose: { type: 'string' },
+    workingRead: { type: 'string' },
+    claims: { type: 'array', items: { type: 'string' } },
+    sourceIds: { type: 'array', items: { type: 'string' } },
+    notAssumingYet: { type: 'array', items: { type: 'string' } },
   },
-  required: ['label', 'givenStatement', 'wrongIf', 'whatChanges'],
+  required: ['purpose', 'workingRead', 'claims', 'sourceIds', 'notAssumingYet'],
 };
 
 const REPORT_DOCUMENT_SCHEMA = {
@@ -1138,26 +1689,26 @@ const REPORT_DOCUMENT_SCHEMA = {
     subtitle: { type: 'string' },
     client: { type: 'string' },
     preparedFor: { type: 'string' },
-    refinedProblemStatement: { type: 'string' },
-    highValueQuestions: { type: 'array', items: REPORT_QUESTION_SCHEMA },
-    typeMap: { type: 'array', items: REPORT_TYPE_MAP_SCHEMA },
-    drillSummary: { type: 'array', items: REPORT_DRILL_SCHEMA },
-    oneThingLeftOpen: { type: 'string' },
-    whyLeftOpen: { type: 'string' },
-    guardrailNote: { type: 'string' },
+    purpose: { type: 'string' },
+	    workingRead: { type: 'string' },
+	    priorityQuestions: { type: 'array', items: REPORT_QUESTION_SCHEMA },
+	    briefItems: { type: 'array', items: REPORT_BRIEF_ITEM_SCHEMA },
+	    notAssumingYet: { type: 'array', items: { type: 'string' } },
+    closingNote: { type: 'string' },
+    lockedA: REPORT_LOCKED_A_SCHEMA,
   },
   required: [
     'title',
     'subtitle',
     'client',
     'preparedFor',
-    'refinedProblemStatement',
-    'highValueQuestions',
-    'typeMap',
-    'drillSummary',
-    'oneThingLeftOpen',
-    'whyLeftOpen',
-    'guardrailNote',
+    'purpose',
+	    'workingRead',
+	    'priorityQuestions',
+	    'briefItems',
+	    'notAssumingYet',
+    'closingNote',
+    'lockedA',
   ],
 };
 
@@ -1183,13 +1734,17 @@ const MODULES = {
       },
       required: ['items'],
     },
-    prompt: (payload) => `Split this intake into atomic candidate items for the next module. Do not classify or judge. Preserve the team's wording as much as possible.
+    prompt: (payload) => `Operator: describe.
+Split the intake into atomic candidate items. Preserve the team's wording. Do not classify or judge yet.
+
+Context slice:
+${JSON.stringify(payload._context || {}, null, 2)}
 
 Intake:
 ${JSON.stringify(payload.intake || {}, null, 2)}`,
   },
-  sort_items: {
-    schemaName: 'sort_items_result',
+  sort_board: {
+    schemaName: 'sort_board_result',
     schema: {
       type: 'object',
       additionalProperties: false,
@@ -1202,33 +1757,43 @@ ${JSON.stringify(payload.intake || {}, null, 2)}`,
             properties: {
               id: { type: 'string' },
               bucket: { type: 'string', enum: ['KK', 'KU', 'UK', 'UU', ''] },
+              board: { type: 'string', enum: ['verify', 'ask_someone', 'bethany_tacit', 'missing_real_question', 'needs_attribution'] },
               holder: { type: 'string' },
+              sourceType: { type: 'string', enum: ['public_fact', 'course_trace', 'student_trace', 'hypothesis_to_test', 'question_for_bethany'] },
+              evidenceIds: { type: 'array', items: { type: 'string' } },
               status: { type: 'string', enum: ['settled', 'needs_attribution'] },
               aiNotes: { type: 'string' },
             },
-            required: ['id', 'bucket', 'holder', 'status', 'aiNotes'],
+            required: ['id', 'bucket', 'board', 'holder', 'sourceType', 'evidenceIds', 'status', 'aiNotes'],
           },
         },
       },
       required: ['items'],
     },
-    prompt: (payload) => `Classify each item into exactly one of KK, KU, UK, or UU only where justified by the team's text.
+    prompt: (payload) => `Operator: describe, with provenance.
+Sort each item for a student-facing board. Preserve the item's id.
 
-Rules:
-- KK: settleable by research alone.
-- KU: the team knows it is missing and needs a conversation.
-- UK: something the organisation knows but has not written down. Only valid if the team states this came from listening, not your inference.
-- UU: a question nobody has thought to ask yet.
-- Every settled item needs a holder/source: whose knowledge this is, or where it can be verified.
-- If holder/source is missing, unknown, TBD, or a placeholder, return status needs_attribution and bucket "".
-- Do not invent holder/source, stakeholder private beliefs, or UK/UU content. If an item asks you to invent or infer private/tacit content, return status needs_attribution and bucket "".
-- Do not assign who says yes, who can say no, or likely no here; those belong to the gatekeeper step for curated high-value questions.
+Use these meanings:
+- verify / KK: externally checkable or supplied fact. Use public_fact or course_trace with evidence IDs.
+- ask_someone / KU: a direct question or answerable unknown. The holder is the Bethany person/group who can answer, usually "Bethany House" if unspecified.
+- bethany_tacit / UK: Bethany likely holds the tacit answer, but the team does not yet have it.
+- missing_real_question / UU: a frame challenge, assumption, hidden tension, or hypothesis to test.
+- needs_attribution: only for private stakeholder claims or unsupported assertions where no source, holder, or evidence can be named.
+
+Never combine KK with hypothesis_to_test or question_for_bethany.
+Never mark an item settled unless bucket, board, holder, and sourceType agree.
+If the item is a hypothesis, do not make it a fact; place it as missing_real_question or bethany_tacit and mark sourceType hypothesis_to_test.
+If the item is already a question, place it as ask_someone and mark sourceType question_for_bethany.
+Use only supplied fact IDs.
+
+Context slice:
+${JSON.stringify(payload._context || {}, null, 2)}
 
 Items:
 ${JSON.stringify(payload.items || [], null, 2)}`,
   },
-  value_tag: {
-    schemaName: 'value_tag_result',
+  value_review: {
+    schemaName: 'value_review_result',
     schema: {
       type: 'object',
       additionalProperties: false,
@@ -1241,23 +1806,27 @@ ${JSON.stringify(payload.items || [], null, 2)}`,
             properties: {
               id: { type: 'string' },
               valueTag: { type: 'string', enum: ['High', 'Medium', 'Low'] },
+              valueLabel: { type: 'string', enum: ['Worth asking Bethany', 'Useful but secondary', 'Handle through research'] },
               valueRationale: { type: 'string' },
+              selectedForBrief: { type: 'boolean' },
             },
-            required: ['id', 'valueTag', 'valueRationale'],
+            required: ['id', 'valueTag', 'valueLabel', 'valueRationale', 'selectedForBrief'],
           },
         },
       },
       required: ['items'],
     },
-    prompt: (payload) => `For each KU, UK, or UU item, propose High, Medium, or Low value.
+    prompt: (payload) => `Operator: value.
+Decide what deserves Bethany House conversation time. High means it could change the frame, protect someone affected by a wrong assumption, or reveal a consequential constraint. Return one direct rationale per item.
 
-Use these factors: bucket importance, stakes for people affected if wrong, whether a gatekeeper's decision depends on it, and whether it depends on a single named source. Return a one-sentence rationale. Do not tag everything High.
+Context slice:
+${JSON.stringify(payload._context || {}, null, 2)}
 
 Items:
 ${JSON.stringify(payload.items || [], null, 2)}`,
   },
-  drill_scaffold: {
-    schemaName: 'drill_scaffold_result',
+  assumption_challenge: {
+    schemaName: 'assumption_challenge_result',
     schema: {
       type: 'object',
       additionalProperties: false,
@@ -1268,31 +1837,58 @@ ${JSON.stringify(payload.items || [], null, 2)}`,
       },
       required: ['claimOptions', 'angles', 'frameQuestion'],
     },
-    prompt: (payload) => `The team selected this item for the Drill: ${JSON.stringify(payload.item || payload.text || '')}
+    prompt: (payload) => `Operator: imagine, but keep the student accountable.
+Selected item: ${JSON.stringify(payload.item || payload.text || '')}
 
-Step (a): Offer 3 alternative phrasings as claims that could be false. Pull language from the team's own intake where possible.
-Steps (b) and (c): Do not write the answer. Offer 3-4 angles the team might consider as prompts only.
-Step (d): Return only the frame question, not candidate answers.`,
+Context slice:
+${JSON.stringify(payload._context || {}, null, 2)}
+
+Offer claim phrasings that could be false, angles the student might test, and one frame question. Do not write the student's final answer.`,
   },
-  question_reengineer: {
-    schemaName: 'question_reengineer_result',
+  question_forge: {
+    schemaName: 'question_forge_result',
     schema: {
       type: 'object',
       additionalProperties: false,
       properties: {
         variants: { type: 'array', items: { type: 'string' } },
+        candidates: {
+          type: 'array',
+          items: {
+            type: 'object',
+            additionalProperties: false,
+            properties: {
+              sourceItemId: { type: 'string' },
+              question: { type: 'string' },
+              whyItMatters: { type: 'string' },
+              whatAnswerClarifies: { type: 'string' },
+              sourceType: { type: 'string', enum: ['public_fact', 'course_trace', 'student_trace', 'hypothesis_to_test', 'question_for_bethany'] },
+              evidenceIds: { type: 'array', items: { type: 'string' } },
+              selectedForBrief: { type: 'boolean' },
+            },
+            required: ['sourceItemId', 'question', 'whyItMatters', 'whatAnswerClarifies', 'sourceType', 'evidenceIds', 'selectedForBrief'],
+          },
+        },
         ownerFlag: { type: 'string' },
       },
-      required: ['variants', 'ownerFlag'],
+      required: ['variants', 'candidates', 'ownerFlag'],
     },
-    prompt: (payload) => `Sharpen this open question along the axes: for whom, how much, by when.
+    prompt: (payload) => `Operator: gated imagine.
+Forge Bethany-facing questions from the supplied item(s). Make them specific enough that Bethany can answer them. Include why each matters and what the answer would clarify. Mark imagined readings as hypothesis_to_test.
 
-Question: ${JSON.stringify(payload.question || '')}
+Respectful language constraint:
+- Write as consultants asking Bethany House for clarity, not as evaluators diagnosing Bethany House.
+- Avoid wording that implies Bethany lacks competence, failed, ignored something, or cannot manage the issue.
+- If the item is a risk or hypothesis, phrase it as "clarify whether/which/how" or "what would have to be true", not as a settled criticism.
 
-Return 3-4 variants that are answerable in principle by a specifically named person. If no variant can be tied to a named owner, say so in ownerFlag instead of forcing an unanswerable question.`,
+Context slice:
+${JSON.stringify(payload._context || {}, null, 2)}
+
+Payload:
+${JSON.stringify({ question: payload.question || '', item: payload.item || null, items: payload.items || [] }, null, 2)}`,
   },
-  one_sentence_check: {
-    schemaName: 'one_sentence_check_result',
+  working_read_check: {
+    schemaName: 'working_read_check_result',
     schema: {
       type: 'object',
       additionalProperties: false,
@@ -1303,7 +1899,8 @@ Return 3-4 variants that are answerable in principle by a specifically named per
       },
       required: ['verdict', 'reasoning', 'missingFields'],
     },
-    prompt: (payload) => `Brief as given:
+    prompt: (payload) => `Operator: check R-growth.
+Brief as given:
 ${payload.briefText || ''}
 
 Team's proposed reframe:
@@ -1315,7 +1912,10 @@ ${payload.rulesIn || ''}
 Rules out:
 ${payload.rulesOut || ''}
 
-Check whether the reframe merely restates the brief or names a tension the brief did not state. Do not supply a replacement sentence. If rules_in or rules_out is empty, return not_yet_doing_work.`,
+Context slice:
+${JSON.stringify(payload._context || {}, null, 2)}
+
+Check whether the working read merely restates the brief or names a tension underneath it. Do not supply a replacement sentence.`,
   },
   final_report: {
     schemaName: 'final_report_result',
@@ -1328,25 +1928,17 @@ Check whether the reframe merely restates the brief or names a tension the brief
       },
       required: ['document', 'markdown'],
     },
-    prompt: (payload) => `Assemble a PDF-ready final report object from already-approved upstream work.
+    prompt: (payload) => `Operator: locked-A client transmission.
+Assemble a Bethany House Question Brief from approved workspace fields. Preserve the working read, item type, provenance, and hedges. Include selected questions, observations, and hypotheses. Write for Bethany House, not for the classroom. Do not add recommendations or private beliefs.
 
-Hard guardrails:
-- Use only explicit fields in the workspace state below.
-- Do not add recommendations, conclusions, stakeholder private beliefs, missing UK/UU content, or polished filler.
-- Empty strings are valid when a field has not been approved by the team.
-- refinedProblemStatement must be the approved oneSentence reframe only.
-- highValueQuestions may include only items whose valueTag is High, whose bucket is KU, UK, or UU, and whose whoSaysYes, veto, and likelyToSayNo fields are explicit non-placeholder text.
-- typeMap must include every item, including unsettled and blank-attribution items.
-- drillSummary must use only the team's givenStatement, wrongIf, and whatChanges fields.
-- The document object must contain plain text only. No Markdown, HTML, LaTeX, tables, or bullets inside document fields.
-- The markdown field must contain the same document content.
+Client-facing respect constraint:
+- The brief is going to Bethany House leadership. It should read as useful, direct, and careful, not as a critique of Bethany House.
+- Do not write "we are not assuming", "the team is not assuming", "Bethany lacks", "Bethany failed", "Bethany cannot", or similar judgmental language.
+- Convert assumption cautions into "Still to clarify" items: "Clarify whether...", "Clarify which...", "Understand how...", "Test whether...".
+- Preserve stakes, but attribute uncertainty to the student team's need to learn before recommending.
 
-Required report sections:
-1. Refined problem statement.
-2. Curated high-value questions for Bethany House, with who must say yes, who holds veto, and who is likely to say no.
-3. Type map with all items, buckets, attribution status, value tags, and source fields.
-4. Assumption drill summary.
-5. One thing left open.
+Context slice:
+${JSON.stringify(payload._context || {}, null, 2)}
 
 Workspace state:
 ${JSON.stringify(payload.state || {}, null, 2)}`,
@@ -1373,7 +1965,7 @@ function fallbackRaw(moduleName, payload) {
     return { items };
   }
 
-  if (moduleName === 'sort_items') {
+  if (moduleName === 'sort_board') {
     return {
       items: (payload.items || []).map((item) => {
         const text = item.rawText || item.text || '';
@@ -1382,7 +1974,10 @@ function fallbackRaw(moduleName, payload) {
           return {
             id: item.id,
             bucket: '',
+            board: 'needs_attribution',
             holder: '',
+            sourceType: 'hypothesis_to_test',
+            evidenceIds: [],
             status: 'needs_attribution',
             aiNotes: 'Cannot invent UK/UU content or infer private stakeholder meaning. Ask what the team actually heard and who can corroborate it.',
           };
@@ -1391,7 +1986,10 @@ function fallbackRaw(moduleName, payload) {
           return {
             id: item.id,
             bucket: '',
+            board: 'needs_attribution',
             holder,
+            sourceType: inferSourceType(text, item.sourceField),
+            evidenceIds: evidenceIdsForText(text, payload._context),
             status: 'needs_attribution',
             aiNotes: 'Missing holder/source; this item is not settled into a final bucket yet.',
           };
@@ -1400,7 +1998,10 @@ function fallbackRaw(moduleName, payload) {
         return {
           id: item.id,
           bucket,
+          board: boardForBucket(bucket),
           holder,
+          sourceType: inferSourceType(text, item.sourceField),
+          evidenceIds: evidenceIdsForText(text, payload._context),
           status: 'settled',
           aiNotes: 'Fallback classification. Review before treating as settled.',
         };
@@ -1408,26 +2009,37 @@ function fallbackRaw(moduleName, payload) {
     };
   }
 
-  if (moduleName === 'value_tag') {
+  if (moduleName === 'value_review') {
     return {
       items: (payload.items || []).map((item) => {
         const text = `${item.rawText || ''} ${item.bucket || ''}`.toLowerCase();
         let valueTag = item.bucket === 'UK' || item.bucket === 'UU' ? 'High' : 'Medium';
         if (item.bucket === 'KK') valueTag = 'Low';
         if (/ceo|board|client|resident|school|funder|trust|veto|risk|hurt|women|children/.test(text)) valueTag = 'High';
-        const rationale = item.bucket === 'KU'
-          ? 'Fallback tag based on the need for a real conversation and gatekeeper approval relevance.'
-          : 'Fallback tag based on bucket importance and visible stakeholder/stakes language.';
+        const valueLabel = valueTag === 'High'
+          ? 'Worth asking Bethany'
+          : valueTag === 'Medium'
+            ? 'Useful but secondary'
+            : 'Handle through research';
+	        const rationale = /relationship|partner|executive assistant|\bea\b/.test(text)
+	          ? 'High value because relationship memory can change whether Bethany House needs a generic hire, a handoff plan, or a different trust-bearing role.'
+	          : item.bucket === 'KU'
+	            ? 'This likely needs a real conversation before the team can use it responsibly.'
+	            : valueTag === 'Low'
+	              ? 'This looks researchable without spending Bethany conversation time.'
+	              : 'This may change the frame or expose a consequence if the team guesses wrong.';
         return {
           id: item.id,
           valueTag,
+          valueLabel,
           valueRationale: rationale,
+          selectedForBrief: valueTag === 'High',
         };
       }),
     };
   }
 
-  if (moduleName === 'drill_scaffold') {
+  if (moduleName === 'assumption_challenge') {
     const text = payload.item?.rawText || payload.item?.text || payload.text || 'this assumption';
     if (guardrail) {
       return {
@@ -1457,25 +2069,44 @@ function fallbackRaw(moduleName, payload) {
     };
   }
 
-  if (moduleName === 'question_reengineer') {
+  if (moduleName === 'question_forge') {
     const q = cleanString(payload.question || 'What do we need to understand?', 300);
     if (guardrail) {
       return {
         variants: [],
+        candidates: [],
         ownerFlag: 'This asks the assistant to infer private stakeholder meaning. Bring back what was heard in the real conversation, then tie the question to a named owner.',
       };
     }
+    const items = payload.items?.length ? payload.items : [payload.item || { id: '', rawText: q, sourceType: 'student_trace' }];
+    const candidates = items
+      .filter((item) => isMeaningfulField(item.reengineeredQuestion || item.rawText || item.text || q))
+      .slice(0, 8)
+      .map((item) => {
+        const base = cleanString(item.reengineeredQuestion || item.rawText || item.text || q, 500);
+        const question = makeBethanyQuestion(base);
+        return {
+          sourceItemId: item.id || '',
+          question,
+          whyItMatters: inferWhyItMatters(base),
+          whatAnswerClarifies: inferWhatClarifies(base),
+          sourceType: item.sourceType || inferSourceType(base, item.sourceField),
+          evidenceIds: item.evidenceIds?.length ? item.evidenceIds : evidenceIdsForText(base, payload._context),
+          selectedForBrief: item.selectedForBrief !== false && (item.valueTag === 'High' || !item.valueTag),
+        };
+      });
     return {
-      variants: [
-        `${q} For whom specifically?`,
-        `${q} How much would change if we guessed wrong?`,
-        `${q} By when does this need to be answered, and by whom?`,
-      ],
+	      variants: [
+	        `${q} For whom specifically at Bethany House?`,
+	        `${q} How much would the team be wrong by if it guessed instead of asking?`,
+	        `${q} By when does Bethany need this clarified, and by whom?`,
+	      ],
+      candidates,
       ownerFlag: 'Fallback variants. Attach a named owner before sending the question forward.',
     };
   }
 
-  if (moduleName === 'one_sentence_check') {
+  if (moduleName === 'working_read_check') {
     const missing = [];
     if (!cleanString(payload.rulesIn || '', 800)) missing.push('rulesIn');
     if (!cleanString(payload.rulesOut || '', 800)) missing.push('rulesOut');
@@ -1506,90 +2137,339 @@ function fallbackRaw(moduleName, payload) {
 function buildReportDocument(state) {
   const one = state.oneSentence || {};
   const items = state.items || [];
-  const highValueItems = items.filter((item) => item.valueTag === 'High' && item.bucket && item.bucket !== 'KK');
-  const highQuestions = highValueItems.filter(isReadyHighValueQuestion);
-  const omittedHighValueCount = highValueItems.length - highQuestions.length;
-  const assumptions = state.drill?.assumptions || [];
+  const selectedItems = selectedBriefQuestions(items).slice(0, 10);
+  const briefItems = selectedItems.map(buildBriefItem);
+  const priorityQuestions = briefItems
+    .filter((item) => item.itemType === 'question')
+    .map((item) => ({
+      sourceItemId: item.sourceItemId,
+      question: item.text,
+      whyItMatters: item.whyItMatters,
+      whatAnswerClarifies: item.whatBethanyCouldClarify,
+      whoCanAnswer: item.whoCanAnswer,
+      whoNeedsComfort: item.whoNeedsComfort,
+      whoFeelsCost: item.whoFeelsCost,
+      sourceType: item.sourceType,
+      evidenceNotes: item.evidenceNotes,
+    }))
+    .slice(0, 8);
+  const notAssumingYet = [
+    one.oneThingLeftOpen || '',
+    ...(items || [])
+      .filter((item) => item.valueTag === 'High' && !isMeaningfulField(item.reengineeredQuestion || item.rawText))
+      .map((item) => item.rawText || item.text || ''),
+  ].filter(isMeaningfulField).map(clientClarificationPoint).slice(0, 5);
+  const sourceIds = uniqueFlat([
+    ...selectedItems.flatMap((item) => item.evidenceIds || []),
+    ...evidenceIdsForText(one.reframeText || '', { facts: BETHANY_FACTS }),
+  ]);
+  const purpose = 'This brief identifies the questions, observations, and hypotheses most worth taking back to Bethany House before the team closes its frame or makes recommendations.';
+  const workingRead = one.status === 'approved' ? one.reframeText || '' : '';
+  const lockedA = {
+    purpose,
+    workingRead,
+    claims: [
+      workingRead,
+      ...briefItems.map((item) => item.text || item.headline || ''),
+      ...notAssumingYet,
+    ].filter(isMeaningfulField),
+    sourceIds,
+    notAssumingYet,
+  };
 
   return {
-    title: 'Decision Manifold Studio Final Report',
-    subtitle: 'Decision Manifold summary',
+    title: 'Bethany House Question Brief',
+    subtitle: 'Prepared for the next Bethany House conversation',
     client: 'Bethany House of Nassau County',
-    preparedFor: 'Columbia SPS Mastering Consulting',
-    refinedProblemStatement: one.status === 'approved' ? one.reframeText || '' : '',
-    highValueQuestions: highQuestions.map((item) => ({
-      sourceItemId: item.id || '',
-      question: item.reengineeredQuestion || item.rawText || item.text || '',
-      whoMustSayYes: item.whoSaysYes || '',
-      vetoHolder: item.veto || '',
-      likelyToSayNo: item.likelyToSayNo || '',
-    })),
-    typeMap: items.map((item) => ({
-      sourceItemId: item.id || '',
-      bucket: item.bucket || '',
-      status: item.status || '',
-      valueTag: item.valueTag || '',
-      holder: item.holder || '',
-      sourceField: item.sourceField || '',
-      item: item.rawText || item.text || '',
-    })),
-    drillSummary: assumptions.map((assumption, index) => ({
-      label: `Assumption ${index + 1}`,
-      givenStatement: assumption.givenStatement || assumption.selectedText || '',
-      wrongIf: assumption.wrongIf || '',
-      whatChanges: assumption.whatChanges || '',
-    })),
-    oneThingLeftOpen: one.oneThingLeftOpen || '',
-    whyLeftOpen: one.whyLeftOpen || '',
-    guardrailNote: [
-      'Generated only from approved workspace fields.',
-      omittedHighValueCount ? `${omittedHighValueCount} high-value item(s) were omitted because who says yes, who can say no, or likely no was blank or placeholder text.` : '',
-    ].filter(Boolean).join(' '),
+    preparedFor: 'Bethany House leadership',
+    purpose,
+    workingRead,
+    priorityQuestions,
+    briefItems,
+    notAssumingYet,
+    closingNote: one.whyLeftOpen || 'These questions give the next Bethany House conversation a sharper starting point before any recommendation is made.',
+    lockedA,
   };
 }
 
 function buildReportMarkdown(document) {
   const lines = [];
-  lines.push(`# ${document.title || 'Decision Manifold Studio Final Report'}`);
+  lines.push(`# ${document.title || 'Bethany House Question Brief'}`);
   if (document.subtitle) lines.push(document.subtitle);
   if (document.client) lines.push(`Client: ${document.client}`);
   lines.push('');
-  lines.push('## Refined Problem Statement');
-  lines.push(document.refinedProblemStatement || '_Draft not yet approved._');
+  lines.push('## Purpose');
+  lines.push(document.purpose || '');
   lines.push('');
-  lines.push('## Curated High-Value Questions');
-  if (!document.highValueQuestions?.length) lines.push('_No high-value questions tagged yet._');
-  (document.highValueQuestions || []).forEach((item, index) => {
+  lines.push('## Working Read');
+  lines.push(document.workingRead || '');
+  lines.push('');
+  lines.push('## Priority Questions');
+  if (!document.priorityQuestions?.length) lines.push('No priority questions selected yet.');
+  (document.priorityQuestions || []).forEach((item, index) => {
     lines.push(`${index + 1}. ${item.question || ''}`);
-    lines.push(`   - Who must say yes: ${item.whoMustSayYes || ''}`);
-    lines.push(`   - Who holds veto: ${item.vetoHolder || ''}`);
-    lines.push(`   - Likely to say no: ${item.likelyToSayNo || ''}`);
+    lines.push(`   Why this matters: ${item.whyItMatters || ''}`);
+    lines.push(`   What Bethany's answer would clarify: ${item.whatAnswerClarifies || ''}`);
+    if (item.whoCanAnswer) lines.push(`   Best first respondent: ${item.whoCanAnswer}`);
+    if (item.whoNeedsComfort) lines.push(`   Needs comfort from: ${item.whoNeedsComfort}`);
+    if (item.whoFeelsCost) lines.push(`   If wrong, watch the cost for: ${item.whoFeelsCost}`);
+  });
+  const nonQuestionItems = (document.briefItems || []).filter((item) => item.itemType !== 'question');
+  lines.push('');
+  lines.push('## High-Value Observations And Hypotheses');
+  if (!nonQuestionItems.length) lines.push('No additional observations or hypotheses selected yet.');
+  nonQuestionItems.forEach((item, index) => {
+    lines.push(`${index + 1}. ${item.headline || item.text || ''}`);
+    lines.push(`   ${briefItemTypeLabel(item.itemType)}: ${item.text || ''}`);
+    lines.push(`   Why this matters: ${item.whyItMatters || ''}`);
+    lines.push(`   What Bethany could clarify: ${item.whatBethanyCouldClarify || ''}`);
+    if (item.whoCanAnswer) lines.push(`   Best first respondent: ${item.whoCanAnswer}`);
+    if (item.whoNeedsComfort) lines.push(`   Needs comfort from: ${item.whoNeedsComfort}`);
+    if (item.whoFeelsCost) lines.push(`   If wrong, watch the cost for: ${item.whoFeelsCost}`);
   });
   lines.push('');
-  lines.push('## Type Map');
-  lines.push('| Bucket | Status | Value | Holder/source | Source | Item |');
-  lines.push('|---|---|---|---|---|---|');
-  (document.typeMap || []).forEach((item) => {
-    lines.push(`| ${safeCell(item.bucket)} | ${safeCell(item.status)} | ${safeCell(item.valueTag)} | ${safeCell(item.holder)} | ${safeCell(item.sourceField)} | ${safeCell(item.item)} |`);
-  });
-  lines.push('');
-  lines.push('## Assumption Drill Summary');
-  (document.drillSummary || []).forEach((assumption) => {
-    lines.push(`### ${assumption.label || 'Assumption'}`);
-    lines.push(`Given: ${assumption.givenStatement || ''}`);
-    lines.push(`Wrong if: ${assumption.wrongIf || ''}`);
-    lines.push(`What changes: ${assumption.whatChanges || ''}`);
-  });
-  lines.push('');
-  lines.push('## One Thing Left Open');
-  lines.push(document.oneThingLeftOpen || '');
-  if (document.whyLeftOpen) lines.push(`\n${document.whyLeftOpen}`);
-  if (document.guardrailNote) {
-    lines.push('');
-    lines.push('## Guardrail Note');
-    lines.push(document.guardrailNote);
-  }
+  lines.push('## Still To Clarify');
+  if (!document.notAssumingYet?.length) lines.push('No additional clarification recorded.');
+  (document.notAssumingYet || []).forEach((item) => lines.push(`- ${item}`));
+  if (document.closingNote) lines.push('', document.closingNote);
   return lines.join('\n');
+}
+
+function buildBriefItem(item = {}) {
+  const rawText = item.rawText || item.text || '';
+  const questionText = item.reengineeredQuestion || (isQuestionText(rawText) ? rawText : '');
+  const itemType = questionText ? 'question' : inferBriefItemType(item, rawText);
+  const text = itemType === 'question' ? questionText : rawText;
+  return {
+    sourceItemId: item.id || '',
+    itemType,
+    headline: itemType === 'question' ? 'Question for Bethany House' : headlineFromText(rawText),
+    text,
+    whyItMatters: item.whyItMatters || inferWhyItMatters(rawText || questionText),
+    whatBethanyCouldClarify: item.whatAnswerClarifies || inferWhatClarifies(rawText || questionText),
+    whoCanAnswer: item.whoSaysYes || item.holder || '',
+    whoNeedsComfort: item.veto || '',
+    whoFeelsCost: item.likelyToSayNo || '',
+    sourceType: item.sourceType || inferSourceType(rawText, item.sourceField),
+    evidenceNotes: evidenceNotesForItem(item),
+  };
+}
+
+function inferBriefItemType(item = {}, text = '') {
+  if (item.sourceType === 'hypothesis_to_test') return 'hypothesis';
+  const lower = cleanString(text, 1200).toLowerCase();
+  if (/assume|assumption|hypothesis|may be|might|could be|would be wrong if|seems like|possibly/.test(lower)) return 'hypothesis';
+  return 'observation';
+}
+
+function isQuestionText(text) {
+  const clean = cleanString(text, 800);
+  return /\?$/.test(clean) || /^(who|what|which|how|when|where|why|does|do|can|could|should|would)\b/i.test(clean);
+}
+
+function headlineFromText(text) {
+  const clean = cleanString(text, 180).replace(/\s+/g, ' ').replace(/[.?]+$/g, '');
+  if (!clean) return 'Working trace';
+  return clean.length > 96 ? `${clean.slice(0, 93)}...` : clean;
+}
+
+function briefItemTypeLabel(itemType) {
+  return itemType === 'hypothesis' ? 'Hypothesis to test' : itemType === 'question' ? 'Question' : 'Observation';
+}
+
+function clientClarificationPoint(text) {
+  const clean = cleanString(text, 1200).replace(/\s+/g, ' ').trim();
+  if (!clean) return '';
+  const lower = clean.toLowerCase();
+  if (/generic hire|standard hire|hire is enough|hire would close/.test(lower)) {
+    return 'Clarify whether the staffing need is primarily role capacity, relationship continuity, or both.';
+  }
+  if (/ceo.*only reliable channel|only reliable channel|channel outside the ceo|outside the ceo/.test(lower)) {
+    return 'Clarify which additional Bethany voices should inform the next round of work.';
+  }
+  if (/^the team is not assuming that\s+/i.test(clean)) {
+    return `Clarify whether ${lowerFirst(clean.replace(/^the team is not assuming that\s+/i, '')).replace(/[.]+$/g, '')}.`;
+  }
+  if (/^the team is not assuming\s+/i.test(clean)) {
+    return `Clarify whether ${lowerFirst(clean.replace(/^the team is not assuming\s+/i, '')).replace(/[.]+$/g, '')}.`;
+  }
+  if (/^we are not assuming that\s+/i.test(clean)) {
+    return `Clarify whether ${lowerFirst(clean.replace(/^we are not assuming that\s+/i, '')).replace(/[.]+$/g, '')}.`;
+  }
+  if (/^we are not assuming\s+/i.test(clean)) {
+    return `Clarify whether ${lowerFirst(clean.replace(/^we are not assuming\s+/i, '')).replace(/[.]+$/g, '')}.`;
+  }
+  if (/^we do not assume that\s+/i.test(clean)) {
+    return `Clarify whether ${lowerFirst(clean.replace(/^we do not assume that\s+/i, '')).replace(/[.]+$/g, '')}.`;
+  }
+  if (/^we do not assume\s+/i.test(clean)) {
+    return `Clarify whether ${lowerFirst(clean.replace(/^we do not assume\s+/i, '')).replace(/[.]+$/g, '')}.`;
+  }
+  if (/^not assuming that\s+/i.test(clean)) {
+    return `Clarify whether ${lowerFirst(clean.replace(/^not assuming that\s+/i, '')).replace(/[.]+$/g, '')}.`;
+  }
+  if (/^not assuming\s+/i.test(clean)) {
+    return `Clarify whether ${lowerFirst(clean.replace(/^not assuming\s+/i, '')).replace(/[.]+$/g, '')}.`;
+  }
+  if (/^bethany house lacks\s+/i.test(clean)) {
+    return `Clarify whether Bethany House needs ${lowerFirst(clean.replace(/^bethany house lacks\s+/i, '')).replace(/[.]+$/g, '')}.`;
+  }
+  if (/^bethany lacks\s+/i.test(clean)) {
+    return `Clarify whether Bethany House needs ${lowerFirst(clean.replace(/^bethany lacks\s+/i, '')).replace(/[.]+$/g, '')}.`;
+  }
+  return clean;
+}
+
+function clientClosingNote(text) {
+  const clean = clientClarificationPoint(text);
+  if (!clean) return '';
+  if (/protect bethany house from/i.test(clean) || /premature answer/i.test(clean)) {
+    return 'These questions give the next Bethany House conversation a sharper starting point before any recommendation is made.';
+  }
+  return clean;
+}
+
+function selectedBriefQuestions(items = []) {
+  return items
+    .filter((item) => (
+      item
+      && item.bucket !== 'KK'
+      && item.valueTag !== 'Low'
+      && (
+        item.selectedForBrief === true
+        || (item.selectedForBrief !== false && item.valueTag === 'High')
+        || item.sourceType === 'question_for_bethany'
+      )
+      && isMeaningfulField(item.reengineeredQuestion || item.rawText || item.text)
+    ))
+    .sort((a, b) => {
+      const selectedDelta = Number(b.selectedForBrief === true) - Number(a.selectedForBrief === true);
+      if (selectedDelta) return selectedDelta;
+      return valueRank(b.valueTag) - valueRank(a.valueTag);
+    });
+}
+
+function valueRank(value) {
+  if (value === 'High') return 3;
+  if (value === 'Medium') return 2;
+  if (value === 'Low') return 1;
+  return 0;
+}
+
+function uniqueFlat(values) {
+  const out = [];
+  const push = (value) => {
+    if (Array.isArray(value)) {
+      value.forEach(push);
+      return;
+    }
+    const clean = cleanString(value, 160);
+    if (clean && !out.includes(clean)) out.push(clean);
+  };
+  values.forEach(push);
+  return out;
+}
+
+function evidenceNotesForItem(item = {}) {
+  const notes = [];
+  for (const id of uniqueFlat(item.evidenceIds || [])) {
+    const fact = BETHANY_FACTS.find((entry) => entry.id === id);
+    if (fact) notes.push(`${sourceTypeLabel(fact.sourceType)}: ${fact.text}`);
+  }
+  if (!notes.length && item.sourceType) notes.push(sourceTypeLabel(item.sourceType));
+  return notes.slice(0, 3);
+}
+
+function sourceTypeLabel(sourceType) {
+  return {
+    public_fact: 'Public record',
+    course_trace: 'Course material',
+    student_trace: 'Team note',
+    hypothesis_to_test: 'Hypothesis to test',
+    question_for_bethany: 'Question for Bethany',
+  }[sourceType] || 'Trace';
+}
+
+function boardForBucket(bucket) {
+  return {
+    KK: 'verify',
+    KU: 'ask_someone',
+    UK: 'bethany_tacit',
+    UU: 'missing_real_question',
+  }[bucket] || 'needs_attribution';
+}
+
+function inferSourceType(text, sourceField = '') {
+  const lower = cleanString(text, 1200).toLowerCase();
+  if (sourceField === 'openQuestions' || lower.endsWith('?')) return 'question_for_bethany';
+  if (/1978|financial|revenue|expenses|net assets|safe ground|three emergency shelters|dss|department of social services|founded/.test(lower)) return 'public_fact';
+  if (/course material|ceo brief|jericho|executive assistant|25\+|relationship-continuity|stakeholder rings/.test(lower)) return 'course_trace';
+  if (/assume|maybe|might|could be|may be|hypothesis|what if/.test(lower)) return 'hypothesis_to_test';
+  return 'student_trace';
+}
+
+function evidenceIdsForText(text, context = {}) {
+  const lower = cleanString(text, 2000).toLowerCase();
+  const ids = new Set();
+  const add = (...values) => values.forEach((value) => ids.add(value));
+  if (/safe ground|transitional|housing|shelter/.test(lower)) add('public_safe_ground_2023', 'public_transitional_housing', 'public_three_shelters');
+  if (/financial|revenue|expenses|net assets|funding|budget/.test(lower)) add('public_2024_financials');
+  if (/executive assistant|\bea\b|relationship|partner/.test(lower)) add('course_ea_hr_brief', 'course_ea_25_relationships', 'course_relationship_continuity');
+  if (/hr|payroll|staff trust|workplace|compliance/.test(lower)) add('public_hr_payroll_2024', 'course_hr_trust');
+  if (/jericho|school|community|resident|town|board/.test(lower)) add('course_jericho', 'course_stakeholder_rings');
+  if (/women|children|100/.test(lower)) add('public_serves_women_children', 'course_100_people');
+
+  const facts = Array.isArray(context.facts) && context.facts.length
+    ? context.facts
+    : BETHANY_FACTS.filter((fact) => (context.factIds || []).includes(fact.id));
+  for (const fact of facts) {
+    const tokens = tokenize(fact.text).filter((word) => word.length > 5);
+    const overlap = tokens.filter((word) => lower.includes(word)).length;
+    if (overlap >= 2) ids.add(fact.id);
+  }
+  return Array.from(ids).slice(0, 5);
+}
+
+function makeBethanyQuestion(text) {
+  const clean = cleanString(text, 500).replace(/\s+/g, ' ');
+  const lower = clean.toLowerCase();
+  if (/^(who|what|which|how|when|where|why)\b/.test(lower) && clean.endsWith('?')) return clean;
+  if (/relationship|partner|executive assistant|\bea\b/.test(lower)) {
+    return 'Which partner or community relationships would be most at risk if Bethany House changes this role or process?';
+  }
+  if (/hr|staff|trust|workplace|payroll|compliance/.test(lower)) {
+    return 'What staff trust or workplace concerns should the team understand before treating HR as a process or compliance solution?';
+  }
+  if (/jericho|school|community|resident|town|board/.test(lower)) {
+    return 'Which board or community concerns would Bethany House want surfaced before the team treats this path as feasible?';
+  }
+  if (/funding|budget|revenue|expense|financial|donor/.test(lower)) {
+    return 'What funding or budget constraint would most change the range of options Bethany House can responsibly consider?';
+  }
+  if (/shelter|housing|safe ground|expansion|growth|footprint/.test(lower)) {
+    return 'What operational condition would Bethany House need protected as it expands shelter or housing capacity?';
+  }
+  return `What would Bethany House need the team to understand about ${lowerFirst(clean).replace(/[.?]+$/g, '')} before the team makes a recommendation?`;
+}
+
+function inferWhyItMatters(text) {
+  const lower = cleanString(text, 1200).toLowerCase();
+  if (/relationship|partner|executive assistant|\bea\b/.test(lower)) return 'This could determine whether the team is solving a staffing gap or protecting relationships the role currently carries.';
+  if (/hr|staff|trust|workplace/.test(lower)) return 'This could separate a technical HR need from a trust, culture, or staff-safety condition.';
+  if (/jericho|school|community|resident|town|board/.test(lower)) return 'This could reveal a community or board constraint early enough to avoid a recommendation that cannot survive contact.';
+  if (/funding|budget|financial|donor/.test(lower)) return 'This could set the real boundary around what Bethany House can responsibly pursue in this round.';
+  if (/shelter|housing|growth|expansion|safe ground/.test(lower)) return 'This could clarify which operational pressure matters most as Bethany House grows capacity.';
+  return 'Bethany House can use the answer to correct a consequential assumption before the team closes its frame.';
+}
+
+function inferWhatClarifies(text) {
+  const lower = cleanString(text, 1200).toLowerCase();
+  if (/relationship|partner|executive assistant|\bea\b/.test(lower)) return 'It would clarify which relationships, handoffs, or forms of institutional memory must be protected.';
+  if (/hr|staff|trust|workplace/.test(lower)) return 'It would clarify whether the missing piece is policy, capacity, trust, confidentiality, or a different kind of support.';
+  if (/jericho|school|community|resident|town|board/.test(lower)) return 'It would clarify who needs to be heard before feasibility can be treated as real.';
+  if (/funding|budget|financial|donor/.test(lower)) return 'It would clarify the budget or funding constraint that should discipline the next recommendation.';
+  if (/shelter|housing|growth|expansion|safe ground/.test(lower)) return 'It would clarify what expansion must not disrupt for residents, staff, partners, or funders.';
+  return 'It would clarify what the team should keep open, verify, or ask next.';
 }
 
 async function checkModelAccess(env, membership, moduleName, payload) {
@@ -1680,37 +2560,52 @@ async function getUsageSummary(env, membership) {
   };
 }
 
-function estimateCostMicros(env, inputTokens, outputTokens, provider) {
+function estimateCostMicros(env, inputTokens, outputTokens, provider, model = '', moduleName = '') {
   if (provider !== 'openai') return 0;
-  const inputUsdPerMillion = Number(env.MODEL_INPUT_USD_PER_MILLION_TOKENS || 0.4);
-  const outputUsdPerMillion = Number(env.MODEL_OUTPUT_USD_PER_MILLION_TOKENS || 1.6);
-  if (!inputTokens && !outputTokens) return estimatedCallCostMicros(env, '');
+  const pricing = pricingForModel(env, model || openAiModelForModule(env, moduleName));
+  if (!inputTokens && !outputTokens) return estimatedCallCostMicros(env, moduleName);
+  const inputUsdPerMillion = pricing.inputUsdPerMillion;
+  const outputUsdPerMillion = pricing.outputUsdPerMillion;
   return Math.ceil((inputTokens * inputUsdPerMillion) + (outputTokens * outputUsdPerMillion));
 }
 
 function estimatedCallCostMicros(env, moduleName) {
   const base = Number(env.ESTIMATED_CALL_COST_MICROS || 50000);
+  if (isHighQualityModule(moduleName)) {
+    const highQualityBase = Number(env.HIGH_QUALITY_ESTIMATED_CALL_COST_MICROS || 150000);
+    return moduleName === 'final_report' ? Math.max(highQualityBase, 150000) : Math.max(base, 50000);
+  }
   return moduleName === 'final_report' ? Math.max(base, 100000) : base;
 }
 
-function reportReadinessError(state) {
-  if (state.oneSentence?.status !== 'approved') return 'Approve the One Sentence before saving a report version.';
-  if (!isMeaningfulField(state.oneSentence?.reframeText)) return 'The approved problem statement is blank.';
-  const high = (state.items || []).filter((item) => item.valueTag === 'High' && item.bucket && item.bucket !== 'KK');
-  if (!high.length) return 'Tag at least one KU, UK, or UU item High before saving a report version.';
-  if (!high.some((item) => isReadyHighValueQuestion(item))) {
-    return 'Complete Gatekeepers for at least one high-value question: who says yes, who can say no, and likely no.';
+function pricingForModel(env, model = '') {
+  const normalized = cleanString(model, 120).toLowerCase();
+  if (normalized.includes('gpt-5.5')) {
+    return {
+      inputUsdPerMillion: Number(env.HIGH_QUALITY_MODEL_INPUT_USD_PER_MILLION_TOKENS || 5),
+      outputUsdPerMillion: Number(env.HIGH_QUALITY_MODEL_OUTPUT_USD_PER_MILLION_TOKENS || 30),
+    };
   }
+  return {
+    inputUsdPerMillion: Number(env.MODEL_INPUT_USD_PER_MILLION_TOKENS || 0.75),
+    outputUsdPerMillion: Number(env.MODEL_OUTPUT_USD_PER_MILLION_TOKENS || 4.5),
+  };
+}
+
+function reportReadinessError(state) {
+  if (state.oneSentence?.status !== 'approved') return 'Approve the Working Read before saving a brief version.';
+  if (!isMeaningfulField(state.oneSentence?.reframeText)) return 'The approved working read is blank.';
+  if (!selectedBriefQuestions(state.items || []).length) return 'Select at least one priority question, observation, or hypothesis for the Bethany House brief.';
   return '';
 }
 
-async function listReportVersions(env, userId) {
+async function listReportVersions(env, userId, classId) {
   const result = await env.STUDIO_DB.prepare(
     `SELECT id, workspace_id, user_id, class_id, version_number, title, pdf_r2_key, created_at
      FROM report_versions
-     WHERE user_id = ?
+     WHERE user_id = ? AND class_id = ?
      ORDER BY version_number DESC`
-  ).bind(userId).all();
+  ).bind(userId, classId).all();
   return (result.results || []).map(sanitizeReportVersion);
 }
 
@@ -1721,10 +2616,72 @@ function sanitizeReportVersion(version) {
     user_id: version.user_id,
     class_id: version.class_id,
     version_number: Number(version.version_number || 0),
-    title: version.title || `Decision Engineering Report v${version.version_number || ''}`,
+    title: version.title || `Bethany House Question Brief v${version.version_number || ''}`,
     pdf_url: `/api/studio/report/versions/${version.id}/pdf`,
     created_at: version.created_at,
   };
+}
+
+async function listDeliverableVersions(env, userId, moduleKey, classId) {
+  const result = await env.STUDIO_DB.prepare(
+    `SELECT id, workspace_id, user_id, class_id, module_key, version_number, title,
+      pdf_r2_key, confidence_config_version, confidence_input_hash, created_at
+     FROM deliverable_versions
+     WHERE user_id = ? AND module_key = ? AND class_id = ?
+     ORDER BY version_number DESC`
+  ).bind(userId, moduleKey, classId).all();
+  return (result.results || []).map(sanitizeDeliverableVersion);
+}
+
+function sanitizeDeliverableVersion(version) {
+  return {
+    id: version.id,
+    workspace_id: version.workspace_id,
+    user_id: version.user_id,
+    class_id: version.class_id,
+    module_key: version.module_key,
+    version_number: Number(version.version_number || 0),
+    title: version.title || `Bethany House Recommendation Brief v${version.version_number || ''}`,
+    pdf_url: `/api/studio/modules/module-2/report/versions/${version.id}/pdf`,
+    confidence_config_version: version.confidence_config_version || '',
+    confidence_input_hash: version.confidence_input_hash || '',
+    created_at: version.created_at,
+  };
+}
+
+async function handleDownloadDeliverablePdf(request, env, user, membership, versionId) {
+  const version = await env.STUDIO_DB.prepare(
+    `SELECT * FROM deliverable_versions
+     WHERE id = ? AND user_id = ? AND class_id = ? AND module_key = ?`
+  ).bind(versionId, user.id, membership.class_id, MODULE2_KEY).first();
+  if (!version) return json({ error: 'Deliverable version not found.' }, 404, request);
+  return serveDeliverablePdf(request, env, version, recommendationPdfFilename(`v${version.version_number}`));
+}
+
+async function serveDeliverablePdf(request, env, version, filename) {
+  const bytes = await readDeliverablePdfBytes(env, version);
+  if (!bytes) return json({ error: 'PDF artifact not found.' }, 404, request);
+  return new Response(bytes, {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `attachment; filename="${filename}"`,
+      'Cache-Control': 'no-store',
+      ...corsHeaders(request),
+      'Access-Control-Expose-Headers': 'Content-Disposition',
+    },
+  });
+}
+
+async function readDeliverablePdfBytes(env, version) {
+  if (env.STUDIO_ARTIFACTS && version.pdf_r2_key && !version.pdf_r2_key.startsWith('d1:')) {
+    const object = await env.STUDIO_ARTIFACTS.get(version.pdf_r2_key);
+    if (object) return new Uint8Array(await object.arrayBuffer());
+  }
+  const artifact = await env.STUDIO_DB.prepare(
+    `SELECT content_base64 FROM deliverable_artifacts WHERE deliverable_version_id = ?`
+  ).bind(version.id).first();
+  return artifact?.content_base64 ? base64ToBytes(artifact.content_base64) : null;
 }
 
 async function serveVersionPdf(request, env, version, filename) {
@@ -1743,6 +2700,9 @@ async function serveVersionPdf(request, env, version, filename) {
 }
 
 async function readVersionPdfBytes(env, version) {
+  const rerendered = renderVersionPdfBytes(version);
+  if (rerendered) return rerendered;
+
   if (env.STUDIO_ARTIFACTS && version.pdf_r2_key && !version.pdf_r2_key.startsWith('d1:')) {
     const object = await env.STUDIO_ARTIFACTS.get(version.pdf_r2_key);
     if (object) return new Uint8Array(await object.arrayBuffer());
@@ -1755,44 +2715,400 @@ async function readVersionPdfBytes(env, version) {
   return base64ToBytes(artifact.content_base64);
 }
 
+function renderVersionPdfBytes(version) {
+  if (!version?.report_json) return null;
+  try {
+    const document = JSON.parse(version.report_json);
+    if (!document || typeof document !== 'object') return null;
+    return buildReportPdfBytes(document);
+  } catch (_) {
+    return null;
+  }
+}
+
 function defaultPdfFilename(suffix = new Date().toISOString().slice(0, 10)) {
   const cleanSuffix = cleanString(String(suffix || ''), 40).replace(/[^a-z0-9.-]+/gi, '-').replace(/^-|-$/g, '');
-  return `decision-engineering-report-${cleanSuffix || 'draft'}.pdf`;
+  return `bethany-house-question-brief-${cleanSuffix || 'draft'}.pdf`;
+}
+
+function recommendationPdfFilename(suffix = new Date().toISOString().slice(0, 10)) {
+  const cleanSuffix = cleanString(String(suffix || ''), 40).replace(/[^a-z0-9.-]+/gi, '-').replace(/^-|-$/g, '');
+  return `bethany-house-recommendation-brief-${cleanSuffix || 'draft'}.pdf`;
 }
 
 function reportLines(document) {
+  const report = normalizeBriefDocument(document);
   const lines = [
-    document.title || 'Decision Manifold Studio Final Report',
-    document.subtitle || '',
-    document.client ? `Client: ${document.client}` : '',
-    document.preparedFor ? `Prepared for: ${document.preparedFor}` : '',
+    report.title || 'Bethany House Question Brief',
+    report.subtitle || '',
+    report.client ? `Client: ${report.client}` : '',
+    report.preparedFor ? `Prepared for: ${report.preparedFor}` : '',
     '',
-    'Refined Problem Statement',
-    document.refinedProblemStatement || 'Draft not yet approved.',
+    'Purpose',
+    report.purpose || '',
     '',
-    'Curated High-Value Questions',
+    'Working Read',
+    report.workingRead || '',
+    '',
+    'Priority Questions',
   ];
-  if (!document.highValueQuestions?.length) lines.push('No high-value questions ready.');
-  (document.highValueQuestions || []).forEach((item, index) => {
+  if (!report.priorityQuestions?.length) lines.push('No priority questions selected yet.');
+  (report.priorityQuestions || []).forEach((item, index) => {
     lines.push(`${index + 1}. ${item.question || ''}`);
-    lines.push(`   Who says yes: ${item.whoMustSayYes || ''}`);
-    lines.push(`   Veto: ${item.vetoHolder || ''}`);
-    lines.push(`   Likely no: ${item.likelyToSayNo || ''}`);
+    if (item.whyItMatters) lines.push(`   Why this matters: ${item.whyItMatters}`);
+    if (item.whatAnswerClarifies) lines.push(`   What Bethany's answer would clarify: ${item.whatAnswerClarifies}`);
+    if (item.whoCanAnswer) lines.push(`   Best first respondent: ${item.whoCanAnswer}`);
+    if (item.whoNeedsComfort) lines.push(`   Comfort to secure: ${item.whoNeedsComfort}`);
+    if (item.whoFeelsCost) lines.push(`   Cost to watch if wrong: ${item.whoFeelsCost}`);
   });
-  lines.push('', 'Type Map');
-  (document.typeMap || []).forEach((item) => {
-    lines.push(`${item.bucket || '-'} | ${item.status || '-'} | ${item.valueTag || '-'} | ${item.holder || '-'} | ${item.sourceField || '-'} | ${item.item || ''}`);
+  const nonQuestionItems = (report.briefItems || []).filter((item) => item.itemType !== 'question');
+  lines.push('', 'High-Value Observations And Hypotheses');
+  if (!nonQuestionItems.length) lines.push('No additional observations or hypotheses selected yet.');
+  nonQuestionItems.forEach((item, index) => {
+    lines.push(`${index + 1}. ${item.headline || item.text || ''}`);
+    lines.push(`   ${briefItemTypeLabel(item.itemType)}: ${item.text || ''}`);
+    if (item.whyItMatters) lines.push(`   Why this matters: ${item.whyItMatters}`);
+    if (item.whatBethanyCouldClarify) lines.push(`   What Bethany could clarify: ${item.whatBethanyCouldClarify}`);
+    if (item.whoCanAnswer) lines.push(`   Best first respondent: ${item.whoCanAnswer}`);
+    if (item.whoNeedsComfort) lines.push(`   Comfort to secure: ${item.whoNeedsComfort}`);
+    if (item.whoFeelsCost) lines.push(`   Cost to watch if wrong: ${item.whoFeelsCost}`);
   });
-  lines.push('', 'Assumption Drill Summary');
-  (document.drillSummary || []).forEach((item) => {
-    lines.push(item.label || 'Assumption');
-    lines.push(`Given: ${item.givenStatement || ''}`);
-    lines.push(`Wrong if: ${item.wrongIf || ''}`);
-    lines.push(`What changes: ${item.whatChanges || ''}`);
-  });
-  lines.push('', 'One Thing Left Open', document.oneThingLeftOpen || '', document.whyLeftOpen || '');
-  if (document.guardrailNote) lines.push('', 'Guardrail Note', document.guardrailNote);
+  lines.push('', 'Still To Clarify');
+  if (!report.notAssumingYet?.length) lines.push('No additional clarification recorded.');
+  (report.notAssumingYet || []).forEach((item) => lines.push(`- ${item}`));
+  if (report.closingNote) lines.push('', report.closingNote);
   return lines;
+}
+
+function normalizeBriefDocument(document = {}) {
+  if (Array.isArray(document.priorityQuestions)) {
+    const questionItems = (document.priorityQuestions || []).map((item) => ({
+      sourceItemId: item.sourceItemId || '',
+      itemType: 'question',
+      headline: 'Question for Bethany House',
+      text: item.question || '',
+      whyItMatters: item.whyItMatters || '',
+      whatBethanyCouldClarify: item.whatAnswerClarifies || '',
+      whoCanAnswer: item.whoCanAnswer || '',
+      whoNeedsComfort: item.whoNeedsComfort || '',
+      whoFeelsCost: item.whoFeelsCost || '',
+      sourceType: item.sourceType || 'student_trace',
+      evidenceNotes: item.evidenceNotes || [],
+    }));
+    return {
+      ...document,
+      briefItems: Array.isArray(document.briefItems) ? document.briefItems : questionItems,
+      notAssumingYet: (document.notAssumingYet || []).map(clientClarificationPoint),
+      closingNote: document.closingNote ? clientClarificationPoint(document.closingNote) : '',
+    };
+  }
+  const legacyQuestions = Array.isArray(document.highValueQuestions) ? document.highValueQuestions : [];
+  const priorityQuestions = legacyQuestions.map((item) => ({
+    question: item.question || '',
+    whyItMatters: item.whyItMatters || 'Bethany House can use this answer to clarify what the team should not assume.',
+    whatAnswerClarifies: item.whatAnswerClarifies || 'It would clarify the next responsible question before a recommendation is made.',
+    whoCanAnswer: item.whoCanAnswer || item.whoMustSayYes || '',
+    whoNeedsComfort: item.whoNeedsComfort || item.vetoHolder || '',
+    whoFeelsCost: item.whoFeelsCost || item.likelyToSayNo || '',
+    evidenceNotes: item.evidenceNotes || [],
+    sourceType: item.sourceType || 'student_trace',
+  }));
+  return {
+    title: 'Bethany House Question Brief',
+    subtitle: document.subtitle || 'Prepared for the next Bethany House conversation',
+    client: document.client || 'Bethany House of Nassau County',
+    preparedFor: document.preparedFor || 'Bethany House leadership',
+    purpose: document.purpose || 'This brief identifies the questions most worth taking back to Bethany House before the team closes its frame or makes recommendations.',
+    workingRead: document.workingRead || document.refinedProblemStatement || '',
+    priorityQuestions,
+    briefItems: priorityQuestions.map((item) => ({
+      sourceItemId: '',
+      itemType: 'question',
+      headline: 'Question for Bethany House',
+      text: item.question || '',
+      whyItMatters: item.whyItMatters || '',
+      whatBethanyCouldClarify: item.whatAnswerClarifies || '',
+      whoCanAnswer: item.whoCanAnswer || '',
+      whoNeedsComfort: item.whoNeedsComfort || '',
+      whoFeelsCost: item.whoFeelsCost || '',
+      sourceType: item.sourceType || 'student_trace',
+      evidenceNotes: item.evidenceNotes || [],
+    })),
+    notAssumingYet: (document.notAssumingYet || [document.oneThingLeftOpen || ''].filter(isMeaningfulField)).map(clientClarificationPoint),
+    closingNote: document.closingNote || document.whyLeftOpen ? clientClarificationPoint(document.closingNote || document.whyLeftOpen || '') : '',
+    lockedA: document.lockedA || null,
+  };
+}
+
+function buildReportPdfBytes(document) {
+  const report = normalizeBriefDocument(document);
+  const pages = [];
+  const left = 58;
+  const right = 554;
+  const width = right - left;
+  const bottom = 68;
+  let y = 714;
+
+  const currentCommands = () => pages[pages.length - 1].commands;
+  const addPage = (withHeader = false) => {
+    pages.push({ commands: [] });
+    y = 714;
+    if (withHeader) {
+      drawText(report.title || 'Bethany House Question Brief', left, 744, 'F2', 8.5, '0.36 0.36 0.36');
+      drawText('ZETESIS LABS', right - 58, 744, 'F2', 7.2, '0.42 0.42 0.42');
+      y = 700;
+    }
+  };
+  const ensure = (height) => {
+    if (!pages.length) addPage(false);
+    if (y - height < bottom) addPage(true);
+  };
+  const drawText = (text, x, baseline, font, size, color = '0.07 0.07 0.07') => {
+    currentCommands().push(`q ${color} rg BT /${font} ${size} Tf ${x} ${baseline} Td (${escapePdf(text)}) Tj ET Q`);
+  };
+  const drawRect = (x, baseline, w, h, color = '0.96 0.96 0.94') => {
+    currentCommands().push(`q ${color} rg ${x} ${baseline} ${w} ${h} re f Q`);
+  };
+  const measureLines = (text, options = {}) => {
+    const size = options.size || 10;
+    const maxWidth = width - (options.indent || 0);
+    return wrapStyledPdfLine(text || ' ', maxWidth, size, Boolean(options.bold), options.font || '');
+  };
+  const addText = (text, options = {}) => {
+    const font = options.font || (options.bold ? 'F2' : 'F1');
+    const size = options.size || 10;
+    const leading = options.leading || Math.round(size * 1.32);
+    const indent = options.indent || 0;
+    const lines = measureLines(text, { ...options, size, indent });
+    const blockHeight = (options.before || 0) + (lines.length * leading) + (options.after || 0);
+    ensure(blockHeight);
+    y -= options.before || 0;
+    lines.forEach((line) => {
+      drawText(line, left + indent, y, font, size, options.color || '0.07 0.07 0.07');
+      y -= leading;
+    });
+    y -= options.after || 0;
+  };
+  const addSection = (title) => {
+    ensure(30);
+    y -= 14;
+    addText(String(title || '').toUpperCase(), { bold: true, size: 8.4, leading: 11, after: 7, color: '0.36 0.36 0.36' });
+  };
+  const addCallout = (title, text) => {
+    const titleLines = measureLines(title, { size: 8.2, bold: true, indent: 16 });
+    const bodyLines = measureLines(text || 'Draft not yet approved.', { size: 11, font: 'F3', indent: 16 });
+    const height = 18 + titleLines.length * 11 + bodyLines.length * 15 + 12;
+    ensure(height);
+    y -= 8;
+    drawRect(left, y - height + 10, width, height, '0.965 0.965 0.94');
+    currentCommands().push(`q 0.18 0.31 0.36 rg ${left} ${y - height + 10} 3 ${height} re f Q`);
+    y -= 14;
+    titleLines.forEach((line) => {
+      drawText(line, left + 16, y, 'F2', 8.2, '0.34 0.34 0.34');
+      y -= 11;
+    });
+    y -= 3;
+    bodyLines.forEach((line) => {
+      drawText(line, left + 16, y, 'F3', 11, '0.10 0.18 0.21');
+      y -= 15;
+    });
+    y -= 11;
+  };
+  const addLabeledParagraph = (label, text, options = {}) => {
+    if (!isMeaningfulField(text)) return;
+    const labelLeading = 10.5;
+    const bodySize = options.size || 9.2;
+    const bodyLeading = options.leading || 12.2;
+    const bodyLines = measureLines(text, { ...options, size: bodySize, indent: options.indent || 0 }).length;
+    ensure((options.before || 4) + labelLeading + bodyLines * bodyLeading + (options.after || 1));
+    addText(label, { bold: true, size: 8.4, leading: 10.5, before: options.before || 4, color: '0.22 0.22 0.22', indent: options.indent || 0 });
+    addText(text, { size: options.size || 9.2, leading: options.leading || 12.2, indent: options.indent || 0, color: options.color || '0.12 0.12 0.12', after: options.after || 1 });
+  };
+  const addQuestion = (item, index) => {
+    const question = pdfSafeText(item.question || item.text || '');
+    const basis = fullEvidenceLine(item.evidenceNotes || [], item.sourceType);
+    const pieces = [
+      { label: `QUESTION ${index + 1}`, text: question, size: 11.5, leading: 14.4, font: 'F4' },
+      { label: 'Why this matters', text: item.whyItMatters || '' },
+      { label: "What Bethany's answer would clarify", text: item.whatAnswerClarifies || item.whatBethanyCouldClarify || '' },
+      { label: 'Best first respondent', text: item.whoCanAnswer || '' },
+      { label: 'Comfort to secure', text: item.whoNeedsComfort || '' },
+      { label: 'Cost to watch if wrong', text: item.whoFeelsCost || '' },
+      { label: 'Basis', text: basis, size: 8.2, leading: 10.7, color: '0.40 0.40 0.40' },
+    ].filter((piece) => isMeaningfulField(piece.text));
+    const height = 12 + pieces.reduce((sum, piece, pieceIndex) => {
+      const lines = measureLines(piece.text, { size: piece.size || 9.2, indent: 22, bold: piece.font === 'F4', font: piece.font || '' });
+      return sum + (pieceIndex === 0 ? 6 : 5) + 10 + lines.length * (piece.leading || 12.2);
+    }, 0);
+    ensure(Math.min(height, 600));
+    y -= index ? 18 : 8;
+    addText(`QUESTION ${index + 1}`, { bold: true, size: 7.8, leading: 10, color: '0.45 0.45 0.45', indent: 22, before: 5, after: 2 });
+    addText(question, { font: 'F4', size: 11.6, leading: 14.8, indent: 22, after: 7, color: '0.07 0.07 0.07' });
+    addLabeledParagraph('Why this matters', item.whyItMatters, { indent: 22 });
+    addLabeledParagraph("What Bethany's answer would clarify", item.whatAnswerClarifies || item.whatBethanyCouldClarify, { indent: 22 });
+    addLabeledParagraph('Best first respondent', item.whoCanAnswer, { indent: 22, size: 8.8, leading: 11.5, color: '0.25 0.25 0.25' });
+    addLabeledParagraph('Comfort to secure', item.whoNeedsComfort, { indent: 22, size: 8.8, leading: 11.5, color: '0.25 0.25 0.25' });
+    addLabeledParagraph('Cost to watch if wrong', item.whoFeelsCost, { indent: 22, size: 8.8, leading: 11.5, color: '0.25 0.25 0.25' });
+    if (basis) addText(`Basis: ${basis}`, { size: 8.1, leading: 10.6, indent: 22, color: '0.43 0.43 0.43', before: 4, after: 2 });
+  };
+  const addBriefItem = (item, index) => {
+    const type = briefItemTypeLabel(item.itemType);
+    const title = briefItemDisplayTitle(item, type, index);
+    const body = pdfSafeText(item.text || '');
+    ensure(190);
+    addText(`${type.toUpperCase()} ${index + 1}`, { bold: true, size: 7.8, leading: 10, color: '0.45 0.45 0.45', before: index ? 18 : 9, after: 2 });
+    addText(title, { font: 'F4', size: 10.8, leading: 13.6, after: 6 });
+    if (body && body !== pdfSafeText(title)) addText(body, { size: 9.2, leading: 12.2, indent: 12 });
+    addLabeledParagraph('Why this matters', item.whyItMatters, { indent: 12 });
+    addLabeledParagraph('What Bethany could clarify', item.whatBethanyCouldClarify, { indent: 12 });
+    addLabeledParagraph('Best first respondent', item.whoCanAnswer, { indent: 12, size: 8.8, leading: 11.5, color: '0.25 0.25 0.25' });
+    addLabeledParagraph('Comfort to secure', item.whoNeedsComfort, { indent: 12, size: 8.8, leading: 11.5, color: '0.25 0.25 0.25' });
+    addLabeledParagraph('Cost to watch if wrong', item.whoFeelsCost, { indent: 12, size: 8.8, leading: 11.5, color: '0.25 0.25 0.25' });
+    const basis = fullEvidenceLine(item.evidenceNotes || [], item.sourceType);
+    if (basis) addText(`Basis: ${basis}`, { size: 8.1, leading: 10.6, indent: 12, color: '0.43 0.43 0.43', before: 3, after: 1 });
+  };
+
+  addPage(false);
+  drawText('ZETESIS LABS', left, 742, 'F2', 7.6, '0.42 0.42 0.42');
+  drawText('Decision Engineering', right - 86, 742, 'F1', 7.6, '0.42 0.42 0.42');
+  y = 690;
+  addText(report.title || 'Bethany House Question Brief', { font: 'F4', size: 22, leading: 27, after: 3 });
+  if (report.subtitle) addText(report.subtitle, { font: 'F3', size: 11, leading: 14, color: '0.20 0.20 0.20', after: 5 });
+  const meta = [report.client, report.preparedFor].filter(Boolean).join(' | ');
+  if (meta) addText(meta, { size: 8.4, leading: 11, color: '0.38 0.38 0.38', after: 12 });
+
+  addSection('Purpose');
+  addText(report.purpose || '', { font: 'F3', size: 10.4, leading: 13.8, after: 2 });
+
+  addCallout('Working read', report.workingRead || 'Draft not yet approved.');
+
+  addSection('Priority questions for Bethany House');
+  if (!report.priorityQuestions?.length) {
+    addText('No priority questions selected yet.', { size: 9.8, leading: 12.8 });
+  }
+  (report.priorityQuestions || []).forEach((item, index) => addQuestion(item, index));
+
+  const nonQuestionItems = (report.briefItems || []).filter((item) => item.itemType !== 'question');
+  if (nonQuestionItems.length) {
+    ensure(230);
+    addSection('High-value observations and hypotheses');
+    nonQuestionItems.forEach((item, index) => addBriefItem(item, index));
+  }
+
+  const clarifySource = (report.notAssumingYet || []).filter(isMeaningfulField);
+  if (!clarifySource.length && isMeaningfulField(report.closingNote)) clarifySource.push(report.closingNote);
+  const clarifyItems = clarifySource.map(clientClarificationPoint);
+  if (clarifyItems.length) {
+    ensure(90);
+    addSection('Still to clarify');
+    clarifyItems.forEach((item) => addText(`- ${item}`, { size: 9.2, leading: 12.2, indent: 12, color: '0.13 0.13 0.13' }));
+  }
+
+  const objects = [];
+  const addObject = (body) => {
+    objects.push(body);
+    return objects.length;
+  };
+  addObject('<< /Type /Catalog /Pages 2 0 R >>');
+  const pagesId = addObject('');
+  const fontId = addObject('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>');
+  const boldFontId = addObject('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>');
+  const serifFontId = addObject('<< /Type /Font /Subtype /Type1 /BaseFont /Times-Roman >>');
+  const serifBoldFontId = addObject('<< /Type /Font /Subtype /Type1 /BaseFont /Times-Bold >>');
+  const pageIds = [];
+  pages.forEach((page, index) => {
+    const stream = styledPdfPageStream(page.commands, index + 1, pages.length);
+    const contentId = addObject(`<< /Length ${byteLength(stream)} >>\nstream\n${stream}\nendstream`);
+    const pageId = addObject(`<< /Type /Page /Parent ${pagesId} 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 ${fontId} 0 R /F2 ${boldFontId} 0 R /F3 ${serifFontId} 0 R /F4 ${serifBoldFontId} 0 R >> >> /Contents ${contentId} 0 R >>`);
+    pageIds.push(pageId);
+  });
+  objects[pagesId - 1] = `<< /Type /Pages /Kids [${pageIds.map((id) => `${id} 0 R`).join(' ')}] /Count ${pageIds.length} >>`;
+
+  let pdf = '%PDF-1.4\n';
+  const offsets = [0];
+  objects.forEach((body, index) => {
+    offsets.push(byteLength(pdf));
+    pdf += `${index + 1} 0 obj\n${body}\nendobj\n`;
+  });
+  const xref = byteLength(pdf);
+  pdf += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n`;
+  offsets.slice(1).forEach((offset) => {
+    pdf += `${String(offset).padStart(10, '0')} 00000 n \n`;
+  });
+  pdf += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`;
+  return new TextEncoder().encode(pdf);
+}
+
+function styledPdfPageStream(commands, pageNumber, totalPages) {
+  const footer = [
+    'q 0.42 0.42 0.42 rg BT /F1 7.2 Tf 58 34 Td (Bethany House Question Brief) Tj ET Q',
+    `q 0.42 0.42 0.42 rg BT /F1 7.2 Tf 506 34 Td (${pageNumber} / ${totalPages}) Tj ET Q`,
+  ];
+  return [...commands, ...footer].join('\n');
+}
+
+function compressedEvidenceLine(notes = [], sourceType = '') {
+  const labels = [];
+  for (const note of notes || []) {
+    const label = evidenceNoteLabel(note);
+    if (label && !labels.includes(label)) labels.push(label);
+  }
+  if (!labels.length && sourceType) labels.push(sourceTypeLabel(sourceType));
+  return labels.slice(0, 4).join('; ');
+}
+
+function fullEvidenceLine(notes = [], sourceType = '') {
+  const parts = [];
+  const seen = new Set();
+  const pushPart = (value) => {
+    const clean = pdfSafeText(value);
+    if (!clean) return;
+    const key = clean.toLowerCase().replace(/^source type:\s*/, '');
+    if (seen.has(key)) return;
+    seen.add(key);
+    parts.push(clean);
+  };
+  if (sourceType) {
+    pushPart(`Source type: ${sourceTypeLabel(sourceType)}`);
+  }
+  for (const note of notes || []) {
+    pushPart(note);
+  }
+  return parts.join('; ');
+}
+
+function evidenceNoteLabel(note) {
+  const text = cleanString(note || '', 400);
+  const lower = text.toLowerCase();
+  if (!text) return '';
+  if (/^course material:/i.test(text)) return 'course material';
+  if (/^public record:/i.test(text)) return 'public record';
+  if (/^team note:/i.test(text)) return 'team note';
+  if (/^hypothesis to test:/i.test(text)) return 'hypothesis to test';
+  if (/^question for bethany:/i.test(text)) return 'question for Bethany';
+  if (/25\+|partner relationships|relationship load/.test(lower)) return 'EA relationship load';
+  if (/first gate|routes through the ceo|ceo channel/.test(lower)) return 'CEO channel risk';
+  if (/too much sits with one person|executive assistant.*hr|ea\/hr/.test(lower)) return 'EA / HR capacity brief';
+  if (/100 women|100\+|women and children/.test(lower)) return '100+ women and children served';
+  if (/jericho|school-district|school district|150-person/.test(lower)) return 'Jericho community-risk precedent';
+  if (/payroll|compliance|hr firm|compensation analysis/.test(lower)) return '2024 HR/payroll update';
+  if (/strategic plan|workplace quality|footprint expansion|capital growth/.test(lower)) return 'five-year strategic plan';
+  if (/single women|emergency shelter.*2025|2025\/2026/.test(lower)) return 'single-women shelter commitment';
+  if (/safe ground/.test(lower)) return 'Safe Ground for Families';
+  return '';
+}
+
+function briefItemDisplayTitle(item, type, index) {
+  const fallback = `${type} ${index + 1}`;
+  const headline = pdfSafeText(item.headline || '');
+  const text = pdfSafeText(item.text || '');
+  if (text && looksTruncatedForPdf(headline)) return text;
+  return headline || text || fallback;
+}
+
+function looksTruncatedForPdf(text) {
+  if (!text) return false;
+  return /\.{3}\s*$/.test(text) || /\b[a-zA-Z]{1,2}\.{3}\s*$/.test(text) || /\u2026\s*$/.test(text);
 }
 
 function buildPdfBytes(lines) {
@@ -1821,7 +3137,7 @@ function buildPdfBytes(lines) {
   const fontId = addObject('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>');
   const pageIds = [];
   pages.forEach((pageLines) => {
-    const stream = pdfPageStream(pageLines);
+    const stream = plainPdfPageStream(pageLines);
     const contentId = addObject(`<< /Length ${byteLength(stream)} >>\nstream\n${stream}\nendstream`);
     const pageId = addObject(`<< /Type /Page /Parent ${pagesId} 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 ${fontId} 0 R >> >> /Contents ${contentId} 0 R >>`);
     pageIds.push(pageId);
@@ -1843,7 +3159,7 @@ function buildPdfBytes(lines) {
   return new TextEncoder().encode(pdf);
 }
 
-function pdfPageStream(lines) {
+function plainPdfPageStream(lines) {
   const commands = ['BT', '/F1 11 Tf', '72 742 Td', '14 TL'];
   lines.forEach((line, index) => {
     if (index > 0) commands.push('T*');
@@ -1853,8 +3169,13 @@ function pdfPageStream(lines) {
   return commands.join('\n');
 }
 
+function wrapStyledPdfLine(line, maxWidth, fontSize, bold = false) {
+  const chars = Math.max(18, Math.floor(maxWidth / (fontSize * (bold ? 0.56 : 0.51))));
+  return wrapPdfLine(line, chars);
+}
+
 function wrapPdfLine(line, width) {
-  const words = String(line).replace(/\s+/g, ' ').trim().split(' ');
+  const words = pdfSafeText(line).replace(/\s+/g, ' ').trim().split(' ');
   const chunks = [];
   let current = '';
   words.forEach((word) => {
@@ -1870,7 +3191,20 @@ function wrapPdfLine(line, width) {
 }
 
 function escapePdf(text) {
-  return String(text).replace(/\\/g, '\\\\').replace(/\(/g, '\\(').replace(/\)/g, '\\)');
+  return pdfSafeText(text).replace(/\\/g, '\\\\').replace(/\(/g, '\\(').replace(/\)/g, '\\)');
+}
+
+function pdfSafeText(value) {
+  return String(value ?? '')
+    .normalize('NFKD')
+    .replace(/[\u2018\u2019\u201a\u201b\u2032]/g, "'")
+    .replace(/[\u201c\u201d\u201e\u201f\u2033]/g, '"')
+    .replace(/[\u2010-\u2015\u2212]/g, '-')
+    .replace(/\u2026/g, '...')
+    .replace(/\u00a0/g, ' ')
+    .replace(/[^\x09\x0a\x0d\x20-\x7e]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 function byteLength(text) {
@@ -1890,7 +3224,7 @@ function base64ToBytes(value) {
   return Uint8Array.from(binary, (char) => char.charCodeAt(0));
 }
 
-async function listInstructorClasses(env) {
+async function listInstructorClasses(env, classId) {
   const result = await env.STUDIO_DB.prepare(
     `SELECT c.id, c.slug, c.name, c.status, c.created_at,
       COUNT(CASE WHEN cm.role = 'student' THEN 1 END) AS student_count,
@@ -1898,66 +3232,91 @@ async function listInstructorClasses(env) {
      FROM classes c
      LEFT JOIN class_memberships cm ON cm.class_id = c.id
      LEFT JOIN report_versions rv ON rv.class_id = c.id AND rv.user_id = cm.user_id
+     WHERE c.id = ?
      GROUP BY c.id
      ORDER BY c.created_at DESC`
-  ).all();
+  ).bind(classId).all();
   return result.results || [];
 }
 
 async function listClassStudents(env, classId) {
-  const result = await env.STUDIO_DB.prepare(
-    `SELECT u.id, u.email, u.name, cm.id AS membership_id, cm.status, cm.model_access_status,
-      cm.usage_used_micros, cm.usage_limit_micros, cm.created_at,
-      w.id AS workspace_id, w.current_step, w.updated_at AS workspace_updated_at,
-      COUNT(DISTINCT rv.id) AS report_count,
-      MAX(rv.created_at) AS latest_report_at,
-      MAX(lr.created_at) AS latest_llm_at
-     FROM class_memberships cm
-     JOIN users u ON u.id = cm.user_id
-     LEFT JOIN team_members tm ON tm.user_id = u.id
-     LEFT JOIN workspaces w ON w.team_id = tm.team_id AND w.engagement_id = ?
-     LEFT JOIN report_versions rv ON rv.user_id = u.id AND rv.class_id = cm.class_id
-     LEFT JOIN llm_runs lr ON lr.user_id = u.id
-     WHERE cm.class_id = ? AND cm.role = 'student'
-     GROUP BY u.id, cm.id, w.id
-     ORDER BY u.name COLLATE NOCASE`
-  ).bind(ENGAGEMENT_ID, classId).all();
+  const result = await env.STUDIO_DB.prepare(LIST_CLASS_STUDENTS_SQL)
+    .bind(ENGAGEMENT_ID, classId).all();
   return result.results || [];
 }
 
-async function getInstructorStudent(env, userId) {
+async function getInstructorStudent(env, userId, classId) {
   const user = await env.STUDIO_DB.prepare(`SELECT id, email, name, role, created_at, updated_at FROM users WHERE id = ?`).bind(userId).first();
   if (!user) return { error: 'Student not found.' };
-  const membership = await getPrimaryMembership(env, userId);
+  const membership = await env.STUDIO_DB.prepare(
+    `SELECT * FROM class_memberships WHERE user_id = ? AND class_id = ? AND role = 'student'`
+  ).bind(userId, classId).first();
+  if (!membership) return { error: 'Student not found.' };
   const bundle = await loadWorkspaceBundle(env, userId, membership);
   return {
     user: publicUser(user),
     membership: publicMembership(membership),
     usage: await getUsageSummary(env, membership),
     ...bundle,
-    versions: await listReportVersions(env, userId),
+    versions: await listReportVersions(env, userId, classId),
   };
 }
 
-async function getInstructorPrompts(env, userId) {
-  const result = await env.STUDIO_DB.prepare(
-    `SELECT id, workspace_id, module, request_json, response_json, provider, model,
-      input_tokens, output_tokens, estimated_cost_micros, guardrail_status, created_at
-     FROM llm_runs
-     WHERE user_id = ?
-     ORDER BY created_at DESC
-     LIMIT 200`
-  ).bind(userId).all();
+async function getInstructorModule2Student(env, userId, classId) {
+  const membership = await env.STUDIO_DB.prepare(
+    `SELECT * FROM class_memberships WHERE user_id = ? AND class_id = ? AND role = 'student'`
+  ).bind(userId, classId).first();
+  if (!membership) return { error: 'Student not found.' };
+  const user = await env.STUDIO_DB.prepare(
+    `SELECT id, email, name, role, created_at, updated_at FROM users WHERE id = ?`
+  ).bind(userId).first();
+  const bundle = await loadModule2WorkspaceBundle(env, userId, membership);
+  return {
+    user: publicUser(user),
+    membership: publicMembership(membership),
+    usage: await getUsageSummary(env, membership),
+    ...bundle,
+  };
+}
+
+async function isStudentInClass(env, userId, classId) {
+  const membership = await env.STUDIO_DB.prepare(
+    `SELECT id FROM class_memberships
+     WHERE user_id = ? AND class_id = ? AND role = 'student'
+     LIMIT 1`
+  ).bind(userId, classId).first();
+  return Boolean(membership);
+}
+
+async function getInstructorPrompts(env, userId, classId, workflowKey = 'module_1') {
+  const result = await env.STUDIO_DB.prepare(INSTRUCTOR_PROMPTS_SQL)
+    .bind(userId, workflowKey, userId, classId, userId, classId).all();
   return result.results || [];
 }
 
-async function getInstructorVersions(env, userId) {
+async function getInstructorVersions(env, userId, classId, workflowKey = 'module_1') {
+  if (workflowKey === MODULE2_KEY) {
+    const result = await env.STUDIO_DB.prepare(
+      `SELECT id, workspace_id, user_id, class_id, module_key, version_number, title,
+        document_json, document_text, pdf_r2_key, confidence_config_version,
+        confidence_input_hash, created_at
+       FROM deliverable_versions
+       WHERE user_id = ? AND class_id = ? AND module_key = ?
+       ORDER BY version_number DESC`
+    ).bind(userId, classId, MODULE2_KEY).all();
+    return (result.results || []).map((version) => ({
+      ...sanitizeDeliverableVersion(version),
+      document_json: version.document_json,
+      document_text: version.document_text,
+      pdf_url: `/api/instructor/deliverable/versions/${version.id}/pdf`,
+    }));
+  }
   const result = await env.STUDIO_DB.prepare(
     `SELECT id, workspace_id, user_id, class_id, version_number, title, report_json, report_text, pdf_r2_key, created_at
      FROM report_versions
-     WHERE user_id = ?
+     WHERE user_id = ? AND class_id = ?
      ORDER BY version_number DESC`
-  ).bind(userId).all();
+  ).bind(userId, classId).all();
   return (result.results || []).map((version) => ({
     ...sanitizeReportVersion(version),
     report_json: version.report_json,
@@ -1965,7 +3324,27 @@ async function getInstructorVersions(env, userId) {
   }));
 }
 
-async function handleClassPdfZip(request, env, classId) {
+async function handleClassPdfZip(request, env, classId, workflowKey = 'module_1') {
+  if (workflowKey === MODULE2_KEY) {
+    const result = await env.STUDIO_DB.prepare(
+      `SELECT dv.*, u.email, u.name
+       FROM deliverable_versions dv
+       JOIN users u ON u.id = dv.user_id
+       WHERE dv.class_id = ? AND dv.module_key = ?
+       ORDER BY u.email, dv.version_number`
+    ).bind(classId, MODULE2_KEY).all();
+    const files = [];
+    for (const version of result.results || []) {
+      const bytes = await readDeliverablePdfBytes(env, version);
+      if (!bytes) continue;
+      const cleanEmailPart = cleanString(version.email || version.user_id, 120).replace(/[^a-z0-9@._-]+/gi, '-');
+      files.push({
+        name: `${cleanEmailPart}/v${version.version_number}-${version.id}.pdf`,
+        bytes,
+      });
+    }
+    return zipResponse(request, files, 'bethany-house-recommendation-pdfs.zip');
+  }
   const result = await env.STUDIO_DB.prepare(
     `SELECT rv.*, u.email, u.name
      FROM report_versions rv
@@ -1983,12 +3362,16 @@ async function handleClassPdfZip(request, env, classId) {
       bytes,
     });
   }
+  return zipResponse(request, files, 'bethany-house-question-pdfs.zip');
+}
+
+function zipResponse(request, files, filename) {
   const zipBytes = buildUncompressedZip(files);
   return new Response(zipBytes, {
     status: 200,
     headers: {
       'Content-Type': 'application/zip',
-      'Content-Disposition': `attachment; filename="bethany-house-report-pdfs.zip"`,
+      'Content-Disposition': `attachment; filename="${filename}"`,
       'Cache-Control': 'no-store',
       ...corsHeaders(request),
       'Access-Control-Expose-Headers': 'Content-Disposition',
@@ -2128,15 +3511,37 @@ async function ensureEngagement(env) {
   ).run();
 }
 
-async function getPrimaryTeam(env, userId) {
+async function getClassWorkspace(env, userId, classId) {
   return env.STUDIO_DB.prepare(
-    `SELECT t.*
-     FROM teams t
-     JOIN team_members tm ON tm.team_id = t.id
-     WHERE tm.user_id = ?
-     ORDER BY t.created_at ASC
+    `SELECT w.id AS workspace_id, w.team_id, w.engagement_id, w.status,
+      w.current_step, w.created_at, w.updated_at,
+      t.id AS linked_team_id, t.name AS team_name, t.join_code, t.created_by
+     FROM class_workspaces cw
+     JOIN workspaces w ON w.id = cw.workspace_id
+     JOIN teams t ON t.id = w.team_id
+     WHERE cw.user_id = ? AND cw.class_id = ?
      LIMIT 1`
-  ).bind(userId).first();
+  ).bind(userId, classId).first().then((row) => {
+    if (!row) return null;
+    return {
+      workspace: {
+        id: row.workspace_id,
+        team_id: row.team_id,
+        engagement_id: row.engagement_id,
+        status: row.status,
+        current_step: row.current_step,
+        created_at: row.created_at,
+        updated_at: row.updated_at,
+      },
+      team: {
+        id: row.linked_team_id,
+        engagement_id: row.engagement_id,
+        name: row.team_name,
+        join_code: row.join_code,
+        created_by: row.created_by,
+      },
+    };
+  });
 }
 
 async function ensureWorkspace(env, teamId, userId) {
@@ -2167,14 +3572,15 @@ async function ensureWorkspace(env, teamId, userId) {
 }
 
 async function loadWorkspaceBundle(env, userId, membership = null) {
-  const team = await getPrimaryTeam(env, userId);
-  if (!team) {
+  if (!membership?.class_id) {
+    return { team: null, workspace: null, state: null, engagement: null, membership: null, usage: await getUsageSummary(env, membership), versions: [] };
+  }
+  const linked = await getClassWorkspace(env, userId, membership.class_id);
+  if (!linked) {
     return { team: null, workspace: null, state: null, engagement: null, membership: publicMembership(membership), usage: await getUsageSummary(env, membership), versions: [] };
   }
 
-  const workspace = await env.STUDIO_DB.prepare(
-    `SELECT * FROM workspaces WHERE team_id = ? AND engagement_id = ?`
-  ).bind(team.id, ENGAGEMENT_ID).first();
+  const { team, workspace } = linked;
   const engagement = await env.STUDIO_DB.prepare(
     `SELECT * FROM engagements WHERE id = ?`
   ).bind(ENGAGEMENT_ID).first();
@@ -2200,8 +3606,142 @@ async function loadWorkspaceBundle(env, userId, membership = null) {
     engagement,
     membership: publicMembership(membership),
     usage: await getUsageSummary(env, membership),
-    versions: await listReportVersions(env, userId),
+    versions: await listReportVersions(env, userId, membership.class_id),
   };
+}
+
+async function loadModule2WorkspaceBundle(env, userId, membership = null) {
+  const module1 = await loadWorkspaceBundle(env, userId, membership);
+  if (!module1.workspace) {
+    return {
+      workspace: null,
+      state: normalizeModule2State(DEFAULT_MODULE2_STATE),
+      membership: publicMembership(membership),
+      usage: await getUsageSummary(env, membership),
+      versions: [],
+    };
+  }
+
+  let state = normalizeModule2State(DEFAULT_MODULE2_STATE);
+  const stored = await env.STUDIO_DB.prepare(
+    `SELECT state_json, current_step, status, updated_at
+     FROM workspace_module_states
+     WHERE workspace_id = ? AND module_key = ?`
+  ).bind(module1.workspace.id, MODULE2_KEY).first();
+
+  if (stored?.state_json) {
+    state = parseStoredModule2State(stored.state_json);
+  } else {
+    state.inheritance = await resolveModule1Inheritance(env, module1, userId, membership);
+    state.updatedAt = new Date().toISOString();
+    await env.STUDIO_DB.prepare(
+      `INSERT OR IGNORE INTO workspace_module_states (
+        workspace_id, module_key, state_json, current_step, status, updated_by
+      ) VALUES (?, ?, ?, 'ground', 'draft', ?)`
+    ).bind(module1.workspace.id, MODULE2_KEY, JSON.stringify(state), userId).run();
+  }
+
+  return {
+    workspace: {
+      ...module1.workspace,
+      current_step: stored?.current_step || 'ground',
+      module_status: stored?.status || 'draft',
+      module_updated_at: stored?.updated_at || '',
+    },
+    state,
+    membership: publicMembership(membership),
+    usage: await getUsageSummary(env, membership),
+    versions: await listDeliverableVersions(env, userId, MODULE2_KEY, membership.class_id),
+  };
+}
+
+async function handleSaveModule2Workspace(request, env, user, membership) {
+  const body = await readJson(request);
+  const module1 = await loadWorkspaceBundle(env, user.id, membership);
+  if (!module1.workspace) return json({ error: 'Workspace not found.' }, 404, request);
+
+  const state = normalizeModule2State(body.state);
+  const stored = await env.STUDIO_DB.prepare(
+    `SELECT state_json FROM workspace_module_states WHERE workspace_id = ? AND module_key = ?`
+  ).bind(module1.workspace.id, MODULE2_KEY).first();
+  if (stored?.state_json) {
+    try {
+      state.inheritance = parseStoredModule2State(stored.state_json).inheritance;
+    } catch (_) {
+      return json({
+        error: 'Stored Module 2 state is unreadable. Contact the instructor before saving again.',
+      }, 409, request);
+    }
+  } else {
+    state.inheritance = await resolveModule1Inheritance(env, module1, user.id, membership);
+  }
+  state.updatedAt = new Date().toISOString();
+  const currentStep = ['ground', 'board', 'lock', 'package'].includes(body.currentStep)
+    ? body.currentStep
+    : 'ground';
+  const status = ['draft', 'locked', 'complete'].includes(body.status)
+    ? body.status
+    : 'draft';
+
+  await env.STUDIO_DB.prepare(
+    `INSERT INTO workspace_module_states (
+      workspace_id, module_key, state_json, current_step, status, updated_by, updated_at
+    ) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
+    ON CONFLICT(workspace_id, module_key) DO UPDATE SET
+      state_json = excluded.state_json,
+      current_step = excluded.current_step,
+      status = excluded.status,
+      updated_by = excluded.updated_by,
+      updated_at = excluded.updated_at`
+  ).bind(
+    module1.workspace.id,
+    MODULE2_KEY,
+    JSON.stringify(state),
+    currentStep,
+    status,
+    user.id
+  ).run();
+
+  await audit(env, module1.workspace.id, user.id, 'module2_workspace_saved', {
+    workflowKey: MODULE2_KEY,
+    currentStep,
+    status,
+  });
+
+  return json({
+    ok: true,
+    state,
+    currentStep,
+    status,
+    versions: await listDeliverableVersions(env, user.id, MODULE2_KEY, membership.class_id),
+  }, 200, request);
+}
+
+async function resolveModule1Inheritance(env, module1, userId, membership) {
+  const saved = await env.STUDIO_DB.prepare(
+    `SELECT id, state_json, created_at
+     FROM report_versions
+     WHERE workspace_id = ? AND user_id = ? AND class_id = ?
+     ORDER BY version_number DESC
+     LIMIT 1`
+  ).bind(module1.workspace.id, userId, membership.class_id).first();
+
+  if (saved?.state_json) {
+    try {
+      return buildModule1InheritanceSnapshot(JSON.parse(saved.state_json), {
+        sourceType: 'saved_version',
+        sourceVersionId: saved.id,
+        snapshotAt: saved.created_at,
+      });
+    } catch (_) {
+      // Fall through to the current draft when a legacy saved snapshot is unreadable.
+    }
+  }
+
+  return buildModule1InheritanceSnapshot(module1.state, {
+    sourceType: 'current_draft',
+    snapshotAt: module1.workspace.updated_at,
+  });
 }
 
 async function createUniqueJoinCode(env) {
@@ -2227,28 +3767,42 @@ function normalizeState(input) {
   const source = input && typeof input === 'object' ? input : {};
   deepMerge(state, source);
   if (!Array.isArray(state.items)) state.items = [];
-  state.items = state.items.map((item) => {
-    const normalized = {
-      id: item.id || crypto.randomUUID(),
-      sourceField: item.sourceField || 'known',
-      rawText: item.rawText || item.text || '',
-      bucket: item.bucket || '',
-      holder: item.holder || '',
-      veto: item.veto || '',
-      status: item.status || 'needs_attribution',
-      valueTag: item.valueTag || '',
-      valueRationale: item.valueRationale || '',
-      aiNotes: item.aiNotes || '',
-      whoSaysYes: item.whoSaysYes || '',
-      likelyToSayNo: item.likelyToSayNo || '',
-      reengineeredQuestion: item.reengineeredQuestion || '',
-    };
-    normalized.status = normalized.bucket && isMeaningfulField(normalized.holder) ? 'settled' : 'needs_attribution';
-    return normalized;
-  });
-  state.oneSentence.status = state.oneSentence.status === 'approved' ? 'approved' : 'draft';
-  return state;
-}
+	  state.items = state.items.map((item) => {
+	    const normalized = {
+	      id: item.id || crypto.randomUUID(),
+	      sourceField: item.sourceField || 'known',
+	      rawText: item.rawText || item.text || '',
+	      bucket: item.bucket || '',
+	      board: item.board || boardForBucket(item.bucket || ''),
+	      holder: item.holder || '',
+	      veto: item.veto || '',
+	      status: item.status || 'needs_attribution',
+	      valueTag: item.valueTag || '',
+	      valueLabel: item.valueLabel || '',
+	      valueRationale: item.valueRationale || '',
+	      aiNotes: item.aiNotes || '',
+	      whoSaysYes: item.whoSaysYes || '',
+	      likelyToSayNo: item.likelyToSayNo || '',
+	      reengineeredQuestion: item.reengineeredQuestion || '',
+	      whyItMatters: item.whyItMatters || '',
+	      whatAnswerClarifies: item.whatAnswerClarifies || '',
+	      sourceType: item.sourceType || inferSourceType(item.rawText || item.text || '', item.sourceField || 'known'),
+	      evidenceIds: Array.isArray(item.evidenceIds) ? item.evidenceIds.filter(Boolean).slice(0, 8) : [],
+	      selectedForBrief: item.selectedForBrief === true || (item.selectedForBrief === undefined && item.valueTag === 'High'),
+	      studentEdited: Boolean(item.studentEdited),
+	    };
+	    normalized.board = normalized.board || boardForBucket(normalized.bucket);
+	    normalized.status = normalized.bucket && isMeaningfulField(normalized.holder) ? 'settled' : 'needs_attribution';
+	    return normalized;
+	  });
+	  state.questionEngineering = state.questionEngineering || {};
+	  if (!state.questionEngineering.variants || Array.isArray(state.questionEngineering.variants)) state.questionEngineering.variants = {};
+	  if (!Array.isArray(state.questionEngineering.candidates)) state.questionEngineering.candidates = [];
+	  state.finalReport = state.finalReport || {};
+	  if (!('lockedA' in state.finalReport)) state.finalReport.lockedA = null;
+	  state.oneSentence.status = state.oneSentence.status === 'approved' ? 'approved' : 'draft';
+	  return state;
+	}
 
 function deepMerge(target, source) {
   for (const [key, value] of Object.entries(source)) {
@@ -2301,6 +3855,12 @@ function corsHeaders(request) {
 
 function normalizePath(pathname) {
   return pathname.replace(/\/+$/, '') || '/';
+}
+
+function workflowFromRequest(request) {
+  return new URL(request.url).searchParams.get('workflow') === MODULE2_KEY
+    ? MODULE2_KEY
+    : 'module_1';
 }
 
 function isPlatformHost(host) {
@@ -2369,13 +3929,11 @@ function isMeaningfulField(value) {
 
 function isReadyHighValueQuestion(item) {
   return item
-    && item.valueTag === 'High'
+    && (item.valueTag === 'High' || item.selectedForBrief === true)
     && item.bucket
     && item.bucket !== 'KK'
-    && isMeaningfulField(item.reengineeredQuestion || item.rawText || item.text)
-    && isMeaningfulField(item.whoSaysYes)
-    && isMeaningfulField(item.veto)
-    && isMeaningfulField(item.likelyToSayNo);
+    && item.valueTag !== 'Low'
+    && isMeaningfulField(item.reengineeredQuestion || item.rawText || item.text);
 }
 
 function randomCode(length) {
