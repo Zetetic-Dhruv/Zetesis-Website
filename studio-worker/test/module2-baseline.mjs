@@ -63,6 +63,8 @@ assert(renderedModule2Script.includes('data-action="update-ground-options"'), 'G
 assert(!renderedModule2Script.includes("groundButton.textContent='Prepare choices'"), 'bulk-option preparation does not consume the continue action');
 assert(renderedModule2Script.includes('data-action="remove-pick-option"'), 'prepared choices expose a direct remove action');
 assert(renderedModule2Script.includes('function excludeOption(id)') && renderedModule2Script.includes('state.ground.pickOptions=(state.ground.pickOptions||[]).filter'), 'removing an option clears both the main and prepared lists');
+assert(!renderedModule2Script.includes("radio('ground.mergeChoice','replace','Replace'"), 'Ground omits the redundant Replace control');
+assert(renderedModule2Script.includes("if(state.ground.mergeChoice==='replace')state.ground.mergeChoice='merge'"), 'legacy Replace drafts fall back to Keep all');
 
 const dashedPaste = parseGroundSolutionPaste('Select ambassador - this will need screening and anti-trust verification\nHire - but one hire will likely take too long');
 assert(dashedPaste.length === 2, 'an inline dash does not create extra options');
