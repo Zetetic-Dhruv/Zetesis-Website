@@ -306,6 +306,17 @@ async function runSuite() {
     suggestions.state.bets.some((bet) => bet.origin === 'generated' && bet.provisional === true),
     'option generation persists only provisional model-created bets'
   );
+  const generatedSuggestion = suggestions.state.bets.find((bet) => bet.origin === 'generated' && bet.provisional === true);
+  const forgedAdmissionState = structuredClone(suggestions.state);
+  forgedAdmissionState.bets.find((bet) => bet.id === generatedSuggestion.id).provisional = false;
+  const rejectedAdmissionMutation = await putJson('/api/studio/modules/module-2/workspace', {
+    state: forgedAdmissionState,
+    currentStep: 'board',
+    status: 'draft',
+  }, authHeaders);
+  assert(rejectedAdmissionMutation.state.bets.find((bet) => bet.id === generatedSuggestion.id).provisional === true, 'ordinary workspace save cannot admit a generated option');
+  const explicitAdmission = await postJson(`/api/studio/modules/module-2/bets/${encodeURIComponent(generatedSuggestion.id)}/admit`, {}, authHeaders);
+  assert(explicitAdmission.state.bets.find((bet) => bet.id === generatedSuggestion.id).provisional === false, 'explicit admission transition promotes a generated option');
 
   const evaluations = await llm('m2_evaluate_bets', {});
   assert(evaluations.workflowKey === 'module_2', 'bet evaluation is recorded under Module 2');
@@ -322,12 +333,12 @@ async function runSuite() {
   assert(reranked.state.ranking.orderedBetIds.length >= 2, 'student reweighting reranks without a model call');
   assert(!('confidence' in reranked.state.ranking), 'deterministic reranking cannot expose candidate confidence');
 
-  const lockedModule2State = structuredClone(reranked.state);
-  lockedModule2State.locks = {
-    ...lockedModule2State.locks,
+  const forgedLockState = structuredClone(reranked.state);
+  forgedLockState.locks = {
+    ...forgedLockState.locks,
     frameConfirmation: 'confirmed',
     setCompletenessConfirmation: 'confirmed',
-    selectedBetId: lockedModule2State.ranking.orderedBetIds[0],
+    selectedBetId: forgedLockState.ranking.orderedBetIds[0],
     lossBearer: 'Program staff',
     accountabilityLocation: 'Program leadership owns the recommendation and response to failed handoffs.',
     reversibility: 'costly_to_reverse',
@@ -337,7 +348,7 @@ async function runSuite() {
       'New Bethany House evidence can reopen the comparison field.',
     ],
   };
-  const forgedPackageState = structuredClone(lockedModule2State);
+  const forgedPackageState = structuredClone(forgedLockState);
   forgedPackageState.package = {
     ...forgedPackageState.package,
     currentPreview: {
@@ -354,6 +365,42 @@ async function runSuite() {
   }, authHeaders);
   assert(lockedModule2.state.package.currentPreview === null, 'workspace save cannot inject a server-owned Module 2 package');
   assert(lockedModule2.state.package.sourceHash === '', 'workspace save cannot inject a server-owned package hash');
+  assert(lockedModule2.state.locks.selectedBetId === '', 'ordinary workspace save cannot forge human lock judgments');
+  const selectedBetId = reranked.state.ranking.orderedBetIds[0];
+  const cleanBoardJudgment = await postJson('/api/studio/modules/module-2/judgments', {
+    frameConfirmation: 'confirmed',
+    setCompletenessConfirmation: 'confirmed',
+    selectedBetId,
+  }, authHeaders);
+  assert(cleanBoardJudgment.state.locks.frameConfirmation === 'confirmed', 'clean Take-to-Lock persists frame acceptance');
+  assert(cleanBoardJudgment.state.locks.setCompletenessConfirmation === 'confirmed', 'clean Take-to-Lock persists comparison-set acceptance');
+  assert(cleanBoardJudgment.state.locks.selectedBetId === selectedBetId, 'clean Take-to-Lock persists the selected bet');
+  const gapState = structuredClone(cleanBoardJudgment.state);
+  gapState.ranking.coverage = {
+    status: 'gap',
+    gap: 'A partnership-based alternative has not been considered.',
+    resolution: '',
+  };
+  await putJson('/api/studio/modules/module-2/workspace', { state: gapState, currentStep: 'board', status: 'draft' }, authHeaders);
+  const gapBypass = await postJson('/api/studio/modules/module-2/judgments', { setCompletenessConfirmation: 'confirmed' }, authHeaders, false);
+  assert(gapBypass.status === 409, 'plain confirmation cannot bypass a comparison-set gap');
+  const reviewedGap = await postJson('/api/studio/modules/module-2/judgments', { setCompletenessConfirmation: 'confirmed_after_review' }, authHeaders);
+  assert(reviewedGap.state.ranking.coverage.status === 'covered', 'dedicated gap review resolves the named comparison-set gap');
+  assert(reviewedGap.state.locks.setCompletenessConfirmation === 'confirmed_after_review', 'dedicated gap review persists its distinct judgment');
+  const prematurePackage = await postJson('/api/studio/llm', { module: 'm2_package', payload: {} }, authHeaders, false);
+  assert(prematurePackage.status === 409, 'package is blocked before consequence and reversibility judgments');
+  const lockedJudgments = await postJson('/api/studio/modules/module-2/judgments', {
+    lossBearer: 'Program staff',
+    accountabilityLocation: 'Program leadership owns the recommendation and response to failed handoffs.',
+    reversibility: 'costly_to_reverse',
+    reversibilityNote: 'A failed relationship transfer would require deliberate repair.',
+    heldConstant: [
+      'The consolidated reply is the current client record.',
+      'New Bethany House evidence can reopen the comparison field.',
+    ],
+  }, authHeaders);
+  assert(lockedJudgments.status === 'locked', 'explicit consequence and reversibility judgments lock the workspace');
+  const lockedModule2State = lockedJudgments.state;
   const module2Package = await llm('m2_package', {});
   assert(module2Package.result.document.title === 'Bethany House Recommendation Brief', 'Module 2 compiler returns a client recommendation document');
   assert(module2Package.result.document.recommendation.name === lockedModule2State.bets.find((bet) => bet.id === lockedModule2State.locks.selectedBetId).name, 'Module 2 compiler preserves the student-selected bet');
@@ -383,9 +430,13 @@ async function runSuite() {
   const module2ZipBytes = new Uint8Array(await module2Zip.arrayBuffer());
   assert(module2ZipBytes.byteLength > 1000, 'Module 2 mass download contains saved PDF bytes');
   assert(!new TextDecoder().decode(module2ZipBytes).includes('@example.com/'), 'Module 2 mass download excludes reserved QA accounts');
-  const editedAfterVersion = structuredClone(module2Version.state);
-  editedAfterVersion.locks.heldConstant.push('A later edit must make the current preview stale.');
-  await putJson('/api/studio/modules/module-2/workspace', { state: editedAfterVersion, currentStep: 'lock', status: 'locked' }, authHeaders);
+  await postJson('/api/studio/modules/module-2/judgments', {
+    lossBearer: module2Version.state.locks.lossBearer,
+    accountabilityLocation: module2Version.state.locks.accountabilityLocation,
+    reversibility: module2Version.state.locks.reversibility,
+    reversibilityNote: module2Version.state.locks.reversibilityNote,
+    heldConstant: [...module2Version.state.locks.heldConstant, 'A later edit must make the current preview stale.'],
+  }, authHeaders);
   const stalePreview = await postJson('/api/studio/modules/module-2/report/preview', {}, authHeaders, false);
   assert(stalePreview.status === 409, 'editing a locked judgment invalidates the current recommendation preview');
   const immutableModule2Pdf = await fetch(`${BASE_URL}${module2Version.version.pdf_url}`, { headers: authHeaders });

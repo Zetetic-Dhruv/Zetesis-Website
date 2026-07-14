@@ -53,21 +53,25 @@ export function fallbackReconcile(payload = {}) {
 export function fallbackSuggestOptions(payload = {}) {
   const state = payload.state || {};
   const frame = state.ground?.frameComparison?.groundedFrame || state.inheritance?.frame || state.ground?.problemSeed || 'the current Bethany House decision';
+  const basisIds = [
+    ...(state.inheritance?.highValueTraces || []).map((trace) => trace.id),
+    ...(payload._context?.facts || []).map((fact) => fact.id),
+  ].filter(Boolean).slice(0, 2);
   return {
     options: [
       {
-        name: 'Sequence capacity and relationship handoffs',
-        description: 'Add capacity in phases while explicitly transferring partner and stakeholder memory.',
-        whyDistinct: 'Treats implementation order and continuity as one design problem.',
-        frameBasisTraceIds: (state.inheritance?.highValueTraces || []).slice(0, 2).map((trace) => trace.id),
-        failureModes: ['The handoff may remain informal and person-dependent.'],
+        name: 'Relationship memory ledger',
+        description: 'Create a maintained partner-history and decision record before changing who owns the work.',
+        whyDistinct: 'Uses a durable knowledge-transfer mechanism instead of changing role ownership or transition timing.',
+        frameBasisTraceIds: basisIds,
+        failureModes: ['The record may become stale or fail to capture tacit relationship context.'],
       },
       {
-        name: 'Separate operational support from people systems',
-        description: 'Use distinct ownership for executive coordination and HR trust/compliance work.',
-        whyDistinct: 'Avoids forcing two different organizational needs into one role.',
-        frameBasisTraceIds: (state.inheritance?.highValueTraces || []).slice(0, 2).map((trace) => trace.id),
-        failureModes: ['Coordination costs may rise if accountability is unclear.'],
+        name: 'Protected intake gate',
+        description: 'Route routine requests through a named intake owner while preserving direct escalation for continuity-sensitive partner issues.',
+        whyDistinct: 'Reduces channel overload through routing rules rather than a role split or a staged relationship transfer.',
+        frameBasisTraceIds: basisIds,
+        failureModes: ['Exception growth may recreate the original bottleneck.'],
       },
     ],
     frameCaveat: `These options inherit the current frame: ${frame}`,
@@ -122,16 +126,21 @@ export function fallbackEvaluateBets(payload = {}) {
   };
 }
 
-export function applyReconciliation(state, result = {}) {
+export function applyReconciliation(state, result = {}, contextFacts = []) {
   const next = structuredClone(state);
   const traceIds = new Set(array(next.inheritance?.highValueTraces).map((trace) => trace.id));
+  const permittedBasisIds = new Set([
+    ...traceIds,
+    ...array(contextFacts).map((fact) => fact?.id).filter(Boolean),
+  ]);
   const betIds = new Set(array(next.bets).map((bet) => bet.id));
   const rawReply = String(next.ground.rawReply || '').toLowerCase();
   next.ground.substantiveLines = array(result.substantiveLines)
-    .filter((line) => String(line || '').trim().length >= 8 && rawReply.includes(String(line).trim().toLowerCase()));
+    .map(normalizeVerbatimLine)
+    .filter((line) => line.length >= 8 && rawReply.includes(line.toLowerCase()));
   next.ground.relevance = {
     ...object(result.relevance, next.ground.relevance),
-    matchedTraceIds: array(result.relevance?.matchedTraceIds).filter((id) => traceIds.has(id)),
+    matchedTraceIds: array(result.relevance?.matchedTraceIds).filter((id) => permittedBasisIds.has(id)),
   };
   if (!next.ground.substantiveLines.length && next.ground.relevance.status === 'relevant') {
     next.ground.relevance = {
@@ -147,6 +156,15 @@ export function applyReconciliation(state, result = {}) {
     ...object(result.voiceDisagreement, {}),
     humanConfirmed: next.ground.voiceDisagreement?.humanConfirmed === true,
   };
+  if (next.ground.voiceDisagreement.status === 'possible'
+    && attributedSpeakerCount(next.ground.voiceDisagreement.evidenceLines) < 2) {
+    next.ground.voiceDisagreement = {
+      status: 'none',
+      summary: '',
+      evidenceLines: [],
+      humanConfirmed: false,
+    };
+  }
   next.ground.completeness = result.coverage?.status === 'gap'
     ? { status: 'gap', reason: result.coverage.gap || '' }
     : { status: 'complete', reason: '' };
@@ -157,10 +175,26 @@ export function applyReconciliation(state, result = {}) {
   return next;
 }
 
-export function applySuggestedOptions(state, result = {}) {
+function normalizeVerbatimLine(value) {
+  return String(value || '')
+    .trim()
+    .replace(/^(?:[-*>]\s*)+/, '')
+    .replace(/^["\u201c]+|["\u201d]+$/g, '')
+    .trim();
+}
+
+function attributedSpeakerCount(lines) {
+  return new Set(array(lines).map((line) => {
+    const match = String(line || '').match(/^\s*(?:[-*>]\s*)?([^:\n]{2,80}):\s+\S/);
+    return match ? match[1].trim().toLowerCase() : '';
+  }).filter(Boolean)).size;
+}
+
+export function applySuggestedOptions(state, result = {}, contextFacts = []) {
   const next = structuredClone(state);
   const existingIds = new Set(next.bets.map((bet) => bet.id));
   const traceIds = new Set(array(next.inheritance?.highValueTraces).map((trace) => trace.id));
+  const basisIds = new Set([...traceIds, ...array(contextFacts).map((fact) => fact.id).filter(Boolean)]);
   const hasGroundedFrame = Boolean(
     String(next.ground?.frameComparison?.groundedFrame || next.inheritance?.frame || next.ground?.problemSeed || '').trim()
   );
@@ -168,7 +202,7 @@ export function applySuggestedOptions(state, result = {}) {
   for (const [index, option] of array(result.options).entries()) {
     let id = option.id || `generated-${slug(option.name || 'option')}-${index + 1}`;
     while (existingIds.has(id)) id = `${id}-new`;
-    const frameBasisTraceIds = array(option.frameBasisTraceIds).filter((traceId) => traceIds.has(traceId));
+    const frameBasisTraceIds = array(option.frameBasisTraceIds).filter((traceId) => basisIds.has(traceId));
     const failureModes = array(option.failureModes).map((item) => typeof item === 'string' ? item.trim() : String(item?.text || '').trim()).filter(Boolean);
     const candidate = {
       id,
@@ -195,8 +229,8 @@ export function applySuggestedOptions(state, result = {}) {
     if (!candidate.whyDistinct) reasons.push('The option does not explain why it is genuinely distinct.');
     if (!candidate.failureModes.length) reasons.push('At least one untested failure mode is required.');
     if (!hasGroundedFrame) reasons.push('A grounded decision frame is required before generating alternatives.');
-    if (traceIds.size && !frameBasisTraceIds.length) reasons.push('The option is not tied to a valid inherited frame trace.');
-    if (array(option.frameBasisTraceIds).some((traceId) => !traceIds.has(traceId))) reasons.push('The option supplied an unknown frame trace ID.');
+    if (basisIds.size && !frameBasisTraceIds.length) reasons.push('The option is not tied to a supplied frame basis.');
+    if (array(option.frameBasisTraceIds).some((traceId) => !basisIds.has(traceId))) reasons.push('The option supplied an unknown frame basis ID.');
     if (findPossibleDuplicates([...next.bets, candidate]).some((pair) => pair.rightId === candidate.id)) {
       reasons.push('The option duplicates an admitted alternative.');
     }
@@ -301,20 +335,25 @@ export function rankLiveBets(bets = [], weights = [], duplicateSignals = [], cov
   }
   const dominatedIds = new Set(dominanceRelations.map((item) => item.dominatedBetId));
   const nameById = new Map(live.map((bet) => [bet.id, bet.name || 'Untitled option']));
-  const scored = initiallyScored
+  const nonDominated = initiallyScored
     .filter((item) => !dominatedIds.has(item.id))
     .sort((a, b) => b.score - a.score || a.id.localeCompare(b.id));
-  if (scored.length < 2) {
-    return {
-      ...incompleteRanking('Fewer than two non-dominated alternatives remain in the comparison field.', true),
-      dominanceRelations,
-    };
-  }
+  const dominated = initiallyScored
+    .filter((item) => dominatedIds.has(item.id))
+    .sort((a, b) => b.score - a.score || a.id.localeCompare(b.id));
+  const scored = [...nonDominated, ...dominated];
   const pairwiseLines = scored.slice(0, 3).map((item, index) => {
     const next = scored[index + 1];
     const itemName = nameById.get(item.id);
+    const dominantRelation = dominanceRelations.find((relation) => relation.dominatedBetId === item.id);
+    if (dominantRelation) {
+      return `${itemName} remains in the field but is currently dominated by ${nameById.get(dominantRelation.dominantBetId)} across the admitted criteria.`;
+    }
     if (!next) return `${itemName} remains live under the current evidence.`;
     const nextName = nameById.get(next.id);
+    if (dominanceRelations.some((relation) => relation.dominantBetId === item.id && relation.dominatedBetId === next.id)) {
+      return `${itemName} ranks above ${nextName} because it meets or exceeds it across every admitted criterion.`;
+    }
     const resistanceEffect = 0.8 * (item.resistance - next.resistance);
     const supportEffect = 0.2 * (item.support - next.support);
     return Math.abs(resistanceEffect) >= Math.abs(supportEffect)
@@ -326,7 +365,7 @@ export function rankLiveBets(bets = [], weights = [], duplicateSignals = [], cov
     dominanceRelations,
     pairwiseLines,
     nearTie: scored.length > 1 && Math.abs(scored[0].score - scored[1].score) <= 0.05,
-    weakField: false,
+    weakField: nonDominated.length < 2,
     evaluationIncomplete: false,
     incompleteReason: '',
     comparisonScores: {
@@ -402,8 +441,11 @@ function validateEvidenceItems(items, state, contextFacts) {
     .map((trace) => trace.id));
   const rawReply = String(state.ground?.rawReply || '').toLowerCase();
   return items.filter((item) => String(item?.text || '').trim()).map((item, index) => {
-    const traceIds = array(item.traceIds).filter((id) => typeof id === 'string');
-    const sourceType = supportedEvidenceSource(item, traceIds, {
+    const normalizedItem = item.sourceType === 'direct_client_reply'
+      ? { ...item, text: normalizeVerbatimLine(item.text) }
+      : item;
+    const traceIds = array(normalizedItem.traceIds).filter((id) => typeof id === 'string');
+    const sourceType = supportedEvidenceSource(normalizedItem, traceIds, {
       inherited,
       publicFacts,
       courseTraces,
@@ -411,8 +453,8 @@ function validateEvidenceItems(items, state, contextFacts) {
       rawReply,
     });
     return {
-      ...item,
-      id: item.id || `evidence-${index + 1}`,
+      ...normalizedItem,
+      id: normalizedItem.id || `evidence-${index + 1}`,
       sourceType,
       traceIds: sourceType === 'generated_hypothesis' ? [] : traceIds,
     };

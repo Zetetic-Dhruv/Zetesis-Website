@@ -102,7 +102,13 @@ console.log(`Stage ${stage} Luna verdict: ${review.verdict}; findings: ${finding
 function gitDiff(paths) {
   const result = spawnSync('git', ['diff', '--', ...paths], { encoding: 'utf8', maxBuffer: 4 * 1024 * 1024 });
   if (result.status !== 0) throw new Error(result.stderr || 'Unable to create frozen source diff.');
-  return result.stdout;
+  const untracked = paths.flatMap((path) => {
+    const tracked = spawnSync('git', ['ls-files', '--error-unmatch', '--', path], { encoding: 'utf8' });
+    if (tracked.status === 0) return [];
+    const absolute = resolve(path);
+    return [`diff --git a/${path} b/${path}\nnew file mode 100644\n--- /dev/null\n+++ b/${path}\n@@ untracked source @@\n${readFileSync(absolute, 'utf8')}`];
+  });
+  return [result.stdout, ...untracked].filter(Boolean).join('\n');
 }
 
 function readText(path) {

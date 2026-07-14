@@ -23,10 +23,16 @@ import {
   fallbackSuggestOptions,
   rankLiveBets,
 } from '../src/module2-engine.js';
-import { renderModule2Page } from '../src/module2-page.js';
+import {
+  module2FrameNeedsExplicitReview,
+  module2LockTransitionJudgments,
+  module2SetNeedsExplicitReview,
+  renderModule2Page,
+} from '../src/module2-page.js';
 import { renderInstructorPage } from '../src/instructor-page.js';
 import { canServeInstructorSurface } from '../src/studio.js';
 import {
+  clientFacingProse,
   compileModule2Document,
   fallbackModule2Package,
   module2DocumentText,
@@ -44,6 +50,25 @@ const productionExport = process.env.MODULE2_PRODUCTION_EXPORT || '';
 const renderedModule2Script = renderModule2Page().match(/<script>([\s\S]*)<\/script>/)?.[1] || '';
 assert(renderedModule2Script.length > 0, 'Module 2 page renders an executable client script');
 assertDoesNotThrow(() => new Function(renderedModule2Script), 'rendered Module 2 client script parses');
+assert(renderModule2Page().includes('Keep both as distinct') && renderModule2Page().includes('duplicate-remove'), 'Module 2 Board exposes explicit duplicate-resolution actions');
+assert(renderModule2Page().includes("/admit',{method:'POST'") && !renderedModule2Script.includes('bet.provisional=false'), 'generated-option admission uses the explicit server transition');
+assert(renderModule2Page().includes('Suggested options to review') && renderModule2Page().includes('renderProvisionalBets()'), 'provisional options and their admission action are visible on the Board');
+assert(renderModule2Page().includes('/api/studio/modules/module-2/judgments'), 'human lock choices use the explicit server judgment transition');
+assert(!module2FrameNeedsExplicitReview('consistent', ''), 'a consistent frame stays on the soft clean path');
+assert(module2FrameNeedsExplicitReview('drift', ''), 'frame drift requires an explicit keep-or-revise judgment');
+assert(module2FrameNeedsExplicitReview('thin', ''), 'a thin frame requires an explicit keep-or-revise judgment');
+assert(!module2SetNeedsExplicitReview('covered', ''), 'a covered comparison set stays on the soft clean path');
+assert(module2SetNeedsExplicitReview('gap', ''), 'a comparison-set gap requires explicit review');
+assert(module2SetNeedsExplicitReview('gap', 'confirmed'), 'a plain confirmation cannot erase a comparison-set gap');
+assert(JSON.stringify(module2LockTransitionJudgments({ frameStatus: 'consistent', coverageStatus: 'covered', selectedBetId: 'bet-a' })) === JSON.stringify({
+  selectedBetId: 'bet-a',
+  frameConfirmation: 'confirmed',
+  setCompletenessConfirmation: 'confirmed',
+}), 'the clean Take-to-Lock action carries frame, set, and selection judgments together');
+assert(renderModule2Page().includes('This consistent frame will be accepted when you take a bet to Lock.') && renderModule2Page().includes('I reviewed the gap; carry this set'), 'Board renders a soft clean path and physical hard-stop recovery');
+assert(clientFacingProse('The course materials describe the role and warn against a handoff.') === 'the available evidence describes the role and warns against a handoff.', 'client provenance substitution preserves subject-verb agreement');
+assert(clientFacingProse('Almost everything the student team know routes through one person.') === 'Almost everything the advisory team knows routes through one person.', 'team-language substitution preserves subject-verb agreement');
+assert(clientFacingProse('Because much the advisory team knowledge routes through the CEO, other views may be missed.') === "Because much of the advisory team's knowledge routes through the CEO, other views may be missed.", 'client prose repairs malformed team-knowledge possessives');
 const renderedInstructorScript = renderInstructorPage().match(/<script>([\s\S]*)<\/script>/)?.[1] || '';
 assert(renderedInstructorScript.length > 0, 'instructor page renders an executable client script');
 assertDoesNotThrow(() => new Function(renderedInstructorScript), 'rendered instructor client script parses');
@@ -55,6 +80,10 @@ assert(renderInstructorPage().includes('class="prompt-run"'), 'instructor opens 
 assert(renderInstructorPage().includes('Module 1 · Questions') && renderInstructorPage().includes('Module 2 · Recommendation'), 'instructor page separates Module 1 and Module 2 per student');
 assert(renderInstructorPage().includes('Question briefs ZIP') && renderInstructorPage().includes('Recommendation briefs ZIP'), 'instructor page exposes workflow-specific mass downloads');
 assert(canServeInstructorSurface('instructor.platform.zetesislabs.com', false), 'production instructor host may serve the instructor workroom');
+assert(canServeInstructorSurface('instructor.module2-staging.platform.zetesislabs.com', false, 'instructor.module2-staging.platform.zetesislabs.com'), 'the exact configured staging instructor host may serve the instructor workroom');
+assert(!canServeInstructorSurface('another.module2-staging.platform.zetesislabs.com', false, 'instructor.module2-staging.platform.zetesislabs.com'), 'a configured staging host does not authorize sibling hosts');
+assert(canServeInstructorSurface('m2-staging.zetesislabs.com', false, '', 'm2-staging.zetesislabs.com'), 'the exact configured staging path host may serve the hidden instructor route');
+assert(!canServeInstructorSurface('platform.zetesislabs.com', false, '', 'm2-staging.zetesislabs.com'), 'a staging path host cannot authorize the public platform host');
 assert(!canServeInstructorSurface('platform.zetesislabs.com', false), 'public platform host cannot serve the instructor workroom');
 assert(!canServeInstructorSurface('unrecognized.zetesislabs.com', false), 'unknown production host cannot serve the instructor workroom');
 assert(canServeInstructorSurface('localhost', true), 'local Worker runtime may serve the instructor workroom');
@@ -123,8 +152,39 @@ const engineState = normalizeModule2State({
 const reconciled = applyReconciliation(engineState, fallbackReconcile({ state: engineState }));
 assert(reconciled.ground.relevance.status === 'relevant', 'reconciliation recognizes assignment-specific reply');
 assert(reconciled.ground.voiceDisagreement.humanConfirmed === false, 'voice signal never confirms itself');
+const provenanceReconciliation = applyReconciliation(engineState, {
+  relevance: {
+    status: 'relevant',
+    reason: 'The reply intersects an inherited trace and a supplied context fact.',
+    matchedTraceIds: ['trace-1', 'course_relationship_continuity', 'invented_trace'],
+  },
+  substantiveLines: ['We need more capacity around Elaine.'],
+}, [{ id: 'course_relationship_continuity', sourceType: 'course_trace', text: 'Relationship continuity matters.' }]);
+assert(provenanceReconciliation.ground.relevance.matchedTraceIds.includes('trace-1'), 'reconciliation retains a valid inherited trace ID');
+assert(provenanceReconciliation.ground.relevance.matchedTraceIds.includes('course_relationship_continuity'), 'reconciliation retains a valid supplied context fact ID');
+assert(!provenanceReconciliation.ground.relevance.matchedTraceIds.includes('invented_trace'), 'reconciliation removes an unknown provenance ID');
+const quoteWrappedReconciliation = applyReconciliation(engineState, {
+  ...fallbackReconcile({ state: engineState }),
+  substantiveLines: ['"Bethany confirmed that partner handoffs and implementation capacity both matter."'],
+});
+assert(
+  quoteWrappedReconciliation.ground.substantiveLines[0] === 'Bethany confirmed that partner handoffs and implementation capacity both matter.',
+  'verbatim reconciliation tolerates removable outer quotation marks'
+);
+assert(quoteWrappedReconciliation.ground.relevance.status === 'relevant', 'quote notation cannot erase a verified client line');
 const suggested = applySuggestedOptions(reconciled, fallbackSuggestOptions({ state: reconciled }));
 assert(suggested.bets.filter((bet) => bet.origin === 'generated').length === 2, 'factory options stay generated and provisional');
+const contextGroundedSuggestion = applySuggestedOptions(reconciled, {
+  options: [{
+    name: 'Use external transition support',
+    description: 'Bring in time-bound external capacity while Bethany preserves internal relationship ownership.',
+    whyDistinct: 'Adds capacity without assigning a new permanent internal structure.',
+    frameBasisTraceIds: ['public-growth-fact'],
+    failureModes: ['External support may not acquire enough context to reduce internal load.'],
+  }],
+  frameCaveat: 'Provisional.',
+}, [{ id: 'public-growth-fact', sourceType: 'public_fact', text: 'Bethany has a growth plan.' }]);
+assert(contextGroundedSuggestion.bets.some((bet) => bet.name === 'Use external transition support'), 'supplied context facts can ground a provisional option');
 const rejectedSuggestion = applySuggestedOptions(reconciled, {
   options: [{
     name: 'Unsupported option',
@@ -139,6 +199,32 @@ assert(rejectedSuggestion.ground.optionGenerationIssues.length === 1, 'invalid g
 const evaluated = applyBetEvaluations(suggested, fallbackEvaluateBets({ state: suggested }));
 assert(evaluated.ranking.orderedBetIds.length >= 2, 'deterministic ranking orders the live field');
 assert(evaluated.bets.every((bet) => bet.description), 'evaluation scaffolds a working description when the student supplied only a name');
+
+const unattributedPriorities = applyReconciliation(normalizeModule2State({
+  ground: { rawReply: 'We need added capacity.\nKeep partner history intact.\nProgram leadership must own the handoff.' },
+}), {
+  relevance: { status: 'relevant', reason: 'Relevant.', matchedTraceIds: [] },
+  substantiveLines: ['We need added capacity.', 'Keep partner history intact.', 'Program leadership must own the handoff.'],
+  frameComparison: { status: 'consistent', inheritedFrame: '', groundedFrame: 'Add capacity with continuity.', reason: 'Consistent.' },
+  fogMap: [],
+  voiceDisagreement: { status: 'possible', summary: 'Several priorities appear.', evidenceLines: ['We need added capacity.', 'Keep partner history intact.'] },
+  coverage: { status: 'covered', gap: '', resolution: '' },
+  possibleDuplicates: [],
+});
+assert(unattributedPriorities.ground.voiceDisagreement.status === 'none', 'unattributed priorities cannot create a multi-voice review burden');
+
+const attributedVoices = applyReconciliation(normalizeModule2State({
+  ground: { rawReply: 'Executive Director: Protect continuity.\nBoard member: Show the full cost.' },
+}), {
+  relevance: { status: 'relevant', reason: 'Relevant.', matchedTraceIds: [] },
+  substantiveLines: ['Executive Director: Protect continuity.', 'Board member: Show the full cost.'],
+  frameComparison: { status: 'consistent', inheritedFrame: '', groundedFrame: 'Protect continuity and cost visibility.', reason: 'Consistent.' },
+  fogMap: [],
+  voiceDisagreement: { status: 'possible', summary: 'Two attributed voices emphasize different constraints.', evidenceLines: ['Executive Director: Protect continuity.', 'Board member: Show the full cost.'] },
+  coverage: { status: 'covered', gap: '', resolution: '' },
+  possibleDuplicates: [],
+});
+assert(attributedVoices.ground.voiceDisagreement.status === 'possible', 'two explicitly attributed voices remain available for human review');
 assert(
   evaluated.ranking.pairwiseLines.every((line) => !line.includes('bet-a') && !line.includes('bet-b')),
   'client-facing ranking explanations use option names rather than internal IDs'
@@ -146,6 +232,19 @@ assert(
 assert(!('confidence' in evaluated.ranking), 'evidence engine cannot emit confidence');
 assert(evaluated.ranking.comparisonScores.basis === 'weighted_criterion_comparison', 'ordinary ranking values have an explicit non-confidence basis');
 assert(evaluated.locks.selectedBetId === '', 'evidence engine cannot choose the final bet');
+const quoteWrappedEvidence = applyBetEvaluations(reconciled, {
+  ...fallbackEvaluateBets({ state: reconciled }),
+  evaluations: fallbackEvaluateBets({ state: reconciled }).evaluations.map((evaluation) => ({
+    ...evaluation,
+    evidenceFor: evaluation.evidenceFor.map((item) => item.sourceType === 'direct_client_reply'
+      ? { ...item, text: `"${item.text}"` }
+      : item),
+  })),
+});
+assert(
+  quoteWrappedEvidence.bets.some((bet) => bet.evidenceFor.some((item) => item.sourceType === 'direct_client_reply')),
+  'direct client evidence tolerates removable outer quotation marks'
+);
 const packageState = structuredClone(evaluated);
 packageState.locks = {
   ...packageState.locks,
@@ -172,6 +271,16 @@ assert(recommendationDocument.candidates.length === packageState.ranking.ordered
 assert(recommendationDocument.candidates.every((candidate) => candidate.evidenceAgainst.length && candidate.tripwires.length), 'package retains contrary evidence and tripwires for every candidate');
 assert(!JSON.stringify(recommendationDocument).includes('confidenceScore'), 'package compiler ignores unaudited confidence injection');
 assert(module2DocumentText(recommendationDocument).includes('Who absorbs the loss') === false, 'plain text uses client-facing decision commitment labels');
+const clientLanguageDocument = compileModule2Document(packageState, {
+  executiveFraming: 'The course materials support the student team finding.',
+  recommendationSummary: 'The student\'s current judgment follows Module 1 trace evidence. This is not a certainty.',
+  recommendationRationale: 'The classroom exercise sharpened the recommendation and a stale record could create false confidence. The probability and likelihood remain unknown.',
+  currentPositionStatement: 'The app selected nothing.',
+  candidateCommentary: [],
+  closingNote: 'The course material remains useful. No robustness band is available. This gives no assurance.',
+});
+const clientLanguageText = module2DocumentText(clientLanguageDocument).toLowerCase();
+assert(!/course material|course trace|student|classroom|the app|module 1|confidence|confident|assurance|certainty|probability|likelihood|robustness band/.test(clientLanguageText), 'compiler prevents classroom, product-process, and confidence-family language from reaching the client brief');
 const incompleteEvaluation = applyBetEvaluations(engineState, {
   evaluations: fallbackEvaluateBets({ state: engineState }).evaluations.slice(0, 1),
 });
@@ -227,6 +336,15 @@ const duplicateBlocked = rankLiveBets([
   },
 ], []);
 assert(duplicateBlocked.orderedBetIds.length === 0, 'unresolved duplicate alternatives cannot influence ranking');
+const dismissedModelDuplicate = rankLiveBets(
+  evaluated.bets,
+  evaluated.weights,
+  [{ leftId: evaluated.bets[0].id, rightId: evaluated.bets[1].id, status: 'dismissed' }]
+);
+assert(
+  JSON.stringify(dismissedModelDuplicate.orderedBetIds) === JSON.stringify(withoutPadding.orderedBetIds),
+  'student dismissal of a heuristic duplicate signal restores deterministic ranking'
+);
 const unevaluatedField = rankLiveBets([
   {
     id: 'unevaluated-a', name: 'Option A', description: 'First distinct path.', liveStatus: 'live',

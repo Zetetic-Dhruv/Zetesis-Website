@@ -1,0 +1,137 @@
+{
+  "reviewer": "gpt-5.6-luna",
+  "reasoningEffort": "low",
+  "transport": "openai-responses-api",
+  "stage": 8,
+  "usage": {
+    "inputTokens": 87998,
+    "outputTokens": 1191
+  },
+  "reviewHistory": [
+    {
+      "attempt": 1,
+      "reviewer": "gpt-5.6-luna",
+      "verdict": "fail",
+      "utilityFindings": [],
+      "qualityFindings": [
+        "Unaudited confidence-adjacent language still appears in the frozen client package evidence. The compiled output rewrites `confidence` to `assurance` rather than removing the concept: the live package contains phrases such as `Score is below high assurance`, `partner assurance`, and `creates misplaced assurance`. The release boundary explicitly requires that no confidence language escape to client artifacts, and the authoritative contract says the candidate confidence engine is unreleasable."
+      ],
+      "correctnessFindings": [],
+      "requiredChanges": [
+        "Change the final client-language boundary to remove confidence and confidence-synonym language, rather than translating `confidence` to `assurance`; apply the rule recursively to every client document field and regenerate the frozen live evidence.",
+        "Add an assertion to the client-artifact tests that rejects confidence synonyms such as `assurance`, `certainty`, `probability`, `likelihood`, `robustness band`, and equivalent confidence framing, then rerun the Stage 8 live battery and PDF checks."
+      ]
+    },
+    {
+      "attempt": 2,
+      "reviewer": "gpt-5.6-luna",
+      "verdict": "fail",
+      "utilityFindings": [],
+      "qualityFindings": [],
+      "correctnessFindings": [
+        "The live evidence does not demonstrate the required explicit human admission interaction for generated options. In `scripts/module2-live-semantic-smoke.mjs`, after generation the harness directly mutates `admittedSuggestion.provisional = false` and persists the state with `PUT /api/studio/modules/module-2/workspace`; it does not exercise a rendered admission control or verify that the UI requires that action. This leaves the R8/R9b boundary unverified and permits the test to pass even if generated options can be admitted through an unintended state mutation or lack an explicit student-facing admission action.",
+        "The live harness also directly writes the lock state, including `selectedBetId`, `lossBearer`, `accountabilityLocation`, `reversibility`, and confirmations, rather than exercising the Screen 3 human gates. Thus the reported live workflow does not establish that the actual UI requires the four required human judgments before packaging; it only establishes that the backend accepts a preconstructed locked state."
+      ],
+      "requiredChanges": [
+        "Add and exercise an explicit student-facing action that promotes a generated provisional option to live/admitted status; reject direct provisional-state mutation or otherwise enforce the promotion transition server-side.",
+        "Run the live battery through the actual rendered Board and Lock interactions, including generated-option admission, selection, frame/set confirmations, who-absorbs-the-loss, reversibility, held-constant, and Generate. Add assertions that packaging is blocked until those required human judgments are completed."
+      ]
+    },
+    {
+      "attempt": 3,
+      "reviewer": "gpt-5.6-luna",
+      "verdict": "fail",
+      "utilityFindings": [
+        "The clean-case frame workflow no longer follows the approved adaptive-gate utility. The specification requires a soft frame gate when no drift or thin-frame signal is detected, with frame and set judgments carried by the clean-case lock action. The diff changes `renderFrameRow()` so `hard` is true whenever `!confirmed`, and `boardBlockers()` always adds `Confirm or revise the decision frame` until an explicit `Keep this frame` or revision is saved. This imposes an extra mandatory judgment on clean users rather than preserving the specified soft clean path."
+      ],
+      "qualityFindings": [],
+      "correctnessFindings": [
+        "The implementation contradicts the approved frame-gating semantics. In `src/module2-page.js`, `renderFrameRow()` computes `const hard=['drift','thin','unresolved'].includes(frame.status)||!confirmed`, and `boardBlockers()` unconditionally blocks when `frameConfirmation` is not `confirmed` or `revised`. Therefore a consistent, adequately grounded frame cannot reach Lock through the specified clean-case flow without a separate frame judgment. The supplied live evidence confirms the added behavior rather than resolving the discrepancy: each scenario explicitly posts `{ frameConfirmation: 'confirmed' }` before packaging, and the deployed flow required separate `Keep this frame` and `I reviewed this comparison set` actions."
+      ],
+      "requiredChanges": [
+        "Restore the adaptive frame gate: for a consistent, non-thin frame, do not create a blocking frame judgment or require a separate `Keep this frame` action; carry the frame confirmation through the clean-case `Take … to Lock` transition. Retain a physical hard stop and explicit keep/revise choice only for drift, thin, or otherwise unresolved frames. Add regression coverage proving both paths."
+      ]
+    },
+    {
+      "attempt": 4,
+      "reviewer": "gpt-5.6-luna",
+      "verdict": "fail",
+      "utilityFindings": [],
+      "qualityFindings": [],
+      "correctnessFindings": [
+        "The server-side human-judgment endpoint does not enforce the comparison-set hard-stop semantics. In `handleModule2Judgments`, any request with `setCompletenessConfirmation: 'confirmed'` is accepted without checking whether `state.ranking.coverage.status` is `covered`; only the value itself is validated. A client can therefore submit `setCompletenessConfirmation: 'confirmed'` while a coverage gap remains, bypassing the specification's required gap-review hard stop. The UI's `module2SetNeedsExplicitReview` logic blocks this path visually, but the server endpoint is the authority used for lock/package readiness and is directly callable.",
+        "The supplied implementation diff shows `module2PackageReadinessError` is used before `m2_package` model access, but it does not show that readiness rejects a gap paired with the incorrectly accepted plain `confirmed` set judgment. Because the judgment endpoint persists that value and the contract requires server-owned hard-stop enforcement, the endpoint must validate the state transition itself rather than relying on the browser blocker."
+      ],
+      "requiredChanges": [
+        "Enforce set-completeness transition semantics in `handleModule2Judgments`: accept `setCompletenessConfirmation: 'confirmed'` only when the server's current coverage status is `covered`; require `confirmed_after_review` for a `gap` (and reject confirmation for any other unresolved state unless the dedicated recovery semantics are explicitly satisfied).",
+        "Add an integration regression test that posts `setCompletenessConfirmation: 'confirmed'` against a workspace whose ranking coverage is `gap`, asserts rejection or non-locking behavior, and verifies that package generation remains blocked until the dedicated gap-review confirmation is submitted."
+      ]
+    },
+    {
+      "attempt": 5,
+      "reviewer": "gpt-5.6-luna",
+      "verdict": "fail",
+      "utilityFindings": [
+        "The clean semantic run does not consistently enforce the specification's multi-voice rule. The live battery defines only the forwarded scenario as having explicitly attributed multiple voices, and `scripts/module2-live-semantic-smoke.mjs` asserts `voiceDisagreement.status === 'none'` for the clean and minimal scenarios. However, the frozen `calibration/stage8-live-model-runs.json` records the clean run with `voiceDisagreement.status: \"possible\"` and evidence lines beginning \"Bethany House confirmed...\" and \"Program leadership needs...\", neither of which is an explicitly attributed speaker format. This can impose an unnecessary voice-review burden on a clean user and contradicts the claimed recovery behavior."
+      ],
+      "qualityFindings": [
+        "The compiled client artifact contains visibly ungrammatical provenance substitutions. The frozen clean package includes strings such as \"the available evidence describe the Executive Assistant role\" and \"the available evidence warn that almost everything the advisory team know routes through the CEO.\" The `clientFacingProse` replacements in `src/module2-package.js` remove prohibited source-language terms but do not preserve grammatical agreement, reducing client-facing professionalism and readability."
+      ],
+      "correctnessFindings": [
+        "The frozen live evidence is internally inconsistent with the live harness contract: `scripts/module2-live-semantic-smoke.mjs` explicitly requires non-forwarded scenarios to produce `voiceDisagreement.status === 'none'`, while `calibration/stage8-live-model-runs.json` records `clean-grounded-reply` as `status: \"possible\"`. The claimed passed battery therefore does not establish correctness of the multi-voice gate, and the release evidence cannot be accepted as a reliable regression result until the artifact is regenerated from the exact frozen code or the discrepancy is resolved."
+      ],
+      "requiredChanges": [
+        "Resolve the clean-run multi-voice discrepancy: regenerate `calibration/stage8-live-model-runs.json` using the exact frozen implementation and demonstrate that clean and minimal inputs yield no possible voice signal unless at least two explicitly attributed speakers are present; retain a passing harness result that matches the regenerated artifact.",
+        "Improve the final client-language boundary or its source substitutions so grammatical agreement is preserved, then rerun the complete PDF/text/render evidence and verify that the corrected client artifact contains no awkward provenance substitutions."
+      ]
+    },
+    {
+      "attempt": 6,
+      "reviewer": "gpt-5.6-luna",
+      "verdict": "fail",
+      "utilityFindings": [],
+      "qualityFindings": [],
+      "correctnessFindings": [
+        "Reconciliation provenance is discarded for valid model-matched context traces. In `applyReconciliation`, `matchedTraceIds` is filtered only against IDs from `next.inheritance.highValueTraces`. The frozen live evidence shows the model returned matched trace IDs such as `course_relationship_continuity`, `course_ea_hr_brief`, and `course_hr_trust`, while the applied state records `matchedTraceIds: []`. This violates the specification's requirement that reconciliation remain grounded in traceable Module 1 material and weakens the model-provenance ledger needed to distinguish raw output from admitted state."
+      ],
+      "requiredChanges": [
+        "Update reconciliation state application and its validation context so valid matched IDs from supplied Module 1 traces and permitted context facts are retained in the admitted state, while still rejecting unknown IDs. Add regression coverage asserting that valid raw matched trace IDs survive deterministic post-processing and that unknown IDs are removed."
+      ]
+    },
+    {
+      "attempt": 7,
+      "reviewer": "gpt-5.6-luna",
+      "verdict": "pass",
+      "utilityFindings": [],
+      "qualityFindings": [],
+      "correctnessFindings": [],
+      "requiredChanges": []
+    }
+  ],
+  "verdict": "pass",
+  "specCoverage": [
+    "Module 1 routes, states, versions, PDFs, authentication, class codes, sessions, and student budgets remain unchanged; offline integration, migration, PDF, rendering, syntax, and regression suites pass.",
+    "Ground, Board, and Lock workflow is exercised against three fresh real-API workflows, including clean, forwarded multi-voice, and minimal replies.",
+    "Human frame, comparison-set, selection, loss-bearer, accountability, reversibility, and held-constant judgments remain server-owned and explicitly gated.",
+    "Generated options remain provisional until explicit admission; duplicate signals, coverage gaps, frame drift, thin frames, unresolved frames, and near ties have recovery paths and hard stops.",
+    "Reconciliation and option-generation provenance is restricted to inherited trace IDs and supplied context-fact IDs; deterministic regression removes invented IDs.",
+    "Client artifacts contain no confidence score, band, configuration, or confidence language, and the candidate confidence engine remains contained.",
+    "Final client-language compilation removes classroom, student-process, product-process, model, module, app, and unaudited confidence language.",
+    "Production routing uses gpt-5.4-mini for reconciliation and option generation and gpt-5.5 for evaluation and package prose; all 12 live calls used OpenAI without fallback.",
+    "Completed workflows remain within the recorded cost evidence: median $0.237971, p95 $0.254133, and total 12-call review cost $0.695807.",
+    "Instructor prompt traces remain scoped to the selected student and closed until explicit prompt-history disclosure; the deployed surface exposed all four required run summaries without dumping raw prompts.",
+    "Additive migration rehearsal against the frozen D1 export passes, and deployed version/PDF immutability and download behavior are evidenced."
+  ],
+  "utilityFindings": [],
+  "qualityFindings": [],
+  "correctnessFindings": [],
+  "evidence": [
+    "The Stage 8 bundle records three complete real-API workflows covering clean, forwarded two-voice, and minimal lazy replies.",
+    "The bundle records successful explicit admission, deterministic ranking, human lock judgments, package generation, instructor retrieval, and corrected version 3 PDF save.",
+    "The bundle records passing confidence-containment, Module 1/Module 2 integration, migration, PDF, rendering, syntax, and regression suites.",
+    "The frozen live ledger records 12 OpenAI calls with no fallback and complete per-call model, token, and cost data.",
+    "The deployed render evidence records visible provisional-option admission, hard-stop recovery, server-owned lock persistence, disabled package actions before required judgments, and scoped instructor prompt disclosure.",
+    "The source integrity hash is recorded as b1720223007ae9919620b8d1679146181eb4079f6b1c3589a442eed29c5981a0."
+  ],
+  "requiredChanges": []
+}

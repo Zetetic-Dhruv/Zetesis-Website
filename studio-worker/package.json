@@ -12,6 +12,7 @@
     "test:confidence": "node test/module2-confidence.mjs",
     "test:confidence-audit": "node test/confidence-audit.mjs",
     "test:offline": "node test/local-offline-smoke.mjs",
+    "test:live-module2": "node scripts/module2-live-semantic-smoke.mjs",
     "test:pdf": "python3 test/pdf_smoke.py && node test/module2-pdf.mjs && python3 test/module2_pdf_smoke.py"
   },
   "devDependencies": {

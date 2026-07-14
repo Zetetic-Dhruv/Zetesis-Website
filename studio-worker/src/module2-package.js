@@ -64,43 +64,43 @@ export function compileModule2Document(state = {}, modelResult = {}) {
   const fallback = fallbackModule2Package(state);
   const commentary = new Map((Array.isArray(modelResult.candidateCommentary) ? modelResult.candidateCommentary : [])
     .map((item) => [clean(item?.betId, 120), item || {}]));
-  const modelText = (key, max = 5000) => clean(modelResult[key], max) || clean(fallback[key], max);
+  const modelText = (key, max = 5000) => clientFacingProse(modelResult[key], max) || clientFacingProse(fallback[key], max);
   const candidates = input.candidates.map((candidate) => {
     const prose = commentary.get(candidate.id) || {};
     const fallbackProse = fallback.candidateCommentary.find((item) => item.betId === candidate.id) || {};
     return {
       betId: candidate.id,
-      name: candidate.name,
-      description: candidate.description,
+      name: clientFacingProse(candidate.name, 300) || 'Current option',
+      description: clientFacingProse(candidate.description, 4000),
       position: candidate.position,
       status: candidate.id === selected.id ? 'Recommended' : 'Alternative',
-      rationale: clean(prose.rationale, 4000) || fallbackProse.rationale,
-      comparisonReason: clean(prose.comparisonReason, 4000) || fallbackProse.comparisonReason,
-      distinction: candidate.whyDistinct,
+      rationale: clientFacingProse(prose.rationale, 4000) || clientFacingProse(fallbackProse.rationale, 4000),
+      comparisonReason: clientFacingProse(prose.comparisonReason, 4000) || clientFacingProse(fallbackProse.comparisonReason, 4000),
+      distinction: clientFacingProse(candidate.whyDistinct, 2000),
       supportingEvidence: candidate.evidenceFor.map((item) => ({
-        text: clean(item.text, 4000),
+        text: clientFacingProse(item.text, 4000),
         basis: evidenceBasis(item.sourceType),
       })).filter((item) => item.text),
       evidenceAgainst: candidate.evidenceAgainst.map((item) => ({
-        text: clean(item.text, 4000),
+        text: clientFacingProse(item.text, 4000),
         severity: clientSeverity(item.severity),
         basis: evidenceBasis(item.sourceType),
       })).filter((item) => item.text),
       tripwires: candidate.failureModes.map((item) => ({
-        text: clean(item.text, 4000),
+        text: clientFacingProse(item.text, 4000),
         consequence: clientSeverity(item.severity),
         testStatus: testStatusLabel(item.testStatus),
       })).filter((item) => item.text),
       decisionCriteria: candidate.criteria.map((item) => ({
-        criterion: clean(item.criterion, 300),
+        criterion: clientFacingProse(item.criterion, 300),
         assessment: criterionAssessment(item.score),
-        reason: clean(item.reason, 2000),
+        reason: clientFacingProse(item.reason, 2000) || 'Further evidence could change this assessment.',
       })).filter((item) => item.criterion),
     };
   });
   const selectedCandidate = candidates.find((candidate) => candidate.betId === selected.id);
   const publicCandidates = candidates.map(({ betId, ...candidate }) => candidate);
-  return {
+  const document = {
     title: 'Bethany House Recommendation Brief',
     subtitle: 'A decision position for discussion with Bethany House',
     client: 'Bethany House of Nassau County',
@@ -122,6 +122,7 @@ export function compileModule2Document(state = {}, modelResult = {}) {
     reversibilityNote: input.humanJudgments.reversibilityNote,
     closingNote: modelText('closingNote'),
   };
+  return sanitizeClientDocument(document);
 }
 
 export function module2DocumentText(document = {}) {
@@ -225,6 +226,47 @@ function criterionAssessment(value) {
 
 function clean(value, max = 5000) {
   return String(value ?? '').replace(/\s+/g, ' ').trim().slice(0, max);
+}
+
+export function clientFacingProse(value, max = 5000) {
+  const text = clean(value, max)
+    .replace(/\b(?:the\s+)?course materials?\s+(describe|show|indicate|suggest|warn|state|note|include|identify|support)\b/gi, (_, verb) => `the available evidence ${singularAgreementVerb(verb)}`)
+    .replace(/\b(?:the\s+)?course traces?\s+(describe|show|indicate|suggest|warn|state|note|include|identify|support)\b/gi, (_, verb) => `the current record ${singularAgreementVerb(verb)}`)
+    .replace(/\b(?:the\s+)?course materials?\b/gi, 'the available evidence')
+    .replace(/\b(?:the\s+)?course traces?\b/gi, 'the current record')
+    .replace(/\bmodule\s*[12]\s+(?:trace|record|output)s?\b/gi, 'working record')
+    .replace(/\bstudent performance\b/gi, 'work quality')
+    .replace(/\bthe student team\b/gi, 'the advisory team')
+    .replace(/\bthe student's\b/gi, 'the')
+    .replace(/\bstudents?\b/gi, 'the advisory team')
+    .replace(/\bmuch\s+(?:of\s+)?the advisory team\s+knowledge\b/gi, "much of the advisory team's knowledge")
+    .replace(/\bthe advisory team\s+(describe|show|indicate|suggest|warn|state|note|include|identify|support|know)\b/gi, (_, verb) => `the advisory team ${singularAgreementVerb(verb)}`)
+    .replace(/\b(the available evidence|the current record|the advisory team)([^.!?]*?)\b(and|or)\s+(describe|show|indicate|suggest|warn|state|note|include|identify|support|know)\b/gi, (_, subject, middle, conjunction, verb) => `${subject}${middle}${conjunction} ${singularAgreementVerb(verb)}`)
+    .replace(/\bpartner confidence\b/gi, 'partner trust')
+    .replace(/\bfalse confidence\b/gi, 'a misleading picture');
+  if (/\b(?:classroom|system prompt|module prompt|language model|the app)\b/i.test(text)) return '';
+  return text.split(/(?<=[.!?])\s+/)
+    .filter((sentence) => !/\b(?:confidence|confident|assurance|certainty|certain|probability|probable|likelihood|likely|robustness\s+band)\b/i.test(sentence))
+    .join(' ')
+    .trim();
+}
+
+function singularAgreementVerb(value) {
+  const verb = String(value || '').toLowerCase();
+  const irregular = { have: 'has' };
+  if (irregular[verb]) return irregular[verb];
+  if (verb.endsWith('s')) return verb;
+  if (verb.endsWith('y') && !/[aeiou]y$/.test(verb)) return `${verb.slice(0, -1)}ies`;
+  if (/(?:ch|sh|x|z|o)$/.test(verb)) return `${verb}es`;
+  return `${verb}s`;
+}
+
+function sanitizeClientDocument(value) {
+  if (Array.isArray(value)) return value.map(sanitizeClientDocument);
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, sanitizeClientDocument(item)]));
+  }
+  return typeof value === 'string' ? clientFacingProse(value, Math.max(5000, value.length)) : value;
 }
 
 function cleanArray(values, limit, max) {

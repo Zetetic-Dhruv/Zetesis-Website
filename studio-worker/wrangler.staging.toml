@@ -1,0 +1,30 @@
+name = "zetesislabs-decision-manifold-studio-staging"
+main = "src/studio.js"
+compatibility_date = "2026-01-01"
+account_id = "75a11ac71fbcc3ddc793675245c3d95b"
+workers_dev = false
+
+[vars]
+OPENAI_MODEL = "gpt-5.4-mini"
+OPENAI_HIGH_QUALITY_MODEL = "gpt-5.5"
+OPENAI_HIGH_QUALITY_REASONING_EFFORT = "low"
+AGENT_API_MODE = "openai"
+DEFAULT_CLASS_ID = "class_bethany_house_2026"
+DEFAULT_ENGAGEMENT_ID = "eng_bethany_house_2026"
+STUDENT_USAGE_LIMIT_MICROS = "10000000"
+ESTIMATED_CALL_COST_MICROS = "50000"
+MODEL_INPUT_USD_PER_MILLION_TOKENS = "0.75"
+MODEL_OUTPUT_USD_PER_MILLION_TOKENS = "4.50"
+HIGH_QUALITY_MODEL_INPUT_USD_PER_MILLION_TOKENS = "5.00"
+HIGH_QUALITY_MODEL_OUTPUT_USD_PER_MILLION_TOKENS = "30.00"
+HIGH_QUALITY_ESTIMATED_CALL_COST_MICROS = "150000"
+INSTRUCTOR_PATH_HOST = "m2-staging.zetesislabs.com"
+
+[[d1_databases]]
+binding = "STUDIO_DB"
+database_name = "zetesis_decision_manifold_studio_staging"
+database_id = "25512fa0-6c25-41ad-968d-45bbf24999e5"
+
+[[routes]]
+pattern = "m2-staging.zetesislabs.com"
+custom_domain = true
