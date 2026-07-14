@@ -4924,7 +4924,7 @@ function renderPlatformPage() {
     <a class="card" href="/decision-engineering/">
       <span class="idx">[ I ]</span>
       <span>
-        <span class="title">Decision Engineering Studio</span>
+        <span class="title">Inquiry Design</span>
         <p>Sort the brief, name who knows what, test the assumptions carrying the answer, and leave with a report the team can stand behind.</p>
       </span>
       <span aria-hidden="true">→</span>
@@ -4932,7 +4932,7 @@ function renderPlatformPage() {
     <a class="card" href="/decision-engineering/module-2">
       <span class="idx">[ II ]</span>
       <span>
-        <span class="title">Bet Selection Studio</span>
+        <span class="title">Decision Engineering</span>
         <p>Compare live options, test what could defeat them, make the accountable choice, and produce a Bethany House Recommendation Brief.</p>
       </span>
       <span aria-hidden="true">→</span>
