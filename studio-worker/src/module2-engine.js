@@ -14,7 +14,7 @@ export function fallbackReconcile(payload = {}) {
   const accountableFrame = String(state.ground?.frameComparison?.groundedFrame || '').trim();
   const lines = reply.split(/\n+/).map((line) => line.trim()).filter((line) => line.length > 12).slice(0, 30);
   const overlap = traces.filter((trace) => sharesTerms(reply, trace.text)).map((trace) => trace.id);
-  const relevant = Boolean(reply && (overlap.length || hasDecisionContext(reply)));
+  const relevant = Boolean(reply && (overlap.length || hasDecisionContext(reply, state)));
   const voiceSignal = possibleVoiceSignal(reply, lines);
   const fogMap = traces.map((trace) => ({
     traceId: trace.id,
@@ -182,7 +182,10 @@ export function applyReconciliation(state, result = {}, contextFacts = []) {
   next.ground.completeness = result.coverage?.status === 'gap'
     ? { status: 'gap', reason: result.coverage.gap || '' }
     : { status: 'complete', reason: '' };
-  next.ranking.coverage = object(result.coverage, next.ranking.coverage);
+  next.ranking.coverage = {
+    ...object(result.coverage, next.ranking.coverage),
+    source: 'reconciliation',
+  };
   next.ground.possibleDuplicates = array(result.possibleDuplicates)
     .filter((item) => item.leftId !== item.rightId && betIds.has(item.leftId) && betIds.has(item.rightId))
     .map((item) => ({ ...item, status: 'needs_review' }));
@@ -262,6 +265,7 @@ export function applySuggestedOptions(state, result = {}, contextFacts = []) {
       status: 'gap',
       gap: 'One or more generated alternatives failed admission checks.',
       resolution: 'Review the generation issues and add or regenerate a distinct grounded alternative.',
+      source: 'evaluation',
     };
   }
   return next;
@@ -291,13 +295,22 @@ export function applyBetEvaluations(state, result = {}, contextFacts = []) {
       evaluationStatus,
     };
   });
-  if (result.coverage) next.ranking.coverage = object(result.coverage, next.ranking.coverage);
+  if (result.coverage) {
+    const evaluationCoverage = { ...object(result.coverage, next.ranking.coverage), source: 'evaluation' };
+    const unresolvedReconciliationGap = next.ranking.coverage?.status === 'gap'
+      && next.ranking.coverage?.source === 'reconciliation'
+      && next.locks?.setCompletenessConfirmation !== 'confirmed_after_review';
+    if (!unresolvedReconciliationGap || evaluationCoverage.status === 'gap') {
+      next.ranking.coverage = evaluationCoverage;
+    }
+  }
   const admittedStudentField = next.bets.filter((bet) => bet.liveStatus === 'live' && bet.provisional !== true);
   if (next.ground.optionGenerationIssues?.length && admittedStudentField.length < 2) {
     next.ranking.coverage = {
       status: 'gap',
       gap: 'One or more generated alternatives failed admission checks.',
       resolution: 'Review the generation issues and add or regenerate a distinct grounded alternative.',
+      source: 'evaluation',
     };
   }
   const commonCriteria = next.bets.find((bet) => bet.evaluationStatus === 'complete')?.criteria?.map((item) => item.criterion).filter(Boolean) || [];
@@ -519,17 +532,52 @@ function supportedEvidenceSource(item, traceIds, sources) {
   return 'generated_hypothesis';
 }
 
-function hasDecisionContext(reply) {
+export function hasDecisionContext(reply, state = {}) {
   const lower = String(reply || '').toLowerCase();
-  const organization = /bethany|shelter|nassau|safe ground/.test(lower);
-  const decisionTerms = [
-    /staff|hiring|role|capacity|implementation/,
-    /partner|relationship|handoff|continuity/,
-    /board|accountab|approval|governance/,
-    /hr|trust|compliance|payroll/,
-    /community|resident|school|town/,
-  ].filter((pattern) => pattern.test(lower)).length;
-  return (organization && decisionTerms >= 1) || decisionTerms >= 2;
+  if (!lower.trim()) return false;
+  if (/\b(?:bethany(?: house)?|nassau county|safe ground|jericho|baldwin|roosevelt)\b/.test(lower)) return true;
+  if (namesAnotherOrganization(reply)) return false;
+
+  const replyTerms = decisionContextTokens(reply);
+  const anchors = [
+    state.ground?.problemSeed,
+    state.ground?.frameComparison?.groundedFrame,
+    state.inheritance?.frame,
+    ...(state.inheritance?.highValueTraces || []).map((trace) => trace.text),
+    ...(state.bets || []).flatMap((bet) => [bet.name, bet.description]),
+  ].filter(Boolean);
+  if (replyTerms.size >= 3 && anchors.some((anchor) => {
+    const anchorTerms = decisionContextTokens(anchor);
+    const overlap = [...replyTerms].filter((term) => anchorTerms.has(term)).length;
+    return overlap >= 3 && overlap / Math.min(replyTerms.size, Math.max(anchorTerms.size, 1)) >= 0.3;
+  })) return true;
+
+  const groundedByBethany = anchors.some((anchor) => /\b(?:bethany(?: house)?|nassau county|safe ground|jericho)\b/i.test(anchor));
+  if (!groundedByBethany) return false;
+  const replyContext = contextualDecisionTokens(reply);
+  const anchorContext = new Set(anchors.flatMap((anchor) => [...contextualDecisionTokens(anchor)]));
+  return [...replyContext].filter((term) => anchorContext.has(term)).length >= 3;
+}
+
+function decisionContextTokens(value) {
+  const generic = new Set([
+    'acme', 'foundation', 'staff', 'staffing', 'capacity', 'partner', 'partners', 'relationship', 'relationships',
+    'handoff', 'handoffs', 'board', 'accountability', 'role', 'roles', 'decision', 'decisions', 'priority', 'priorities',
+    'implementation', 'governance', 'approval', 'organization', 'organisation', 'needs', 'need', 'current', 'clear',
+  ]);
+  return new Set((String(value || '').toLowerCase().match(/[a-z0-9]+(?:-[a-z0-9]+)*/g) || [])
+    .filter((term) => term.length >= 4 && !generic.has(term)));
+}
+
+function contextualDecisionTokens(value) {
+  const stop = new Set(['that', 'this', 'with', 'from', 'into', 'while', 'should', 'would', 'could', 'needs', 'need', 'also', 'current', 'clear', 'added', 'adding']);
+  return new Set((String(value || '').toLowerCase().match(/[a-z0-9]+(?:-[a-z0-9]+)*/g) || [])
+    .filter((term) => term.length >= 4 && !stop.has(term)));
+}
+
+function namesAnotherOrganization(value) {
+  const names = String(value || '').match(/\b[A-Z][A-Za-z&'-]*(?:\s+[A-Z][A-Za-z&'-]*){0,3}\s+(?:Foundation|House|Trust|University|Company|Corporation|Corp|Inc|LLC|Association|Institute|School|Hospital)\b/g) || [];
+  return names.some((name) => !/^Bethany House$/i.test(name.trim()));
 }
 
 function possibleVoiceSignal(reply, lines) {

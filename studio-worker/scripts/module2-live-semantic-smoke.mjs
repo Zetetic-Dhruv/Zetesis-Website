@@ -156,6 +156,17 @@ try {
     assert(admittedSuggestion.state.bets.find((bet) => bet.id === generated[0].id)?.provisional === false, `${scenario.id}: explicit admission transition promotes the chosen generated option`);
 
     let evaluate = await modelCall('m2_evaluate_bets', student);
+    if (evaluate.state.ranking.coverage?.status === 'gap') {
+      const coverageReview = await post('/api/studio/modules/module-2/judgments', {
+        setCompletenessConfirmation: 'confirmed_after_review',
+      }, student);
+      evaluate = { ...evaluate, state: coverageReview.state };
+      assert(
+        coverageReview.state.ranking.coverage.status === 'covered'
+          && coverageReview.state.ranking.coverage.source === 'human_review',
+        `${scenario.id}: an explicit human review, not evaluation, resolves the reconciliation gap`,
+      );
+    }
     let admitted = evaluate.state.bets.filter((bet) => bet.liveStatus === 'live' && bet.provisional !== true);
     for (let recoveryAttempt = 0; evaluate.state.ranking.weakField && recoveryAttempt < 2; recoveryAttempt += 1) {
       let recoveryOption = evaluate.state.bets.find((bet) => bet.liveStatus === 'live' && bet.provisional === true);

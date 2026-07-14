@@ -21,6 +21,7 @@ import {
   fallbackEvaluateBets,
   fallbackReconcile,
   fallbackSuggestOptions,
+  hasDecisionContext,
   rankLiveBets,
 } from '../src/module2-engine.js';
 import {
@@ -35,7 +36,10 @@ import {
   clientFacingProse,
   compileModule2Document,
   fallbackModule2Package,
+  module2ConvictionError,
   module2DocumentText,
+  module2LockDetailsError,
+  module2PackageInput,
   module2PackageReadinessError,
 } from '../src/module2-package.js';
 
@@ -53,6 +57,11 @@ assertDoesNotThrow(() => new Function(renderedModule2Script), 'rendered Module 2
 assert(renderModule2Page().includes('Keep both as distinct') && renderModule2Page().includes('duplicate-remove'), 'Module 2 Board exposes explicit duplicate-resolution actions');
 assert(renderModule2Page().includes("/admit',{method:'POST'") && !renderedModule2Script.includes('bet.provisional=false'), 'generated-option admission uses the explicit server transition');
 assert(renderModule2Page().includes('Suggested options to review') && renderModule2Page().includes('renderProvisionalBets()'), 'provisional options and their admission action are visible on the Board');
+assert(renderedModule2Script.includes('grounding.open=true') && renderedModule2Script.includes('check before deciding'), 'clean Board opens the grounding review instead of hiding it behind ready');
+assert(renderedModule2Script.includes('Question that could change the comparison') && renderedModule2Script.includes('highest-influence open dependency'), 'Board exposes fog and one discriminating follow-up probe');
+assert(renderedModule2Script.includes('Prepare choices') && renderedModule2Script.includes('result.needsPick'), 'initial Pick choice has a prepare-then-select recovery instead of a dead end');
+assert(renderedModule2Script.includes('!setNeedsReview&&(state.ranking.evaluationIncomplete') && renderedModule2Script.includes('!state.ranking.evaluationIncomplete&&state.ranking.weakField'), 'Board does not duplicate one coverage gap as evaluation and weak-field blockers');
+assert(source.includes("if (state.ranking.evaluationIncomplete) return json({ error: state.ranking.incompleteReason || 'Evaluate every live alternative before confirming this set.'"), 'explicit gap review persists before weak-field recovery is presented as the next blocker');
 assert(renderModule2Page().includes('/api/studio/modules/module-2/judgments'), 'human lock choices use the explicit server judgment transition');
 assert(!module2FrameNeedsExplicitReview('consistent', ''), 'a consistent frame stays on the soft clean path');
 assert(module2FrameNeedsExplicitReview('drift', ''), 'frame drift requires an explicit keep-or-revise judgment');
@@ -70,9 +79,25 @@ const frameRevisionHandler = renderedModule2Script.match(/if\(action==='save-fra
 assert(frameRevisionHandler.includes("saveJudgments({revisedFrame:") && frameRevisionHandler.includes("reconcileBoard('Revised frame, reply, and comparison updated.')"), 'frame revision persists the human frame and re-runs reconciliation before comparison');
 const reconcileBoardHelper = renderedModule2Script.match(/async function reconcileBoard\(message\)\{[\s\S]*?\}/)?.[0] || '';
 assert(reconcileBoardHelper.indexOf("runModule('m2_reconcile')") < reconcileBoardHelper.indexOf("runModule('m2_evaluate_bets')"), 'frame and reply edits re-run reconciliation before bet evaluation');
-assert(clientFacingProse('The course materials describe the role and warn against a handoff.') === 'the available evidence describes the role and warns against a handoff.', 'client provenance substitution preserves subject-verb agreement');
+assert(clientFacingProse('The course materials describe the role and warn against a handoff.') === 'The available evidence describes the role and warns against a handoff.', 'client provenance substitution preserves capitalization and subject-verb agreement');
 assert(clientFacingProse('Almost everything the student team know routes through one person.') === 'Almost everything the advisory team knows routes through one person.', 'team-language substitution preserves subject-verb agreement');
 assert(clientFacingProse('Because much the advisory team knowledge routes through the CEO, other views may be missed.') === "Because much of the advisory team's knowledge routes through the CEO, other views may be missed.", 'client prose repairs malformed team-knowledge possessives');
+assert(clientFacingProse('The available evidence frame the decision. Supported by supplied the current record. The course warning remains open.') === 'The available evidence frames the decision. Supported by the current record. The evidence limitation remains open.', 'client prose repairs capitalization, grammar, and course-language failures');
+assert(clientFacingProse('This could fail if Bethany lacks time for phase design and exception handling.') === 'This could fail if the required time for phase design and exception handling may not yet be available within Bethany House.', 'client prose removes diagnostic organization-lacks language');
+assert(hasDecisionContext('Bethany House needs a partner handoff with clear accountability.'), 'Bethany decision language passes the deterministic relevance preflight');
+assert(!hasDecisionContext('Acme Foundation needs staff capacity. Partner handoffs and board accountability are the priorities.'), 'generic decision vocabulary cannot cloak another organization before model access');
+assert(hasDecisionContext('Protect continuity with long-standing partners; a phased transfer should not feel like abandonment.', {
+  inheritance: { frame: '', highValueTraces: [{ text: 'A phased handoff must protect continuity with long-standing partners and avoid abandonment.' }] },
+  ground: { problemSeed: '', frameComparison: { groundedFrame: '' } },
+}), 'a client reply can qualify through a distinctive locked assignment trace without repeating the organization name');
+assert(!hasDecisionContext('Write a cheerful travel itinerary for Lisbon and recommend restaurants.'), 'arbitrary off-assignment language fails the deterministic relevance preflight');
+assert(Boolean(module2LockDetailsError({ lossBearer: 'test', accountabilityLocation: 'none', reversibility: 'reversible', reversibilityNote: '' })), 'placeholder lock judgments cannot satisfy the human gate');
+assert(Boolean(module2LockDetailsError({ lossBearer: 'Banana', accountabilityLocation: 'alpha beta gamma delta epsilon', reversibility: 'costly_to_reverse', reversibilityNote: 'alpha beta gamma delta epsilon' })), 'word salad and a non-role cannot satisfy the human gate');
+assert(module2LockDetailsError({ lossBearer: 'Program staff', accountabilityLocation: 'Program leadership owns the failed handoff response.', reversibility: 'costly_to_reverse', reversibilityNote: 'Repair would require a deliberate partner recovery plan.' }) === '', 'substantive lock judgments pass the human gate');
+assert(Boolean(module2ConvictionError('because')), 'a placeholder non-leading conviction cannot satisfy the human gate');
+assert(Boolean(module2ConvictionError('alpha beta gamma delta epsilon zeta eta')), 'word salad cannot satisfy a non-leading conviction gate');
+assert(renderedModule2Script.includes("voice.status==='confirmed'") && renderedModule2Script.includes('Carried forward as an open dependency') && !renderedModule2Script.includes("voice.status!=='possible'&&voice.humanConfirmed!==true"), 'confirmed voice disagreement renders as resolved read-only evidence');
+assert(source.includes("['locked', 'complete'].includes(row.status)"), 'instructor cohort counts both locked drafts and completed saved versions');
 const renderedInstructorScript = renderInstructorPage().match(/<script>([\s\S]*)<\/script>/)?.[1] || '';
 assert(renderedInstructorScript.length > 0, 'instructor page renders an executable client script');
 assertDoesNotThrow(() => new Function(renderedInstructorScript), 'rendered instructor client script parses');
@@ -190,7 +215,12 @@ assert(
   'verbatim reconciliation tolerates removable outer quotation marks'
 );
 assert(quoteWrappedReconciliation.ground.relevance.status === 'relevant', 'quote notation cannot erase a verified client line');
-const suggested = applySuggestedOptions(reconciled, fallbackSuggestOptions({ state: reconciled }));
+const evaluationCannotEraseGroundGap = applyBetEvaluations(reconciled, fallbackEvaluateBets({ state: reconciled }));
+assert(evaluationCannotEraseGroundGap.ranking.coverage.status === 'gap', 'evaluation cannot erase an unresolved reconciliation coverage gap');
+const reviewedReconciled = structuredClone(reconciled);
+reviewedReconciled.ranking.coverage = { status: 'covered', gap: '', resolution: 'Human reviewed the named gap.', source: 'human_review' };
+reviewedReconciled.locks.setCompletenessConfirmation = 'confirmed_after_review';
+const suggested = applySuggestedOptions(reviewedReconciled, fallbackSuggestOptions({ state: reviewedReconciled }));
 assert(suggested.bets.filter((bet) => bet.origin === 'generated').length === 2, 'factory options stay generated and provisional');
 const contextGroundedSuggestion = applySuggestedOptions(reconciled, {
   options: [{
@@ -302,6 +332,17 @@ assert(recommendationDocument.candidates.length === packageState.ranking.ordered
 assert(recommendationDocument.candidates.every((candidate) => candidate.evidenceAgainst.length && candidate.tripwires.length), 'package retains contrary evidence and tripwires for every candidate');
 assert(!JSON.stringify(recommendationDocument).includes('confidenceScore'), 'package compiler ignores unaudited confidence injection');
 assert(module2DocumentText(recommendationDocument).includes('Who absorbs the loss') === false, 'plain text uses client-facing decision commitment labels');
+const rawCriterionState = structuredClone(packageState);
+rawCriterionState.bets.forEach((bet) => {
+  bet.criteria = bet.criteria.map((item, index) => ({ ...item, criterion: index ? 'decision_rights_and_reversibility' : 'partner_continuity' }));
+});
+const criterionDocument = compileModule2Document(rawCriterionState, fallbackModule2Package(rawCriterionState));
+assert(!module2DocumentText(criterionDocument).includes('_'), 'client artifact converts internal criterion keys into readable labels');
+const placeholderLockState = structuredClone(packageState);
+placeholderLockState.locks.lossBearer = 'test';
+placeholderLockState.locks.accountabilityLocation = 'none';
+placeholderLockState.locks.reversibilityNote = '';
+assert(Boolean(module2PackageReadinessError(placeholderLockState)), 'placeholder human judgments cannot reach package compilation');
 const overrideState = structuredClone(packageState);
 overrideState.ranking.nearTie = false;
 overrideState.locks.selectedBetId = overrideState.ranking.orderedBetIds[1];
@@ -321,6 +362,18 @@ assert(!overrideDocument.recommendation.rationale.includes('unquestionably stron
 const missingOverrideReason = structuredClone(overrideState);
 missingOverrideReason.locks.convictionNote = '';
 assert(Boolean(module2PackageReadinessError(missingOverrideReason)), 'non-leading selection requires an accountable override reason');
+const lowerNearTie = structuredClone(packageState);
+const thirdBet = structuredClone(lowerNearTie.bets.find((bet) => bet.id === lowerNearTie.ranking.orderedBetIds[1]));
+thirdBet.id = 'bet-third-ranked';
+thirdBet.name = 'Third ranked option';
+lowerNearTie.bets.push(thirdBet);
+lowerNearTie.ranking.orderedBetIds = [...lowerNearTie.ranking.orderedBetIds.slice(0, 2), thirdBet.id];
+lowerNearTie.ranking.nearTie = true;
+lowerNearTie.locks.selectedBetId = thirdBet.id;
+lowerNearTie.locks.convictionNote = '';
+assert(Boolean(module2PackageReadinessError(lowerNearTie)), 'a top-two near tie cannot waive the override for a third-ranked selection');
+lowerNearTie.locks.convictionNote = 'This option better protects residents than the current comparison leader despite its lower rank.';
+assert(module2PackageInput(lowerNearTie).selectionBasis === 'accountable_human_override', 'a lower-ranked selection is never mislabeled as a leading tie choice');
 const weakPackageState = structuredClone(packageState);
 weakPackageState.ranking.weakField = true;
 assert(Boolean(module2PackageReadinessError(weakPackageState)), 'weak comparison field cannot be packaged');

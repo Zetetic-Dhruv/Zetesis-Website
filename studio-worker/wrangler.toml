@@ -18,7 +18,9 @@ account_id = "75a11ac71fbcc3ddc793675245c3d95b"
 workers_dev = false
 
 [vars]
-OPENAI_MODEL = "gpt-4.1-mini"
+OPENAI_MODEL = "gpt-5.4-mini"
+OPENAI_HIGH_QUALITY_MODEL = "gpt-5.5"
+OPENAI_HIGH_QUALITY_REASONING_EFFORT = "low"
 # Set to "fixture" for localhost/offline testing where deterministic,
 # source-grounded behavior substitutes for the external LLM API.
 AGENT_API_MODE = "openai"
@@ -26,8 +28,11 @@ DEFAULT_CLASS_ID = "class_bethany_house_2026"
 DEFAULT_ENGAGEMENT_ID = "eng_bethany_house_2026"
 STUDENT_USAGE_LIMIT_MICROS = "10000000"
 ESTIMATED_CALL_COST_MICROS = "50000"
-MODEL_INPUT_USD_PER_MILLION_TOKENS = "0.40"
-MODEL_OUTPUT_USD_PER_MILLION_TOKENS = "1.60"
+MODEL_INPUT_USD_PER_MILLION_TOKENS = "0.75"
+MODEL_OUTPUT_USD_PER_MILLION_TOKENS = "4.50"
+HIGH_QUALITY_MODEL_INPUT_USD_PER_MILLION_TOKENS = "5.00"
+HIGH_QUALITY_MODEL_OUTPUT_USD_PER_MILLION_TOKENS = "30.00"
+HIGH_QUALITY_ESTIMATED_CALL_COST_MICROS = "150000"
 
 [[d1_databases]]
 binding = "STUDIO_DB"
@@ -51,5 +56,5 @@ pattern = "platform.zetesislabs.com/*"
 zone_id = "e18a1fe40e3f82d744a62612ebf3f0f2"
 
 [[routes]]
-pattern = "instructor.platform.zetesislabs.com/*"
-zone_id = "e18a1fe40e3f82d744a62612ebf3f0f2"
+pattern = "instructor.platform.zetesislabs.com"
+custom_domain = true

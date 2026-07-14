@@ -10,11 +10,26 @@ export function module2PackageReadinessError(state = {}) {
   if (live.length < 2) return 'Keep at least two credible live alternatives in the comparison field.';
   if (!selected) return 'Choose the bet the team is prepared to carry.';
   const leaderId = state.ranking?.orderedBetIds?.[0] || '';
-  if (leaderId && selected.id !== leaderId && !state.ranking?.nearTie && !meaningful(state.locks?.convictionNote)) return 'Explain why the team is carrying a bet that does not lead the current comparison.';
-  if (!meaningful(state.locks?.lossBearer)) return 'Name who absorbs the loss if the recommendation fails.';
-  if (!meaningful(state.locks?.accountabilityLocation)) return 'Name where accountability sits.';
+  if (leaderId && selected.id !== leaderId && !isLeadingTieChoice(state, selected.id) && !hasConvictionReason(state.locks?.convictionNote)) return 'Explain with a concrete consequence or evidence why the team is carrying a bet that does not lead the current comparison.';
+  if (!hasLossBearer(state.locks?.lossBearer)) return 'Name the specific person, role, or group that absorbs the loss if the recommendation fails.';
+  if (!hasAccountabilityStatement(state.locks?.accountabilityLocation)) return 'State concretely where accountability sits and who must respond.';
   if (!['reversible', 'costly_to_reverse', 'one_way'].includes(state.locks?.reversibility)) return 'Judge how reversible the recommendation is.';
+  if (!hasReversibilityReason(state.locks?.reversibilityNote, state.locks?.reversibility)) return 'Explain the commitment, recovery path, or cost that makes this reversibility judgment true.';
   return '';
+}
+
+export function module2LockDetailsError(details = {}) {
+  if (!hasLossBearer(details.lossBearer)) return 'Name a specific person, role, or group as the loss bearer.';
+  if (!hasAccountabilityStatement(details.accountabilityLocation)) return 'Describe where accountability sits and who must respond.';
+  if (!['reversible', 'costly_to_reverse', 'one_way'].includes(details.reversibility)) return 'Choose how reversible the recommendation is.';
+  if (!hasReversibilityReason(details.reversibilityNote, details.reversibility)) return 'Explain the commitment, recovery path, or cost behind the reversibility judgment.';
+  return '';
+}
+
+export function module2ConvictionError(value) {
+  return hasConvictionReason(value)
+    ? ''
+    : 'Explain with a concrete consequence or evidence why this non-leading bet should be carried.';
 }
 
 export function module2PackageInput(state = {}) {
@@ -28,7 +43,7 @@ export function module2PackageInput(state = {}) {
     decisionFrame: clean(state.ground?.frameComparison?.groundedFrame || state.inheritance?.frame || state.ground?.problemSeed, 3000),
     selectedBet: selected ? compactBet(selected) : null,
     selectedPosition,
-    selectionBasis: selectedPosition === 1 ? 'comparison_leader' : state.ranking?.nearTie ? 'tie_choice' : 'accountable_human_override',
+    selectionBasis: selectedPosition === 1 ? 'comparison_leader' : isLeadingTieChoice(state, selected?.id) ? 'tie_choice' : 'accountable_human_override',
     candidates: ordered.map((bet, index) => ({
       ...compactBet(bet),
       position: index + 1,
@@ -115,7 +130,7 @@ export function compileModule2Document(state = {}, modelResult = {}) {
         testStatus: testStatusLabel(item.testStatus),
       })).filter((item) => item.text),
       decisionCriteria: candidate.criteria.map((item) => ({
-        criterion: clientFacingProse(item.criterion, 300),
+        criterion: criterionLabel(item.criterion),
         assessment: criterionAssessment(item.score),
         reason: clientFacingProse(item.reason, 2000) || 'Further evidence could change this assessment.',
       })).filter((item) => item.criterion),
@@ -253,10 +268,16 @@ function clean(value, max = 5000) {
 
 export function clientFacingProse(value, max = 5000) {
   const text = clean(value, max)
+    .replace(/\bBethany(?: House)? lacks ([^.!?]+)/gi, (_, requirement) => `the required ${requirement.trim()} may not yet be available within Bethany House`)
+    .replace(/\bBethany(?: House)? failed to ([^.!?]+)/gi, (_, action) => `the current record does not show that Bethany House has ${action.trim()}`)
+    .replace(/\bBethany(?: House)? cannot ([^.!?]+)/gi, (_, action) => `it may not be feasible for Bethany House to ${action.trim()}`)
     .replace(/\b(?:the\s+)?course materials?\s+(describe|show|indicate|suggest|warn|state|note|include|identify|support)\b/gi, (_, verb) => `the available evidence ${singularAgreementVerb(verb)}`)
     .replace(/\b(?:the\s+)?course traces?\s+(describe|show|indicate|suggest|warn|state|note|include|identify|support)\b/gi, (_, verb) => `the current record ${singularAgreementVerb(verb)}`)
     .replace(/\b(?:the\s+)?course materials?\b/gi, 'the available evidence')
     .replace(/\b(?:the\s+)?course traces?\b/gi, 'the current record')
+    .replace(/\b(?:the\s+)?course warning\b/gi, 'the evidence limitation')
+    .replace(/\bthe available evidence frame\b/gi, 'the available evidence frames')
+    .replace(/\b(?:supported by\s+)?supplied the current record\b/gi, 'supported by the current record')
     .replace(/\bmodule\s*[12]\s+(?:trace|record|output)s?\b/gi, 'working record')
     .replace(/\bstudent performance\b/gi, 'work quality')
     .replace(/\bthe student team\b/gi, 'the advisory team')
@@ -268,10 +289,64 @@ export function clientFacingProse(value, max = 5000) {
     .replace(/\bpartner confidence\b/gi, 'partner trust')
     .replace(/\bfalse confidence\b/gi, 'a misleading picture');
   if (/\b(?:classroom|system prompt|module prompt|language model|the app)\b/i.test(text)) return '';
-  return text.split(/(?<=[.!?])\s+/)
+  const filtered = text.split(/(?<=[.!?])\s+/)
     .filter((sentence) => !/\b(?:confidence|confident|assurance|certainty|certain|probability|probable|likelihood|likely|robustness\s+band)\b/i.test(sentence))
     .join(' ')
     .trim();
+  return filtered.replace(/(^|[.!?]\s+)([a-z])/g, (_, boundary, letter) => `${boundary}${letter.toUpperCase()}`);
+}
+
+function criterionLabel(value) {
+  const normalized = clean(value, 300).replace(/[_-]+/g, ' ').replace(/\s+/g, ' ').trim();
+  return normalized ? normalized.charAt(0).toUpperCase() + normalized.slice(1) : '';
+}
+
+function substantiveJudgment(value, minWords, minChars) {
+  const text = clean(value, 3000);
+  if (text.length < minChars) return false;
+  if (/^(?:n\/?a|none|test|testing|asdf\w*|unknown|tbd|someone|somebody|something|whatever|idk|not sure|placeholder|later)$/i.test(text)) return false;
+  if (/^(.)\1{2,}$/i.test(text.replace(/\s+/g, ''))) return false;
+  return (text.match(/[a-z0-9]+(?:['-][a-z0-9]+)*/gi) || []).length >= minWords;
+}
+
+function hasLossBearer(value) {
+  const text = clean(value, 800);
+  if (!substantiveJudgment(text, 1, 4)) return false;
+  const namedPerson = /\b[A-Z][a-z]+\s+[A-Z][a-z]+\b/.test(text);
+  const roleOrGroup = /\b(?:staff|team|lead|leader|leadership|director|executive|board|partner|resident|client|women|children|famil(?:y|ies)|community|funder|employee|manager|supervisor|coordinator|officer|owner|sponsor|program|operations|volunteer|vendor|stakeholder)s?\b/i.test(text);
+  return namedPerson || roleOrGroup;
+}
+
+function hasAccountabilityStatement(value) {
+  const text = clean(value, 3000);
+  if (!substantiveJudgment(text, 5, 28) || !hasLossBearer(text)) return false;
+  const accountableAction = /\b(?:own|owns|responsib\w*|respond\w*|repair\w*|approve\w*|decid\w*|escalat\w*|monitor\w*|report\w*|pause\w*|revers\w*|correct\w*|resolv\w*|carry|carries|absorb\w*)\b/i.test(text);
+  const consequence = /\b(?:failure|loss|harm|cost|service|relationship|handoff|decision|risk|consequence|recovery|response|delivery|implementation|disruption|complaint|escalation)\w*\b/i.test(text);
+  return accountableAction && consequence;
+}
+
+function hasReversibilityReason(value, reversibility) {
+  const text = clean(value, 3000);
+  if (!substantiveJudgment(text, 5, 28)) return false;
+  const causal = /\b(?:because|if|would|will|require\w*|need\w*|after|once|without|means|makes)\b/i.test(text);
+  const cues = {
+    reversible: /\b(?:revis\w*|chang\w*|adjust\w*|pause\w*|revers\w*|undo\w*|restore\w*|return\w*|cancel\w*|stop\w*|rollback|boundary|boundaries)\b/i,
+    costly_to_reverse: /\b(?:cost\w*|repair\w*|recover\w*|rebuild\w*|restore\w*|trust|disrupt\w*|time|resource\w*|relationship\w*|service\w*|handoff\w*|reputation\w*)\b/i,
+    one_way: /\b(?:irrevers\w*|cannot|permanent\w*|commit\w*|contract\w*|purchas\w*|terminat\w*|closure|public|trust|loss)\b/i,
+  };
+  return causal && Boolean(cues[reversibility]?.test(text));
+}
+
+function hasConvictionReason(value) {
+  const text = clean(value, 3000);
+  if (!substantiveJudgment(text, 6, 30)) return false;
+  const comparison = /\b(?:option|bet|leader|comparison|alternative|choice|rank\w*|instead|than|outweigh\w*)\b/i.test(text);
+  const reason = /\b(?:evidence|reply|record|fact|constraint|risk|failure|loss|consequence|cost|harm|impact|because|despite|although|protect\w*|preserv\w*|avoid\w*|contain\w*)\b/i.test(text);
+  return comparison && reason;
+}
+
+function isLeadingTieChoice(state, selectedId) {
+  return Boolean(state.ranking?.nearTie && selectedId && (state.ranking?.orderedBetIds || []).slice(0, 2).includes(selectedId));
 }
 
 function singularAgreementVerb(value) {

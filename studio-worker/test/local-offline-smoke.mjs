@@ -270,6 +270,31 @@ async function runSuite() {
   assert(malformedModule2.state.inheritance.entryState === 'fresh', 'malformed inheritance value preserves defaults');
   assert(Array.isArray(malformedModule2.state.locks.heldConstant), 'malformed lock value preserves defaults');
 
+  const prematureSuggestion = await postJson('/api/studio/llm', { module: 'm2_suggest_options', payload: {} }, authHeaders, false);
+  assert(prematureSuggestion.status === 409, 'option generation is blocked until relevance is established');
+  await postJson('/api/studio/modules/module-2/ground', {
+    problemSeed: 'Plan a holiday itinerary.',
+    rawReply: 'Write a cheerful travel itinerary for Lisbon and recommend restaurants.',
+    solutions: [{ name: 'Book the cheapest hotel', description: 'Choose only by nightly price.' }],
+    mergeChoice: 'replace',
+  }, authHeaders);
+  const rejectedOffAssignment = await postJson('/api/studio/llm', { module: 'm2_reconcile', payload: {} }, authHeaders, false);
+  assert(rejectedOffAssignment.status === 400 && rejectedOffAssignment.data.error.includes('Bethany House decision work'), 'arbitrary off-assignment text is rejected before a model call');
+
+  const preparedPick = await postJson('/api/studio/modules/module-2/ground', {
+    problemSeed: 'How should Bethany House add staffing capacity without losing relationship continuity or accountability?',
+    rawReply: 'Bethany House needs a partner handoff with clear accountability and enough implementation capacity.',
+    solutionPaste: 'Phased relationship handoff\nSeparate operational and people ownership',
+    mergeChoice: 'pick',
+    pickedIds: [],
+  }, authHeaders);
+  assert(preparedPick.needsPick === true && preparedPick.state.ground.pickOptions.length >= 2, 'Pick prepares inherited, current, and pasted options before requiring a selection');
+  const appliedPick = await postJson('/api/studio/modules/module-2/ground', {
+    mergeChoice: 'pick',
+    pickedIds: [preparedPick.state.ground.pickOptions[0].id],
+  }, authHeaders);
+  assert(appliedPick.state.bets.length === 1 && appliedPick.state.bets[0].id === preparedPick.state.ground.pickOptions[0].id, 'prepared Pick applies the explicit student selection');
+
   const modelReadyModule2 = await postJson('/api/studio/modules/module-2/ground', {
     problemSeed: 'How should Bethany House add staffing capacity without losing relationship continuity or accountability?',
     rawReply: [
@@ -291,6 +316,37 @@ async function runSuite() {
     mergeChoice: 'replace',
   }, authHeaders);
   assert(modelReadyModule2.state.bets.length === 2, 'GROUND prepares two credible student alternatives for evaluation');
+
+  const acmeGround = await postJson('/api/studio/modules/module-2/ground', {
+    problemSeed: 'How should Bethany House add staffing capacity without losing relationship continuity or accountability?',
+    rawReply: 'Acme Foundation needs staff capacity. Partner handoffs and board accountability are the priorities.',
+    solutions: [
+      { id: 'bet-phased-handoff', name: 'Phased relationship handoff', description: 'Add capacity while explicitly sequencing partner handoffs.' },
+      { id: 'bet-separated-ownership', name: 'Separate operational and people ownership', description: 'Keep executive coordination and HR trust work under distinct ownership.' },
+    ],
+    mergeChoice: 'replace',
+  }, authHeaders);
+  assert(acmeGround.state.ground.rawReply.startsWith('Acme Foundation'), 'keyword-padding attack reaches only persisted Ground state');
+  const beforeAcmeUsage = await getJson('/api/studio/me', authHeaders);
+  const beforeAcmePrompts = await getJson(`/api/instructor/students/${reg.user.id}/prompts?workflow=module_2`, adminHeaders);
+  const rejectedAcme = await postJson('/api/studio/llm', { module: 'm2_reconcile', payload: {} }, authHeaders, false);
+  const afterAcmeUsage = await getJson('/api/studio/me', authHeaders);
+  const afterAcmePrompts = await getJson(`/api/instructor/students/${reg.user.id}/prompts?workflow=module_2`, adminHeaders);
+  assert(rejectedAcme.status === 400, 'another organization cannot cloak itself with generic staffing, partner, and board vocabulary');
+  assert(Number(afterAcmeUsage.usage.used_micros || 0) === Number(beforeAcmeUsage.usage.used_micros || 0), 'rejected keyword padding does not change student usage');
+  assert(afterAcmePrompts.prompts.length === beforeAcmePrompts.prompts.length, 'rejected keyword padding creates no LLM run');
+  await postJson('/api/studio/modules/module-2/ground', {
+    problemSeed: 'How should Bethany House add staffing capacity without losing relationship continuity or accountability?',
+    rawReply: [
+      'Bethany confirmed that partner continuity matters during the staffing transition.',
+      'Implementation capacity and clear accountability also matter to the decision.',
+    ].join('\n'),
+    solutions: [
+      { id: 'bet-phased-handoff', name: 'Phased relationship handoff', description: 'Add capacity while explicitly sequencing partner handoffs.' },
+      { id: 'bet-separated-ownership', name: 'Separate operational and people ownership', description: 'Keep executive coordination and HR trust work under distinct ownership.' },
+    ],
+    mergeChoice: 'replace',
+  }, authHeaders);
 
   const reconciliation = await llm('m2_reconcile', {});
   assert(reconciliation.workflowKey === 'module_2', 'reconciliation is recorded under Module 2');
@@ -367,6 +423,7 @@ async function runSuite() {
   assert(lockedModule2.state.package.sourceHash === '', 'workspace save cannot inject a server-owned package hash');
   assert(lockedModule2.state.locks.selectedBetId === '', 'ordinary workspace save cannot forge human lock judgments');
   const selectedBetId = reranked.state.ranking.orderedBetIds[0];
+  const cohortBeforeBoardSelection = await getJson('/api/instructor/classes/class_bethany_house_2026/module-2/convergence', adminHeaders);
   const cleanBoardJudgment = await postJson('/api/studio/modules/module-2/judgments', {
     frameConfirmation: 'confirmed',
     setCompletenessConfirmation: 'confirmed',
@@ -375,6 +432,8 @@ async function runSuite() {
   assert(cleanBoardJudgment.state.locks.frameConfirmation === 'confirmed', 'clean Take-to-Lock persists frame acceptance');
   assert(cleanBoardJudgment.state.locks.setCompletenessConfirmation === 'confirmed', 'clean Take-to-Lock persists comparison-set acceptance');
   assert(cleanBoardJudgment.state.locks.selectedBetId === selectedBetId, 'clean Take-to-Lock persists the selected bet');
+  const selectedButNotLocked = await getJson('/api/instructor/classes/class_bethany_house_2026/module-2/convergence', adminHeaders);
+  assert(selectedButNotLocked.lockedStudents === cohortBeforeBoardSelection.lockedStudents, 'instructor cohort does not count a Board selection as a completed lock');
   const gapState = structuredClone(cleanBoardJudgment.state);
   gapState.ranking.coverage = {
     status: 'gap',

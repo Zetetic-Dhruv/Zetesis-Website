@@ -22,12 +22,15 @@ import {
   fallbackEvaluateBets,
   fallbackReconcile,
   fallbackSuggestOptions,
+  hasDecisionContext,
   rankLiveBets,
 } from './module2-engine.js';
 import {
   compileModule2Document,
   fallbackModule2Package,
+  module2ConvictionError,
   module2DocumentText,
+  module2LockDetailsError,
   module2PackageInput,
   module2PackageReadinessError,
 } from './module2-package.js';
@@ -1062,6 +1065,16 @@ async function handleLlm(request, env, user, membership = null) {
     ? { ...requestedPayload, state: module2Bundle.state }
     : requestedPayload;
   const promptPayload = withModuleContext(moduleName, payload);
+
+  if (moduleName === 'm2_reconcile' && !hasDecisionContext(module2Bundle?.state?.ground?.rawReply || '', module2Bundle?.state || {})) {
+    await logAbuse(env, membership, bundle.workspace.id, user.id, moduleName, 'The supplied reply has no Bethany House decision context.', payload);
+    await audit(env, bundle.workspace.id, user.id, 'llm_guardrail_reject', { module: moduleName, reason: 'module_2_relevance_preflight' });
+    return json({ error: ABUSE_MESSAGE }, 400, request);
+  }
+  if (['m2_suggest_options', 'm2_evaluate_bets'].includes(moduleName)
+      && module2Bundle?.state?.ground?.relevance?.status !== 'relevant') {
+    return json({ error: 'Reconcile a relevant Bethany House reply before using model-assisted options or evaluation.' }, 409, request);
+  }
 
   if (moduleName === 'm2_package') {
     const readiness = module2PackageReadinessError(module2Bundle?.state || {});
@@ -3854,8 +3867,12 @@ async function getModule2CohortSummary(env, classId) {
     if (!row.state_json) continue;
     try {
       const state = parseStoredModule2State(row.state_json);
-      const selected = state.bets.find((bet) => bet.id === state.locks.selectedBetId && bet.liveStatus === 'live');
-      if (!selected?.name) continue;
+      const selected = state.bets.find((bet) => bet.id === state.locks.selectedBetId && bet.liveStatus === 'live' && bet.provisional !== true);
+      const isLocked = row.current_step === 'lock'
+        && ['locked', 'complete'].includes(row.status)
+        && selected?.name
+        && module2PackageReadinessError(state) === '';
+      if (!isLocked) continue;
       locked += 1;
       const key = selected.name.trim().toLocaleLowerCase();
       const current = choices.get(key) || { name: selected.name.trim(), count: 0 };
@@ -4507,20 +4524,26 @@ async function handleModule2Judgments(request, env, user, membership) {
         status: 'covered',
         gap: '',
         resolution: 'The student reviewed the identified gap and accepted the current comparison set.',
+        source: 'human_review',
       };
       state.ranking = { ...state.ranking, ...rankLiveBets(state.bets, state.weights, state.ground.possibleDuplicates, state.ranking.coverage) };
     }
-    if (state.ranking.evaluationIncomplete || state.ranking.weakField) return json({ error: state.ranking.incompleteReason || 'Add another credible, non-dominated alternative before confirming this set.' }, 409, request);
+    if (state.ranking.evaluationIncomplete) return json({ error: state.ranking.incompleteReason || 'Evaluate every live alternative before confirming this set.' }, 409, request);
   }
   if (body.selectedBetId !== undefined) {
     if (state.ranking.evaluationIncomplete || state.ranking.weakField || !state.ranking.orderedBetIds?.includes(body.selectedBetId)) return json({ error: state.ranking.incompleteReason || 'Resolve the comparison field before choosing a bet.' }, 409, request);
     const selected = state.bets.find((bet) => bet.id === body.selectedBetId && bet.liveStatus === 'live' && bet.provisional !== true);
     if (!selected) return json({ error: 'Choose a live, admitted option.' }, 409, request);
-    const nonLeader = state.ranking.orderedBetIds[0] !== selected.id;
+    const selectedPosition = state.ranking.orderedBetIds.indexOf(selected.id);
+    const nonLeader = selectedPosition > 0;
+    const tiedLeaderChoice = state.ranking.nearTie && selectedPosition === 1;
     const convictionNote = cleanString(body.convictionNote, 3000);
-    if (nonLeader && !state.ranking.nearTie && !convictionNote) return json({ error: 'Explain why you are carrying a bet that does not lead the comparison.' }, 409, request);
+    if (nonLeader && !tiedLeaderChoice) {
+      const convictionError = module2ConvictionError(convictionNote);
+      if (convictionError) return json({ error: 'Explain with a concrete consequence or evidence why you are carrying a bet that does not lead the comparison.' }, 409, request);
+    }
     state.locks.selectedBetId = selected.id;
-    state.locks.convictionNote = nonLeader && !state.ranking.nearTie ? convictionNote : '';
+    state.locks.convictionNote = nonLeader && !tiedLeaderChoice ? convictionNote : '';
   }
 
   const hasLockDetails = ['lossBearer', 'accountabilityLocation', 'reversibility', 'reversibilityNote', 'heldConstant']
@@ -4529,9 +4552,13 @@ async function handleModule2Judgments(request, env, user, membership) {
     const lossBearer = String(body.lossBearer || '').trim();
     const accountabilityLocation = String(body.accountabilityLocation || '').trim();
     const reversibility = String(body.reversibility || '');
-    if (!lossBearer || !accountabilityLocation || !['reversible', 'costly_to_reverse', 'one_way'].includes(reversibility)) {
-      return json({ error: 'Name the loss bearer, accountability location, and reversibility before saving judgments.' }, 400, request);
-    }
+    const lockError = module2LockDetailsError({
+      lossBearer,
+      accountabilityLocation,
+      reversibility,
+      reversibilityNote: body.reversibilityNote,
+    });
+    if (lockError) return json({ error: lockError }, 400, request);
     state.locks.lossBearer = lossBearer.slice(0, 800);
     state.locks.accountabilityLocation = accountabilityLocation.slice(0, 3000);
     state.locks.reversibility = reversibility;
@@ -4580,7 +4607,7 @@ async function handleApplyModule2Ground(request, env, user, membership) {
   const bundle = await loadModule2WorkspaceBundle(env, user.id, membership);
   if (!bundle.workspace) return json({ error: 'Workspace not found.' }, 404, request);
   const state = normalizeModule2State(bundle.state);
-  const solutionPaste = cleanString(body.solutionPaste, 12000);
+  const solutionPaste = cleanString(body.solutionPaste ?? state.ground.solutionPaste, 12000);
   const incomingSolutions = Array.isArray(body.solutions) && body.solutions.length
     ? body.solutions
     : splitAtomic(solutionPaste).map((name) => ({ name, description: '' }));
@@ -4589,7 +4616,6 @@ async function handleApplyModule2Ground(request, env, user, membership) {
   const nextProblemSeed = cleanString(body.problemSeed ?? state.ground.problemSeed, 4000);
   const nextRawReply = cleanString(body.rawReply ?? state.ground.rawReply, 30000);
   const pickedIds = Array.isArray(body.pickedIds) ? body.pickedIds : state.ground.pickedIds;
-  if (body.mergeChoice === 'pick' && !pickedIds.length) return json({ error: 'Choose at least one option before continuing.' }, 400, request);
   state.ground.problemSeed = nextProblemSeed;
   state.ground.rawReply = nextRawReply;
   state.ground.solutionPaste = solutionPaste || state.ground.solutionPaste;
@@ -4598,13 +4624,28 @@ async function handleApplyModule2Ground(request, env, user, membership) {
     : state.ground.mergeChoice;
   state.ground.pickedIds = pickedIds;
   const protectedGenerated = state.bets.filter((bet) => bet.origin === 'generated');
-  const nextBets = [...combineGroundSolutions({
+  const preparedOptions = [...combineGroundSolutions({
     inheritedSolutions: state.inheritance.inheritedSolutions,
     currentBets: state.bets.filter((bet) => bet.origin !== 'generated'),
     incomingSolutions,
-    choice: state.ground.mergeChoice,
-    pickedIds,
-  }), ...protectedGenerated.filter((bet) => !pickedIds.length || pickedIds.includes(bet.id))];
+    choice: 'merge',
+  }), ...protectedGenerated];
+  state.ground.pickOptions = state.ground.mergeChoice === 'pick' ? preparedOptions : [];
+  if (state.ground.mergeChoice === 'pick' && !pickedIds.length) {
+    if (previousGround !== `${nextProblemSeed}\n${nextRawReply}`) invalidateModule2Analysis(state, true);
+    state.updatedAt = new Date().toISOString();
+    await persistModule2State(env, bundle.workspace.id, user.id, state, 'ground', 'draft');
+    return json({ ok: true, needsPick: true, state, currentStep: 'ground' }, 200, request);
+  }
+  const nextBets = state.ground.mergeChoice === 'pick'
+    ? preparedOptions.filter((bet) => pickedIds.includes(bet.id))
+    : [...combineGroundSolutions({
+        inheritedSolutions: state.inheritance.inheritedSolutions,
+        currentBets: state.bets.filter((bet) => bet.origin !== 'generated'),
+        incomingSolutions,
+        choice: state.ground.mergeChoice,
+        pickedIds,
+      }), ...protectedGenerated];
   const betFingerprint = (bets) => JSON.stringify(bets.map((bet) => [bet.id, bet.name, bet.description]));
   const groundChanged = previousGround !== `${nextProblemSeed}\n${nextRawReply}`;
   const betsChanged = betFingerprint(state.bets) !== betFingerprint(nextBets);
