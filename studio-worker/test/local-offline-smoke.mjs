@@ -293,6 +293,14 @@ async function runSuite() {
     pickedIds: ['obsolete-malformed-option'],
   }, authHeaders);
   assert(stalePick.needsPick === true && stalePick.state.ground.pickedIds.length === 0, 'Pick rejects stale option IDs and presents the repaired choices again');
+  const excludedPickId = stalePick.state.ground.pickOptions[0].id;
+  const repairedPick = await postJson('/api/studio/modules/module-2/ground', {
+    mergeChoice: 'pick',
+    pickedIds: [],
+    excludedOptionIds: [excludedPickId],
+  }, authHeaders);
+  assert(repairedPick.needsPick === true && !repairedPick.state.ground.pickOptions.some((option) => option.id === excludedPickId), 'removing a prepared option keeps it out of the refreshed choice list');
+  assert(repairedPick.state.ground.excludedOptionIds.includes(excludedPickId), 'manual option exclusions persist in the draft');
 
   const preparedPick = await postJson('/api/studio/modules/module-2/ground', {
     problemSeed: 'How should Bethany House add staffing capacity without losing relationship continuity or accountability?',

@@ -34,6 +34,7 @@ export const DEFAULT_MODULE2_STATE = Object.freeze({
     mergeChoice: 'merge',
     pickedIds: [],
     pickOptions: [],
+    excludedOptionIds: [],
     corrections: [],
   },
   bets: [],
@@ -93,6 +94,7 @@ export function normalizeModule2State(input) {
   state.ground.mergeChoice = oneOf(state.ground.mergeChoice, ['merge', 'replace', 'pick'], 'merge');
   state.ground.pickedIds = cleanStringArray(state.ground.pickedIds, 100);
   state.ground.pickOptions = normalizeSolutions(state.ground.pickOptions, 'student');
+  state.ground.excludedOptionIds = cleanStringArray(state.ground.excludedOptionIds, 100);
 
   state.bets = cleanObjectArray(state.bets, 50).map((bet, index) => ({
     id: cleanText(bet.id, 120) || `bet-${index + 1}`,

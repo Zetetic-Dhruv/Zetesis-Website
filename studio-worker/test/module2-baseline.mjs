@@ -61,6 +61,8 @@ assert(renderModule2Page().includes('Suggested options to review') && renderModu
 assert(renderedModule2Script.includes('grounding.open=true') && renderedModule2Script.includes('check before deciding'), 'clean Board opens the grounding review instead of hiding it behind ready');
 assert(renderedModule2Script.includes('data-action="update-ground-options"'), 'Ground keeps a dedicated bulk-option update action');
 assert(!renderedModule2Script.includes("groundButton.textContent='Prepare choices'"), 'bulk-option preparation does not consume the continue action');
+assert(renderedModule2Script.includes('data-action="remove-pick-option"'), 'prepared choices expose a direct remove action');
+assert(renderedModule2Script.includes('function excludeOption(id)') && renderedModule2Script.includes('state.ground.pickOptions=(state.ground.pickOptions||[]).filter'), 'removing an option clears both the main and prepared lists');
 
 const dashedPaste = parseGroundSolutionPaste('Select ambassador - this will need screening and anti-trust verification\nHire - but one hire will likely take too long');
 assert(dashedPaste.length === 2, 'an inline dash does not create extra options');
@@ -69,7 +71,7 @@ assert(dashedPaste[1].name === 'Hire' && dashedPaste[1].description === 'but one
 const bulletedPaste = parseGroundSolutionPaste('- Select ambassador - screen and verify\n* Hire directly');
 assert(bulletedPaste.length === 2 && bulletedPaste[0].name === 'Select ambassador' && bulletedPaste[1].name === 'Hire directly', 'line-level bullets are removed without splitting inline dashes');
 assert(renderedModule2Script.includes('Question that could change the comparison') && renderedModule2Script.includes('highest-influence open dependency'), 'Board exposes fog and one discriminating follow-up probe');
-assert(renderedModule2Script.includes('Prepare choices') && renderedModule2Script.includes('result.needsPick'), 'initial Pick choice has a prepare-then-select recovery instead of a dead end');
+assert(renderedModule2Script.includes('Choices updated. Select the options to keep.') && renderedModule2Script.includes('result.needsPick'), 'initial Pick choice has an update-then-select recovery instead of a dead end');
 assert(renderedModule2Script.includes('!setNeedsReview&&(state.ranking.evaluationIncomplete') && renderedModule2Script.includes('!state.ranking.evaluationIncomplete&&state.ranking.weakField'), 'Board does not duplicate one coverage gap as evaluation and weak-field blockers');
 assert(source.includes("if (state.ranking.evaluationIncomplete) return json({ error: state.ranking.incompleteReason || 'Evaluate every live alternative before confirming this set.'"), 'explicit gap review persists before weak-field recovery is presented as the next blocker');
 assert(renderModule2Page().includes('/api/studio/modules/module-2/judgments'), 'human lock choices use the explicit server judgment transition');

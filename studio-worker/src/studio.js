@@ -4617,6 +4617,12 @@ async function handleApplyModule2Ground(request, env, user, membership) {
   const nextProblemSeed = cleanString(body.problemSeed ?? state.ground.problemSeed, 4000);
   const nextRawReply = cleanString(body.rawReply ?? state.ground.rawReply, 30000);
   const submittedPickedIds = Array.isArray(body.pickedIds) ? body.pickedIds : state.ground.pickedIds;
+  const excludedOptionIds = (Array.isArray(body.excludedOptionIds)
+    ? body.excludedOptionIds
+    : state.ground.excludedOptionIds)
+    .map((id) => cleanString(id, 120))
+    .filter(Boolean)
+    .slice(0, 100);
   state.ground.problemSeed = nextProblemSeed;
   state.ground.rawReply = nextRawReply;
   state.ground.solutionPaste = solutionPaste || state.ground.solutionPaste;
@@ -4624,12 +4630,14 @@ async function handleApplyModule2Ground(request, env, user, membership) {
     ? body.mergeChoice
     : state.ground.mergeChoice;
   const protectedGenerated = state.bets.filter((bet) => bet.origin === 'generated');
+  const excludedIds = new Set(excludedOptionIds);
   const preparedOptions = [...combineGroundSolutions({
     inheritedSolutions: state.inheritance.inheritedSolutions,
     currentBets: state.bets.filter((bet) => bet.origin !== 'generated'),
     incomingSolutions,
     choice: 'merge',
-  }), ...protectedGenerated];
+  }), ...protectedGenerated].filter((bet) => !excludedIds.has(bet.id));
+  state.ground.excludedOptionIds = excludedOptionIds;
   const preparedIds = new Set(preparedOptions.map((bet) => bet.id));
   const pickedIds = submittedPickedIds.filter((id) => preparedIds.has(id));
   state.ground.pickedIds = pickedIds;
@@ -4645,10 +4653,10 @@ async function handleApplyModule2Ground(request, env, user, membership) {
     : [...combineGroundSolutions({
         inheritedSolutions: state.inheritance.inheritedSolutions,
         currentBets: state.bets.filter((bet) => bet.origin !== 'generated'),
-        incomingSolutions,
+        incomingSolutions: incomingSolutions.filter((solution) => !excludedIds.has(solution.id)),
         choice: state.ground.mergeChoice,
         pickedIds,
-      }), ...protectedGenerated];
+      }).filter((bet) => !excludedIds.has(bet.id)), ...protectedGenerated.filter((bet) => !excludedIds.has(bet.id))];
   const betFingerprint = (bets) => JSON.stringify(bets.map((bet) => [bet.id, bet.name, bet.description]));
   const groundChanged = previousGround !== `${nextProblemSeed}\n${nextRawReply}`;
   const betsChanged = betFingerprint(state.bets) !== betFingerprint(nextBets);
