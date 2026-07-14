@@ -1072,7 +1072,12 @@ async function handleLlm(request, env, user, membership = null) {
     await audit(env, bundle.workspace.id, user.id, 'llm_guardrail_reject', { module: moduleName, reason: 'module_2_relevance_preflight' });
     return json({ error: ABUSE_MESSAGE }, 400, request);
   }
-  if (['m2_suggest_options', 'm2_evaluate_bets'].includes(moduleName)
+  if (moduleName === 'm2_suggest_options'
+      && module2Bundle?.state?.ground?.relevance?.status !== 'relevant'
+      && !canSuggestModule2Options(module2Bundle?.state)) {
+    return json({ error: 'Add a Bethany House decision frame or reconcile a relevant reply before asking for options.' }, 409, request);
+  }
+  if (moduleName === 'm2_evaluate_bets'
       && module2Bundle?.state?.ground?.relevance?.status !== 'relevant') {
     return json({ error: 'Reconcile a relevant Bethany House reply before using model-assisted options or evaluation.' }, 409, request);
   }
@@ -4898,6 +4903,20 @@ export function canServeInstructorSurface(host, localRuntime = false, configured
   return isInstructorHost(normalizedHost, configuredHost)
     || (normalizedPathHost !== '' && normalizedHost === normalizedPathHost)
     || (localRuntime === true && isLocalHost(normalizedHost));
+}
+
+export function canSuggestModule2Options(state = {}) {
+  const frame = cleanString(
+    state?.ground?.frameComparison?.groundedFrame
+      || state?.inheritance?.frame
+      || state?.ground?.problemSeed,
+    4000
+  );
+  if (!isMeaningfulField(frame)) return false;
+  const inheritedGrounding = state?.inheritance?.sourceType !== 'absent'
+    && isMeaningfulField(state?.inheritance?.frame);
+  const explicitAssignmentAnchor = /\b(?:bethany(?: house)?|nassau county|safe ground|jericho|baldwin|roosevelt)\b/i.test(frame);
+  return inheritedGrounding || explicitAssignmentAnchor;
 }
 
 function isLocalHost(host) {

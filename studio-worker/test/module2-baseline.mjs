@@ -32,7 +32,7 @@ import {
   renderModule2Page,
 } from '../src/module2-page.js';
 import { renderInstructorPage } from '../src/instructor-page.js';
-import { canServeInstructorSurface } from '../src/studio.js';
+import { canServeInstructorSurface, canSuggestModule2Options } from '../src/studio.js';
 import {
   clientFacingProse,
   compileModule2Document,
@@ -65,6 +65,12 @@ assert(renderedModule2Script.includes('data-action="remove-pick-option"'), 'prep
 assert(renderedModule2Script.includes('function excludeOption(id)') && renderedModule2Script.includes('state.ground.pickOptions=(state.ground.pickOptions||[]).filter'), 'removing an option clears both the main and prepared lists');
 assert(!renderedModule2Script.includes("radio('ground.mergeChoice','replace','Replace'"), 'Ground omits the redundant Replace control');
 assert(renderedModule2Script.includes("if(state.ground.mergeChoice==='replace')state.ground.mergeChoice='merge'"), 'legacy Replace drafts fall back to Keep all');
+assert(renderedModule2Script.includes("button.classList.add('assist')"), 'model-assisted option creation is visually highlighted');
+assert(renderedModule2Script.includes("if(state.ground.rawReply?.trim()&&state.ground.relevance?.status!=='relevant')await runModule('m2_reconcile')"), 'Suggest options reconciles a supplied reply before calling the option model');
+assert(renderedModule2Script.includes("statusText='Developing distinct options...'"), 'Suggest options exposes an active model-call state');
+assert(canSuggestModule2Options({ inheritance: { sourceType: 'saved_version', frame: 'Add operating capacity without losing relationship continuity.' } }), 'a grounded inherited frame can support provisional option imagination without a reply');
+assert(canSuggestModule2Options({ inheritance: { sourceType: 'absent', frame: '' }, ground: { problemSeed: 'What operating model should Bethany House use for the transition?' } }), 'an explicit Bethany decision frame can support provisional option imagination');
+assert(!canSuggestModule2Options({ inheritance: { sourceType: 'absent', frame: '' }, ground: { problemSeed: 'Plan a Lisbon holiday.' } }), 'an unrelated frame cannot unlock option imagination');
 
 const dashedPaste = parseGroundSolutionPaste('Select ambassador - this will need screening and anti-trust verification\nHire - but one hire will likely take too long');
 assert(dashedPaste.length === 2, 'an inline dash does not create extra options');
