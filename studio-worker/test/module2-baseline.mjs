@@ -6,6 +6,7 @@ import {
   buildModule1InheritanceSnapshot,
   combineGroundSolutions,
   normalizeModule2State,
+  parseGroundSolutionPaste,
   parseStoredModule2State,
 } from '../src/module2-state.js';
 import {
@@ -58,6 +59,15 @@ assert(renderModule2Page().includes('Keep both as distinct') && renderModule2Pag
 assert(renderModule2Page().includes("/admit',{method:'POST'") && !renderedModule2Script.includes('bet.provisional=false'), 'generated-option admission uses the explicit server transition');
 assert(renderModule2Page().includes('Suggested options to review') && renderModule2Page().includes('renderProvisionalBets()'), 'provisional options and their admission action are visible on the Board');
 assert(renderedModule2Script.includes('grounding.open=true') && renderedModule2Script.includes('check before deciding'), 'clean Board opens the grounding review instead of hiding it behind ready');
+assert(renderedModule2Script.includes('data-action="update-ground-options"'), 'Ground keeps a dedicated bulk-option update action');
+assert(!renderedModule2Script.includes("groundButton.textContent='Prepare choices'"), 'bulk-option preparation does not consume the continue action');
+
+const dashedPaste = parseGroundSolutionPaste('Select ambassador - this will need screening and anti-trust verification\nHire - but one hire will likely take too long');
+assert(dashedPaste.length === 2, 'an inline dash does not create extra options');
+assert(dashedPaste[0].name === 'Select ambassador' && dashedPaste[0].description === 'this will need screening and anti-trust verification', 'an inline dash separates an option name from its description');
+assert(dashedPaste[1].name === 'Hire' && dashedPaste[1].description === 'but one hire will likely take too long', 'each pasted line retains its own description');
+const bulletedPaste = parseGroundSolutionPaste('- Select ambassador - screen and verify\n* Hire directly');
+assert(bulletedPaste.length === 2 && bulletedPaste[0].name === 'Select ambassador' && bulletedPaste[1].name === 'Hire directly', 'line-level bullets are removed without splitting inline dashes');
 assert(renderedModule2Script.includes('Question that could change the comparison') && renderedModule2Script.includes('highest-influence open dependency'), 'Board exposes fog and one discriminating follow-up probe');
 assert(renderedModule2Script.includes('Prepare choices') && renderedModule2Script.includes('result.needsPick'), 'initial Pick choice has a prepare-then-select recovery instead of a dead end');
 assert(renderedModule2Script.includes('!setNeedsReview&&(state.ranking.evaluationIncomplete') && renderedModule2Script.includes('!state.ranking.evaluationIncomplete&&state.ranking.weakField'), 'Board does not duplicate one coverage gap as evaluation and weak-field blockers');

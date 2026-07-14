@@ -233,6 +233,21 @@ export function combineGroundSolutions({
   return mode === 'pick' ? pool.filter((solution) => picked.has(solution.id)) : pool;
 }
 
+export function parseGroundSolutionPaste(text) {
+  return String(text || '')
+    .replace(/\r\n?/g, '\n')
+    .split(/\n+/)
+    .map((line) => line.replace(/^\s*(?:[-*]\s+|\d+[.)]\s+)/, '').trim())
+    .filter((line) => line.length > 2)
+    .slice(0, 50)
+    .map((line) => {
+      const parts = line.match(/^(.{2,200}?)\s+-\s+(.{3,})$/);
+      return parts
+        ? { name: parts[1].trim(), description: parts[2].trim() }
+        : { name: line, description: '' };
+    });
+}
+
 function mergeKnown(target, source) {
   if (!source || typeof source !== 'object' || Array.isArray(source)) return;
   for (const key of Object.keys(target)) {

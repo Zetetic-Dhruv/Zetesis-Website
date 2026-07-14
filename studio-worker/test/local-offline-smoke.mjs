@@ -281,6 +281,19 @@ async function runSuite() {
   const rejectedOffAssignment = await postJson('/api/studio/llm', { module: 'm2_reconcile', payload: {} }, authHeaders, false);
   assert(rejectedOffAssignment.status === 400 && rejectedOffAssignment.data.error.includes('Bethany House decision work'), 'arbitrary off-assignment text is rejected before a model call');
 
+  const dashedOptions = await postJson('/api/studio/modules/module-2/ground', {
+    solutionPaste: 'Select ambassador - this will need screening and anti-trust verification\nHire - but one hire will likely take too long',
+    mergeChoice: 'replace',
+  }, authHeaders);
+  assert(dashedOptions.state.bets.length === 2, 'GROUND keeps one dashed option per pasted line');
+  assert(dashedOptions.state.bets[0].name === 'Select ambassador' && dashedOptions.state.bets[0].description.startsWith('this will need screening'), 'GROUND stores text after an inline dash as the option description');
+  assert(dashedOptions.state.bets[1].name === 'Hire' && dashedOptions.state.bets[1].description.startsWith('but one hire'), 'GROUND does not turn a second inline dash into another option');
+  const stalePick = await postJson('/api/studio/modules/module-2/ground', {
+    mergeChoice: 'pick',
+    pickedIds: ['obsolete-malformed-option'],
+  }, authHeaders);
+  assert(stalePick.needsPick === true && stalePick.state.ground.pickedIds.length === 0, 'Pick rejects stale option IDs and presents the repaired choices again');
+
   const preparedPick = await postJson('/api/studio/modules/module-2/ground', {
     problemSeed: 'How should Bethany House add staffing capacity without losing relationship continuity or accountability?',
     rawReply: 'Bethany House needs a partner handoff with clear accountability and enough implementation capacity.',

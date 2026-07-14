@@ -13,6 +13,7 @@ import {
   buildModule1InheritanceSnapshot,
   combineGroundSolutions,
   normalizeModule2State,
+  parseGroundSolutionPaste,
   parseStoredModule2State,
 } from './module2-state.js';
 import {
@@ -4610,19 +4611,18 @@ async function handleApplyModule2Ground(request, env, user, membership) {
   const solutionPaste = cleanString(body.solutionPaste ?? state.ground.solutionPaste, 12000);
   const incomingSolutions = Array.isArray(body.solutions) && body.solutions.length
     ? body.solutions
-    : splitAtomic(solutionPaste).map((name) => ({ name, description: '' }));
+    : parseGroundSolutionPaste(solutionPaste);
 
   const previousGround = `${state.ground.problemSeed}\n${state.ground.rawReply}`;
   const nextProblemSeed = cleanString(body.problemSeed ?? state.ground.problemSeed, 4000);
   const nextRawReply = cleanString(body.rawReply ?? state.ground.rawReply, 30000);
-  const pickedIds = Array.isArray(body.pickedIds) ? body.pickedIds : state.ground.pickedIds;
+  const submittedPickedIds = Array.isArray(body.pickedIds) ? body.pickedIds : state.ground.pickedIds;
   state.ground.problemSeed = nextProblemSeed;
   state.ground.rawReply = nextRawReply;
   state.ground.solutionPaste = solutionPaste || state.ground.solutionPaste;
   state.ground.mergeChoice = ['merge', 'replace', 'pick'].includes(body.mergeChoice)
     ? body.mergeChoice
     : state.ground.mergeChoice;
-  state.ground.pickedIds = pickedIds;
   const protectedGenerated = state.bets.filter((bet) => bet.origin === 'generated');
   const preparedOptions = [...combineGroundSolutions({
     inheritedSolutions: state.inheritance.inheritedSolutions,
@@ -4630,6 +4630,9 @@ async function handleApplyModule2Ground(request, env, user, membership) {
     incomingSolutions,
     choice: 'merge',
   }), ...protectedGenerated];
+  const preparedIds = new Set(preparedOptions.map((bet) => bet.id));
+  const pickedIds = submittedPickedIds.filter((id) => preparedIds.has(id));
+  state.ground.pickedIds = pickedIds;
   state.ground.pickOptions = state.ground.mergeChoice === 'pick' ? preparedOptions : [];
   if (state.ground.mergeChoice === 'pick' && !pickedIds.length) {
     if (previousGround !== `${nextProblemSeed}\n${nextRawReply}`) invalidateModule2Analysis(state, true);
