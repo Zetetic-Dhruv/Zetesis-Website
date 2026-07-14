@@ -90,7 +90,13 @@ const lockedState = {
 const document = compileModule2Document(lockedState, {
   executiveFraming: 'Bethany House is choosing how to add capacity while preserving partner trust and clear accountability.',
   recommendationSummary: 'Use a bounded pilot to learn before making a permanent ownership change.',
-  recommendationRationale: 'The pilot currently carries less irreversible downside than the other live options.',
+  recommendationRationale: [
+    'The pilot currently carries less irreversible downside than the other live options.',
+    'It creates a bounded learning period before Bethany House transfers permanent ownership.',
+    'The position remains conditional on explicit relationship handoffs, named accountability, and service protection.',
+    'A failed checkpoint should reopen the choice rather than be treated as ordinary implementation noise.',
+    'This rationale is intentionally long enough to exercise the PDF paginator across a page boundary.',
+  ].join(' '),
   currentPositionStatement: 'This is a current decision position, not a prediction of programme success.',
   candidateCommentary: [
     { betId: 'pilot', rationale: 'It creates implementation evidence before permanent role transfer.', comparisonReason: 'It leads because the admitted downside is more reversible.' },

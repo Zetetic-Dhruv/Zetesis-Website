@@ -4,8 +4,8 @@
   "transport": "openai-responses-api",
   "stage": 8,
   "usage": {
-    "inputTokens": 87998,
-    "outputTokens": 1191
+    "inputTokens": 84901,
+    "outputTokens": 952
   },
   "reviewHistory": [
     {
@@ -106,32 +106,68 @@
       "qualityFindings": [],
       "correctnessFindings": [],
       "requiredChanges": []
+    },
+    {
+      "attempt": 8,
+      "reviewer": "gpt-5.6-luna",
+      "verdict": "fail",
+      "utilityFindings": [],
+      "qualityFindings": [],
+      "correctnessFindings": [
+        "The frozen diff changes the shared assignment-abuse boundary and therefore violates the Module 1 regression boundary. `detectAssignmentAbuse` previously rejected `freeChat` or unrelated content only when the payload lacked assignment vocabulary: `if ((freeChat || unrelatedOrg) && !mentionsAssignment)`. The new implementation removes the `!mentionsAssignment` condition and rejects every payload matching `freeChat` or `unrelatedOrg`, including assignment-relevant Module 1 requests. The Stage 8 contract explicitly requires Module 1 routes, states, versions, PDFs, authentication, class codes, sessions, and student budgets to remain unchanged, but the supplied diff changes this shared behavior in `src/studio.js`. The listed offline tests only demonstrate rejection of irrelevant and disguised Module 2 requests; they do not establish that legitimate Module 1 requests retain prior behavior."
+      ],
+      "requiredChanges": [
+        "Preserve the existing Module 1 assignment-abuse behavior while adding the Module 2 injection protection: scope the stricter rejection to Module 2 or otherwise retain the assignment-context exemption for Module 1.",
+        "Add a deterministic regression test proving representative legitimate Module 1 assignment requests that match the existing `freeChat` or `unrelatedOrg` patterns are still accepted, alongside the Module 2 disguised-injection rejection test."
+      ]
+    },
+    {
+      "attempt": 9,
+      "reviewer": "gpt-5.6-luna",
+      "verdict": "fail",
+      "utilityFindings": [
+        "Revising the decision frame can leave the student with an analysis built against the prior frame, undermining the Board's grounding-and-comparison workflow. The specification requires that grounding-band edits re-run reconciliation/ranking, but the UI's `save-frame-revision` handler calls `saveJudgments({revisedFrame: ...})` followed by `evaluate()`, not `m2_reconcile`; the server's `revisedFrame` branch only updates `state.ground.frameComparison` and calls `invalidateModule2Analysis(state, false)`. A student must therefore perform an additional or different reconciliation action to regenerate the grounded interpretation, rather than receiving the specified live re-grounding behavior."
+      ],
+      "qualityFindings": [],
+      "correctnessFindings": [
+        "Frame revision does not re-run reconciliation against the Bethany reply. In `src/module2-page.js`, `save-frame-revision` invokes `saveJudgments({revisedFrame: ...})` and then `evaluate()`. In `src/studio.js`/the live workflow contract, reconciliation is the `m2_reconcile` step, while `m2_evaluate_bets` evaluates the existing field. In `studio.js`'s `handleModule2Judgments`, the `revisedFrame` branch changes the frame and invalidates analysis with `invalidateModule2Analysis(state, false)` but does not invoke reconciliation or otherwise regenerate `substantiveLines`, relevance, fog, voice, coverage, or frame comparison from the reply. This violates §7.2's 'All editable; edits re-run the reconciliation/ranking' requirement and can produce stale or empty derived grounding state after a valid frame edit."
+      ],
+      "requiredChanges": [
+        "Change the frame-revision flow so the revised frame is persisted and then `m2_reconcile` is executed against the current raw reply and revised frame, followed by deterministic evaluation/ranking as applicable. Ensure relevance, substantive lines, fog map, voice signals, coverage, and frame comparison are regenerated before the student can continue to Lock.",
+        "Add a deterministic regression test that edits the frame after an initial reconciliation and asserts that reconciliation is re-run and that derived grounding/ranking state cannot remain stale or merely invalidated."
+      ]
+    },
+    {
+      "attempt": 10,
+      "reviewer": "gpt-5.6-luna",
+      "verdict": "pass",
+      "utilityFindings": [],
+      "qualityFindings": [],
+      "correctnessFindings": [],
+      "requiredChanges": []
     }
   ],
   "verdict": "pass",
   "specCoverage": [
-    "Module 1 routes, states, versions, PDFs, authentication, class codes, sessions, and student budgets remain unchanged; offline integration, migration, PDF, rendering, syntax, and regression suites pass.",
-    "Ground, Board, and Lock workflow is exercised against three fresh real-API workflows, including clean, forwarded multi-voice, and minimal replies.",
-    "Human frame, comparison-set, selection, loss-bearer, accountability, reversibility, and held-constant judgments remain server-owned and explicitly gated.",
-    "Generated options remain provisional until explicit admission; duplicate signals, coverage gaps, frame drift, thin frames, unresolved frames, and near ties have recovery paths and hard stops.",
-    "Reconciliation and option-generation provenance is restricted to inherited trace IDs and supplied context-fact IDs; deterministic regression removes invented IDs.",
-    "Client artifacts contain no confidence score, band, configuration, or confidence language, and the candidate confidence engine remains contained.",
-    "Final client-language compilation removes classroom, student-process, product-process, model, module, app, and unaudited confidence language.",
-    "Production routing uses gpt-5.4-mini for reconciliation and option generation and gpt-5.5 for evaluation and package prose; all 12 live calls used OpenAI without fallback.",
-    "Completed workflows remain within the recorded cost evidence: median $0.237971, p95 $0.254133, and total 12-call review cost $0.695807.",
-    "Instructor prompt traces remain scoped to the selected student and closed until explicit prompt-history disclosure; the deployed surface exposed all four required run summaries without dumping raw prompts.",
-    "Additive migration rehearsal against the frozen D1 export passes, and deployed version/PDF immutability and download behavior are evidenced."
+    "Module 1 routes, states, versions, PDFs, authentication, class codes, sessions, and student budgets remain unchanged; complete Module 1/Module 2 integration and migration rehearsals pass.",
+    "Ground, Board, and Lock workflow is exercised through three real-API semantic workflows, including clean, forwarded multi-voice, and minimal lazy replies.",
+    "Human judgment boundaries are enforced for voice disposition, duplicate recovery, generated-option admission, frame confirmation/revision, comparison-set confirmation, selection, loss bearer, accountability, and reversibility.",
+    "Generated confidence output remains contained as client_no_confidence; deterministic containment suites, PDF routes, instructor views, and ZIP routes fail closed against unaudited confidence provenance.",
+    "Reconciliation provenance is restricted to inherited trace IDs and supplied context-fact IDs, with an invented-ID regression proving removal.",
+    "Client-language compilation removes prohibited process and confidence language, preserves recommendation semantics, and includes agreement and possessive regressions.",
+    "Cost evidence is below the stated release ceilings, with all calls using the required OpenAI provider and no fallback.",
+    "Migration, rendering, PDF extraction, syntax, diff, instructor scoping, prompt disclosure, and deployed student/instructor workflows have supplied passing evidence."
   ],
   "utilityFindings": [],
   "qualityFindings": [],
   "correctnessFindings": [],
   "evidence": [
-    "The Stage 8 bundle records three complete real-API workflows covering clean, forwarded two-voice, and minimal lazy replies.",
-    "The bundle records successful explicit admission, deterministic ranking, human lock judgments, package generation, instructor retrieval, and corrected version 3 PDF save.",
-    "The bundle records passing confidence-containment, Module 1/Module 2 integration, migration, PDF, rendering, syntax, and regression suites.",
-    "The frozen live ledger records 12 OpenAI calls with no fallback and complete per-call model, token, and cost data.",
-    "The deployed render evidence records visible provisional-option admission, hard-stop recovery, server-owned lock persistence, disabled package actions before required judgments, and scoped instructor prompt disclosure.",
-    "The source integrity hash is recorded as b1720223007ae9919620b8d1679146181eb4079f6b1c3589a442eed29c5981a0."
+    "The live semantic battery records 3 complete workflows, 12 OpenAI calls, no fallback, and explicit recovery and human-judgment transitions.",
+    "The deployed render evidence records successful Ground, Board, and Lock completion, explicit resolution of voice and duplicate heuristics, required Lock judgments, immutable version saving, and instructor/student recommendation agreement.",
+    "The confidence-containment evidence states that student UI, package compiler, version storage, single-PDF route, instructor views, and ZIP route fail closed against candidate confidence provenance.",
+    "The deterministic evidence reports passing migration, integration, PDF, rendering, syntax, language-boundary, provenance, and confidence-containment suites.",
+    "The frozen implementation diff adds server-owned invalidation and dedicated judgment enforcement, including rejection of forged ranking, coverage, weak-field, voice, and lock mutations through generic workspace saves.",
+    "The supplied cost ledger reports a median complete-workflow cost of $0.196428 and p95 cost of $0.248697 against the $0.75 median and $2.00 p95 ceilings."
   ],
   "requiredChanges": []
 }

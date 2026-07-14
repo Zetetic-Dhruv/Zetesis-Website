@@ -2324,6 +2324,8 @@ Check whether the working read merely restates the brief or names a tension unde
         inheritance: payload.state?.inheritance || {},
         ground: {
           problemSeed: payload.state?.ground?.problemSeed || '',
+          accountableFrame: payload.state?.ground?.frameComparison?.groundedFrame || '',
+          frameConfirmation: payload.state?.locks?.frameConfirmation || '',
         },
         bets: (payload.state?.bets || []).map((bet) => ({ id: bet.id, name: bet.name, description: bet.description })),
         context: payload._context || {},
@@ -2366,7 +2368,7 @@ Check whether the working read merely restates the brief or names a tension unde
     schema: M2_PACKAGE_SCHEMA,
     prompt: (payload) => [
       'Write the connective prose for a Bethany House recommendation brief from the locked decision object below.',
-      'Be direct, specific, and respectful. Explain why the selected bet currently leads without claiming certainty, predicting success, diagnosing Bethany House, or hiding contrary evidence. Treat tripwires as conditions for reopening the decision. Keep every candidate genuinely live in the prose. Never change the selected bet or invent a client preference. Use the supplied evidence without mentioning confidence, students, course materials, classroom work, prompts, models, modules, or the app.',
+      'Be direct, specific, and respectful. Describe the selected position exactly as supplied. If it does not lead the weighted comparison, name the leading option and explain the accountable human override from the supplied conviction note; if the leading pair is tied, state that it was a tie choice. Never call a non-leading bet the leader or strongest option. Do not claim certainty, predict success, diagnose Bethany House, or hide contrary evidence. Treat tripwires as conditions for reopening the decision. Keep every candidate genuinely live in the prose. Never change the selected bet or invent a client preference. Use the supplied evidence without mentioning confidence, students, course materials, classroom work, prompts, models, modules, or the app.',
       JSON.stringify(module2PackageInput(payload.state || {}), null, 2),
     ].join('\n\n'),
   },
@@ -2954,7 +2956,8 @@ function detectAssignmentAbuse(moduleName, payload) {
   const freeChat = /(write|draft|compose).*(essay|poem|cover letter|email|code|python|javascript|sql|dating|resume)|homework unrelated|ignore previous|jailbreak|system prompt|act as|free model|chatgpt|solve this math|investment advice|medical advice|legal advice/.test(text);
   const unrelatedOrg = /(tesla|bitcoin|stock price|nba|movie script|restaurant|travel itinerary|recipe|calculus|leetcode|weather|celebrity)/.test(text);
   const mentionsAssignment = /bethany|house|nassau|staffing|executive assistant|ceo|board|resident|women|children|jericho|school district|decision|unknown|assumption|gatekeeper|consulting|stakeholder|problem statement/.test(text);
-  if ((freeChat || unrelatedOrg) && !mentionsAssignment) return 'irrelevant_or_free_chat_use';
+  const strictModule2Boundary = String(moduleName || '').startsWith('m2_');
+  if ((freeChat || unrelatedOrg) && (strictModule2Boundary || !mentionsAssignment)) return 'irrelevant_or_free_chat_use';
   return '';
 }
 
@@ -4292,44 +4295,30 @@ async function handleSaveModule2Workspace(request, env, user, membership) {
   const module1 = await loadWorkspaceBundle(env, user.id, membership);
   if (!module1.workspace) return json({ error: 'Workspace not found.' }, 404, request);
 
-  const state = normalizeModule2State(body.state);
+  const incoming = normalizeModule2State(body.state);
   const stored = await env.STUDIO_DB.prepare(
     `SELECT state_json FROM workspace_module_states WHERE workspace_id = ? AND module_key = ?`
   ).bind(module1.workspace.id, MODULE2_KEY).first();
+  let state;
   if (stored?.state_json) {
     try {
       const storedState = parseStoredModule2State(stored.state_json);
-      state.inheritance = storedState.inheritance;
-      const storedBets = new Map(storedState.bets.map((bet) => [bet.id, bet]));
-      state.bets = state.bets.map((bet) => {
-        const existing = storedBets.get(bet.id);
-        return existing?.origin === 'generated'
-          ? { ...bet, origin: 'generated', provisional: existing.provisional }
-          : bet;
-      });
-      state.locks = storedState.locks;
-      state.package = {
-        ...state.package,
-        currentPreview: storedState.package.currentPreview,
-        savedVersionIds: storedState.package.savedVersionIds,
-        generatedAt: storedState.package.generatedAt,
-        sourceHash: storedState.package.sourceHash,
-      };
+      state = applyModule2EditableSave(storedState, incoming);
     } catch (_) {
       return json({
         error: 'Stored Module 2 state is unreadable. Contact the instructor before saving again.',
       }, 409, request);
     }
   } else {
+    state = normalizeModule2State({});
     state.inheritance = await resolveModule1Inheritance(env, module1, user.id, membership);
+    state = applyModule2EditableSave(state, incoming);
   }
   state.updatedAt = new Date().toISOString();
-  const currentStep = ['ground', 'board', 'lock', 'package'].includes(body.currentStep)
+  const currentStep = ['ground', 'board'].includes(body.currentStep)
     ? body.currentStep
     : 'ground';
-  const status = ['draft', 'locked', 'complete'].includes(body.status)
-    ? body.status
-    : 'draft';
+  const status = 'draft';
 
   await persistModule2State(env, module1.workspace.id, user.id, state, currentStep, status);
 
@@ -4346,6 +4335,90 @@ async function handleSaveModule2Workspace(request, env, user, membership) {
     status,
     versions: await listDeliverableVersions(env, user.id, MODULE2_KEY, membership.class_id),
   }, 200, request);
+}
+
+function applyModule2EditableSave(storedState, incomingState) {
+  const state = normalizeModule2State(storedState);
+  const beforeGround = `${state.ground.problemSeed}\n${state.ground.rawReply}`;
+  const afterGround = `${incomingState.ground.problemSeed}\n${incomingState.ground.rawReply}`;
+  state.ground.problemSeed = incomingState.ground.problemSeed;
+  state.ground.rawReply = incomingState.ground.rawReply;
+  state.ground.solutionPaste = incomingState.ground.solutionPaste;
+  state.ground.mergeChoice = incomingState.ground.mergeChoice;
+  state.ground.pickedIds = incomingState.ground.pickedIds;
+
+  const existing = new Map(state.bets.map((bet) => [bet.id, bet]));
+  let betContentChanged = false;
+  state.bets = incomingState.bets.map((submitted) => {
+    const prior = existing.get(submitted.id);
+    if (!prior) {
+      betContentChanged = true;
+      return freshStudentBet(submitted);
+    }
+    const changed = prior.name !== submitted.name || prior.description !== submitted.description;
+    if (changed) betContentChanged = true;
+    return changed
+      ? {
+          ...freshStudentBet(submitted),
+          id: prior.id,
+          origin: prior.origin,
+          provisional: prior.provisional,
+          liveStatus: prior.liveStatus,
+          frameBasisTraceIds: prior.frameBasisTraceIds,
+        }
+      : prior;
+  });
+  if (state.bets.length !== existing.size) betContentChanged = true;
+
+  if (beforeGround !== afterGround) invalidateModule2Analysis(state, true);
+  else if (betContentChanged) invalidateModule2Analysis(state, false);
+  return state;
+}
+
+function freshStudentBet(value) {
+  return {
+    id: cleanString(value.id, 120) || `student-${crypto.randomUUID()}`,
+    name: cleanString(value.name, 200),
+    description: cleanString(value.description, 3000),
+    origin: 'student',
+    provisional: false,
+    liveStatus: 'live',
+    evidenceFor: [], evidenceAgainst: [], failureModes: [], criteria: [],
+    frameBasisTraceIds: [], whyDistinct: '', evaluationStatus: 'not_evaluated',
+  };
+}
+
+function invalidateModule2Analysis(state, clearFrame) {
+  for (const bet of state.bets) {
+    bet.evidenceFor = [];
+    bet.evidenceAgainst = [];
+    bet.failureModes = [];
+    bet.criteria = [];
+    bet.evaluationStatus = 'not_evaluated';
+  }
+  state.weights = [];
+  state.ranking = normalizeModule2State({}).ranking;
+  state.locks.setCompletenessConfirmation = '';
+  state.locks.selectedBetId = '';
+  state.locks.convictionNote = '';
+  state.locks.lossBearer = '';
+  state.locks.accountabilityLocation = '';
+  state.locks.reversibility = '';
+  state.locks.reversibilityNote = '';
+  state.locks.heldConstant = [];
+  state.package.currentPreview = null;
+  state.package.generatedAt = '';
+  state.package.sourceHash = '';
+  if (clearFrame) {
+    state.ground.substantiveLines = [];
+    state.ground.relevance = { status: 'unresolved', reason: '', matchedTraceIds: [] };
+    state.ground.frameComparison = { status: 'unresolved', inheritedFrame: state.inheritance.frame || '', groundedFrame: '', reason: '' };
+    state.ground.completeness = { status: 'unresolved', reason: '' };
+    state.ground.fogMap = [];
+    state.ground.voiceDisagreement = { status: 'none', summary: '', evidenceLines: [], humanConfirmed: false };
+    state.ground.possibleDuplicates = [];
+    state.locks.frameConfirmation = '';
+  }
 }
 
 async function handleAdmitModule2Bet(request, env, user, membership, betId) {
@@ -4380,6 +4453,38 @@ async function handleModule2Judgments(request, env, user, membership) {
   if (!bundle.workspace) return json({ error: 'Workspace not found.' }, 404, request);
   const state = bundle.state;
 
+  if (body.revisedFrame !== undefined) {
+    const revisedFrame = cleanString(body.revisedFrame, 3000);
+    if (!revisedFrame) return json({ error: 'Write the revised decision frame before using it.' }, 400, request);
+    state.ground.frameComparison.groundedFrame = revisedFrame;
+    state.ground.frameComparison.status = 'revised';
+    state.ground.frameComparison.reason = 'Revised after checking the reply.';
+    state.locks.frameConfirmation = 'revised';
+    invalidateModule2Analysis(state, false);
+  }
+  if (body.voiceDisposition !== undefined) {
+    if (!['confirmed', 'dismissed'].includes(body.voiceDisposition) || state.ground.voiceDisagreement?.status !== 'possible') {
+      return json({ error: 'Review the attributed voices before recording this judgment.' }, 409, request);
+    }
+    state.ground.voiceDisagreement.status = body.voiceDisposition;
+    state.ground.voiceDisagreement.humanConfirmed = body.voiceDisposition === 'confirmed';
+    state.ground.fogMap = (state.ground.fogMap || []).filter((item) => item.traceId !== 'confirmed-voice-disagreement');
+    if (body.voiceDisposition === 'confirmed') state.ground.fogMap.push({ traceId: 'confirmed-voice-disagreement', question: state.ground.voiceDisagreement.summary || 'Which voice should govern this decision?', status: 'unaddressed', answerLine: '', influence: 1, critical: true, contradictionConfirmed: true });
+    invalidateModule2Analysis(state, false);
+  }
+  if (body.duplicateDecision !== undefined) {
+    const decision = body.duplicateDecision || {};
+    const pair = (state.ground.possibleDuplicates || []).find((item) => item.leftId === decision.leftId && item.rightId === decision.rightId);
+    if (!pair || decision.action !== 'keep_distinct') return json({ error: 'The duplicate review no longer matches the live field.' }, 409, request);
+    pair.status = 'dismissed';
+    state.ranking = { ...state.ranking, ...rankLiveBets(state.bets, state.weights, state.ground.possibleDuplicates, state.ranking.coverage) };
+    state.locks.setCompletenessConfirmation = '';
+    state.locks.selectedBetId = '';
+  }
+
+  const canonicalRanking = rankLiveBets(state.bets, state.weights, state.ground.possibleDuplicates, state.ranking.coverage);
+  state.ranking = { ...state.ranking, ...canonicalRanking };
+
   if (body.frameConfirmation !== undefined) {
     if (!['confirmed', 'revised'].includes(body.frameConfirmation)) return json({ error: 'Choose whether to keep or revise the frame.' }, 400, request);
     if (body.frameConfirmation === 'revised' && state.ground.frameComparison?.status !== 'revised') {
@@ -4403,12 +4508,19 @@ async function handleModule2Judgments(request, env, user, membership) {
         gap: '',
         resolution: 'The student reviewed the identified gap and accepted the current comparison set.',
       };
+      state.ranking = { ...state.ranking, ...rankLiveBets(state.bets, state.weights, state.ground.possibleDuplicates, state.ranking.coverage) };
     }
+    if (state.ranking.evaluationIncomplete || state.ranking.weakField) return json({ error: state.ranking.incompleteReason || 'Add another credible, non-dominated alternative before confirming this set.' }, 409, request);
   }
   if (body.selectedBetId !== undefined) {
+    if (state.ranking.evaluationIncomplete || state.ranking.weakField || !state.ranking.orderedBetIds?.includes(body.selectedBetId)) return json({ error: state.ranking.incompleteReason || 'Resolve the comparison field before choosing a bet.' }, 409, request);
     const selected = state.bets.find((bet) => bet.id === body.selectedBetId && bet.liveStatus === 'live' && bet.provisional !== true);
     if (!selected) return json({ error: 'Choose a live, admitted option.' }, 409, request);
+    const nonLeader = state.ranking.orderedBetIds[0] !== selected.id;
+    const convictionNote = cleanString(body.convictionNote, 3000);
+    if (nonLeader && !state.ranking.nearTie && !convictionNote) return json({ error: 'Explain why you are carrying a bet that does not lead the comparison.' }, 409, request);
     state.locks.selectedBetId = selected.id;
+    state.locks.convictionNote = nonLeader && !state.ranking.nearTie ? convictionNote : '';
   }
 
   const hasLockDetails = ['lossBearer', 'accountabilityLocation', 'reversibility', 'reversibilityNote', 'heldConstant']
@@ -4428,6 +4540,7 @@ async function handleModule2Judgments(request, env, user, membership) {
       .map((item) => String(item || '').trim().slice(0, 3000)).filter(Boolean).slice(0, 50);
   }
 
+  if (state.ground.voiceDisagreement?.status === 'possible') return json({ error: 'Confirm whether the attributed voices disagree before locking.' }, 409, request);
   const readiness = hasLockDetails ? module2PackageReadinessError(state) : '';
   if (readiness) return json({ error: readiness }, 409, request);
   state.package.currentPreview = null;
@@ -4472,19 +4585,32 @@ async function handleApplyModule2Ground(request, env, user, membership) {
     ? body.solutions
     : splitAtomic(solutionPaste).map((name) => ({ name, description: '' }));
 
-  state.ground.problemSeed = cleanString(body.problemSeed ?? state.ground.problemSeed, 4000);
-  state.ground.rawReply = cleanString(body.rawReply ?? state.ground.rawReply, 30000);
+  const previousGround = `${state.ground.problemSeed}\n${state.ground.rawReply}`;
+  const nextProblemSeed = cleanString(body.problemSeed ?? state.ground.problemSeed, 4000);
+  const nextRawReply = cleanString(body.rawReply ?? state.ground.rawReply, 30000);
+  const pickedIds = Array.isArray(body.pickedIds) ? body.pickedIds : state.ground.pickedIds;
+  if (body.mergeChoice === 'pick' && !pickedIds.length) return json({ error: 'Choose at least one option before continuing.' }, 400, request);
+  state.ground.problemSeed = nextProblemSeed;
+  state.ground.rawReply = nextRawReply;
   state.ground.solutionPaste = solutionPaste || state.ground.solutionPaste;
   state.ground.mergeChoice = ['merge', 'replace', 'pick'].includes(body.mergeChoice)
     ? body.mergeChoice
     : state.ground.mergeChoice;
-  state.bets = combineGroundSolutions({
+  state.ground.pickedIds = pickedIds;
+  const protectedGenerated = state.bets.filter((bet) => bet.origin === 'generated');
+  const nextBets = [...combineGroundSolutions({
     inheritedSolutions: state.inheritance.inheritedSolutions,
-    currentBets: state.bets,
+    currentBets: state.bets.filter((bet) => bet.origin !== 'generated'),
     incomingSolutions,
     choice: state.ground.mergeChoice,
-    pickedIds: body.pickedIds,
-  });
+    pickedIds,
+  }), ...protectedGenerated.filter((bet) => !pickedIds.length || pickedIds.includes(bet.id))];
+  const betFingerprint = (bets) => JSON.stringify(bets.map((bet) => [bet.id, bet.name, bet.description]));
+  const groundChanged = previousGround !== `${nextProblemSeed}\n${nextRawReply}`;
+  const betsChanged = betFingerprint(state.bets) !== betFingerprint(nextBets);
+  state.bets = nextBets;
+  if (groundChanged) invalidateModule2Analysis(state, true);
+  else if (betsChanged) invalidateModule2Analysis(state, false);
   state.updatedAt = new Date().toISOString();
 
   await persistModule2State(env, bundle.workspace.id, user.id, state, 'ground', 'draft');
@@ -4501,14 +4627,37 @@ async function handleRerankModule2(request, env, user, membership) {
   const body = await readJson(request);
   const bundle = await loadModule2WorkspaceBundle(env, user.id, membership);
   if (!bundle.workspace) return json({ error: 'Workspace not found.' }, 404, request);
-  const state = normalizeModule2State({
-    ...bundle.state,
-    weights: Array.isArray(body.weights) ? body.weights : bundle.state.weights,
-  });
+  const state = normalizeModule2State(bundle.state);
+  const criteria = [...new Set((state.bets.find((bet) => bet.evaluationStatus === 'complete')?.criteria || []).map((item) => item.criterion).filter(Boolean))];
+  const submitted = Array.isArray(body.weights) ? body.weights : [];
+  if (!criteria.length || submitted.length !== criteria.length) return json({ error: 'Re-evaluate the common criterion field before changing weights.' }, 409, request);
+  const priorByCriterion = new Map(state.weights.map((item) => [item.criterion, item]));
+  const submittedByCriterion = new Map(submitted.map((item) => [cleanString(item.criterion, 160), item]));
+  if (criteria.some((criterion) => !submittedByCriterion.has(criterion))) return json({ error: 'Every common criterion needs one weight.' }, 400, request);
+  const nextWeights = [];
+  for (const criterion of criteria) {
+    const value = Number(submittedByCriterion.get(criterion)?.weight);
+    if (!Number.isFinite(value) || value < 0 || value > 1) return json({ error: 'Weights must be between zero and one.' }, 400, request);
+    const prior = priorByCriterion.get(criterion);
+    nextWeights.push({ criterion, weight: value, min: prior?.min ?? 0, max: prior?.max ?? 1, basisType: prior?.basisType === 'traced' ? 'traced' : 'student_choice', basisTraceId: prior?.basisType === 'traced' ? prior.basisTraceId : '' });
+  }
+  if (nextWeights.reduce((sum, item) => sum + item.weight, 0) <= 0) return json({ error: 'At least one criterion must carry weight.' }, 400, request);
+  state.weights = nextWeights;
   state.ranking = {
     ...state.ranking,
     ...rankLiveBets(state.bets, state.weights, state.ground.possibleDuplicates, state.ranking.coverage),
   };
+  state.locks.setCompletenessConfirmation = '';
+  state.locks.selectedBetId = '';
+  state.locks.convictionNote = '';
+  state.locks.lossBearer = '';
+  state.locks.accountabilityLocation = '';
+  state.locks.reversibility = '';
+  state.locks.reversibilityNote = '';
+  state.locks.heldConstant = [];
+  state.package.currentPreview = null;
+  state.package.generatedAt = '';
+  state.package.sourceHash = '';
   state.updatedAt = new Date().toISOString();
   await persistModule2State(env, bundle.workspace.id, user.id, state, 'board', 'draft');
   await audit(env, bundle.workspace.id, user.id, 'module2_reranked', {

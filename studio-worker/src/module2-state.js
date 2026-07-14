@@ -32,6 +32,7 @@ export const DEFAULT_MODULE2_STATE = Object.freeze({
     possibleDuplicates: [],
     optionGenerationIssues: [],
     mergeChoice: 'merge',
+    pickedIds: [],
     corrections: [],
   },
   bets: [],
@@ -54,6 +55,7 @@ export const DEFAULT_MODULE2_STATE = Object.freeze({
     frameConfirmation: '',
     setCompletenessConfirmation: '',
     selectedBetId: '',
+    convictionNote: '',
     lossBearer: '',
     accountabilityLocation: '',
     reversibility: '',
@@ -88,6 +90,7 @@ export function normalizeModule2State(input) {
   state.ground.possibleDuplicates = cleanObjectArray(state.ground.possibleDuplicates, 20);
   state.ground.optionGenerationIssues = cleanObjectArray(state.ground.optionGenerationIssues, 30);
   state.ground.mergeChoice = oneOf(state.ground.mergeChoice, ['merge', 'replace', 'pick'], 'merge');
+  state.ground.pickedIds = cleanStringArray(state.ground.pickedIds, 100);
 
   state.bets = cleanObjectArray(state.bets, 50).map((bet, index) => ({
     id: cleanText(bet.id, 120) || `bet-${index + 1}`,
@@ -127,6 +130,7 @@ export function normalizeModule2State(input) {
   state.ranking.nearTie = Boolean(state.ranking.nearTie);
   state.ranking.weakField = Boolean(state.ranking.weakField);
   state.ranking.evaluationIncomplete = Boolean(state.ranking.evaluationIncomplete);
+  state.locks.convictionNote = cleanText(state.locks.convictionNote, 3000);
   state.locks.heldConstant = cleanStringArray(state.locks.heldConstant, 50);
   state.package.savedVersionIds = cleanStringArray(state.package.savedVersionIds, 100);
   state.package.currentPreview = incomingPreview && typeof incomingPreview === 'object' && !Array.isArray(incomingPreview)

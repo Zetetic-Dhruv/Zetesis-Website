@@ -57,20 +57,17 @@ All 12 calls used provider `openai`; no fallback occurred.
 
 ### Utility judgment
 
-The clean run separated relationship transfer, workflow routing, function sequencing, and stakeholder-liaison mechanisms. The forwarded run preserved continuity, cost, and accountability as separate constraints. The minimal run still produced concrete documentation, supervised-transfer, and triage mechanisms with named failure conditions. Across runs, the model surfaced implementation tripwires such as stale relationship records, exception growth, ambiguous overlap authority, hidden transition cost, and continued CEO routing. It did not choose the final recommendation.
+The clean run separated relationship transfer, workflow routing, function sequencing, and stakeholder-liaison mechanisms. The forwarded run preserved continuity, cost, and accountability as separate constraints. The minimal run still produced concrete documentation, supervised-transfer, and triage mechanisms with named failure conditions. Across runs, the model surfaced implementation tripwires such as stale relationship records, exception growth, ambiguous overlap authority, hidden transition cost, and continued CEO routing. It did not choose the final recommendation. The remediation battery additionally exercised explicit voice-disposition and duplicate-review transitions, bounded weak-field recovery, and server-owned lock invalidation after source edits.
 
 ### Cost and model evidence
 
 - Completed workflows: `3`
-- Median complete-workflow cost: `$0.237971`
-- p95 complete-workflow cost: `$0.254133`
-- Total 12-call review cost: `$0.695807`
-- Reconciliation: 3 calls, 4,548 input tokens, 2,380 output tokens, `$0.014123`
-- Option generation: 3 calls, 3,995 input tokens, 1,426 output tokens, `$0.009414`
-- Bet evaluation: 3 calls, 8,606 input tokens, 14,470 output tokens, `$0.477130`
-- Package prose: 3 calls, 18,478 input tokens, 3,425 output tokens, `$0.195140`
+- Median complete-workflow cost: `$0.196428`
+- p95 complete-workflow cost: `$0.248697`
+- Total review cost: `$0.635089`
+- Every workflow remained below the `$0.75` median and `$2.00` p95 release ceilings.
 
-The frozen raw request-result evidence and per-call ledger are in `calibration/stage8-live-model-runs.json`.
+The frozen remediation request-result evidence and per-call ledger are in `calibration/stage8-live-model-runs-remediation.json`.
 
 ## Deterministic Evidence
 
@@ -90,18 +87,16 @@ The frozen raw request-result evidence and per-call ledger are in `calibration/s
 - Isolated Cloudflare staging Worker: `zetesislabs-decision-manifold-studio-staging`.
 - Isolated staging D1: `zetesis_decision_manifold_studio_staging`.
 - Reviewed HTTPS host: `https://m2-staging.zetesislabs.com`.
-- Active immutable staging version: `7a16645f-d307-48f0-9ad5-8616cf9cd196`.
-- A fresh browser account completed Ground, Board, and Lock through visible controls against the deployed Worker and real OpenAI API.
-- The Board visibly rendered two generated options as provisional. The reviewer admitted one with `Add to live comparison`; the app then required a fresh common-field evaluation.
-- The deployed clean Board showed a consistent frame and covered set as ready, with no separate keep-frame or review-set blocker. `Take ... to Lock` persisted the frame, set, and selected bet together. D1 readback confirmed `frameConfirmation=confirmed` and `setCompletenessConfirmation=confirmed`.
-- Drift, thin-frame, unresolved-frame, and comparison-gap states retain explicit keep/revise or gap-review hard stops. Executable regression tests cover all four hard states.
-- A model-produced near tie still required the human to choose which of the two leading bets to carry before the combined Lock action.
-- On Lock, `Generate PDF` and `Save Version` were disabled until the loss bearer, accountability location, and reversibility judgment were supplied and saved.
-- The deployed flow generated and saved corrected version 3. D1 contains the immutable Module 2 version and its 61,572-character base64 PDF artifact; versions 1 and 2 remain downloadable.
-- The exact saved PDF is eight letter-sized pages. PNG inspection of all pages found no clipping, overlap, broken glyph, horizontal rule, or unreadable section transition.
-- The document contains every one of 217 substantive JSON string leaves after PDF punctuation normalization, with zero missing leaves.
-- The instructor surface displayed one student, one locked recommendation, one saved version, the selected bet, ranking, loss bearer, accountability, reversibility, and download link.
-- Instructor prompts remained absent until `Review prompt history` and a second disclosure confirmation. Six run summaries then appeared closed; no raw prompt body was dumped into the student page.
+- Active immutable staging version: `7cffccb0-593c-4195-ae88-f0d09113cd74`.
+- A fresh student account completed Ground, Board, and Lock through visible controls against the deployed Worker and real OpenAI API.
+- Ground accepted a three-speaker reply and two student bets. The Board surfaced a possible multi-voice signal and a possible duplicate signal as heuristics. The student explicitly marked the voices as one compatible position and kept both bets as distinct.
+- The common-field evaluation produced an effective near tie. The student explicitly chose the leading staged-handoff bet before entering Lock.
+- On Lock, `Generate PDF` and `Save Version` remained unavailable until the student named the loss bearer, accountability location, reversibility classification, and recovery note, then saved those judgments.
+- The deployed flow generated and saved immutable version `bf470467-7142-4745-949e-a36c5742d7da` from the remediated candidate.
+- The exact saved PDF is six letter-sized pages. PNG inspection of every page found no clipping, overlap, broken glyph, horizontal rule, orphaned rationale heading, or unreadable section transition.
+- The document contains all 144 JSON string leaves in order with 100% token-subsequence coverage, including strings split by page headers.
+- The fresh instructor account selected the same student and displayed the same locked recommendation, ranking, loss bearer, accountability, reversibility, saved version, and PDF link.
+- Instructor prompts remained absent until `Review prompt history` and a second disclosure confirmation. Four run summaries then appeared closed. Opening the package run exposed its complete system/kernel prompt and module prompt under the selected student only.
 
 ## Confidence Containment
 
@@ -109,7 +104,7 @@ The deterministic measurement and sealed metamorphic audit code pass their mecha
 
 ## Source Integrity
 
-- Integrated source, harness, test, live-evidence, and staging-config SHA-256: `b1720223007ae9919620b8d1679146181eb4079f6b1c3589a442eed29c5981a0`.
+- Integrated source, harness, test, and remediation-ledger SHA-256: `1acf55696ee009e270bab21986425f658a8a6bd1072a200a83cc5f8660ff660b`.
 
 ## Files In Scope
 
@@ -125,7 +120,7 @@ The deterministic measurement and sealed metamorphic audit code pass their mecha
 - `test/module2-baseline.mjs`
 - `test/local-offline-smoke.mjs`
 - `package.json`
-- `calibration/stage8-live-model-runs.json`
+- `calibration/stage8-live-model-runs-remediation.json`
 - `wrangler.staging.toml`
 
 ## Required Response

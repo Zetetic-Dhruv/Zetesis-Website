@@ -319,6 +319,7 @@ export function renderInstructorPage() {
           <p class="meta">Loss bearer: \${escapeHtml(state.locks?.lossBearer || 'not set')}</p>
           <p class="meta">Accountability: \${escapeHtml(state.locks?.accountabilityLocation || 'not set')}</p>
           <p class="meta">Reversibility: \${escapeHtml(state.locks?.reversibility || 'not set')}</p>
+          \${state.locks?.convictionNote ? \`<p class="meta">Reason for overriding the weighted leader: \${escapeHtml(state.locks.convictionNote)}</p>\` : ''}
         </section>
         <section class="info-card wide">
           <h2>Current ranking</h2>

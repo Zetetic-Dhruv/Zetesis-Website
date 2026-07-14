@@ -37,9 +37,11 @@ export function buildRecommendationPdfBytes(document = {}) {
     const lines = linesFor(text, size, indent, font);
     const before = options.before || 0;
     const after = options.after || 0;
-    ensure(before + lines.length * leading + after);
+    const initialLines = Math.min(2, lines.length);
+    ensure(before + initialLines * leading + (lines.length <= initialLines ? after : 0));
     y -= before;
     for (const line of lines) {
+      if (y - leading < bottom) addPage(true);
       drawText(line, left + indent, y, font, size, options.color || '0.08 0.08 0.08');
       y -= leading;
     }
@@ -51,7 +53,10 @@ export function buildRecommendationPdfBytes(document = {}) {
   };
   const addLabelValue = (label, value, options = {}) => {
     if (!meaningful(value)) return;
-    ensure(34);
+    const valueSize = options.size || 9.4;
+    const valueLeading = options.leading || 12.4;
+    const valueLines = linesFor(value, valueSize, options.indent || 0, options.font || 'F1');
+    ensure((options.before ?? 5) + 12 + Math.min(2, valueLines.length) * valueLeading + (options.after ?? 2));
     addText(label, { bold: true, size: 8.1, leading: 10.2, color: '0.31 0.31 0.31', before: options.before ?? 5, after: 1, indent: options.indent || 0 });
     addText(value, { font: options.font || 'F1', size: options.size || 9.4, leading: options.leading || 12.4, indent: options.indent || 0, after: options.after ?? 2 });
   };

@@ -11,6 +11,7 @@ export function fallbackReconcile(payload = {}) {
   const state = payload.state || {};
   const reply = String(state.ground?.rawReply || payload.rawReply || '').trim();
   const traces = state.inheritance?.highValueTraces || [];
+  const accountableFrame = String(state.ground?.frameComparison?.groundedFrame || '').trim();
   const lines = reply.split(/\n+/).map((line) => line.trim()).filter((line) => line.length > 12).slice(0, 30);
   const overlap = traces.filter((trace) => sharesTerms(reply, trace.text)).map((trace) => trace.id);
   const relevant = Boolean(reply && (overlap.length || hasDecisionContext(reply)));
@@ -30,10 +31,12 @@ export function fallbackReconcile(payload = {}) {
     },
     substantiveLines: lines,
     frameComparison: {
-      status: state.inheritance?.frame ? 'consistent' : 'thin',
+      status: state.locks?.frameConfirmation === 'revised' ? 'revised' : state.inheritance?.frame ? 'consistent' : 'thin',
       inheritedFrame: state.inheritance?.frame || '',
-      groundedFrame: state.inheritance?.frame || state.ground?.problemSeed || '',
-      reason: state.inheritance?.frame ? 'No explicit contradiction was detected in fixture mode.' : 'No inherited frame is available.',
+      groundedFrame: accountableFrame || state.inheritance?.frame || state.ground?.problemSeed || '',
+      reason: state.locks?.frameConfirmation === 'revised'
+        ? 'Reconciled against the student-revised frame in fixture mode.'
+        : state.inheritance?.frame ? 'No explicit contradiction was detected in fixture mode.' : 'No inherited frame is available.',
     },
     fogMap,
     voiceDisagreement: {
@@ -128,6 +131,9 @@ export function fallbackEvaluateBets(payload = {}) {
 
 export function applyReconciliation(state, result = {}, contextFacts = []) {
   const next = structuredClone(state);
+  const accountableFrame = next.locks?.frameConfirmation === 'revised'
+    ? String(next.ground?.frameComparison?.groundedFrame || '').trim()
+    : '';
   const traceIds = new Set(array(next.inheritance?.highValueTraces).map((trace) => trace.id));
   const permittedBasisIds = new Set([
     ...traceIds,
@@ -150,6 +156,14 @@ export function applyReconciliation(state, result = {}, contextFacts = []) {
     };
   }
   next.ground.frameComparison = object(result.frameComparison, next.ground.frameComparison);
+  if (accountableFrame) {
+    next.ground.frameComparison = {
+      ...next.ground.frameComparison,
+      status: 'revised',
+      groundedFrame: accountableFrame,
+      reason: 'Reconciled against the student-revised frame.',
+    };
+  }
   next.ground.fogMap = array(result.fogMap).filter((item) => traceIds.has(item.traceId));
   next.ground.voiceDisagreement = {
     ...next.ground.voiceDisagreement,
@@ -286,6 +300,11 @@ export function applyBetEvaluations(state, result = {}, contextFacts = []) {
       resolution: 'Review the generation issues and add or regenerate a distinct grounded alternative.',
     };
   }
+  const commonCriteria = next.bets.find((bet) => bet.evaluationStatus === 'complete')?.criteria?.map((item) => item.criterion).filter(Boolean) || [];
+  const existingWeights = new Map(array(next.weights).map((item) => [item.criterion, item]));
+  if (commonCriteria.length && (next.weights.length !== commonCriteria.length || commonCriteria.some((criterion) => !existingWeights.has(criterion)))) {
+    next.weights = commonCriteria.map((criterion) => ({ criterion, weight: 1 / commonCriteria.length, min: 0, max: 1, basisType: 'neutral', basisTraceId: '' }));
+  }
   next.ranking = {
     ...next.ranking,
     ...rankLiveBets(next.bets, next.weights, next.ground.possibleDuplicates, next.ranking.coverage),
@@ -414,7 +433,9 @@ function dominates(left, right, criteria) {
 
 function normalizedWeights(criteria, weights) {
   const supplied = new Map(array(weights).map((item) => [item.criterion, Math.max(0, Number(item.weight) || 0)]));
-  const raw = criteria.map((criterion) => supplied.get(criterion) || (criteria.length ? 1 / criteria.length : 0));
+  const raw = criteria.map((criterion) => supplied.has(criterion)
+    ? supplied.get(criterion)
+    : (criteria.length ? 1 / criteria.length : 0));
   const total = raw.reduce((sum, value) => sum + value, 0) || 1;
   return new Map(criteria.map((criterion, index) => [criterion, raw[index] / total]));
 }

@@ -1,0 +1,444 @@
+{
+  "reviewer": "gpt-5.6-sol",
+  "reasoningEffort": "max",
+  "transport": "openai-responses-api",
+  "reviewMode": "single-inquiry-one-shot",
+  "requestCount": 1,
+  "sourceCommit": "5a33dfb38276b9edbc9eaba769d8de6380c191ae",
+  "inputWitnesses": {
+    "bundleSha256": "8d0531f2c052dd772dfa8f74550f68114163631b4ee2668a49675d387d6e595b",
+    "specSha256": "89a9fcc66eb7ee5806fc9e8c952951cd97a0d81671d3f4603f772712011b5f6d",
+    "wireframeSha256": "aab33d49fcd8aaa2b759b3d3c6fd754321183ea099e2c1da2224d2e857719763",
+    "browserEvidenceSha256": "7b92b8756657b1a6c0ee8a59ba64008e33fe2047d7c475fafeafbfc9e4dc1263",
+    "pdfSha256": "eef29ecf7cae014f353abcb9b1f7438f6324f90a1308b92702ead4e8c99d86e4",
+    "renderedPageSha256": [
+      "a5d0814cdd7e57efe35055981e5715feae7943cf46bc06a5cae10d2d048b72eb",
+      "9fb530de3e369a7b386bd292aa95d340cc56c8bd68a22860923029caa230b21f",
+      "94d187d294c7be7936623416d1fd2596787564577dcb24b163d5d8b80270cc7b",
+      "0c7416b04c93534c5d13dc8fa03119caa4485d52dd842b4b67b1bc091c13ade1",
+      "11ac3cee9e92b659b86f4a19d05c066783f1bcb21da55920e3d844e078a31cab",
+      "31fc08d84a104e4a712b5fd2c8364bcc1f06d3014301ec093d2f99307e35ec4d",
+      "faf46ce9014ea1c8f0460abb8c75ebc7fb720a23e1a352256f02dda679fe85f0",
+      "e75d0d25496c9c8da1c04b98ccf0f9e3d3bdbd30b5f15ad1dff98b7d2e40a012"
+    ],
+    "sourceSha256": [
+      {
+        "path": "src/module2-engine.js",
+        "sha256": "7a515b012723209f00f53cb5c9ff51029faf2f29532d12703189be3b0b6a52f2"
+      },
+      {
+        "path": "src/module2-state.js",
+        "sha256": "1d0734d4855f8516fc4ff8e7355fc43002b2c25b27151ca5d43bfc81c2f0d44e"
+      },
+      {
+        "path": "src/module2-package.js",
+        "sha256": "98b088d63bf58b51fb8555df0b4960eeff0b3fbdfd399515beeaebf622022d12"
+      },
+      {
+        "path": "src/module2-pdf.js",
+        "sha256": "fa1509264f57768123ddbb58c1a9a34facc00a340103cf924cb8a23cb4ff745d"
+      },
+      {
+        "path": "src/module2-page.js",
+        "sha256": "b0afc6f8a633ad755c89dc9497a33a9c1879110a272233d62a6b37882cfb721a"
+      },
+      {
+        "path": "src/instructor-page.js",
+        "sha256": "2e4feb9549af93fc03d86f1ee127fd330cf270bc86f3fbe30a1acedbf6696b25"
+      },
+      {
+        "path": "src/instructor-queries.js",
+        "sha256": "1e148ba41c4b8dea4d6f377dfe64f195be9beeeda2c668a2511be5aeab13f7f0"
+      },
+      {
+        "path": "src/studio.js",
+        "sha256": "b62fc22e7730663f33954c8623c4c61f5b27aa02e7a2b2ede73d3573a7ef0b2a"
+      },
+      {
+        "path": "test/module2-baseline.mjs",
+        "sha256": "1c50501436a621f7da4ef74f1266e13afff757d8e02ee882592a7af1b27efe74"
+      },
+      {
+        "path": "test/local-offline-smoke.mjs",
+        "sha256": "6464cabac72f942ba44f36e2e7cd789471e5b5eeb78d1da1ab844eee0697c515"
+      },
+      {
+        "path": "test/module2-containment.mjs",
+        "sha256": "0515e350d2488895c8b4372f2c1e5a26db0a139683fe3196b2de6702061dfcaa"
+      },
+      {
+        "path": "test/module2-confidence.mjs",
+        "sha256": "14d976eef73d273a2799d540df0f59af85afe6ebea680c4e87e8ca3dcb37345b"
+      },
+      {
+        "path": "test/confidence-audit.mjs",
+        "sha256": "c556532cf4527578a7ea6d50a143546ff51c2f93c3758fd4c2871dda739017c6"
+      },
+      {
+        "path": "calibration/stage8-live-model-runs.json",
+        "sha256": "fa3dc22f4d63fe02e5722da7223d7ec995576b0444df4a1ca425c31efd963f68"
+      }
+    ]
+  },
+  "usage": {
+    "inputTokens": 199917,
+    "outputTokens": 26595,
+    "reasoningTokens": 22272
+  },
+  "verdict": "fail",
+  "inquiryMap": {
+    "lockedMeasurements": [
+      "Release boundary: source commit 5a33dfb38276b9edbc9eaba769d8de6380c191ae and active staging Worker 7a16645f-d307-48f0-9ad5-8616cf9cd196.",
+      "The Stage 8 semantic ledger records three complete workflows, twelve OpenAI calls, no fallback, median cost $0.237971, and p95 cost $0.254133 using the specified model routing.",
+      "The deployed student snapshot is at Lock with fresh inheritance, three live bets, $0.74 usage, a selected staged operating-partner bet, and three saved versions.",
+      "The deployed instructor snapshot shows absent Module 1 inheritance, the staged operating-partner bet locked, but the deterministic ranking places the internal escalation cadence first and the selected bet second.",
+      "Confidence is contained in the reviewed state, UI, saved artifact, and instructor paths; only ordinary deterministic comparison values are released.",
+      "Generated options remain provisional until the dedicated server admission transition, and model evaluation does not directly set selection, loss bearer, accountability, or reversibility.",
+      "Instructor queries and artifact routes are class-scoped; prompt history is closed by default and requires two disclosure actions in the supplied UI.",
+      "The exact saved PDF is eight letter-sized pages and contains all 217 substantive document strings with no missing leaves or broken glyphs."
+    ],
+    "unknowns": [
+      {
+        "id": "KK-01",
+        "quadrant": "KK",
+        "attackQuestion": "Can a student with no Module 1 inheritance reach Lock and save a recommendation?",
+        "requiredWitness": "Deployed student and instructor browser snapshots created 2026-07-14T07:28:04.809Z.",
+        "disposition": "closed"
+      },
+      {
+        "id": "KK-02",
+        "quadrant": "KK",
+        "attackQuestion": "Does the exact saved PDF preserve the structured recommendation content?",
+        "requiredWitness": "Exact saved PDF text, eight rendered pages, and deterministic PDF regression measurement.",
+        "disposition": "closed"
+      },
+      {
+        "id": "KK-03",
+        "quadrant": "KK",
+        "attackQuestion": "Does the client brief describe the selected bet consistently with the current deterministic ranking?",
+        "requiredWitness": "Deployed instructor snapshot plus exact saved PDF.",
+        "disposition": "confirmed_failure"
+      },
+      {
+        "id": "KU-01",
+        "quadrant": "KU",
+        "attackQuestion": "Does a one-bet field automatically enter the required factory-mode pick-list?",
+        "requiredWitness": "Frozen src/module2-page.js and src/module2-engine.js, including groundGo, boardBlockers, and rankLiveBets.",
+        "disposition": "confirmed_failure"
+      },
+      {
+        "id": "KU-02",
+        "quadrant": "KU",
+        "attackQuestion": "Does weakField physically block Lock as required by the wireframe?",
+        "requiredWitness": "Frozen src/module2-engine.js rankLiveBets and src/module2-page.js boardBlockers/renderBoardAction.",
+        "disposition": "confirmed_failure"
+      },
+      {
+        "id": "KU-03",
+        "quadrant": "KU",
+        "attackQuestion": "Does a slider weight of zero actually remove that criterion from the deterministic comparison?",
+        "requiredWitness": "Frozen src/module2-page.js slider range and src/module2-engine.js normalizedWeights.",
+        "disposition": "confirmed_failure"
+      },
+      {
+        "id": "UK-01",
+        "quadrant": "UK",
+        "attackQuestion": "Is the product assuming that a later option picker exists after the user chooses Pick later?",
+        "requiredWitness": "Frozen src/module2-page.js groundGo request and src/module2-state.js combineGroundSolutions.",
+        "disposition": "confirmed_failure"
+      },
+      {
+        "id": "UK-02",
+        "quadrant": "UK",
+        "attackQuestion": "Is the product assuming that an already confirmed frame remains valid after the reply is corrected?",
+        "requiredWitness": "Frozen src/module2-page.js module2FrameNeedsExplicitReview and reconcile-reply transition.",
+        "disposition": "confirmed_failure"
+      },
+      {
+        "id": "UU-01",
+        "quadrant": "UU",
+        "attackQuestion": "Can client-controlled draft state be recombined with server ranking and packaging to launder forged relevance, evidence, criteria, or coverage?",
+        "requiredWitness": "Frozen src/studio.js handleSaveModule2Workspace, handleRerankModule2, handleModule2Judgments, and module2 package readiness logic.",
+        "disposition": "confirmed_failure"
+      },
+      {
+        "id": "UU-02",
+        "quadrant": "UU",
+        "attackQuestion": "Can irrelevant or injection-shaped text obtain model access by wrapping itself in Bethany assignment language?",
+        "requiredWitness": "Frozen src/studio.js detectAssignmentAbuse/checkModelAccess and Module 2 payload construction.",
+        "disposition": "confirmed_failure"
+      },
+      {
+        "id": "UU-03",
+        "quadrant": "UU",
+        "attackQuestion": "Does confirming multiple attributed voices change the comparison before the recommendation can be locked?",
+        "requiredWitness": "Stage 8 forwarded-two-voice ledger and frozen src/module2-page.js voice-yes handler.",
+        "disposition": "confirmed_failure"
+      },
+      {
+        "id": "UU-04",
+        "quadrant": "UU",
+        "attackQuestion": "Can complete structured content still render as an unpolished client artifact through orphaned headings?",
+        "requiredWitness": "Rendered page 1 of the exact saved PDF and src/module2-pdf.js addLabelValue pagination logic.",
+        "disposition": "confirmed_failure"
+      }
+    ],
+    "probes": [
+      {
+        "id": "P-MOBILE-01",
+        "persona": "lazy_mobile_executive",
+        "hypothesis": "The candidate source lacks the required single-column mobile layout and sticky primary action.",
+        "witness": "Frozen src/module2-page.js SHA-256 b0afc6f8a633ad755c89dc9497a33a9c1879110a272233d62a6b37882cfb721a.",
+        "result": "pass",
+        "finding": "Closes this failure hypothesis at source level: the responsive breakpoint, single-column grids, and sticky action are present."
+      },
+      {
+        "id": "P-MOBILE-02",
+        "persona": "lazy_mobile_executive",
+        "hypothesis": "Correcting a forwarded-thread extraction avoids manipulating a large free-text block on a phone.",
+        "witness": "Frozen src/module2-page.js renderReplyRow and authoritative mobile extraction wireframe.",
+        "result": "fail",
+        "finding": "Confirms the failure hypothesis: the only correction control is a prefilled full-reply textarea; no tap-to-highlight interaction is implemented, leaving avoidable full-thread manipulation on mobile."
+      },
+      {
+        "id": "P-STUDENT-01",
+        "persona": "inexperienced_student",
+        "hypothesis": "Fresh entry without Module 1 inheritance is a terminal dead end.",
+        "witness": "Deployed student and instructor browser snapshots showing fresh/absent inheritance, Lock, and three saved versions.",
+        "result": "pass",
+        "finding": "Closes this broad hypothesis: a fresh student did reach Lock and save artifacts."
+      },
+      {
+        "id": "P-STUDENT-02",
+        "persona": "inexperienced_student",
+        "hypothesis": "A student entering with one bet receives the automatic provisional factory pick-list required by the specification.",
+        "witness": "Frozen src/module2-page.js groundGo and boardBlockers plus src/module2-engine.js rankLiveBets.",
+        "result": "fail",
+        "finding": "Confirms the failure hypothesis: one bet is not auto-expanded; the primary recovery offers repeated evaluation even though ranking requires two admitted bets. Suggest options remains a separate optional control."
+      },
+      {
+        "id": "P-STUDENT-03",
+        "persona": "inexperienced_student",
+        "hypothesis": "Selecting Pick later leads to an actual chooser without discarding the comparison field.",
+        "witness": "Frozen src/module2-page.js groundGo, which sends no pickedIds, and src/module2-state.js combineGroundSolutions, which filters pick mode by an empty pickedIds set.",
+        "result": "fail",
+        "finding": "Confirms the failure hypothesis: Pick later has no later picker and deterministically returns an empty set."
+      },
+      {
+        "id": "P-GAMER-01",
+        "persona": "adversarial_gamer",
+        "hypothesis": "Derived relevance, evaluation, provenance, ranking, and coverage cannot be forged through the ordinary workspace save API.",
+        "witness": "Frozen src/studio.js handleSaveModule2Workspace/handleRerankModule2 and src/module2-state.js normalizeModule2State.",
+        "result": "fail",
+        "finding": "Confirms the failure hypothesis: ordinary PUT state accepts client-authored ground and ranking fields and student-origin evaluation records. The rank and package paths can then trust those records without rerunning provenance admission."
+      },
+      {
+        "id": "P-GAMER-02",
+        "persona": "adversarial_gamer",
+        "hypothesis": "Dominated live foils trigger the required weak-field hard stop.",
+        "witness": "Frozen src/module2-engine.js rankLiveBets and src/module2-page.js boardBlockers/renderBoardAction.",
+        "result": "fail",
+        "finding": "Confirms the failure hypothesis: weakField is computed but never rendered or enforced, so a field with fewer than two non-dominated alternatives can proceed to Lock."
+      },
+      {
+        "id": "P-GAMER-03",
+        "persona": "adversarial_gamer",
+        "hypothesis": "Reweighting cannot silently preserve a criterion set to zero or bypass a newly created near tie.",
+        "witness": "Frozen src/module2-engine.js normalizedWeights and src/module2-page.js renderBoardAction/rerank transition.",
+        "result": "fail",
+        "finding": "Confirms the failure hypothesis: zero is replaced by the equal-weight default through `supplied.get(...) || default`; a near-tie warning is also suppressed when an earlier selectedBetId remains set after reranking."
+      },
+      {
+        "id": "P-GAMER-04",
+        "persona": "adversarial_gamer",
+        "hypothesis": "Irrelevant or prompt-injection use is rejected before external model access even when assignment words are included.",
+        "witness": "Frozen src/studio.js detectAssignmentAbuse and checkModelAccess.",
+        "result": "fail",
+        "finding": "Confirms the failure hypothesis: free-chat or unrelated patterns are rejected only when no assignment term appears. Adding Bethany or decision language defeats the pre-call rejection."
+      },
+      {
+        "id": "P-GAMER-05",
+        "persona": "adversarial_gamer",
+        "hypothesis": "Candidate confidence can be injected into state, UI, instructor output, or the saved PDF.",
+        "witness": "Frozen module2-containment and confidence regression suites, deployed UI snapshots, and exact saved PDF.",
+        "result": "pass",
+        "finding": "Closes the confidence-manipulation hypothesis: injected confidence fields are dropped or stripped and no confidence claim appears in the released artifact."
+      },
+      {
+        "id": "P-DISRUPT-01",
+        "persona": "disrupted_reality_user",
+        "hypothesis": "Human confirmation of attributed voice disagreement causes reevaluation before Lock.",
+        "witness": "Stage 8 forwarded-two-voice ledger SHA-256 fa3dc22f4d63fe02e5722da7223d7ec995576b0444df4a1ca425c31efd963f68 and frozen src/module2-page.js voice-yes handler.",
+        "result": "fail",
+        "finding": "Confirms the failure hypothesis: Stage 8 stops at humanConfirmed=false, while the supplied transition only appends fog and saves; it does not reevaluate, rerank, or block Lock."
+      },
+      {
+        "id": "P-DISRUPT-02",
+        "persona": "disrupted_reality_user",
+        "hypothesis": "Correcting the reply invalidates an earlier frame confirmation when the new reconciliation reports drift.",
+        "witness": "Frozen src/module2-page.js module2FrameNeedsExplicitReview and reconcile-reply flow, with src/module2-engine.js applyReconciliation.",
+        "result": "fail",
+        "finding": "Confirms the failure hypothesis: an existing confirmed/revised value suppresses explicit frame review even after upstream reply changes, and reconciliation does not clear that judgment."
+      },
+      {
+        "id": "P-INSTRUCTOR-01",
+        "persona": "instructor_observer",
+        "hypothesis": "Instructor data, prompt records, versions, PDFs, and class ZIPs are unscoped or disclosed by default.",
+        "witness": "Frozen instructor-page.js, instructor-queries.js, studio.js authorization routes, regression tests, and deployed instructor snapshot.",
+        "result": "pass",
+        "finding": "Closes the cross-student/default-disclosure hypothesis for the supplied paths: class membership checks are present, prompt history is closed, and workflow-specific versions and ZIP actions are available."
+      },
+      {
+        "id": "P-INSTRUCTOR-02",
+        "persona": "instructor_observer",
+        "hypothesis": "The selected student's recommendation is semantically consistent across ranking, Lock, instructor view, and PDF.",
+        "witness": "Deployed instructor snapshot and exact saved PDF text/pages.",
+        "result": "fail",
+        "finding": "Confirms the failure hypothesis: the ranking places the cadence first and the selected staged role second, while the PDF says the selected role currently leads and is the strongest recommendation. No conviction-evidence override is explained."
+      },
+      {
+        "id": "P-INSTRUCTOR-03",
+        "persona": "instructor_observer",
+        "hypothesis": "The exact PDF is missing structured document leaves or has broken glyphs.",
+        "witness": "Eight rendered pages, exact extracted text, and the 217-string deterministic measurement.",
+        "result": "pass",
+        "finding": "Closes this artifact-loss hypothesis: all substantive leaves are present and legible."
+      },
+      {
+        "id": "P-INSTRUCTOR-04",
+        "persona": "instructor_observer",
+        "hypothesis": "Complete PDF content is paginated with headings kept with their bodies.",
+        "witness": "Rendered page 1 of the exact saved PDF and frozen src/module2-pdf.js addLabelValue.",
+        "result": "fail",
+        "finding": "Confirms the failure hypothesis: “Why this recommendation currently leads” is orphaned at the bottom of page 1 while its body begins on page 2."
+      }
+    ],
+    "coverageArgument": [
+      "The inquiry locked release identity, deployed student behavior, deployed instructor behavior, live-model semantics, deterministic transitions, authorization, and the exact released artifact before attacking unknowns.",
+      "Utility coverage includes fresh entry, one-bet factory mode, merge/pick semantics, mobile correction, Board recovery, Lock, and PDF generation.",
+      "Correctness coverage follows upstream reply changes through reconciliation, voice handling, weights, ranking, human selection, package compilation, and rendered client prose.",
+      "Security coverage includes irrelevant use, prompt-injection admission, confidence manipulation, client-state tampering, server-side judgment gates, class scoping, prompt disclosure, and PDF authorization.",
+      "Artifact coverage checks both leaf completeness and semantic/pagination quality against the exact saved eight-page PDF rather than compiler intent.",
+      "All five required perspectives are represented inside this single inquiry. Positive closures do not offset the independently confirmed release-blocking failures."
+    ]
+  },
+  "personaOutcomes": [
+    {
+      "persona": "lazy_mobile_executive",
+      "outcome": "fail",
+      "completedAssignment": true,
+      "complaints": [
+        "Forwarded-reply correction requires manipulating the full raw reply in a textarea rather than the specified highlight or purpose-built relevant-lines interaction.",
+        "A completed brief can claim that the selected recommendation leads even when the visible deterministic ranking places it second."
+      ],
+      "evidence": [
+        "Frozen src/module2-page.js renderReplyRow and authoritative mobile wireframe.",
+        "Deployed instructor snapshot and exact saved PDF."
+      ]
+    },
+    {
+      "persona": "inexperienced_student",
+      "outcome": "fail",
+      "completedAssignment": true,
+      "complaints": [
+        "The required automatic one-bet factory mode is absent; following the primary Evaluate recovery cannot produce a valid ranking.",
+        "Pick later has no chooser and empties the comparison field."
+      ],
+      "evidence": [
+        "Deployed fresh-inheritance student completed Lock and three versions.",
+        "Frozen src/module2-page.js groundGo/boardBlockers and src/module2-state.js combineGroundSolutions."
+      ]
+    },
+    {
+      "persona": "adversarial_gamer",
+      "outcome": "fail",
+      "completedAssignment": false,
+      "complaints": [
+        "Client-controlled state can forge derived relevance, evidence, evaluation status, criteria, coverage, and ranking before explicit judgment and packaging calls.",
+        "Weak-field padding is computed but not blocked.",
+        "Zero-weight and stale near-tie behavior permit weight gaming.",
+        "Irrelevant or injection-shaped requests can obtain model access when wrapped in assignment language."
+      ],
+      "evidence": [
+        "Frozen src/studio.js workspace-save, rank, judgment, readiness, and abuse-control paths.",
+        "Frozen src/module2-engine.js rankLiveBets/normalizedWeights and src/module2-page.js renderBoardAction.",
+        "Confidence containment tests separately close confidence injection."
+      ]
+    },
+    {
+      "persona": "disrupted_reality_user",
+      "outcome": "fail",
+      "completedAssignment": false,
+      "complaints": [
+        "Confirming multiple attributed voices does not reevaluate or rerank the bets before Lock.",
+        "Correcting the reply does not invalidate a prior frame confirmation, so newly detected drift can be carried through without renewed judgment."
+      ],
+      "evidence": [
+        "Stage 8 forwarded-two-voice ledger records only an unconfirmed signal.",
+        "Frozen src/module2-page.js voice and reply-correction transitions plus applyReconciliation behavior."
+      ]
+    },
+    {
+      "persona": "instructor_observer",
+      "outcome": "fail",
+      "completedAssignment": true,
+      "complaints": [
+        "The selected student's ranking and recommendation brief contradict each other without explaining a human override.",
+        "The exact saved PDF contains an orphaned section heading on page 1."
+      ],
+      "evidence": [
+        "Deployed instructor panel shows the selected bet ranked second.",
+        "Exact saved PDF calls that bet the current leader and strongest recommendation.",
+        "Rendered PDF page 1 separates the heading from its body."
+      ]
+    }
+  ],
+  "utilityFindings": [
+    "Pick later is a broken interaction: the client sends no pickedIds and no later picker exists, so pick mode returns an empty comparison set.",
+    "The n=1 path does not invoke automatic factory mode; its primary Evaluate recovery cannot satisfy the two-admitted-bet ranking invariant.",
+    "The forwarded-reply repair uses a full raw-reply textarea and omits the specified tap-to-highlight interaction, creating avoidable mobile manipulation."
+  ],
+  "qualityFindings": [
+    "The exact PDF orphans “Why this recommendation currently leads” at the bottom of page 1.",
+    "Client-facing prose says the selected bet currently leads while the same artifact numbers it second in the deterministic candidate field.",
+    "The Lock/package experience does not explain why human conviction overrides the evidence ranking."
+  ],
+  "correctnessFindings": [
+    "The deployed ranking is cadence first and staged operating partner second, but the package describes the selected second-ranked bet as the current leader and strongest recommendation.",
+    "Voice confirmation changes fog state without triggering reevaluation or ranking refresh.",
+    "An upstream reply correction can leave frameConfirmation valid even when the new frame status is drift or thin.",
+    "A displayed weight of zero is converted back to a nonzero equal default.",
+    "weakField is calculated but is absent from Board blockers and package readiness.",
+    "A previously selected bet suppresses the near-tie choice after reranking.",
+    "Package readiness does not require the set-completeness judgment itself; forged covered status can therefore bypass that gate."
+  ],
+  "securityFindings": [
+    "The ordinary workspace PUT treats substantial derived state as client-authoritative. Forged student-origin evaluations and provenance can reach deterministic ranking and client packaging without passing applyBetEvaluations validation.",
+    "The irrelevant-use guard is bypassed whenever free-chat or injection patterns coexist with Bethany or other assignment terms, allowing irrelevant external model access.",
+    "Server readiness does not independently enforce weak-field, renewed near-tie, voice-resolution, or set-confirmation invariants, so browser controls are not a sufficient security boundary."
+  ],
+  "artifactFindings": [
+    "The PDF completeness witness passes: eight pages, 217 substantive strings, zero missing leaves, and no broken glyphs.",
+    "The released artifact is semantically inconsistent about which option leads.",
+    "The released artifact has an avoidable orphan heading on page 1."
+  ],
+  "residualRisks": [
+    "The specification's accepted clean-case soft-frame limitation remains non-actionable here; the confirmed stale-confirmation defect is separate and requires correction.",
+    "Heuristic relevance and voice detection can still misfire as explicitly named in the specification; they remain acceptable only when their human recovery transitions are correctly enforced.",
+    "Cohort homogenization remains the specification's named pedagogy risk rather than a release blocker."
+  ],
+  "requiredChanges": [
+    "Make reconciliation, evidence provenance, evaluation status, coverage, duplicate decisions, and ranking server-owned. Reject client mutation or revalidate them on every rank and package transition.",
+    "Enforce all judgment invariants server-side, including set-completeness confirmation, weak-field review, post-rerank near-tie choice, and the conviction-evidence check for a non-leading selection.",
+    "Invalidate dependent frame, set, selection, and package judgments whenever the reply, frame, bets, admitted field, or relevant weights change. Reevaluate and rerank immediately after confirmed voice disagreement.",
+    "Render and physically block weak fields; do not permit dominated live foils to create an apparently valid field.",
+    "Implement true automatic n=1 factory mode with provisional alternatives and an explicit student admission pick-list.",
+    "Replace Pick later with a functioning chooser and preserve the existing field until explicit picks are submitted.",
+    "Fix weight handling so zero remains zero, validate traced bases server-side, and surface near ties after every recomputation regardless of an older selection.",
+    "Harden irrelevant-use and prompt-injection admission independently of assignment keywords and apply untrusted-data boundaries to every student-controlled model input before any external call.",
+    "Add the R9c conviction-evidence intervention and make package prose accurately state when the student selected a non-leading bet; never label it the current leader unless the current ranking supports that claim.",
+    "Provide the specified phone-safe extraction repair, including tap-to-highlight or an explicit relevant-lines repaste flow that does not require editing the full thread.",
+    "Add keep-with-next pagination for PDF labels and regenerate the recommendation artifact so headings are not orphaned."
+  ],
+  "releaseRationale": "Fail. The positive live workflows, confidence containment, scoped instructor access, and complete PDF leaves are established, but they do not close multiple authoritative source and artifact failures. The release permits client-state laundering and judgment bypass, omits required weak-field and one-bet behavior, mishandles corrections and confirmed voices, and ships a recommendation brief that contradicts its own current ranking. Each issue is actionable without changing the assignment, so the release contract forbids a pass."
+}

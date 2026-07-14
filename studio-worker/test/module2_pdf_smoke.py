@@ -26,7 +26,8 @@ def main() -> None:
     source = json.loads(SOURCE_PATH.read_text())
     with pdfplumber.open(PDF_PATH) as pdf:
         assert len(pdf.pages) >= 2, "complete recommendation should span multiple readable pages"
-        extracted = normalized(" ".join(page.extract_text() or "" for page in pdf.pages))
+        page_texts = [normalized(page.extract_text() or "") for page in pdf.pages]
+        extracted = normalized(" ".join(page_texts))
         for expected in source["expectedStrings"]:
             assert normalized(expected) in extracted, f"PDF omitted document content: {expected}"
         for excluded in source["excludedStrings"]:
@@ -39,6 +40,12 @@ def main() -> None:
         assert "confidence score" not in extracted.lower()
         assert "KK" not in extracted and "KU" not in extracted and "UK" not in extracted and "UU" not in extracted
         assert "system prompt" not in extracted.lower()
+        rationale_label = "Why this recommendation currently leads"
+        rationale_page = next(text for text in page_texts if rationale_label in text)
+        rationale_tail = normalized(rationale_page.split(rationale_label, 1)[1])
+        assert len(rationale_tail) >= 30, "recommendation rationale label must keep visible value text on the same page"
+        for page_number, page_text in enumerate(page_texts[1:], start=2):
+            assert "ZETESIS LABS" in page_text, f"continuation page {page_number} must retain its running header"
 
     if shutil.which("pdfinfo"):
         subprocess.run(["pdfinfo", str(PDF_PATH)], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)

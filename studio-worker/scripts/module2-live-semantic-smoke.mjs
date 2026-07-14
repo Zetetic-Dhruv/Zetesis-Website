@@ -112,9 +112,35 @@ try {
     } else {
       assert(reconcile.state.ground.voiceDisagreement.status === 'none', `${scenario.id}: unattributed priorities do not create a voice-review burden`);
     }
-    const reviewedState = structuredClone(reconcile.state);
-    reviewedState.ground.possibleDuplicates = reviewedState.ground.possibleDuplicates.map((pair) => ({ ...pair, status: 'dismissed' }));
-    await put('/api/studio/modules/module-2/workspace', { state: reviewedState, currentStep: 'board', status: 'draft' }, student);
+    let reviewedState = reconcile.state;
+    if (reviewedState.ground.voiceDisagreement.status === 'possible') {
+      const voiceSummary = String(reviewedState.ground.voiceDisagreement.summary || '').toLowerCase();
+      const voiceDisposition = /no clear disagreement|aligned concern|not a confirmed disagreement/.test(voiceSummary)
+        ? 'dismissed'
+        : 'confirmed';
+      const voiceReview = await post('/api/studio/modules/module-2/judgments', {
+        voiceDisposition,
+      }, student);
+      reviewedState = voiceReview.state;
+      assert(
+        reviewedState.ground.voiceDisagreement.status === voiceDisposition,
+        `${scenario.id}: attributed voice signal requires an explicit human judgment`,
+      );
+    }
+    for (const pair of reviewedState.ground.possibleDuplicates.filter((item) => item.status !== 'dismissed')) {
+      const duplicateReview = await post('/api/studio/modules/module-2/judgments', {
+        duplicateDecision: {
+          leftId: pair.leftId,
+          rightId: pair.rightId,
+          action: 'keep_distinct',
+        },
+      }, student);
+      reviewedState = duplicateReview.state;
+    }
+    assert(
+      reviewedState.ground.possibleDuplicates.every((pair) => pair.status === 'dismissed'),
+      `${scenario.id}: duplicate signals are cleared only through explicit human review`,
+    );
 
     let suggest = await modelCall('m2_suggest_options', student);
     if (!suggest.result.options.length) {
@@ -129,11 +155,23 @@ try {
     const admittedSuggestion = await post(`/api/studio/modules/module-2/bets/${encodeURIComponent(generated[0].id)}/admit`, {}, student);
     assert(admittedSuggestion.state.bets.find((bet) => bet.id === generated[0].id)?.provisional === false, `${scenario.id}: explicit admission transition promotes the chosen generated option`);
 
-    const evaluate = await modelCall('m2_evaluate_bets', student);
-    const admitted = evaluate.state.bets.filter((bet) => bet.liveStatus === 'live' && bet.provisional !== true);
-    assert(admitted.length === 3, `${scenario.id}: student-admitted comparison field contains three mechanisms`);
+    let evaluate = await modelCall('m2_evaluate_bets', student);
+    let admitted = evaluate.state.bets.filter((bet) => bet.liveStatus === 'live' && bet.provisional !== true);
+    for (let recoveryAttempt = 0; evaluate.state.ranking.weakField && recoveryAttempt < 2; recoveryAttempt += 1) {
+      let recoveryOption = evaluate.state.bets.find((bet) => bet.liveStatus === 'live' && bet.provisional === true);
+      if (!recoveryOption) {
+        const recoverySuggestions = await modelCall('m2_suggest_options', student);
+        recoveryOption = recoverySuggestions.state.bets.find((bet) => bet.liveStatus === 'live' && bet.provisional === true);
+      }
+      assert(Boolean(recoveryOption), `${scenario.id}: weak-field recovery offers another provisional mechanism`);
+      await post(`/api/studio/modules/module-2/bets/${encodeURIComponent(recoveryOption.id)}/admit`, {}, student);
+      evaluate = await modelCall('m2_evaluate_bets', student);
+      admitted = evaluate.state.bets.filter((bet) => bet.liveStatus === 'live' && bet.provisional !== true);
+    }
+    assert(admitted.length >= 3, `${scenario.id}: student-admitted comparison field contains at least three mechanisms`);
     assert(admitted.every((bet) => bet.evaluationStatus === 'complete'), `${scenario.id}: every admitted alternative has a complete common-field evaluation`);
     assert(evaluate.state.ranking.orderedBetIds.length >= 1, `${scenario.id}: deterministic ranking identifies at least one leading option`);
+    assert(evaluate.state.ranking.weakField === false, `${scenario.id}: weak-field recovery leaves at least two non-dominated mechanisms`);
     const accountedBetIds = new Set([
       ...evaluate.state.ranking.orderedBetIds,
       ...(evaluate.state.ranking.dominanceRelations || []).map((relation) => relation.dominatedBetId),
@@ -179,14 +217,14 @@ try {
     const selected = judged.state.bets.find((bet) => bet.id === judged.state.locks.selectedBetId);
     assert(document.title === 'Bethany House Recommendation Brief', `${scenario.id}: package uses the client deliverable title`);
     assert(document.recommendation.name === selected.name, `${scenario.id}: package preserves the human-selected recommendation`);
-    assert(document.candidates.length === 3, `${scenario.id}: package retains the complete admitted comparison field`);
+    assert(document.candidates.length === admitted.length, `${scenario.id}: package retains the complete admitted comparison field`);
     assert(respectfulDocument(document), `${scenario.id}: package passes Bethany-respect language checks`);
     assert(!/\b(?:confidence|confident|assurance|certainty|probability|likelihood|robustness\s+band)\b/i.test(JSON.stringify(document)), `${scenario.id}: package makes no unaudited confidence-family claim`);
 
     const prompts = await get(`/api/instructor/students/${registration.user.id}/prompts?workflow=module_2`, admin);
     const promptModules = new Set(prompts.prompts.map((run) => run.module));
     assert(['m2_reconcile', 'm2_suggest_options', 'm2_evaluate_bets', 'm2_package'].every((module) => promptModules.has(module)), `${scenario.id}: instructor trace contains every required model step`);
-    assert(prompts.prompts.length >= 4 && prompts.prompts.length <= 5, `${scenario.id}: live workflow uses at most one bounded option-generation retry`);
+    assert(prompts.prompts.length >= 4 && prompts.prompts.length <= 8, `${scenario.id}: live workflow keeps factory and weak-field recovery bounded`);
     assert(prompts.prompts.every((run) => run.provider === 'openai'), `${scenario.id}: no call silently falls back from OpenAI`);
     const workflowCostMicros = prompts.prompts.reduce((sum, run) => sum + Number(run.estimated_cost_micros || 0), 0);
     audit.runs.push({

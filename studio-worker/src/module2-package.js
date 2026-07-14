@@ -2,10 +2,15 @@ export function module2PackageReadinessError(state = {}) {
   const live = admittedLiveBets(state);
   const selected = live.find((bet) => bet.id === state.locks?.selectedBetId);
   if (state.ground?.relevance?.status !== 'relevant') return 'Reconcile a relevant Bethany House reply before packaging.';
+  if (state.ground?.voiceDisagreement?.status === 'possible') return 'Confirm whether the attributed voices disagree before packaging.';
   if (!['confirmed', 'revised'].includes(state.locks?.frameConfirmation)) return 'Confirm or revise the decision frame before packaging.';
+  if (!['confirmed', 'confirmed_after_review'].includes(state.locks?.setCompletenessConfirmation)) return 'Confirm the complete comparison set before packaging.';
   if (state.ranking?.coverage?.status !== 'covered' || state.ranking?.evaluationIncomplete) return 'Complete the common comparison field before packaging.';
+  if (state.ranking?.weakField) return 'Add another credible, non-dominated alternative before packaging.';
   if (live.length < 2) return 'Keep at least two credible live alternatives in the comparison field.';
   if (!selected) return 'Choose the bet the team is prepared to carry.';
+  const leaderId = state.ranking?.orderedBetIds?.[0] || '';
+  if (leaderId && selected.id !== leaderId && !state.ranking?.nearTie && !meaningful(state.locks?.convictionNote)) return 'Explain why the team is carrying a bet that does not lead the current comparison.';
   if (!meaningful(state.locks?.lossBearer)) return 'Name who absorbs the loss if the recommendation fails.';
   if (!meaningful(state.locks?.accountabilityLocation)) return 'Name where accountability sits.';
   if (!['reversible', 'costly_to_reverse', 'one_way'].includes(state.locks?.reversibility)) return 'Judge how reversible the recommendation is.';
@@ -18,9 +23,12 @@ export function module2PackageInput(state = {}) {
   const ordered = (state.ranking?.orderedBetIds || []).map((id) => byId.get(id)).filter(Boolean);
   for (const bet of live) if (!ordered.some((item) => item.id === bet.id)) ordered.push(bet);
   const selected = byId.get(state.locks?.selectedBetId) || null;
+  const selectedPosition = selected ? ordered.findIndex((bet) => bet.id === selected.id) + 1 : 0;
   return {
     decisionFrame: clean(state.ground?.frameComparison?.groundedFrame || state.inheritance?.frame || state.ground?.problemSeed, 3000),
     selectedBet: selected ? compactBet(selected) : null,
+    selectedPosition,
+    selectionBasis: selectedPosition === 1 ? 'comparison_leader' : state.ranking?.nearTie ? 'tie_choice' : 'accountable_human_override',
     candidates: ordered.map((bet, index) => ({
       ...compactBet(bet),
       position: index + 1,
@@ -32,6 +40,7 @@ export function module2PackageInput(state = {}) {
       reversibility: clean(state.locks?.reversibility, 80),
       reversibilityNote: clean(state.locks?.reversibilityNote, 3000),
       heldConstants: cleanArray(state.locks?.heldConstant, 50, 3000),
+      convictionNote: clean(state.locks?.convictionNote, 3000),
     },
   };
 }
@@ -41,12 +50,23 @@ export function fallbackModule2Package(state = {}) {
   const selected = input.selectedBet || {};
   const selectedIndex = input.candidates.findIndex((item) => item.id === selected.id);
   const comparisonLine = input.candidates[selectedIndex]?.comparisonLine || '';
-  const leadingReason = comparisonLine || `${selected.name || 'The selected option'} remains the team's preferred path under the current evidence.`;
+  const override = input.selectionBasis === 'accountable_human_override';
+  const tieChoice = input.selectionBasis === 'tie_choice';
+  const leadingName = input.candidates[0]?.name || 'another live option';
+  const leadingReason = tieChoice
+    ? `The comparison produced an effective tie between the leading options. The advisory team selected ${selected.name || 'this option'} as the position it is prepared to carry.`
+    : override
+    ? `The comparison placed ${leadingName} first. The advisory team carries ${selected.name || 'the selected option'} instead because ${input.humanJudgments.convictionNote}`
+    : comparisonLine || `${selected.name || 'The selected option'} remains the team's preferred path under the current evidence.`;
   return {
     executiveFraming: `Bethany House is choosing how to add operating capacity without losing the relationships and accountability the work depends on.`,
     recommendationSummary: selected.description || `${selected.name || 'The selected option'} is the current recommendation.`,
     recommendationRationale: leadingReason,
-    currentPositionStatement: `${selected.name || 'The selected option'} is the team's current recommendation after comparison with ${Math.max(0, input.candidates.length - 1)} live alternative${input.candidates.length === 2 ? '' : 's'}.`,
+    currentPositionStatement: tieChoice
+      ? `${selected.name || 'The selected option'} is the advisory team's choice from an effectively tied leading pair.`
+      : override
+      ? `${leadingName} leads the weighted comparison. The advisory team has deliberately selected ${selected.name || 'the selected option'} for the reason stated above.`
+      : `${selected.name || 'The selected option'} leads the current comparison and is the team's recommendation after review of ${Math.max(0, input.candidates.length - 1)} live alternative${input.candidates.length === 2 ? '' : 's'}.`,
     candidateCommentary: input.candidates.map((candidate) => ({
       betId: candidate.id,
       rationale: candidate.description || `${candidate.name} remains a live response to the decision frame.`,
@@ -61,10 +81,13 @@ export function compileModule2Document(state = {}, modelResult = {}) {
   if (readiness) throw new Error(readiness);
   const input = module2PackageInput(state);
   const selected = input.selectedBet;
+  const override = input.selectionBasis !== 'comparison_leader';
   const fallback = fallbackModule2Package(state);
-  const commentary = new Map((Array.isArray(modelResult.candidateCommentary) ? modelResult.candidateCommentary : [])
+  const commentary = new Map((override ? [] : Array.isArray(modelResult.candidateCommentary) ? modelResult.candidateCommentary : [])
     .map((item) => [clean(item?.betId, 120), item || {}]));
-  const modelText = (key, max = 5000) => clientFacingProse(modelResult[key], max) || clientFacingProse(fallback[key], max);
+  const modelText = (key, max = 5000) => override
+    ? clientFacingProse(fallback[key], max)
+    : clientFacingProse(modelResult[key], max) || clientFacingProse(fallback[key], max);
   const candidates = input.candidates.map((candidate) => {
     const prose = commentary.get(candidate.id) || {};
     const fallbackProse = fallback.candidateCommentary.find((item) => item.betId === candidate.id) || {};
@@ -110,10 +133,10 @@ export function compileModule2Document(state = {}, modelResult = {}) {
     recommendation: {
       name: selected.name,
       description: selected.description,
-      summary: modelText('recommendationSummary'),
-      rationale: modelText('recommendationRationale'),
+      summary: override ? clientFacingProse(selected.description, 5000) : modelText('recommendationSummary'),
+      rationale: override ? clientFacingProse(fallback.recommendationRationale, 5000) : modelText('recommendationRationale'),
     },
-    currentPositionStatement: modelText('currentPositionStatement'),
+    currentPositionStatement: override ? clientFacingProse(fallback.currentPositionStatement, 5000) : modelText('currentPositionStatement'),
     candidates: publicCandidates,
     heldConstants: input.humanJudgments.heldConstants,
     lossBearer: input.humanJudgments.lossBearer,

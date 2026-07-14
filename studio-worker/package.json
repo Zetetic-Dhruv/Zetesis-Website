@@ -13,6 +13,7 @@
     "test:confidence-audit": "node test/confidence-audit.mjs",
     "test:offline": "node test/local-offline-smoke.mjs",
     "test:live-module2": "node scripts/module2-live-semantic-smoke.mjs",
+    "review:sol-inquiry": "node scripts/run-sol-inquiry-review.mjs calibration/final-sol-review-bundle.md calibration/final-sol-inquiry-review.json ../platform/Module2_Design_Spec_v0.95.pdf ../platform/Module2_Wireframe_v0.95.pdf calibration/final-sol-browser-evidence.json tmp/pdfs/stage8-final/bethany-house-recommendation-brief.pdf src/module2-engine.js src/module2-state.js src/module2-package.js src/module2-pdf.js src/module2-page.js src/instructor-page.js src/instructor-queries.js src/studio.js test/module2-baseline.mjs test/local-offline-smoke.mjs test/module2-containment.mjs test/module2-confidence.mjs test/confidence-audit.mjs test/module2-pdf.mjs test/module2_pdf_smoke.py scripts/module2-live-semantic-smoke.mjs calibration/stage8-luna-review.json calibration/stage8-live-model-runs-remediation.json",
     "test:pdf": "python3 test/pdf_smoke.py && node test/module2-pdf.mjs && python3 test/module2_pdf_smoke.py"
   },
   "devDependencies": {

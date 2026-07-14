@@ -66,6 +66,10 @@ assert(JSON.stringify(module2LockTransitionJudgments({ frameStatus: 'consistent'
   setCompletenessConfirmation: 'confirmed',
 }), 'the clean Take-to-Lock action carries frame, set, and selection judgments together');
 assert(renderModule2Page().includes('This consistent frame will be accepted when you take a bet to Lock.') && renderModule2Page().includes('I reviewed the gap; carry this set'), 'Board renders a soft clean path and physical hard-stop recovery');
+const frameRevisionHandler = renderedModule2Script.match(/if\(action==='save-frame-revision'\)[\s\S]*?return\}/)?.[0] || '';
+assert(frameRevisionHandler.includes("saveJudgments({revisedFrame:") && frameRevisionHandler.includes("reconcileBoard('Revised frame, reply, and comparison updated.')"), 'frame revision persists the human frame and re-runs reconciliation before comparison');
+const reconcileBoardHelper = renderedModule2Script.match(/async function reconcileBoard\(message\)\{[\s\S]*?\}/)?.[0] || '';
+assert(reconcileBoardHelper.indexOf("runModule('m2_reconcile')") < reconcileBoardHelper.indexOf("runModule('m2_evaluate_bets')"), 'frame and reply edits re-run reconciliation before bet evaluation');
 assert(clientFacingProse('The course materials describe the role and warn against a handoff.') === 'the available evidence describes the role and warns against a handoff.', 'client provenance substitution preserves subject-verb agreement');
 assert(clientFacingProse('Almost everything the student team know routes through one person.') === 'Almost everything the advisory team knows routes through one person.', 'team-language substitution preserves subject-verb agreement');
 assert(clientFacingProse('Because much the advisory team knowledge routes through the CEO, other views may be missed.') === "Because much of the advisory team's knowledge routes through the CEO, other views may be missed.", 'client prose repairs malformed team-knowledge possessives');
@@ -163,6 +167,20 @@ const provenanceReconciliation = applyReconciliation(engineState, {
 assert(provenanceReconciliation.ground.relevance.matchedTraceIds.includes('trace-1'), 'reconciliation retains a valid inherited trace ID');
 assert(provenanceReconciliation.ground.relevance.matchedTraceIds.includes('course_relationship_continuity'), 'reconciliation retains a valid supplied context fact ID');
 assert(!provenanceReconciliation.ground.relevance.matchedTraceIds.includes('invented_trace'), 'reconciliation removes an unknown provenance ID');
+const revisedFrameState = normalizeModule2State({
+  ...engineState,
+  ground: {
+    ...engineState.ground,
+    frameComparison: { status: 'revised', inheritedFrame: '', groundedFrame: 'Student-accountable revised frame.', reason: 'Revised.' },
+  },
+  locks: { ...engineState.locks, frameConfirmation: 'revised' },
+});
+const reconciledRevisedFrame = applyReconciliation(revisedFrameState, {
+  ...fallbackReconcile({ state: revisedFrameState }),
+  frameComparison: { status: 'consistent', inheritedFrame: '', groundedFrame: 'Model replacement frame.', reason: 'Model view.' },
+});
+assert(reconciledRevisedFrame.ground.frameComparison.groundedFrame === 'Student-accountable revised frame.', 'fresh reconciliation preserves the accountable human frame');
+assert(reconciledRevisedFrame.ground.frameComparison.status === 'revised', 'fresh reconciliation keeps the revised-frame judgment explicit');
 const quoteWrappedReconciliation = applyReconciliation(engineState, {
   ...fallbackReconcile({ state: engineState }),
   substantiveLines: ['"Bethany confirmed that partner handoffs and implementation capacity both matter."'],
@@ -232,6 +250,19 @@ assert(
 assert(!('confidence' in evaluated.ranking), 'evidence engine cannot emit confidence');
 assert(evaluated.ranking.comparisonScores.basis === 'weighted_criterion_comparison', 'ordinary ranking values have an explicit non-confidence basis');
 assert(evaluated.locks.selectedBetId === '', 'evidence engine cannot choose the final bet');
+const zeroWeightedCriterion = evaluated.weights[0]?.criterion;
+if (zeroWeightedCriterion && evaluated.weights.length > 1) {
+  const zeroPreservingWeights = evaluated.weights.map((weight, index) => ({
+    ...weight,
+    weight: index === 0 ? 0 : 1,
+  }));
+  const zeroWeightedRanking = rankLiveBets(evaluated.bets, zeroPreservingWeights);
+  assert(zeroWeightedRanking.orderedBetIds.length >= 2, 'a deliberate zero weight still yields a deterministic comparison');
+  assert(
+    JSON.stringify(zeroWeightedRanking) === JSON.stringify(rankLiveBets(evaluated.bets, zeroPreservingWeights)),
+    'zero-weight comparisons are reproducible and are not replaced by equal defaults'
+  );
+}
 const quoteWrappedEvidence = applyBetEvaluations(reconciled, {
   ...fallbackEvaluateBets({ state: reconciled }),
   evaluations: fallbackEvaluateBets({ state: reconciled }).evaluations.map((evaluation) => ({
@@ -271,6 +302,28 @@ assert(recommendationDocument.candidates.length === packageState.ranking.ordered
 assert(recommendationDocument.candidates.every((candidate) => candidate.evidenceAgainst.length && candidate.tripwires.length), 'package retains contrary evidence and tripwires for every candidate');
 assert(!JSON.stringify(recommendationDocument).includes('confidenceScore'), 'package compiler ignores unaudited confidence injection');
 assert(module2DocumentText(recommendationDocument).includes('Who absorbs the loss') === false, 'plain text uses client-facing decision commitment labels');
+const overrideState = structuredClone(packageState);
+overrideState.ranking.nearTie = false;
+overrideState.locks.selectedBetId = overrideState.ranking.orderedBetIds[1];
+overrideState.locks.convictionNote = 'The loss-bearing consequence is better contained by the second-ranked option.';
+const overrideDocument = compileModule2Document(overrideState, {
+  executiveFraming: 'The selected option is unquestionably strongest.',
+  recommendationSummary: 'The selected option leads.',
+  recommendationRationale: 'The selected option leads.',
+  currentPositionStatement: 'The selected option leads.',
+  candidateCommentary: [],
+});
+const overrideLeader = overrideState.bets.find((bet) => bet.id === overrideState.ranking.orderedBetIds[0]).name;
+const overrideSelection = overrideState.bets.find((bet) => bet.id === overrideState.locks.selectedBetId).name;
+assert(overrideDocument.currentPositionStatement.includes(overrideLeader), 'non-leading selection names the weighted leader');
+assert(overrideDocument.currentPositionStatement.includes(overrideSelection), 'non-leading selection names the accountable human choice');
+assert(!overrideDocument.recommendation.rationale.includes('unquestionably strongest'), 'model prose cannot relabel a non-leading selection as strongest');
+const missingOverrideReason = structuredClone(overrideState);
+missingOverrideReason.locks.convictionNote = '';
+assert(Boolean(module2PackageReadinessError(missingOverrideReason)), 'non-leading selection requires an accountable override reason');
+const weakPackageState = structuredClone(packageState);
+weakPackageState.ranking.weakField = true;
+assert(Boolean(module2PackageReadinessError(weakPackageState)), 'weak comparison field cannot be packaged');
 const clientLanguageDocument = compileModule2Document(packageState, {
   executiveFraming: 'The course materials support the student team finding.',
   recommendationSummary: 'The student\'s current judgment follows Module 1 trace evidence. This is not a certainty.',
