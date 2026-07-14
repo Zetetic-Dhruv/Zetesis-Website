@@ -4921,7 +4921,7 @@ function renderPlatformPage() {
     <nav><strong>Zetesis Labs</strong><a href="https://zetesislabs.com/">Main site</a></nav>
     <h1>Zetesis Platform</h1>
     <p>For the moment when a team has notes, pressure, and a deadline, but not yet a question it can defend.</p>
-    <a class="card" href="/decision-engineering/">
+    <a class="card" href="/decision-engineering/module-2">
       <span class="idx">[ I ]</span>
       <span>
         <span class="title">Decision Engineering Studio</span>
