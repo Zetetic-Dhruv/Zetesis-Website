@@ -4921,11 +4921,19 @@ function renderPlatformPage() {
     <nav><strong>Zetesis Labs</strong><a href="https://zetesislabs.com/">Main site</a></nav>
     <h1>Zetesis Platform</h1>
     <p>For the moment when a team has notes, pressure, and a deadline, but not yet a question it can defend.</p>
-    <a class="card" href="/decision-engineering/module-2">
+    <a class="card" href="/decision-engineering/">
       <span class="idx">[ I ]</span>
       <span>
         <span class="title">Decision Engineering Studio</span>
         <p>Sort the brief, name who knows what, test the assumptions carrying the answer, and leave with a report the team can stand behind.</p>
+      </span>
+      <span aria-hidden="true">→</span>
+    </a>
+    <a class="card" href="/decision-engineering/module-2">
+      <span class="idx">[ II ]</span>
+      <span>
+        <span class="title">Bet Selection Studio</span>
+        <p>Compare live options, test what could defeat them, make the accountable choice, and produce a Bethany House Recommendation Brief.</p>
       </span>
       <span aria-hidden="true">→</span>
     </a>
