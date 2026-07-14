@@ -8,7 +8,7 @@ const PORT = Number(process.env.STUDIO_TEST_PORT || 8788);
 const BASE_URL = `http://localhost:${PORT}`;
 const DEV_SECRET = 'dev-secret';
 const RUN_ID = Date.now();
-const EMAIL = `studio-test-${RUN_ID}@example.com`;
+const EMAIL = `studio-test-${RUN_ID}@columbia.edu`;
 const ADMIN_EMAIL = `studio-admin-${RUN_ID}@example.com`;
 const PASSWORD = `student-password-${RUN_ID}`;
 const ADMIN_PASSWORD = `admin-password-${RUN_ID}`;
@@ -58,10 +58,14 @@ async function startWorker() {
       'wrangler',
       'dev',
       '--local',
+      '--route',
+      'localhost/*',
       '--port',
       String(PORT),
       '--var',
       `DEV_AUTH_SECRET:${DEV_SECRET}`,
+      '--var',
+      'LOCAL_DEV_MODE:true',
       '--var',
       'AGENT_API_MODE:fixture',
       '--var',
@@ -100,6 +104,7 @@ async function startWorker() {
 }
 
 async function runSuite() {
+  await assertInstructorHostBoundary();
   const html = await fetchText('/studio');
   assert(html.includes('Decision Manifold Studio'), 'serves studio HTML');
   assert(html.includes('Consequence Check'), 'serves consequence-check step');
@@ -122,6 +127,8 @@ async function runSuite() {
   assert(unauthenticatedMe.status === 401, 'asks for login when no session is present');
   assert(/Log in or register/.test(unauthenticatedMe.data.error || ''), 'uses account-auth missing-session copy');
   assert(!/Cloudflare|Access/i.test(unauthenticatedMe.data.error || ''), 'does not leak auth infrastructure language');
+  const unauthenticatedPrompts = await getJson('/api/instructor/students/not-a-student/prompts?workflow=module_2', {}, false);
+  assert(unauthenticatedPrompts.status === 401, 'prompt history requires an authenticated session');
 
   const rejected = await postJson('/api/studio/auth/register', {
     name: 'Bad Code',
@@ -156,6 +163,8 @@ async function runSuite() {
     password: PASSWORD,
   }, { 'Content-Type': 'application/json' }, true, 'student');
   assert(login.user.email === EMAIL, 'login restores student session');
+  const studentPromptAttempt = await getJson(`/api/instructor/students/${reg.user.id}/prompts?workflow=module_2`, authHeaders, false);
+  assert(studentPromptAttempt.status === 403, 'student sessions cannot access instructor prompt history');
 
   const adminReg = await postJson('/api/instructor/auth/register', {
     name: 'Studio Admin',
@@ -168,6 +177,8 @@ async function runSuite() {
   assert((classes.classes || []).some((item) => item.id === 'class_bethany_house_2026'), 'instructor can list class dashboard');
   const foreignClass = await getJson('/api/instructor/classes/not-the-admin-class/students', adminHeaders, false);
   assert(foreignClass.status === 404, 'instructor cannot enumerate a class outside their membership');
+  const foreignConvergence = await getJson('/api/instructor/classes/not-the-admin-class/module-2/convergence', adminHeaders, false);
+  assert(foreignConvergence.status === 404, 'instructor cannot aggregate a class outside their membership');
   const nonStudentDetail = await getJson(`/api/instructor/students/${adminReg.user.id}`, adminHeaders, false);
   assert(nonStudentDetail.status === 404, 'instructor student detail requires a student in the authorized class');
   const nonStudentModule2 = await getJson(`/api/instructor/students/${adminReg.user.id}/module-2`, adminHeaders, false);
@@ -360,6 +371,18 @@ async function runSuite() {
   assert(module2Versions.versions.length === 1, 'student can list saved Module 2 versions');
   const module2PdfResponse = await fetch(`${BASE_URL}${module2Version.version.pdf_url}`, { headers: authHeaders });
   assert(module2PdfResponse.ok && module2PdfResponse.headers.get('content-type')?.includes('application/pdf'), 'student can download the saved recommendation PDF');
+  const classStudentsAfterModule2 = await getJson('/api/instructor/classes/class_bethany_house_2026/students', adminHeaders);
+  const studentSummary = classStudentsAfterModule2.students.find((student) => student.id === reg.user.id);
+  assert(studentSummary.module2_current_step === 'lock', 'instructor student card shows independent Module 2 progress');
+  assert(Number(studentSummary.module2_version_count) === 1, 'instructor student card shows independent Module 2 version count');
+  const cohortSummary = await getJson('/api/instructor/classes/class_bethany_house_2026/module-2/convergence', adminHeaders);
+  assert(cohortSummary.totalStudents >= 1 && cohortSummary.lockedStudents >= 1, 'instructor cohort summary counts selected Module 2 students');
+  assert(cohortSummary.selectedBets.some((bet) => bet.name === module2Package.result.document.recommendation.name && bet.count >= 1), 'instructor cohort summary aggregates locked recommendation names');
+  const module2Zip = await fetch(`${BASE_URL}/api/instructor/classes/class_bethany_house_2026/pdf-zip?workflow=module_2`, { headers: adminHeaders });
+  assert(module2Zip.ok && module2Zip.headers.get('content-type')?.includes('application/zip'), 'instructor can mass-download Module 2 PDFs');
+  const module2ZipBytes = new Uint8Array(await module2Zip.arrayBuffer());
+  assert(module2ZipBytes.byteLength > 1000, 'Module 2 mass download contains saved PDF bytes');
+  assert(!new TextDecoder().decode(module2ZipBytes).includes('@example.com/'), 'Module 2 mass download excludes reserved QA accounts');
   const editedAfterVersion = structuredClone(module2Version.state);
   editedAfterVersion.locks.heldConstant.push('A later edit must make the current preview stale.');
   await putJson('/api/studio/modules/module-2/workspace', { state: editedAfterVersion, currentStep: 'lock', status: 'locked' }, authHeaders);
@@ -507,6 +530,12 @@ async function runSuite() {
   await postJson(`/api/instructor/students/${reg.user.id}/reset-usage`, {}, adminHeaders);
 
   console.log('All local offline Studio tests passed.');
+}
+
+async function assertInstructorHostBoundary() {
+  const localPage = await fetch(`${BASE_URL}/instructor`);
+  assert(localPage.status === 200, 'localhost serves the instructor workroom');
+  assert((await localPage.text()).includes('Instructor Workroom'), 'localhost response is the instructor workroom');
 }
 
 async function llm(module, payload) {

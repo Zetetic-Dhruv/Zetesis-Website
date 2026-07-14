@@ -4,6 +4,7 @@ import { renderInstructorPage } from './instructor-page.js';
 import {
   INSTRUCTOR_PROMPTS_SQL,
   LIST_CLASS_STUDENTS_SQL,
+  LIST_INSTRUCTOR_CLASSES_SQL,
   isActiveAdminMembership,
 } from './instructor-queries.js';
 import {
@@ -177,6 +178,7 @@ export default {
     const url = new URL(request.url);
     const pathname = normalizePath(url.pathname);
     const host = url.hostname.toLowerCase();
+    const localRuntime = env.LOCAL_DEV_MODE === 'true';
 
     if (request.method === 'OPTIONS') {
       return new Response(null, { status: 204, headers: corsHeaders(request) });
@@ -193,7 +195,7 @@ export default {
       return html(renderPlatformPage());
     }
 
-    if (isPlatformHost(host) && pathname === '/instructor') {
+    if (canServeInstructorSurface(host, localRuntime) && pathname === '/instructor') {
       return html(renderInstructorPage());
     }
 
@@ -205,7 +207,7 @@ export default {
       return html(renderStudioPage());
     }
 
-    if (pathname.startsWith('/api/instructor')) {
+    if (canServeInstructorSurface(host, localRuntime) && pathname.startsWith('/api/instructor')) {
       return handleInstructorApi(request, env, pathname);
     }
 
@@ -402,6 +404,12 @@ async function handleInstructorApi(request, env, pathname) {
     if (request.method === 'GET' && zipMatch) {
       if (zipMatch[1] !== admin.membership.class_id) return json({ error: 'Class not found.' }, 404, request);
       return await handleClassPdfZip(request, env, zipMatch[1], workflowFromRequest(request));
+    }
+
+    const convergenceMatch = pathname.match(/^\/api\/instructor\/classes\/([^/]+)\/module-2\/convergence$/);
+    if (request.method === 'GET' && convergenceMatch) {
+      if (convergenceMatch[1] !== admin.membership.class_id) return json({ error: 'Class not found.' }, 404, request);
+      return json(await getModule2CohortSummary(env, convergenceMatch[1]), 200, request);
     }
 
     const studentMatch = pathname.match(/^\/api\/instructor\/students\/([^/]+)$/);
@@ -3787,17 +3795,8 @@ function base64ToBytes(value) {
 }
 
 async function listInstructorClasses(env, classId) {
-  const result = await env.STUDIO_DB.prepare(
-    `SELECT c.id, c.slug, c.name, c.status, c.created_at,
-      COUNT(CASE WHEN cm.role = 'student' THEN 1 END) AS student_count,
-      COUNT(rv.id) AS report_count
-     FROM classes c
-     LEFT JOIN class_memberships cm ON cm.class_id = c.id
-     LEFT JOIN report_versions rv ON rv.class_id = c.id AND rv.user_id = cm.user_id
-     WHERE c.id = ?
-     GROUP BY c.id
-     ORDER BY c.created_at DESC`
-  ).bind(classId).all();
+  const result = await env.STUDIO_DB.prepare(LIST_INSTRUCTOR_CLASSES_SQL)
+    .bind(MODULE2_KEY, classId).all();
   return result.results || [];
 }
 
@@ -3805,6 +3804,50 @@ async function listClassStudents(env, classId) {
   const result = await env.STUDIO_DB.prepare(LIST_CLASS_STUDENTS_SQL)
     .bind(ENGAGEMENT_ID, classId).all();
   return result.results || [];
+}
+
+async function getModule2CohortSummary(env, classId) {
+  const members = await env.STUDIO_DB.prepare(
+    `SELECT cm.user_id, wms.state_json, wms.current_step, wms.status,
+      COUNT(DISTINCT dv.id) AS version_count
+     FROM class_memberships cm
+     JOIN users u ON u.id = cm.user_id
+     LEFT JOIN class_workspaces cw ON cw.class_id = cm.class_id AND cw.user_id = cm.user_id
+     LEFT JOIN workspace_module_states wms ON wms.workspace_id = cw.workspace_id AND wms.module_key = ?
+     LEFT JOIN deliverable_versions dv ON dv.class_id = cm.class_id AND dv.user_id = cm.user_id AND dv.module_key = ?
+     WHERE cm.class_id = ? AND cm.role = 'student'
+       AND lower(u.email) NOT LIKE '%@example.com'
+     GROUP BY cm.user_id, wms.workspace_id`
+  ).bind(MODULE2_KEY, MODULE2_KEY, classId).all();
+  const choices = new Map();
+  let started = 0;
+  let locked = 0;
+  let saved = 0;
+  for (const row of members.results || []) {
+    if (row.state_json) started += 1;
+    if (Number(row.version_count || 0) > 0) saved += 1;
+    if (!row.state_json) continue;
+    try {
+      const state = parseStoredModule2State(row.state_json);
+      const selected = state.bets.find((bet) => bet.id === state.locks.selectedBetId && bet.liveStatus === 'live');
+      if (!selected?.name) continue;
+      locked += 1;
+      const key = selected.name.trim().toLocaleLowerCase();
+      const current = choices.get(key) || { name: selected.name.trim(), count: 0 };
+      current.count += 1;
+      choices.set(key, current);
+    } catch (_) {
+      // An unreadable draft is excluded from the aggregate and remains visible in the student record.
+    }
+  }
+  return {
+    workflowKey: MODULE2_KEY,
+    totalStudents: (members.results || []).length,
+    startedStudents: started,
+    lockedStudents: locked,
+    studentsWithSavedVersions: saved,
+    selectedBets: [...choices.values()].sort((a, b) => b.count - a.count || a.name.localeCompare(b.name)),
+  };
 }
 
 async function getInstructorStudent(env, userId, classId) {
@@ -3894,6 +3937,7 @@ async function handleClassPdfZip(request, env, classId, workflowKey = 'module_1'
        FROM deliverable_versions dv
        JOIN users u ON u.id = dv.user_id
        WHERE dv.class_id = ? AND dv.module_key = ?
+         AND lower(u.email) NOT LIKE '%@example.com'
        ORDER BY u.email, dv.version_number`
     ).bind(classId, MODULE2_KEY).all();
     const files = [];
@@ -3915,6 +3959,7 @@ async function handleClassPdfZip(request, env, classId, workflowKey = 'module_1'
      FROM report_versions rv
      JOIN users u ON u.id = rv.user_id
      WHERE rv.class_id = ?
+       AND lower(u.email) NOT LIKE '%@example.com'
      ORDER BY u.email, rv.version_number`
   ).bind(classId).all();
   const files = [];
@@ -4530,6 +4575,15 @@ function isPlatformHost(host) {
 
 function isInstructorHost(host) {
   return host === 'instructor.platform.zetesislabs.com';
+}
+
+export function canServeInstructorSurface(host, localRuntime = false) {
+  const normalizedHost = String(host || '').toLowerCase();
+  return isInstructorHost(normalizedHost) || (localRuntime === true && isLocalHost(normalizedHost));
+}
+
+function isLocalHost(host) {
+  return host === 'localhost' || host === '127.0.0.1' || host === '[::1]';
 }
 
 function renderPlatformPage() {

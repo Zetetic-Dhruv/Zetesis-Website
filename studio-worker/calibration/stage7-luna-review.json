@@ -1,0 +1,93 @@
+{
+  "reviewer": "gpt-5.6-luna",
+  "reasoningEffort": "low",
+  "transport": "openai-responses-api",
+  "stage": 7,
+  "usage": {
+    "inputTokens": 21518,
+    "outputTokens": 753
+  },
+  "reviewHistory": [
+    {
+      "attempt": 1,
+      "reviewer": "gpt-5.6-luna",
+      "verdict": "fail",
+      "utilityFindings": [],
+      "qualityFindings": [],
+      "correctnessFindings": [
+        "The instructor page is now served for `/instructor` on every host, not only the authorized instructor host. The diff changes `if (isPlatformHost(host) && pathname === '/instructor')` to `if (pathname === '/instructor')`. This conflicts with the release boundary, which specifies the instructor route as local `/instructor` and production `https://instructor.platform.zetesislabs.com`, while the public platform page must not expose instructor access. Even if subsequent APIs require authentication, the instructor workroom shell is exposed on the public platform host and any other host handled by this worker."
+      ],
+      "requiredChanges": [
+        "Restore explicit host validation for the instructor page: allow `/instructor` only on the local development host and `instructor.platform.zetesislabs.com` in production, or otherwise return the normal public-platform response/404 on the public platform host and unknown hosts.",
+        "Add a regression test that requests `/instructor` on the public platform host and an unrecognized host and verifies that the instructor workroom is not served, while the authorized instructor host remains available."
+      ]
+    },
+    {
+      "attempt": 2,
+      "reviewer": "gpt-5.6-luna",
+      "verdict": "fail",
+      "utilityFindings": [],
+      "qualityFindings": [
+        "The instructor page renders the complete prompt stack, including system/kernel and module prompts, directly in a wide table. Although prompt history is closed initially, opening it exposes sensitive prompt material without any additional disclosure, redaction, or role distinction. The contract requires prompt visibility for the instructor, but the supplied evidence does not establish that this exposure is appropriate for all existing admin accounts or that prompt dumping is bounded beyond class ownership."
+      ],
+      "correctnessFindings": [
+        "The host boundary is not strictly enforced by the production runtime when `LOCAL_DEV_MODE=true`: `canServeInstructorSurface()` returns true for any host whenever the local flag is enabled, while `requestHostname()` trusts the request `Host` header. The deterministic tests only verify the helper with `localRuntime=false` for production hosts and `true` for an arbitrary local-style host; they do not verify that a public production host is rejected when the flag is accidentally present or that a spoofed Host header cannot expose `/instructor` and `/api/instructor`. This leaves the stated requirement—production instructor surfaces only on `instructor.platform.zetesislabs.com`, with public and unknown hosts failing closed—unproven and potentially bypassable."
+      ],
+      "requiredChanges": [
+        "Make the production host check authoritative and independent of an accidentally enabled local-development flag: permit the local override only for an explicitly recognized local runtime/hostname, and reject public or unknown production hosts even when `LOCAL_DEV_MODE=true`. Add an integration test exercising `/instructor` and `/api/instructor` with public, unknown, spoofed-Host, and production-host requests.",
+        "Document and enforce the intended prompt-disclosure boundary for existing admin accounts. At minimum, add an explicit authorization test for prompt-stack access and a UI disclosure/confirmation or equivalent control that makes the sensitive system/kernel prompt exposure intentional rather than an immediate bulk dump when prompt history is opened."
+      ]
+    },
+    {
+      "attempt": 3,
+      "reviewer": "gpt-5.6-luna",
+      "verdict": "fail",
+      "utilityFindings": [
+        "The cohort summary omits the total-students metric required by the contract, making the displayed cohort denominator unavailable alongside the other Module 2 counts."
+      ],
+      "qualityFindings": [],
+      "correctnessFindings": [
+        "`listInstructorClasses()` counts `report_versions` and `deliverable_versions` through every class membership without restricting `cm.role = 'student'`. As written, instructor or other non-student member artifacts can inflate the sidebar's displayed `question brief` and `recommendation brief` counts, contrary to the student-scoped class counts and reserved-record exclusion boundary."
+      ],
+      "requiredChanges": [
+        "Render `cohortSummary.totalStudents` in the Module 2 cohort sidebar, with an explicit `total students` label.",
+        "Make `listInstructorClasses()` count only real student memberships for both question-brief and recommendation-brief totals, either by restricting the membership join to `cm.role = 'student'` or adding equivalent conditional predicates; add a regression test containing a non-student member with saved artifacts and verify those artifacts do not affect the displayed counts."
+      ]
+    },
+    {
+      "attempt": 4,
+      "reviewer": "gpt-5.6-luna",
+      "verdict": "pass",
+      "utilityFindings": [],
+      "qualityFindings": [],
+      "correctnessFindings": [],
+      "requiredChanges": []
+    }
+  ],
+  "verdict": "pass",
+  "specCoverage": [
+    "Instructor surface is host-gated to the production instructor host and explicit localhost development mode; public and unknown hosts are rejected.",
+    "Student data, module views, versions, prompts, cohort aggregation, and usage-reset access are class- and ownership-scoped.",
+    "Reserved example.com QA records are excluded from roster, counts, cohort aggregation, and both ZIP exports.",
+    "Module 1 and Module 2 progress, versions, drafts, inherited traces, locks, rankings, recommendation summaries, and saved content are separated and disclosed appropriately.",
+    "Prompt history requires explicit confirmation, is workflow-filtered, includes system/module prompts and run metadata, and renders each run independently collapsed.",
+    "Cohort counts include an explicit denominator and selected-bet frequencies.",
+    "Question-brief and recommendation-brief ZIP downloads are separate, and Module 2 PDF generation preserves saved artifacts despite draft staleness and model-access changes.",
+    "Desktop and mobile overflow checks passed, including individually opened prompt runs.",
+    "Syntax, module, offline, PDF, diff, authorization, aggregation, prompt, ZIP, host-policy, and artifact-download checks passed."
+  ],
+  "utilityFindings": [],
+  "qualityFindings": [],
+  "correctnessFindings": [],
+  "evidence": [
+    "Browser exercise observed only real-domain students after reserved-record filtering; 78 example.com smoke accounts were excluded.",
+    "Browser exercise observed independent Module 1/Module 2 progress, inheritance, ranking, locks, current brief, saved versions, and current draft.",
+    "Browser exercise observed exactly the selected student's workflow-filtered Module 2 prompt modules, with system/kernel and module prompts present.",
+    "Prompt history was absent from the DOM while closed; confirmation preceded loading, and 10 loaded runs were individually collapsed with zero open by default.",
+    "Desktop 1440x900 and mobile 390x844 measurements showed no document overflow; an opened mobile prompt run fit in a 285px single-column grid.",
+    "Deterministic evidence reports 404 for cross-class student, detail, prompt, version, convergence, and usage-reset requests.",
+    "Deterministic evidence reports successful reserved-QA exclusion, separate ZIP behavior, saved-PDF availability after staleness/model-access changes, production host enforcement, local opt-in enforcement, prompt authorization, denominator display, and admin-artifact exclusion.",
+    "All listed syntax, test, PDF, offline, and diff checks passed."
+  ],
+  "requiredChanges": []
+}

@@ -11,6 +11,7 @@ import {
 import {
   INSTRUCTOR_PROMPTS_SQL,
   LIST_CLASS_STUDENTS_SQL,
+  LIST_INSTRUCTOR_CLASSES_SQL,
   isActiveAdminMembership,
 } from '../src/instructor-queries.js';
 import {
@@ -23,6 +24,8 @@ import {
   rankLiveBets,
 } from '../src/module2-engine.js';
 import { renderModule2Page } from '../src/module2-page.js';
+import { renderInstructorPage } from '../src/instructor-page.js';
+import { canServeInstructorSurface } from '../src/studio.js';
 import {
   compileModule2Document,
   fallbackModule2Package,
@@ -41,6 +44,24 @@ const productionExport = process.env.MODULE2_PRODUCTION_EXPORT || '';
 const renderedModule2Script = renderModule2Page().match(/<script>([\s\S]*)<\/script>/)?.[1] || '';
 assert(renderedModule2Script.length > 0, 'Module 2 page renders an executable client script');
 assertDoesNotThrow(() => new Function(renderedModule2Script), 'rendered Module 2 client script parses');
+const renderedInstructorScript = renderInstructorPage().match(/<script>([\s\S]*)<\/script>/)?.[1] || '';
+assert(renderedInstructorScript.length > 0, 'instructor page renders an executable client script');
+assertDoesNotThrow(() => new Function(renderedInstructorScript), 'rendered instructor client script parses');
+assert(renderInstructorPage().includes('Module 2 cohort'), 'instructor page exposes the Module 2 cohort summary');
+assert(renderInstructorPage().includes('total students'), 'instructor cohort summary displays its student denominator');
+assert(renderInstructorPage().includes('Prompt history stays closed until opened.'), 'instructor prompt history is closed by default');
+assert(renderInstructorPage().includes('Continue to prompt records'), 'instructor prompt history requires an explicit disclosure confirmation');
+assert(renderInstructorPage().includes('class="prompt-run"'), 'instructor opens prompt records one run at a time');
+assert(renderInstructorPage().includes('Module 1 · Questions') && renderInstructorPage().includes('Module 2 · Recommendation'), 'instructor page separates Module 1 and Module 2 per student');
+assert(renderInstructorPage().includes('Question briefs ZIP') && renderInstructorPage().includes('Recommendation briefs ZIP'), 'instructor page exposes workflow-specific mass downloads');
+assert(canServeInstructorSurface('instructor.platform.zetesislabs.com', false), 'production instructor host may serve the instructor workroom');
+assert(!canServeInstructorSurface('platform.zetesislabs.com', false), 'public platform host cannot serve the instructor workroom');
+assert(!canServeInstructorSurface('unrecognized.zetesislabs.com', false), 'unknown production host cannot serve the instructor workroom');
+assert(canServeInstructorSurface('localhost', true), 'local Worker runtime may serve the instructor workroom');
+assert(!canServeInstructorSurface('platform.zetesislabs.com', true), 'local override cannot authorize the public platform host');
+assert(!canServeInstructorSurface('unrecognized.zetesislabs.com', true), 'local override cannot authorize an unknown host');
+assert(renderInstructorPage().includes('Open raw draft'), 'instructor raw state is available without being dumped by default');
+assert(LIST_CLASS_STUDENTS_SQL.includes("lower(u.email) NOT LIKE '%@example.com'"), 'reserved QA accounts are excluded from the instructor roster');
 
 assert(contract.cases.length === 3, 'inheritance contract freezes full, partial, and absent cases');
 for (const testCase of contract.cases) {
@@ -275,6 +296,7 @@ for (const field of ['status', 'class_status', 'class_code_status']) {
   }), `inactive admin ${field} is rejected`);
 }
 testClassScopedActivityQuery();
+testInstructorClassCounts();
 
 for (const route of [
   '/api/studio/me',
@@ -317,6 +339,41 @@ function rehearseMigration(sqlExport, migrationFiles) {
   }
 }
 
+function testInstructorClassCounts() {
+  const dir = mkdtempSync(join(tmpdir(), 'module2-class-counts-'));
+  const db = join(dir, 'counts.db');
+  try {
+    const schema = `
+      CREATE TABLE classes (id TEXT PRIMARY KEY, slug TEXT, name TEXT, status TEXT, created_at TEXT);
+      CREATE TABLE users (id TEXT PRIMARY KEY, email TEXT, name TEXT);
+      CREATE TABLE class_memberships (id TEXT PRIMARY KEY, class_id TEXT, user_id TEXT, role TEXT);
+      CREATE TABLE report_versions (id TEXT, user_id TEXT, class_id TEXT);
+      CREATE TABLE deliverable_versions (id TEXT, user_id TEXT, class_id TEXT, module_key TEXT);
+      INSERT INTO classes VALUES ('class-a', 'a', 'Class A', 'active', '2026-01-01');
+      INSERT INTO users VALUES
+        ('student-1', 'student@columbia.edu', 'Student'),
+        ('admin-1', 'admin@zetesislabs.com', 'Admin');
+      INSERT INTO class_memberships VALUES
+        ('membership-student', 'class-a', 'student-1', 'student'),
+        ('membership-admin', 'class-a', 'admin-1', 'admin');
+      INSERT INTO report_versions VALUES
+        ('student-report', 'student-1', 'class-a'),
+        ('admin-report', 'admin-1', 'class-a');
+      INSERT INTO deliverable_versions VALUES
+        ('student-recommendation', 'student-1', 'class-a', 'module_2'),
+        ('admin-recommendation', 'admin-1', 'class-a', 'module_2');
+    `;
+    execFileSync('sqlite3', [db], { input: schema });
+    const rows = JSON.parse(execFileSync('sqlite3', ['-json', db, bindSql(LIST_INSTRUCTOR_CLASSES_SQL, ['module_2', 'class-a'])], { encoding: 'utf8' }) || '[]');
+    assert(rows.length === 1, 'instructor class count query returns the selected class');
+    assert(Number(rows[0].student_count) === 1, 'instructor class count includes only student memberships');
+    assert(Number(rows[0].report_count) === 1, 'admin question artifacts cannot inflate class report counts');
+    assert(Number(rows[0].module2_version_count) === 1, 'admin recommendation artifacts cannot inflate class version counts');
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+}
+
 function testClassScopedActivityQuery() {
   const dir = mkdtempSync(join(tmpdir(), 'module2-class-scope-'));
   const db = join(dir, 'scope.db');
@@ -331,13 +388,15 @@ function testClassScopedActivityQuery() {
       CREATE TABLE class_workspaces (class_id TEXT, user_id TEXT, workspace_id TEXT);
       CREATE TABLE workspaces (id TEXT, team_id TEXT, engagement_id TEXT, current_step TEXT, updated_at TEXT);
       CREATE TABLE report_versions (id TEXT, user_id TEXT, class_id TEXT, created_at TEXT);
+      CREATE TABLE workspace_module_states (workspace_id TEXT, module_key TEXT, current_step TEXT, status TEXT, updated_at TEXT);
+      CREATE TABLE deliverable_versions (id TEXT, user_id TEXT, class_id TEXT, module_key TEXT, created_at TEXT);
       CREATE TABLE llm_runs (
         id TEXT, workspace_id TEXT, module TEXT, workflow_key TEXT, system_prompt TEXT,
         module_prompt TEXT, request_json TEXT, response_json TEXT, provider TEXT, model TEXT,
         input_tokens INTEGER, output_tokens INTEGER, estimated_cost_micros INTEGER,
         guardrail_status TEXT, created_at TEXT, user_id TEXT, class_membership_id TEXT
       );
-      INSERT INTO users VALUES ('user-1', 'student@example.com', 'Student');
+      INSERT INTO users VALUES ('user-1', 'student@columbia.edu', 'Student');
       INSERT INTO class_memberships VALUES
         ('membership-a', 'class-a', 'user-1', 'student', 'active', 'active', 0, 10000000, '2026-01-01'),
         ('membership-b', 'class-b', 'user-1', 'student', 'active', 'active', 0, 10000000, '2026-01-01');
@@ -361,6 +420,8 @@ function testClassScopedActivityQuery() {
     const rows = JSON.parse(execFileSync('sqlite3', ['-json', db, sql], { encoding: 'utf8' }) || '[]');
     assert(rows.length === 1, 'class student query returns the selected membership once');
     assert(rows[0].workspace_id === 'workspace-a', 'class student query resolves the selected class workspace');
+    assert('module2_current_step' in rows[0], 'class student query exposes independent Module 2 progress');
+    assert('module2_version_count' in rows[0], 'class student query exposes independent Module 2 versions');
     assert(rows[0].latest_llm_at === '2026-01-02', 'class student activity excludes another class and ambiguous legacy runs');
     const promptSql = bindSql(INSTRUCTOR_PROMPTS_SQL, [
       'user-1', 'module_1', 'user-1', 'class-a', 'user-1', 'class-a',
