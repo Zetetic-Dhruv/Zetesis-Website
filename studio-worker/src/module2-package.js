@@ -1,7 +1,6 @@
 export function module2PackageReadinessError(state = {}) {
   const live = admittedLiveBets(state);
   const selected = live.find((bet) => bet.id === state.locks?.selectedBetId);
-  if (state.ground?.relevance?.status !== 'relevant') return 'Reconcile a relevant Bethany House reply before packaging.';
   if (state.ground?.voiceDisagreement?.status === 'possible') return 'Confirm whether the attributed voices disagree before packaging.';
   if (!['confirmed', 'revised'].includes(state.locks?.frameConfirmation)) return 'Confirm or revise the decision frame before packaging.';
   if (!['confirmed', 'confirmed_after_review'].includes(state.locks?.setCompletenessConfirmation)) return 'Confirm the complete comparison set before packaging.';
@@ -311,24 +310,24 @@ function substantiveJudgment(value, minWords, minChars) {
 
 function hasLossBearer(value) {
   const text = clean(value, 800);
-  if (!substantiveJudgment(text, 1, 4)) return false;
+  if (!substantiveJudgment(text, 1, 3)) return false;
   const namedPerson = /\b[A-Z][a-z]+\s+[A-Z][a-z]+\b/.test(text);
-  const roleOrGroup = /\b(?:staff|team|lead|leader|leadership|director|executive|board|partner|resident|client|women|children|famil(?:y|ies)|community|funder|employee|manager|supervisor|coordinator|officer|owner|sponsor|program|operations|volunteer|vendor|stakeholder)s?\b/i.test(text);
+  const roleOrGroup = /\b(?:ceo|staff|team|lead|leader|leadership|director|executive|board|partner|resident|client|women|children|famil(?:y|ies)|community|funder|employee|manager|supervisor|coordinator|officer|owner|sponsor|program|operations|volunteer|vendor|stakeholder)s?\b/i.test(text);
   return namedPerson || roleOrGroup;
 }
 
 function hasAccountabilityStatement(value) {
   const text = clean(value, 3000);
-  if (!substantiveJudgment(text, 5, 28) || !hasLossBearer(text)) return false;
+  if (!substantiveJudgment(text, 3, 12) || !hasLossBearer(text)) return false;
   const accountableAction = /\b(?:own|owns|responsib\w*|respond\w*|repair\w*|approve\w*|decid\w*|escalat\w*|monitor\w*|report\w*|pause\w*|revers\w*|correct\w*|resolv\w*|carry|carries|absorb\w*)\b/i.test(text);
-  const consequence = /\b(?:failure|loss|harm|cost|service|relationship|handoff|decision|risk|consequence|recovery|response|delivery|implementation|disruption|complaint|escalation)\w*\b/i.test(text);
+  const consequence = /\b(?:failure|loss|harm|cost|service|relationship|handoff|decision|risk|consequence|recovery|repair|response|delivery|implementation|disruption|complaint|escalation)\w*\b/i.test(text);
   return accountableAction && consequence;
 }
 
 function hasReversibilityReason(value, reversibility) {
   const text = clean(value, 3000);
-  if (!substantiveJudgment(text, 5, 28)) return false;
-  const causal = /\b(?:because|if|would|will|require\w*|need\w*|after|once|without|means|makes)\b/i.test(text);
+  if (!substantiveJudgment(text, 3, 12)) return false;
+  const causal = /\b(?:because|if|can|could|would|will|allow\w*|require\w*|need\w*|after|once|without|means|makes)\b/i.test(text);
   const cues = {
     reversible: /\b(?:revis\w*|chang\w*|adjust\w*|pause\w*|revers\w*|undo\w*|restore\w*|return\w*|cancel\w*|stop\w*|rollback|boundary|boundaries)\b/i,
     costly_to_reverse: /\b(?:cost\w*|repair\w*|recover\w*|rebuild\w*|restore\w*|trust|disrupt\w*|time|resource\w*|relationship\w*|service\w*|handoff\w*|reputation\w*)\b/i,
@@ -339,7 +338,7 @@ function hasReversibilityReason(value, reversibility) {
 
 function hasConvictionReason(value) {
   const text = clean(value, 3000);
-  if (!substantiveJudgment(text, 6, 30)) return false;
+  if (!substantiveJudgment(text, 4, 18)) return false;
   const comparison = /\b(?:option|bet|leader|comparison|alternative|choice|rank\w*|instead|than|outweigh\w*)\b/i.test(text);
   const reason = /\b(?:evidence|reply|record|fact|constraint|risk|failure|loss|consequence|cost|harm|impact|because|despite|although|protect\w*|preserv\w*|avoid\w*|contain\w*)\b/i.test(text);
   return comparison && reason;

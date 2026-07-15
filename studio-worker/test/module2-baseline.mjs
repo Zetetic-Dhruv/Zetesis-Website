@@ -32,7 +32,7 @@ import {
   renderModule2Page,
 } from '../src/module2-page.js';
 import { renderInstructorPage } from '../src/instructor-page.js';
-import { canServeInstructorSurface, canSuggestModule2Options } from '../src/studio.js';
+import { canServeInstructorSurface } from '../src/studio.js';
 import {
   clientFacingProse,
   compileModule2Document,
@@ -66,11 +66,11 @@ assert(renderedModule2Script.includes('function excludeOption(id)') && renderedM
 assert(!renderedModule2Script.includes("radio('ground.mergeChoice','replace','Replace'"), 'Ground omits the redundant Replace control');
 assert(renderedModule2Script.includes("if(state.ground.mergeChoice==='replace')state.ground.mergeChoice='merge'"), 'legacy Replace drafts fall back to Keep all');
 assert(renderedModule2Script.includes("button.classList.add('assist')"), 'model-assisted option creation is visually highlighted');
-assert(renderedModule2Script.includes("if(state.ground.rawReply?.trim()&&state.ground.relevance?.status!=='relevant')await runModule('m2_reconcile')"), 'Suggest options reconciles a supplied reply before calling the option model');
+assert(!renderedModule2Script.includes("await runModule('m2_reconcile');await runModule('m2_suggest_options')"), 'Suggest options is not hidden behind reconciliation');
 assert(renderedModule2Script.includes("statusText='Developing distinct options...'"), 'Suggest options exposes an active model-call state');
-assert(canSuggestModule2Options({ inheritance: { sourceType: 'saved_version', frame: 'Add operating capacity without losing relationship continuity.' } }), 'a grounded inherited frame can support provisional option imagination without a reply');
-assert(canSuggestModule2Options({ inheritance: { sourceType: 'absent', frame: '' }, ground: { problemSeed: 'What operating model should Bethany House use for the transition?' } }), 'an explicit Bethany decision frame can support provisional option imagination');
-assert(!canSuggestModule2Options({ inheritance: { sourceType: 'absent', frame: '' }, ground: { problemSeed: 'Plan a Lisbon holiday.' } }), 'an unrelated frame cannot unlock option imagination');
+assert(!source.includes('detectAssignmentAbuse') && !source.includes('ABUSE_MESSAGE'), 'custom lexical abuse blocking is absent from model access');
+assert(!source.includes("moduleName === 'm2_reconcile' && !hasDecisionContext"), 'reconciliation is not blocked by a lexical relevance preflight');
+assert(!source.includes("moduleName === 'm2_evaluate_bets'\n      && module2Bundle?.state?.ground?.relevance?.status !== 'relevant'"), 'evaluation is not blocked by relevance classification');
 
 const dashedPaste = parseGroundSolutionPaste('Select ambassador - this will need screening and anti-trust verification\nHire - but one hire will likely take too long');
 assert(dashedPaste.length === 2, 'an inline dash does not create extra options');
@@ -104,13 +104,13 @@ assert(clientFacingProse('Almost everything the student team know routes through
 assert(clientFacingProse('Because much the advisory team knowledge routes through the CEO, other views may be missed.') === "Because much of the advisory team's knowledge routes through the CEO, other views may be missed.", 'client prose repairs malformed team-knowledge possessives');
 assert(clientFacingProse('The available evidence frame the decision. Supported by supplied the current record. The course warning remains open.') === 'The available evidence frames the decision. Supported by the current record. The evidence limitation remains open.', 'client prose repairs capitalization, grammar, and course-language failures');
 assert(clientFacingProse('This could fail if Bethany lacks time for phase design and exception handling.') === 'This could fail if the required time for phase design and exception handling may not yet be available within Bethany House.', 'client prose removes diagnostic organization-lacks language');
-assert(hasDecisionContext('Bethany House needs a partner handoff with clear accountability.'), 'Bethany decision language passes the deterministic relevance preflight');
-assert(!hasDecisionContext('Acme Foundation needs staff capacity. Partner handoffs and board accountability are the priorities.'), 'generic decision vocabulary cannot cloak another organization before model access');
+assert(hasDecisionContext('Bethany House needs a partner handoff with clear accountability.'), 'Bethany decision language produces a positive relevance signal');
+assert(!hasDecisionContext('Acme Foundation needs staff capacity. Partner handoffs and board accountability are the priorities.'), 'generic decision vocabulary does not produce a false Bethany relevance signal');
 assert(hasDecisionContext('Protect continuity with long-standing partners; a phased transfer should not feel like abandonment.', {
   inheritance: { frame: '', highValueTraces: [{ text: 'A phased handoff must protect continuity with long-standing partners and avoid abandonment.' }] },
   ground: { problemSeed: '', frameComparison: { groundedFrame: '' } },
-}), 'a client reply can qualify through a distinctive locked assignment trace without repeating the organization name');
-assert(!hasDecisionContext('Write a cheerful travel itinerary for Lisbon and recommend restaurants.'), 'arbitrary off-assignment language fails the deterministic relevance preflight');
+}), 'a client reply can match a distinctive locked assignment trace without repeating the organization name');
+assert(!hasDecisionContext('Write a cheerful travel itinerary for Lisbon and recommend restaurants.'), 'arbitrary off-assignment language remains typed as unrelated');
 assert(Boolean(module2LockDetailsError({ lossBearer: 'test', accountabilityLocation: 'none', reversibility: 'reversible', reversibilityNote: '' })), 'placeholder lock judgments cannot satisfy the human gate');
 assert(Boolean(module2LockDetailsError({ lossBearer: 'Banana', accountabilityLocation: 'alpha beta gamma delta epsilon', reversibility: 'costly_to_reverse', reversibilityNote: 'alpha beta gamma delta epsilon' })), 'word salad and a non-role cannot satisfy the human gate');
 assert(module2LockDetailsError({ lossBearer: 'Program staff', accountabilityLocation: 'Program leadership owns the failed handoff response.', reversibility: 'costly_to_reverse', reversibilityNote: 'Repair would require a deliberate partner recovery plan.' }) === '', 'substantive lock judgments pass the human gate');
@@ -339,6 +339,13 @@ packageState.locks = {
   heldConstant: ['The supplied reply is the current client record.', 'The decision frame remains open to new client evidence.'],
 };
 assert(module2PackageReadinessError(packageState) === '', 'locked evidence state is ready for a client package');
+assert(module2LockDetailsError({
+  lossBearer: 'CEO',
+  accountabilityLocation: 'CEO owns recovery.',
+  reversibility: 'reversible',
+  reversibilityNote: 'Pilot can be stopped.',
+}) === '', 'concise accountable judgments pass without padding');
+assert(module2ConvictionError('Protects residents despite lower rank.') === '', 'a concise accountable override reason passes without padding');
 const packageDraft = fallbackModule2Package(packageState);
 const recommendationDocument = compileModule2Document(packageState, {
   ...packageDraft,

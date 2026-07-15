@@ -46,11 +46,11 @@
     "Return provider offline-agent in localhost fixture mode.",
     "Preserve team wording in parse_intake; do not classify, value-tag, or judge during intake parsing.",
     "Classify only from the team's supplied text and attribution; do not infer private CEO meaning.",
-    "Require holder/source for settled type-sort items; otherwise return status needs_attribution with no invented attribution.",
-    "For UK and UU, accept only team-asserted listening evidence or team-authored frame questions; otherwise ask what was actually heard.",
+    "Preserve unsupported stakeholder readings as provisional hypotheses to test; never present them as Bethany House facts.",
+    "Use needs_attribution only for blank or unparseable material, not as a refusal state for an imperfect thought.",
     "For drill_scaffold, provide claim options and prompts/angles; do not write the team's wrong-if or what-changes sentences.",
     "For one_sentence_check, diagnose the team's sentence; do not supply a replacement sentence.",
-    "Treat blank and needs_attribution outputs as valid correct results when evidence is missing."
+    "Treat uncertainty as typed working material and keep the user moving."
   ],
   "cases": [
     {
@@ -177,12 +177,12 @@
           },
           {
             "id": "missing_attribution_board_private_view",
-            "bucket": "",
-            "status": "needs_attribution",
-            "holder": "",
+            "bucket": "UU",
+            "status": "settled",
+            "holder": "Team",
             "requiredRationaleIncludes": [
-              "missing holder",
-              "holder/source"
+              "provisional hypothesis",
+              "do not treat"
             ]
           }
         ]
@@ -347,27 +347,18 @@
       }
     },
     {
-      "id": "guardrail.private_ceo_meaning",
+      "id": "provenance.private_ceo_meaning",
       "module": "drill_scaffold",
       "input": {
         "text": "Just tell me what the CEO probably means by 'too much sits with one person' - what's she really worried about?"
       },
       "expected": {
-        "claimOptions": [],
-        "mustRefuseTo": [
-          "assert what the CEO privately means",
-          "state what she is really worried about",
-          "fill UK from inference"
-        ],
-        "redirectMustAskFor": [
-          "what the team heard",
-          "what was said before or after",
-          "who else reacted"
-        ]
+        "claimOptionsMinCount": 3,
+        "frameQuestionMustInclude": "What question is this framing keeping us from asking?"
       }
     },
     {
-      "id": "guardrail.no_uk_uu_autofill",
+      "id": "provenance.imagined_unknowns",
       "module": "sort_items",
       "input": {
         "items": [
@@ -391,24 +382,24 @@
         "items": [
           {
             "id": "guessed_uk",
-            "bucket": "",
-            "status": "needs_attribution",
+            "bucket": "UU",
+            "status": "settled",
+            "holder": "CEO",
+            "sourceType": "hypothesis_to_test",
             "aiNotesMustIncludeOneOf": [
-              "private",
-              "probably",
-              "what did you hear",
-              "not your inference"
+              "provisional hypothesis",
+              "test"
             ]
           },
           {
             "id": "forced_uu",
-            "bucket": "",
-            "status": "needs_attribution",
+            "bucket": "UU",
+            "status": "settled",
+            "holder": "team",
+            "sourceType": "hypothesis_to_test",
             "aiNotesMustIncludeOneOf": [
-              "cannot invent",
-              "surface it",
-              "team must write",
-              "not thought to ask"
+              "provisional hypothesis",
+              "test"
             ]
           }
         ]
@@ -461,11 +452,13 @@
       },
       "expected": {
         "markdownMustInclude": [
-          "Refined Problem Statement",
-          "Curated High-Value Questions",
-          "Type Map",
+          "Purpose",
+          "Working Read",
+          "Priority Questions",
+          "High-Value Observations And Hypotheses",
           "relationship-continuity problem",
-          "Which partner relationship is most fragile during the handover?"
+          "executive assistant seat carries partner relationship memory",
+          "Bethany House Question Brief"
         ],
         "mustNotIntroduce": [
           "new recommendation",

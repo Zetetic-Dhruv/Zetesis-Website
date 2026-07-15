@@ -23,7 +23,6 @@ import {
   fallbackEvaluateBets,
   fallbackReconcile,
   fallbackSuggestOptions,
-  hasDecisionContext,
   rankLiveBets,
 } from './module2-engine.js';
 import {
@@ -51,7 +50,6 @@ const ENGAGEMENT_ID = 'eng_bethany_house_2026';
 const CLASS_ID = 'class_bethany_house_2026';
 const STUDENT_CODE_ID = 'code_bethany_house_student_2026';
 const ADMIN_CODE_ID = 'code_bethany_house_admin_2026';
-const ABUSE_MESSAGE = 'This workspace only processes Bethany House decision work for the current class assignment.';
 const SESSION_COOKIE = 'studio_session';
 const PASSWORD_ITERATIONS = 100000;
 const DEFAULT_SESSION_SECONDS = 60 * 60 * 24 * 14;
@@ -1067,21 +1065,6 @@ async function handleLlm(request, env, user, membership = null) {
     : requestedPayload;
   const promptPayload = withModuleContext(moduleName, payload);
 
-  if (moduleName === 'm2_reconcile' && !hasDecisionContext(module2Bundle?.state?.ground?.rawReply || '', module2Bundle?.state || {})) {
-    await logAbuse(env, membership, bundle.workspace.id, user.id, moduleName, 'The supplied reply has no Bethany House decision context.', payload);
-    await audit(env, bundle.workspace.id, user.id, 'llm_guardrail_reject', { module: moduleName, reason: 'module_2_relevance_preflight' });
-    return json({ error: ABUSE_MESSAGE }, 400, request);
-  }
-  if (moduleName === 'm2_suggest_options'
-      && module2Bundle?.state?.ground?.relevance?.status !== 'relevant'
-      && !canSuggestModule2Options(module2Bundle?.state)) {
-    return json({ error: 'Add a Bethany House decision frame or reconcile a relevant reply before asking for options.' }, 409, request);
-  }
-  if (moduleName === 'm2_evaluate_bets'
-      && module2Bundle?.state?.ground?.relevance?.status !== 'relevant') {
-    return json({ error: 'Reconcile a relevant Bethany House reply before using model-assisted options or evaluation.' }, 409, request);
-  }
-
   if (moduleName === 'm2_package') {
     const readiness = module2PackageReadinessError(module2Bundle?.state || {});
     if (readiness) return json({ error: readiness }, 409, request);
@@ -1089,11 +1072,6 @@ async function handleLlm(request, env, user, membership = null) {
 
   const access = await checkModelAccess(env, membership, moduleName, payload);
   if (!access.ok) {
-    if (access.abuse) {
-      await logAbuse(env, membership, bundle.workspace.id, user.id, moduleName, access.reason, payload);
-      await audit(env, bundle.workspace.id, user.id, 'llm_guardrail_reject', { module: moduleName, reason: access.reason });
-      return json({ error: ABUSE_MESSAGE }, 400, request);
-    }
     return json({ error: access.error }, access.status, request);
   }
 
@@ -1252,9 +1230,8 @@ function normalizeSortBoardItem(inputItem = {}, modelItem = {}, context = {}) {
   const modelBucket = cleanString(modelItem.bucket || '', 10);
   const modelNotes = cleanString(modelItem.aiNotes || '', 700);
 
-  const sortGuardrail = isSortGuardrailItem(rawText) || isPrivateStakeholderClaim(rawText, suppliedHolder);
-  if (!rawText || sortGuardrail) {
-    const inventUnknown = isInventUnknownRequest(rawText);
+  const provisionalHypothesis = isProvisionalHypothesisItem(rawText) || isPrivateStakeholderClaim(rawText, suppliedHolder);
+  if (!rawText) {
     return buildSortBoardItem({
       id,
       bucket: '',
@@ -1262,11 +1239,19 @@ function normalizeSortBoardItem(inputItem = {}, modelItem = {}, context = {}) {
       holder: '',
       sourceType: modelSourceType || inferSourceType(rawText, sourceField),
       evidenceIds: [],
-      aiNotes: rawText
-        ? inventUnknown
-          ? 'Cannot invent an unknown unknown for the team; the team must write the missing question from real traces.'
-          : 'Private or probable stakeholder knowledge needs a named source or real conversation evidence; do not treat this as the team\'s inference.'
-        : 'Blank item; add a source trace before sorting.',
+      aiNotes: 'Blank item; add a source trace before sorting.',
+    });
+  }
+  if (provisionalHypothesis) {
+    return buildSortBoardItem({
+      id,
+      bucket: 'UU',
+      board: 'missing_real_question',
+      holder: suppliedHolder || 'Team',
+      sourceType: 'hypothesis_to_test',
+      evidenceIds,
+      status: 'settled',
+      aiNotes: 'Provisional hypothesis. Keep it available for inquiry, but do not treat it as a Bethany House fact until tested.',
     });
   }
 
@@ -1461,11 +1446,6 @@ function isPrivateStakeholderClaim(text, holder = '') {
   const lower = cleanString(text, 1000).toLowerCase();
   return /(privately|probably|secretly|really thinks|really wants|afraid of|opposed to|private meaning|what.*means)/.test(lower)
     && /(ceo|board|staff|funder|resident|community|bethany)/.test(lower);
-}
-
-function isInventUnknownRequest(text) {
-  const lower = cleanString(text, 1000).toLowerCase();
-  return /invent the question|invent.*unknown|fill.*unknown|nobody has thought|not thought to ask/.test(lower);
 }
 
 function inferQuestionHolder(text) {
@@ -2193,7 +2173,7 @@ Use these meanings:
 - ask_someone / KU: a direct question or answerable unknown. The holder is the Bethany person/group who can answer, usually "Bethany House" if unspecified.
 - bethany_tacit / UK: Bethany likely holds the tacit answer, but the team does not yet have it.
 - missing_real_question / UU: a frame challenge, assumption, hidden tension, or hypothesis to test.
-- needs_attribution: only for private stakeholder claims or unsupported assertions where no source, holder, or evidence can be named.
+- needs_attribution: only for blank or unparseable material. Preserve unsupported or private readings as hypotheses to test rather than discarding them.
 
 Never combine KK with hypothesis_to_test or question_for_bethany.
 Never mark an item settled unless bucket, board, holder, and sourceType agree.
@@ -2425,8 +2405,6 @@ function fallbackModule(moduleName, payload, note) {
 }
 
 function fallbackRaw(moduleName, payload) {
-  const guardrail = detectGuardrailRequest(payload);
-
   if (moduleName === 'm2_reconcile') return fallbackReconcile(payload);
   if (moduleName === 'm2_suggest_options') return fallbackSuggestOptions(payload);
   if (moduleName === 'm2_evaluate_bets') return fallbackEvaluateBets(payload);
@@ -2449,16 +2427,16 @@ function fallbackRaw(moduleName, payload) {
       items: (payload.items || []).map((item) => {
         const text = item.rawText || item.text || '';
         const holder = cleanString(item.holder || '', 160);
-        if (isSortGuardrailItem(text)) {
+        if (isProvisionalHypothesisItem(text)) {
           return {
             id: item.id,
-            bucket: '',
-            board: 'needs_attribution',
-            holder: '',
+            bucket: 'UU',
+            board: 'missing_real_question',
+            holder: holder || 'Team',
             sourceType: 'hypothesis_to_test',
             evidenceIds: [],
-            status: 'needs_attribution',
-            aiNotes: 'Cannot invent UK/UU content or infer private stakeholder meaning. Ask what the team actually heard and who can corroborate it.',
+            status: 'settled',
+            aiNotes: 'Provisional hypothesis. Keep it available for inquiry and test it before treating it as a Bethany House fact.',
           };
         }
         if (!isMeaningfulField(holder)) {
@@ -2520,17 +2498,6 @@ function fallbackRaw(moduleName, payload) {
 
   if (moduleName === 'assumption_challenge') {
     const text = payload.item?.rawText || payload.item?.text || payload.text || 'this assumption';
-    if (guardrail) {
-      return {
-        claimOptions: [],
-        angles: [
-          'That depends on what the team actually heard, not on a model guess.',
-          'Ask what was said immediately before or after the line.',
-          'Ask who else reacted, disagreed, or added context in the room.',
-        ],
-        frameQuestion: 'What did the team hear, what was said before or after that line, and who else reacted?',
-      };
-    }
     return {
       claimOptions: [
         `The team is assuming that ${lowerFirst(text)}.`,
@@ -2550,13 +2517,6 @@ function fallbackRaw(moduleName, payload) {
 
   if (moduleName === 'question_forge') {
     const q = cleanString(payload.question || 'What do we need to understand?', 300);
-    if (guardrail) {
-      return {
-        variants: [],
-        candidates: [],
-        ownerFlag: 'This asks the assistant to infer private stakeholder meaning. Bring back what was heard in the real conversation, then tie the question to a named owner.',
-      };
-    }
     const items = payload.items?.length ? payload.items : [payload.item || { id: '', rawText: q, sourceType: 'student_trace' }];
     const candidates = items
       .filter((item) => isMeaningfulField(item.reengineeredQuestion || item.rawText || item.text || q))
@@ -2964,35 +2924,7 @@ async function checkModelAccess(env, membership, moduleName, payload) {
       return { ok: false, status: 402, error: 'Model budget reached for this class. Draft editing and saved reports remain available.' };
     }
   }
-  const abuseReason = detectAssignmentAbuse(moduleName, payload);
-  if (abuseReason) return { ok: false, abuse: true, reason: abuseReason };
   return { ok: true };
-}
-
-function detectAssignmentAbuse(moduleName, payload) {
-  const text = JSON.stringify({ moduleName, payload }).toLowerCase();
-  if (!text.trim()) return '';
-  const freeChat = /(write|draft|compose).*(essay|poem|cover letter|email|code|python|javascript|sql|dating|resume)|homework unrelated|ignore previous|jailbreak|system prompt|act as|free model|chatgpt|solve this math|investment advice|medical advice|legal advice/.test(text);
-  const unrelatedOrg = /(tesla|bitcoin|stock price|nba|movie script|restaurant|travel itinerary|recipe|calculus|leetcode|weather|celebrity)/.test(text);
-  const mentionsAssignment = /bethany|house|nassau|staffing|executive assistant|ceo|board|resident|women|children|jericho|school district|decision|unknown|assumption|gatekeeper|consulting|stakeholder|problem statement/.test(text);
-  const strictModule2Boundary = String(moduleName || '').startsWith('m2_');
-  if ((freeChat || unrelatedOrg) && (strictModule2Boundary || !mentionsAssignment)) return 'irrelevant_or_free_chat_use';
-  return '';
-}
-
-async function logAbuse(env, membership, workspaceId, userId, moduleName, reason, payload) {
-  await env.STUDIO_DB.prepare(
-    `INSERT INTO abuse_events (id, class_membership_id, workspace_id, user_id, module, reason, payload_json)
-     VALUES (?, ?, ?, ?, ?, ?, ?)`
-  ).bind(
-    crypto.randomUUID(),
-    membership?.id || null,
-    workspaceId,
-    userId,
-    moduleName,
-    reason,
-    JSON.stringify(payload || {})
-  ).run();
 }
 
 async function recordUsage(env, membership, workspaceId, llmRunId, moduleName, provider, inputTokens, outputTokens, estimatedCostMicros, status) {
@@ -4905,20 +4837,6 @@ export function canServeInstructorSurface(host, localRuntime = false, configured
     || (localRuntime === true && isLocalHost(normalizedHost));
 }
 
-export function canSuggestModule2Options(state = {}) {
-  const frame = cleanString(
-    state?.ground?.frameComparison?.groundedFrame
-      || state?.inheritance?.frame
-      || state?.ground?.problemSeed,
-    4000
-  );
-  if (!isMeaningfulField(frame)) return false;
-  const inheritedGrounding = state?.inheritance?.sourceType !== 'absent'
-    && isMeaningfulField(state?.inheritance?.frame);
-  const explicitAssignmentAnchor = /\b(?:bethany(?: house)?|nassau county|safe ground|jericho|baldwin|roosevelt)\b/i.test(frame);
-  return inheritedGrounding || explicitAssignmentAnchor;
-}
-
 function isLocalHost(host) {
   return host === 'localhost' || host === '127.0.0.1' || host === '[::1]';
 }
@@ -5022,12 +4940,7 @@ function inferBucket(text, sourceField) {
   return 'KK';
 }
 
-function detectGuardrailRequest(payload) {
-  const text = JSON.stringify(payload || {}).toLowerCase();
-  return /privately thinks|private meaning|probably means|really worried|what she means|what the ceo means|just tell me what.*ceo/.test(text);
-}
-
-function isSortGuardrailItem(text) {
+function isProvisionalHypothesisItem(text) {
   const lower = cleanString(text, 1000).toLowerCase();
   return /probably knows|probably thinks|private meaning|privately means|really worried|invent the question|invent.*unknown|fill.*unknown|what.*ceo.*private/.test(lower);
 }
