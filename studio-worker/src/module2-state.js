@@ -31,7 +31,6 @@ export const DEFAULT_MODULE2_STATE = Object.freeze({
     },
     possibleDuplicates: [],
     optionGenerationIssues: [],
-    mergeChoice: 'merge',
     pickedIds: [],
     pickOptions: [],
     excludedOptionIds: [],
@@ -91,7 +90,6 @@ export function normalizeModule2State(input) {
   state.ground.voiceDisagreement.evidenceLines = cleanStringArray(state.ground.voiceDisagreement.evidenceLines, 30);
   state.ground.possibleDuplicates = cleanObjectArray(state.ground.possibleDuplicates, 20);
   state.ground.optionGenerationIssues = cleanObjectArray(state.ground.optionGenerationIssues, 30);
-  state.ground.mergeChoice = oneOf(state.ground.mergeChoice, ['merge', 'replace', 'pick'], 'merge');
   state.ground.pickedIds = cleanStringArray(state.ground.pickedIds, 100);
   state.ground.pickOptions = normalizeSolutions(state.ground.pickOptions, 'student');
   state.ground.excludedOptionIds = cleanStringArray(state.ground.excludedOptionIds, 100);
@@ -221,18 +219,11 @@ export function combineGroundSolutions({
   inheritedSolutions = [],
   currentBets = [],
   incomingSolutions = [],
-  choice = 'merge',
-  pickedIds = [],
 } = {}) {
   const inherited = normalizeSolutions(inheritedSolutions, 'inherited');
   const current = normalizeSolutions(currentBets, 'student');
   const incoming = normalizeSolutions(incomingSolutions, 'student');
-  const mode = oneOf(choice, ['merge', 'replace', 'pick'], 'merge');
-  const pool = mode === 'replace'
-    ? incoming
-    : uniqueSolutions([...inherited, ...current, ...incoming]);
-  const picked = new Set(cleanStringArray(pickedIds, 100));
-  return mode === 'pick' ? pool.filter((solution) => picked.has(solution.id)) : pool;
+  return uniqueSolutions([...inherited, ...current, ...incoming]);
 }
 
 export function parseGroundSolutionPaste(text) {

@@ -227,7 +227,6 @@ async function runSuite() {
   const groundedModule2 = await postJson('/api/studio/modules/module-2/ground', {
     rawReply: 'Bethany confirmed that continuity and implementation capacity both matter.',
     solutionPaste: 'Create a shared operations role',
-    mergeChoice: 'merge',
   }, authHeaders);
   assert(/continuity and implementation capacity/i.test(groundedModule2.state.ground.rawReply), 'GROUND stores the pasted reply');
   assert(groundedModule2.state.bets.length === 2, 'GROUND merges a new solution without replacing the current set');
@@ -276,45 +275,47 @@ async function runSuite() {
     problemSeed: 'Plan a holiday itinerary.',
     rawReply: 'Write a cheerful travel itinerary for Lisbon and recommend restaurants.',
     solutions: [{ name: 'Book the cheapest hotel', description: 'Choose only by nightly price.' }],
-    mergeChoice: 'replace',
   }, authHeaders);
   const rejectedOffAssignment = await postJson('/api/studio/llm', { module: 'm2_reconcile', payload: {} }, authHeaders, false);
   assert(rejectedOffAssignment.status === 200 && rejectedOffAssignment.data.state.ground.relevance.status !== 'relevant', 'off-assignment text is processed and typed as not relevant rather than treated as abuse');
 
   const dashedOptions = await postJson('/api/studio/modules/module-2/ground', {
     solutionPaste: 'Select ambassador - this will need screening and anti-trust verification\nHire - but one hire will likely take too long',
-    mergeChoice: 'replace',
   }, authHeaders);
-  assert(dashedOptions.state.bets.length === 2, 'GROUND keeps one dashed option per pasted line');
-  assert(dashedOptions.state.bets[0].name === 'Select ambassador' && dashedOptions.state.bets[0].description.startsWith('this will need screening'), 'GROUND stores text after an inline dash as the option description');
-  assert(dashedOptions.state.bets[1].name === 'Hire' && dashedOptions.state.bets[1].description.startsWith('but one hire'), 'GROUND does not turn a second inline dash into another option');
-  const stalePick = await postJson('/api/studio/modules/module-2/ground', {
-    mergeChoice: 'pick',
-    pickedIds: ['obsolete-malformed-option'],
-  }, authHeaders);
-  assert(stalePick.needsPick === true && stalePick.state.ground.pickedIds.length === 0, 'Pick rejects stale option IDs and presents the repaired choices again');
-  const excludedPickId = stalePick.state.ground.pickOptions[0].id;
-  const repairedPick = await postJson('/api/studio/modules/module-2/ground', {
-    mergeChoice: 'pick',
+  const selectAmbassador = dashedOptions.state.ground.pickOptions.find((option) => option.name === 'Select ambassador');
+  const hire = dashedOptions.state.ground.pickOptions.find((option) => option.name === 'Hire');
+  assert(Boolean(selectAmbassador && hire), 'GROUND keeps one dashed option per pasted line in the unified list');
+  assert(selectAmbassador.description.startsWith('this will need screening'), 'GROUND stores text after an inline dash as the option description');
+  assert(hire.description.startsWith('but one hire'), 'GROUND does not turn a second inline dash into another option');
+  assert(dashedOptions.state.ground.pickedIds.includes(selectAmbassador.id) && dashedOptions.state.ground.pickedIds.includes(hire.id), 'new bulk options begin selected');
+  const clearedSelection = await postJson('/api/studio/modules/module-2/ground', {
     pickedIds: [],
-    excludedOptionIds: [excludedPickId],
+    selectionInitialized: true,
   }, authHeaders);
-  assert(repairedPick.needsPick === true && !repairedPick.state.ground.pickOptions.some((option) => option.id === excludedPickId), 'removing a prepared option keeps it out of the refreshed choice list');
-  assert(repairedPick.state.ground.excludedOptionIds.includes(excludedPickId), 'manual option exclusions persist in the draft');
+  assert(clearedSelection.state.bets.length === 0 && clearedSelection.state.ground.pickOptions.length >= 2, 'unchecking options keeps them available without carrying them forward');
+  const removedOption = await postJson('/api/studio/modules/module-2/ground', {
+    pickedIds: [],
+    excludedOptionIds: [selectAmbassador.id],
+    selectionInitialized: true,
+  }, authHeaders);
+  assert(!removedOption.state.ground.pickOptions.some((option) => option.id === selectAmbassador.id), 'removing an option deletes it from the unified list');
+  assert(removedOption.state.ground.excludedOptionIds.includes(selectAmbassador.id), 'manual option exclusions persist in the draft');
 
-  const preparedPick = await postJson('/api/studio/modules/module-2/ground', {
+  const preparedSelection = await postJson('/api/studio/modules/module-2/ground', {
     problemSeed: 'How should Bethany House add staffing capacity without losing relationship continuity or accountability?',
     rawReply: 'Bethany House needs a partner handoff with clear accountability and enough implementation capacity.',
     solutionPaste: 'Phased relationship handoff\nSeparate operational and people ownership',
-    mergeChoice: 'pick',
     pickedIds: [],
+    selectionInitialized: true,
   }, authHeaders);
-  assert(preparedPick.needsPick === true && preparedPick.state.ground.pickOptions.length >= 2, 'Pick prepares inherited, current, and pasted options before requiring a selection');
-  const appliedPick = await postJson('/api/studio/modules/module-2/ground', {
-    mergeChoice: 'pick',
-    pickedIds: [preparedPick.state.ground.pickOptions[0].id],
+  const phasedPrepared = preparedSelection.state.ground.pickOptions.find((option) => option.name === 'Phased relationship handoff');
+  const separatedPrepared = preparedSelection.state.ground.pickOptions.find((option) => option.name === 'Separate operational and people ownership');
+  assert(preparedSelection.state.ground.pickedIds.includes(phasedPrepared.id) && preparedSelection.state.ground.pickedIds.includes(separatedPrepared.id), 'newly prepared options are checked by default');
+  const appliedSelection = await postJson('/api/studio/modules/module-2/ground', {
+    pickedIds: [phasedPrepared.id],
+    selectionInitialized: true,
   }, authHeaders);
-  assert(appliedPick.state.bets.length === 1 && appliedPick.state.bets[0].id === preparedPick.state.ground.pickOptions[0].id, 'prepared Pick applies the explicit student selection');
+  assert(appliedSelection.state.bets.length === 1 && appliedSelection.state.bets[0].id === phasedPrepared.id, 'the checklist directly defines the carried option set');
 
   const modelReadyModule2 = await postJson('/api/studio/modules/module-2/ground', {
     problemSeed: 'How should Bethany House add staffing capacity without losing relationship continuity or accountability?',
@@ -334,7 +335,8 @@ async function runSuite() {
         description: 'Keep executive coordination and HR trust work under distinct ownership.',
       },
     ],
-    mergeChoice: 'replace',
+    pickedIds: ['bet-phased-handoff', 'bet-separated-ownership'],
+    selectionInitialized: true,
   }, authHeaders);
   assert(modelReadyModule2.state.bets.length === 2, 'GROUND prepares two credible student alternatives for evaluation');
 
@@ -345,7 +347,8 @@ async function runSuite() {
       { id: 'bet-phased-handoff', name: 'Phased relationship handoff', description: 'Add capacity while explicitly sequencing partner handoffs.' },
       { id: 'bet-separated-ownership', name: 'Separate operational and people ownership', description: 'Keep executive coordination and HR trust work under distinct ownership.' },
     ],
-    mergeChoice: 'replace',
+    pickedIds: ['bet-phased-handoff', 'bet-separated-ownership'],
+    selectionInitialized: true,
   }, authHeaders);
   assert(acmeGround.state.ground.rawReply.startsWith('Acme Foundation'), 'keyword-padding attack reaches only persisted Ground state');
   const beforeAcmeUsage = await getJson('/api/studio/me', authHeaders);
@@ -366,7 +369,8 @@ async function runSuite() {
       { id: 'bet-phased-handoff', name: 'Phased relationship handoff', description: 'Add capacity while explicitly sequencing partner handoffs.' },
       { id: 'bet-separated-ownership', name: 'Separate operational and people ownership', description: 'Keep executive coordination and HR trust work under distinct ownership.' },
     ],
-    mergeChoice: 'replace',
+    pickedIds: ['bet-phased-handoff', 'bet-separated-ownership'],
+    selectionInitialized: true,
   }, authHeaders);
 
   const reconciliation = await llm('m2_reconcile', {});
@@ -574,7 +578,6 @@ async function runSuite() {
   const noReplyGround = await postJson('/api/studio/modules/module-2/ground', {
     problemSeed: 'What operating model should Bethany House use for the transition?',
     rawReply: '',
-    mergeChoice: 'merge',
   }, authHeaders);
   assert(noReplyGround.state.ground.relevance.status === 'unresolved', 'removing the reply invalidates the old relevance result');
   const noReplySuggestions = await llm('m2_suggest_options', {});

@@ -63,8 +63,11 @@ assert(renderedModule2Script.includes('data-action="update-ground-options"'), 'G
 assert(!renderedModule2Script.includes("groundButton.textContent='Prepare choices'"), 'bulk-option preparation does not consume the continue action');
 assert(renderedModule2Script.includes('data-action="remove-pick-option"'), 'prepared choices expose a direct remove action');
 assert(renderedModule2Script.includes('function excludeOption(id)') && renderedModule2Script.includes('state.ground.pickOptions=(state.ground.pickOptions||[]).filter'), 'removing an option clears both the main and prepared lists');
-assert(!renderedModule2Script.includes("radio('ground.mergeChoice','replace','Replace'"), 'Ground omits the redundant Replace control');
-assert(renderedModule2Script.includes("if(state.ground.mergeChoice==='replace')state.ground.mergeChoice='merge'"), 'legacy Replace drafts fall back to Keep all');
+assert(renderModule2Page().includes('Options to carry forward') && renderedModule2Script.includes('data-pick='), 'Ground renders one unified selectable option list');
+assert(!/Keep all|Choose options|Pick later|Combine with inherited options/.test(renderModule2Page()), 'Ground omits all merge-mode controls');
+assert(!renderedModule2Script.includes('mergeChoice') && !source.includes('needsPick'), 'Ground has no hidden merge mode or two-pass pick handshake');
+assert(renderedModule2Script.includes('if(!hadPrepared)state.ground.pickedIds=state.ground.pickOptions.map'), 'first-load options are checked by default');
+assert(renderedModule2Script.includes('syncSelectedGroundBets();render()'), 'the checklist directly controls the carried option set');
 assert(renderedModule2Script.includes("button.classList.add('assist')"), 'model-assisted option creation is visually highlighted');
 assert(!renderedModule2Script.includes("await runModule('m2_reconcile');await runModule('m2_suggest_options')"), 'Suggest options is not hidden behind reconciliation');
 assert(renderedModule2Script.includes("statusText='Developing distinct options...'"), 'Suggest options exposes an active model-call state');
@@ -79,7 +82,7 @@ assert(dashedPaste[1].name === 'Hire' && dashedPaste[1].description === 'but one
 const bulletedPaste = parseGroundSolutionPaste('- Select ambassador - screen and verify\n* Hire directly');
 assert(bulletedPaste.length === 2 && bulletedPaste[0].name === 'Select ambassador' && bulletedPaste[1].name === 'Hire directly', 'line-level bullets are removed without splitting inline dashes');
 assert(renderedModule2Script.includes('Question that could change the comparison') && renderedModule2Script.includes('highest-influence open dependency'), 'Board exposes fog and one discriminating follow-up probe');
-assert(renderedModule2Script.includes('Choices updated. Select the options to keep.') && renderedModule2Script.includes('result.needsPick'), 'initial Pick choice has an update-then-select recovery instead of a dead end');
+assert(renderedModule2Script.includes("throw new Error('Select an option, add one, or ask the assistant for suggestions.')"), 'an empty selection gives one direct recovery instruction');
 assert(renderedModule2Script.includes('!setNeedsReview&&(state.ranking.evaluationIncomplete') && renderedModule2Script.includes('!state.ranking.evaluationIncomplete&&state.ranking.weakField'), 'Board does not duplicate one coverage gap as evaluation and weak-field blockers');
 assert(source.includes("if (state.ranking.evaluationIncomplete) return json({ error: state.ranking.incompleteReason || 'Evaluate every live alternative before confirming this set.'"), 'explicit gap review persists before weak-field recovery is presented as the next blocker');
 assert(renderModule2Page().includes('/api/studio/modules/module-2/judgments'), 'human lock choices use the explicit server judgment transition');
@@ -514,23 +517,11 @@ assert(
   identityIntoDuplicate.length === 1 && identityIntoDuplicate[0].id === 'option-a',
   'an explicit-ID update into existing content collapses the other exact duplicate'
 );
-assert(
-  combineGroundSolutions({
-    inheritedSolutions: mergedSolutions,
-    incomingSolutions: [{ id: 'replacement', name: 'Use an external service' }],
-    choice: 'replace',
-  }).map((item) => item.id).join(',') === 'replacement',
-  'replace deliberately removes inherited solutions from the Module 2 set'
-);
-assert(
-  combineGroundSolutions({
-    inheritedSolutions: mergedSolutions,
-    incomingSolutions: [{ id: 'student-c', name: 'Sequence the work' }],
-    choice: 'pick',
-    pickedIds: ['student-c'],
-  }).map((item) => item.id).join(',') === 'student-c',
-  'pick retains only explicitly selected solutions'
-);
+const unifiedSolutions = combineGroundSolutions({
+  inheritedSolutions: mergedSolutions,
+  incomingSolutions: [{ id: 'student-c', name: 'Sequence the work' }],
+});
+assert(unifiedSolutions.some((item) => item.id === 'student-c') && unifiedSolutions.length === mergedSolutions.length + 1, 'the option pool always preserves inherited and newly supplied choices');
 assert(isActiveAdminMembership({
   role: 'admin',
   status: 'active',

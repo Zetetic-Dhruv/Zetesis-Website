@@ -4299,8 +4299,9 @@ function applyModule2EditableSave(storedState, incomingState) {
   state.ground.problemSeed = incomingState.ground.problemSeed;
   state.ground.rawReply = incomingState.ground.rawReply;
   state.ground.solutionPaste = incomingState.ground.solutionPaste;
-  state.ground.mergeChoice = incomingState.ground.mergeChoice;
   state.ground.pickedIds = incomingState.ground.pickedIds;
+  state.ground.pickOptions = incomingState.ground.pickOptions;
+  state.ground.excludedOptionIds = incomingState.ground.excludedOptionIds;
 
   const existing = new Map(state.bets.map((bet) => [bet.id, bet]));
   let betContentChanged = false;
@@ -4554,6 +4555,7 @@ async function handleApplyModule2Ground(request, env, user, membership) {
   const nextProblemSeed = cleanString(body.problemSeed ?? state.ground.problemSeed, 4000);
   const nextRawReply = cleanString(body.rawReply ?? state.ground.rawReply, 30000);
   const submittedPickedIds = Array.isArray(body.pickedIds) ? body.pickedIds : state.ground.pickedIds;
+  const selectionInitialized = body.selectionInitialized === true || state.ground.pickOptions.length > 0;
   const excludedOptionIds = (Array.isArray(body.excludedOptionIds)
     ? body.excludedOptionIds
     : state.ground.excludedOptionIds)
@@ -4563,37 +4565,31 @@ async function handleApplyModule2Ground(request, env, user, membership) {
   state.ground.problemSeed = nextProblemSeed;
   state.ground.rawReply = nextRawReply;
   state.ground.solutionPaste = solutionPaste || state.ground.solutionPaste;
-  state.ground.mergeChoice = ['merge', 'replace', 'pick'].includes(body.mergeChoice)
-    ? body.mergeChoice
-    : state.ground.mergeChoice;
   const protectedGenerated = state.bets.filter((bet) => bet.origin === 'generated');
   const excludedIds = new Set(excludedOptionIds);
+  const previousOptions = state.ground.pickOptions.length
+    ? state.ground.pickOptions
+    : combineGroundSolutions({
+        inheritedSolutions: state.inheritance.inheritedSolutions,
+        currentBets: state.bets.filter((bet) => bet.origin !== 'generated'),
+      });
+  const previousOptionIds = new Set(previousOptions.map((bet) => bet.id));
   const preparedOptions = [...combineGroundSolutions({
     inheritedSolutions: state.inheritance.inheritedSolutions,
-    currentBets: state.bets.filter((bet) => bet.origin !== 'generated'),
+    currentBets: [...state.ground.pickOptions, ...state.bets.filter((bet) => bet.origin !== 'generated')],
     incomingSolutions,
-    choice: 'merge',
   }), ...protectedGenerated].filter((bet) => !excludedIds.has(bet.id));
   state.ground.excludedOptionIds = excludedOptionIds;
   const preparedIds = new Set(preparedOptions.map((bet) => bet.id));
-  const pickedIds = submittedPickedIds.filter((id) => preparedIds.has(id));
+  const pickedIds = selectionInitialized
+    ? [...new Set([
+        ...submittedPickedIds.filter((id) => preparedIds.has(id)),
+        ...preparedOptions.filter((bet) => !previousOptionIds.has(bet.id)).map((bet) => bet.id),
+      ])]
+    : [...preparedIds];
   state.ground.pickedIds = pickedIds;
-  state.ground.pickOptions = state.ground.mergeChoice === 'pick' ? preparedOptions : [];
-  if (state.ground.mergeChoice === 'pick' && !pickedIds.length) {
-    if (previousGround !== `${nextProblemSeed}\n${nextRawReply}`) invalidateModule2Analysis(state, true);
-    state.updatedAt = new Date().toISOString();
-    await persistModule2State(env, bundle.workspace.id, user.id, state, 'ground', 'draft');
-    return json({ ok: true, needsPick: true, state, currentStep: 'ground' }, 200, request);
-  }
-  const nextBets = state.ground.mergeChoice === 'pick'
-    ? preparedOptions.filter((bet) => pickedIds.includes(bet.id))
-    : [...combineGroundSolutions({
-        inheritedSolutions: state.inheritance.inheritedSolutions,
-        currentBets: state.bets.filter((bet) => bet.origin !== 'generated'),
-        incomingSolutions: incomingSolutions.filter((solution) => !excludedIds.has(solution.id)),
-        choice: state.ground.mergeChoice,
-        pickedIds,
-      }).filter((bet) => !excludedIds.has(bet.id)), ...protectedGenerated.filter((bet) => !excludedIds.has(bet.id))];
+  state.ground.pickOptions = preparedOptions;
+  const nextBets = preparedOptions.filter((bet) => pickedIds.includes(bet.id));
   const betFingerprint = (bets) => JSON.stringify(bets.map((bet) => [bet.id, bet.name, bet.description]));
   const groundChanged = previousGround !== `${nextProblemSeed}\n${nextRawReply}`;
   const betsChanged = betFingerprint(state.bets) !== betFingerprint(nextBets);
@@ -4605,7 +4601,8 @@ async function handleApplyModule2Ground(request, env, user, membership) {
   await persistModule2State(env, bundle.workspace.id, user.id, state, 'ground', 'draft');
   await audit(env, bundle.workspace.id, user.id, 'module2_ground_applied', {
     workflowKey: MODULE2_KEY,
-    mergeChoice: state.ground.mergeChoice,
+    availableOptionCount: state.ground.pickOptions.length,
+    selectedOptionCount: state.ground.pickedIds.length,
     betCount: state.bets.length,
     hasReply: Boolean(state.ground.rawReply),
   });
